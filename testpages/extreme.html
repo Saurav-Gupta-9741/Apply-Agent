@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Extreme-case application (local test page)</title></head>
+<body style="font:15px system-ui;max-width:640px;margin:32px auto;padding:0 16px">
+<p style="background:#fff3cd;padding:8px 12px;border-radius:6px">Local practice page with hard cases. Nothing is sent anywhere.</p>
+<h1>Operations Analyst</h1>
+<form id="application-form">
+  <div class="field"><label for="first_name">First Name *</label><input id="first_name" name="first_name" required></div>
+  <div class="field"><label for="last_name">Last Name *</label><input id="last_name" name="last_name" required></div>
+  <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" required value="old.address@example.org"></div>
+  <div class="field"><label for="resume">Resume *</label><input id="resume" name="resume" type="file" required></div>
+  <div class="field"><label for="cover">Cover letter (PDF) *</label><input id="cover" name="cover_letter" type="file" required></div>
+  <div class="field"><label for="aadhaar">Aadhaar number *</label><input id="aadhaar" name="aadhaar" required></div>
+  <div class="field"><label for="pan">PAN (optional)</label><input id="pan" name="pan"></div>
+  <div class="field"><label for="father">Father's name *</label><input id="father" name="father" required></div>
+  <div class="field"><label for="oneliner">In one line, why us? *</label><input id="oneliner" name="oneliner" maxlength="50" required></div>
+  <div class="field"><label for="sign">Type your full name to sign this application *</label><input id="sign" name="signature" required></div>
+  <button type="submit">Submit application</button>
+</form>
+<script>
+  document.getElementById("application-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    sessionStorage.setItem("submits", String(Number(sessionStorage.getItem("submits") || 0) + 1));
+    document.body.innerHTML = "<h1>Thank you for applying!</h1>";
+  });
+</script>
+</body>
+</html>

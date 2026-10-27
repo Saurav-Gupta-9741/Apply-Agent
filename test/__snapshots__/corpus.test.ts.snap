@@ -1,0 +1,891 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`real forms, offline > ashby-airwallex.html 1`] = `
+[
+  "  file      skip                         ",
+  "* text      profile:fullName             Full Name",
+  "* text      profile:firstName            First Name",
+  "  text      skip                         Middle Name",
+  "* text      profile:lastName             Last Name / Surname",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "  combobox  skip                         Location",
+  "* file      resume                       Resume",
+  "* text      profile:linkedin             Linkedin",
+  "  text      ask:salary                   Salary Expectations",
+  "  checkbox  skip                         Do you have any relatives currently working for Airwallex?",
+  "  text      skip                         If Yes, please share their name here",
+  "  checkbox  ask:work_authorization       Are you legally authorized to work in the United States for any employer?",
+  "  checkbox  ask:sponsorship              Will you now or in the future require sponsorship for employment visa status or work authorization?",
+  "  checkbox  skip                         This position requires hybrid work with mandatory in-office days. Can you meet this requirement?",
+  "* text      ask:unknown                  How did you first hear about Airwallex?",
+  "  checkbox  skip                         We encourage you to use AI tools to help research, prepare, or refine your application materials. However, we ask that you do not use AI tools during live, real-time interviews unless you've been explicitly told otherwise. Our goal during live conversations is to get a true sense of how you think on your feet, solve problems, and express yourself authentically in the moment. Please indicate your understanding and agreement to refrain from using AI during live interviews by selecting ‘Yes’ below.",
+  "  radio     ask:gender                   Gender",
+  "  radio     ask:race                     Race",
+  "  radio     ask:veteran                  Veteran Status",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > ashby-atlan.html 1`] = `
+[
+  "  file      skip                         ",
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "  radio     skip                         SMS",
+  "  radio     skip                         WhatsApp",
+  "  combobox  skip                         Location",
+  "* file      resume                       Resume",
+  "  file      skip                         Cover Letter",
+  "* text      profile:linkedin             LinkedIn profile",
+  "* text      ask:missing_profile_value    Please list your most recent Employer here.",
+  "  checkbox  ask:work_authorization       Are you currently eligible to work in the country to which you are applying? If so, you will be asked to provide documentation.",
+  "  checkbox  ask:sponsorship              Do you now or in the future require visa sponsorship to continue working in that country?",
+  "* text      ask:salary                   What are your compensation expectations for this role?",
+  "  combobox  skip                         How did you learn about this opportunity with Atlan?",
+  "  checkbox  skip                         Acknowledge/ Confirm",
+  "* textarea  ask:unknown                  Tell us about something you’ve built with AI for your own work in the last year that someone else now relies on. What’s changed since the first version? When and What tools did you use to build it?",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > ashby-fireworks-ai.html 1`] = `
+[
+  "  file      skip                         ",
+  "* text      profile:fullName             Legal Name",
+  "  text      skip                         Preferred Name (if applicable)",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone Number",
+  "* file      resume                       Resume",
+  "  url       profile:linkedin             LinkedIn URL",
+  "  checkbox  ask:work_authorization       Are you authorized to work in the country where the job is located?",
+  "  checkbox  ask:sponsorship              Will you now or in the future require visa sponsorship to work in the country where this position is located?",
+  "  combobox  skip                         Where are you currently located?",
+  "  checkbox  skip                         London, UK",
+  "  checkbox  skip                         New York, NY",
+  "  checkbox  skip                         Remote, US",
+  "  checkbox  skip                         San Mateo, CA",
+  "  checkbox  skip                         Singapore",
+  "  checkbox  skip                         Are you open to a hybrid schedule with in-office days on Monday, Wednesday, and Friday?",
+  "* textarea  ask:unknown                  Why are you interested in Fireworks AI?",
+  "* text      ask:notice_period            If offered a position, what is your ideal start-date?",
+  "  number    ask:salary                   Do you have any initial compensation expectations?",
+  "  radio     skip                         Interview Recording Consent",
+  "  radio     ask:gender                   Gender",
+  "  radio     ask:race                     Race",
+  "  radio     ask:veteran                  Veteran Status",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > ashby-headway.html 1`] = `
+[
+  "  file      skip                         ",
+  "* text      profile:fullName             Full Name",
+  "  text      skip                         Name Pronunciation / Preferred Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone Number",
+  "  file      resume                       Resume",
+  "  file      skip                         Cover Letter",
+  "* url       profile:linkedin             LinkedIn Profile URL",
+  "  url       skip                         Personal Website/Portfolio",
+  "  combobox  skip                         Please enter your current working location",
+  "* text      ask:unknown                  Who is your current or previous employer?",
+  "  checkbox  skip                         Have you worked at Headway in the past in a Full-Time, Part-Time, Contractor or Intern capacity?",
+  "  radio     ask:consent                  I understand and agree that Headway may contact additional references beyond the references you provide to validate your previous employment.",
+  "  checkbox  ask:work_authorization       Are you authorized to work in the United States for any employer?",
+  "  checkbox  ask:sponsorship              Will you now, or in the future, require visa sponsorship for employment visa status (e.g. H-1B visa status)?",
+  "  radio     ask:gender                   I identify my gender as",
+  "  radio     ask:gender                   I identify as transgender",
+  "  radio     ask:sexual_orientation       I identify my sexual orientation as",
+  "  checkbox  skip                         Alaskan Native / American Indian / Indigenous American / Native American",
+  "  checkbox  skip                         Black / of African descent",
+  "  checkbox  skip                         East Asian (inclusive of Chinese, Japanese, Korean, Mongolian, Tibetan, and Taiwanese)",
+  "  checkbox  ask:race                     Hispanic / Latinx",
+  "  checkbox  skip                         Middle Eastern",
+  "  checkbox  skip                         Pacific Islander",
+  "  checkbox  skip                         South Asian (including Bangladeshi, Bhutanese, Indian, Nepali, Pakistani, and Sri Lankan",
+  "  checkbox  skip                         Southeast Asian (including Burmese, Cambodian, Filipino, Hmong, Indonesian, Laotian, Malaysian, Mien, Singaporean, Thai, and Vietnamese)",
+  "  checkbox  skip                         White",
+  "  checkbox  skip                         I don't wish to answer",
+  "  checkbox  skip                         I prefer to self-describe",
+  "  radio     ask:veteran                  Veteran status",
+  "  radio     ask:disability               Disability status",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > ashby-lio.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "  tel       profile:phone                Phone",
+  "* file      resume                       CV",
+  "  text      profile:linkedin             LinkedIn/GitHub Link",
+  "  checkbox  skip                         Are you located in Munich / would you be willing to move here?",
+  "  checkbox  skip                         I’m aware that this is a 100% on-site role and I’m fully comfortable with that.",
+  "  radio     skip                         Proficiency in German",
+  "* text      ask:notice_period            Start date",
+  "  checkbox  ask:work_authorization       Are you authorized to work in Germany?",
+  "* number    ask:salary                   Salary expectations in €",
+  "* textarea  ask:unknown                  Why do you want to join us?",
+  "* textarea  ask:unknown                  What are your relevant experiences for this role?",
+  "* textarea  ask:unknown                  What is your spike (idiosyncratic strength)?",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > ashby-notion.html 1`] = `
+[
+  "  file      skip                         ",
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "  combobox  skip                         Location",
+  "* file      resume                       Resume",
+  "* text      profile:linkedin             LinkedIn Profile",
+  "  radio     ask:gender                   What pronouns would you like our team to use when addressing you?",
+  "  checkbox  skip                         We work from our offices on Mondays, Tuesdays, and Thursdays (Anchor Days). If you need an accommodation, we’ll partner with you and explore reasonable options consistent with applicable law. Are you able to commit to working from one of our offices on Anchor Days each week?",
+  "  checkbox  ask:sponsorship              Will you now or in the future require Notion to sponsor an immigration case in order to employ you?",
+  "  checkbox  skip                         LinkedIn",
+  "  checkbox  skip                         Glassdoor",
+  "  checkbox  skip                         Notion Blog",
+  "  checkbox  skip                         Notion Employee",
+  "  checkbox  skip                         Notion Website",
+  "  checkbox  skip                         Billboard/Outdoor Ads",
+  "  checkbox  skip                         Conference or Meetup",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > ashby-nous.html 1`] = `
+[
+  "  file      skip                         ",
+  "* text      profile:fullName             Name",
+  "* email     profile:email                Email",
+  "* file      resume                       Resume",
+  "  url       profile:linkedin             LinkedIn URL",
+  "  url       skip                         Github URL",
+  "* textarea  ask:unknown                  What are you proud of building?",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > ashby-rainmaker-technology-corporati.html 1`] = `
+[
+  "  file      skip                         ",
+  "* text      profile:fullName             Name",
+  "* email     profile:email                Email",
+  "  text      skip                         Current company",
+  "  text      skip                         Current location",
+  "  tel       profile:phone                Phone",
+  "* file      resume                       Resume",
+  "  textarea  skip                         Additional information",
+  "  text      profile:linkedin             LinkedIn",
+  "  text      skip                         Twitter",
+  "  text      skip                         GitHub",
+  "  text      skip                         Portfolio",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > bamboohr-adistec.html 1`] = `
+[
+  "  text      profile:firstName            First Name",
+  "  text      profile:lastName             Last Name",
+  "  text      profile:email                Email",
+  "  text      profile:phone                Phone",
+  "  text      skip                         Address",
+  "  text      skip                         City",
+  "  text      skip                         Province",
+  "  text      skip                         Postal Code",
+  "* file      resume                       Resume",
+  "  text      skip                         Date Available",
+  "  text      skip                         Website, Blog or Portfolio",
+  "  text      profile:linkedin             LinkedIn URL",
+  "  text      skip                         Conoce a algún trabajador de Adistec? indique su nombre",
+  "  textarea  skip                         Tiene experiencia previa en el cargo a postular? Coméntanos",
+  "  text      ask:salary                   Indique sus pretensiones de renta líquida",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > bamboohr-hinterlandgroup.html 1`] = `
+[
+  "  text      profile:firstName            First Name",
+  "  text      profile:lastName             Last Name",
+  "  text      profile:email                Email",
+  "  text      profile:phone                Phone",
+  "  text      skip                         Address",
+  "  text      skip                         City",
+  "  text      skip                         ZIP",
+  "* file      resume                       Resume",
+  "  text      skip                         Date Available",
+  "  text      ask:salary                   Desired Pay",
+  "  text      skip                         Website, Blog or Portfolio",
+  "  text      profile:linkedin             LinkedIn URL",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > bamboohr-maplr.html 1`] = `
+[
+  "  text      profile:firstName            First Name",
+  "  text      profile:lastName             Last Name",
+  "  text      profile:email                Email",
+  "  text      profile:phone                Phone",
+  "  text      skip                         Address",
+  "  text      skip                         City",
+  "  text      skip                         Postal Code",
+  "* file      resume                       Resume",
+  "  text      skip                         Date Available",
+  "  text      ask:salary                   Desired Pay",
+  "  text      skip                         Website, Blog or Portfolio",
+  "  text      profile:linkedin             LinkedIn URL",
+  "* radio     ask:unknown                  Parles-tu couramment le français ?",
+  "* radio     ask:unknown                  Ton niveau d'anglais te permet-il de travailler avec de la documentation et des interlocuteurs anglophones ?",
+  "* radio     ask:work_authorization       As-tu déjà le droit de travailler au Canada (citoyenneté, résidence permanente ou permis de travail valide) ?",
+  "* radio     ask:unknown                  Le mandat est hybride, avec 2 jours par semaine obligatoires sur place à Montréal. Est-ce que cela te convient ?",
+  "  textarea  skip                         Décris un traitement AS/400 (IBM i) ou Mainframe que tu as développé ou supporté en production : quelles technologies (COBOL, CL, SQL/400, DB2, Control-M…), quel était ton rôle exact, et quelle criticité ou volumétrie ?",
+  "* radio     ask:unknown                  Combien d'années d'expérience professionnelle as-tu sur AS/400 (IBM i) ou Mainframe ?",
+  "* radio     ask:unknown                  As-tu au moins 5 ans d'expérience professionnelle sur AS/400 (IBM i) ou Mainframe ?",
+  "* radio     ask:unknown                  Le mandat inclut une rotation de support sur appel et du travail certaines fins de semaine si requis. Est-ce que cela te convient ?",
+  "* radio     ask:unknown                  Acceptes-tu une enquête de sécurité (incluant une vérification de crédit) avant le démarrage du mandat ?",
+  "  text      skip                         Comment as-tu connu Maplr ?",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > bamboohr-otstaffing.html 1`] = `
+[
+  "  text      profile:firstName            First Name",
+  "  text      profile:lastName             Last Name",
+  "  text      profile:email                Email",
+  "  text      profile:phone                Phone",
+  "  text      skip                         Address",
+  "  text      skip                         City",
+  "  text      skip                         ZIP",
+  "* file      resume                       Resume",
+  "  text      ask:salary                   Desired Pay",
+  "* radio     ask:unknown                  Do you have a valid Driver License?",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > breezy-small-batch-standard.html 1`] = `
+[
+  "* file      resume                       cResume",
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email Address",
+  "* text      profile:phone                Phone Number",
+  "  checkbox  skip                         smsConsent",
+  "* text      ask:unknown                  Address",
+  "* radio     ask:unknown                  Do you have 2+ years of full-cycle, accrual-based accounting experience managing multiple clients or entities?",
+  "* radio     ask:unknown                  Have you used QuickBooks Online regularly in a prior role?",
+  "* radio     ask:unknown                  Have you processed AP with Bill.com in a prior role?",
+  "* radio     ask:sponsorship              Are you authorized to work in the United States without needing visa sponsorship?",
+  "* radio     ask:unknown                  Have you worked remotely before?",
+  "* textarea  ask:unknown                  Why are craft breweries and remote accounting work a fit for you?",
+  "* textarea  ask:unknown                  Where do you work currently, and why are you considering leaving? If you are not currently employed, what led to the transition out of your last position?",
+  "* select    ask:unknown                  How did you hear about this role?",
+]
+`;
+
+exports[`real forms, offline > breezy-social-discovery-group.html 1`] = `
+[
+  "  file      resume                       cResume",
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email Address",
+  "  text      profile:phone                Phone Number",
+  "* select    ask:unknown                  Which location are you applying for",
+  "  textarea  skip                         Experience Summary",
+  "  textarea  skip                         Cover Letter",
+  "* checkbox  ask:consent                  I've read the Privacy Notice below and consent the processing of my data as part of my job application.",
+]
+`;
+
+exports[`real forms, offline > breezy-taqar.html 1`] = `
+[
+  "* file      resume                       cResume",
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email Address",
+  "* text      profile:phone                Phone Number",
+  "  textarea  skip                         Experience Summary",
+  "  textarea  skip                         Cover Letter",
+  "* checkbox  ask:consent                  I've read the Privacy Notice below and consent the processing of my data as part of my job application.",
+]
+`;
+
+exports[`real forms, offline > breezy-zero-hash.html 1`] = `
+[
+  "  file      resume                       cResume",
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email Address",
+  "  text      profile:phone                Phone Number",
+  "  checkbox  skip                         smsConsent",
+  "  textarea  skip                         Experience Summary",
+  "  textarea  skip                         Cover Letter",
+  "* radio     ask:race                     Race or Ethnicity",
+  "* radio     ask:gender                   Gender",
+  "* checkbox  ask:consent                  I've read the Privacy Notice below and consent the processing of my data as part of my job application.",
+]
+`;
+
+exports[`real forms, offline > greenhouse-drw.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* text      profile:firstName            Preferred First Name",
+  "* text      profile:email                Email",
+  "* combobox  ask:missing_profile_value    Country",
+  "* tel       profile:phone                Phone",
+  "* combobox  ask:missing_profile_value    Location (City)",
+  "  file      resume                       Resume/CV",
+  "  file      skip                         Cover Letter",
+  "  text      profile:linkedin             LinkedIn Profile",
+  "  text      skip                         Website",
+  "* combobox  ask:work_authorization       Are you legally permitted to work in the UK?",
+  "* combobox  ask:work_authorization       Do you have a current UK work permit?",
+  "* combobox  ask:sponsorship              Will you now or in the future require DRW to sponsor you in the UK?",
+  "* combobox  ask:unknown                  How did you hear about this job?",
+  "  text      skip                         Please provide additional detail if appropriate.",
+  "* textarea  profile:firstName            Legal First Name",
+  "* textarea  profile:lastName             Legal Last Name",
+]
+`;
+
+exports[`real forms, offline > greenhouse-esri.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "  text      profile:firstName            Preferred First Name",
+  "* text      profile:email                Email",
+  "* combobox  ask:missing_profile_value    Country",
+  "* tel       profile:phone                Phone",
+  "* combobox  ask:missing_profile_value    Location (City)",
+  "* file      resume                       Resume/CV",
+  "  file      skip                         Cover Letter",
+  "* combobox  ask:consent                  By selecting yes to this question you confirm that you have read Esri’s Applicant Privacy Notice.",
+  "  combobox  ask:sponsorship              Will you now or in the future require visa sponsorship from Esri for employment (e.g., H-1B visa)?",
+  "  combobox  ask:relocation               Are you able to work onsite in the Esri location of this job posting, or relocate to do so?",
+  "  text      ask:salary                   What is your annual salary range requirement?",
+  "  text      profile:linkedin             LinkedIn Profile",
+  "  file      skip                         This position requires a portfolio submission. Please attach your portfolio if it is not linked in your resume or cover letter.",
+  "* combobox  ask:gender                   Gender",
+  "* combobox  ask:race                     Are you Hispanic/Latino?",
+  "* combobox  ask:veteran                  Veteran Status",
+]
+`;
+
+exports[`real forms, offline > greenhouse-figma.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* text      profile:email                Email",
+  "* combobox  ask:missing_profile_value    Country",
+  "* tel       profile:phone                Phone",
+  "* combobox  ask:missing_profile_value    Location (City)",
+  "* file      resume                       Resume/CV",
+  "  text      profile:firstName            Preferred First Name",
+  "  combobox  ask:gender                   Pronouns",
+  "  text      profile:linkedin             LinkedIn Profile",
+  "  text      skip                         Other Website",
+  "* textarea  ask:unknown                  Why do you want to join Figma?",
+  "  textarea  skip                         Additional Information",
+  "* text      ask:unknown                  From where do you intend to work?",
+  "* combobox  ask:work_authorization       Are you authorized to work in the country for which you applied?",
+  "* combobox  ask:unknown                  Have you ever worked for Figma before, as an employee or a contractor/consultant?",
+  "  combobox  ask:gender                   Gender",
+  "  combobox  ask:race                     Are you Hispanic/Latino?",
+  "  combobox  ask:veteran                  Veteran Status",
+]
+`;
+
+exports[`real forms, offline > greenhouse-gomotive.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* text      profile:email                Email",
+  "* combobox  ask:missing_profile_value    Country",
+  "* tel       profile:phone                Phone",
+  "* combobox  ask:missing_profile_value    Location (City)",
+  "* file      resume                       Resume/CV",
+  "  file      skip                         Cover Letter",
+  "* text      ask:unknown                  Company name",
+  "* text      ask:unknown                  Title",
+  "* combobox  ask:notice_period            Start date month",
+  "* text      ask:notice_period            Start date year",
+  "* combobox  ask:unknown                  End date month",
+  "* text      ask:unknown                  End date year",
+  "  checkbox  skip                         Current role",
+  "* combobox  ask:missing_profile_value    School",
+  "* combobox  profile:degree               Degree",
+  "* combobox  ask:missing_profile_value    Discipline",
+  "* combobox  ask:unknown                  How did you hear about this opportunity?",
+  "* combobox  ask:gender                   Pronouns",
+  "* text      profile:linkedin             LinkedIn Profile",
+  "  text      skip                         Website",
+  "* text      ask:notice_period            What is your official notice period?",
+  "* text      ask:notice_period            If you are currently serving your notice period, when would be your last working day?",
+  "* text      ask:salary                   What is your current fixed annual CTC (in INR)?",
+  "* text      ask:salary                   What is your expected fixed annual CTC (in INR)?",
+  "* text      ask:unknown                  How many years of experience do you have as a Product Manager?",
+]
+`;
+
+exports[`real forms, offline > greenhouse-kinder-s.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "  text      profile:firstName            Preferred First Name",
+  "* text      profile:email                Email",
+  "* combobox  ask:missing_profile_value    Country",
+  "* tel       profile:phone                Phone",
+  "* combobox  ask:missing_profile_value    Location (City)",
+  "* file      resume                       Resume/CV",
+  "  file      skip                         Cover Letter",
+  "  text      profile:linkedin             LinkedIn Profile",
+  "* combobox  ask:unknown                  Are you at least 18 years old?",
+  "* combobox  ask:work_authorization       Are you legally authorized to work in the United States?",
+  "* combobox  ask:sponsorship              Will you now or in the future require sponsorship for employment visa status? Please note: Candidates working on F-1 OPT or STEM OPT should answer "No" only if they will never require employer sponsorship in the future.",
+]
+`;
+
+exports[`real forms, offline > greenhouse-lg-energy-solution-arizona.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "  text      profile:firstName            Preferred First Name",
+  "* text      profile:email                Email",
+  "  combobox  skip                         Country",
+  "  tel       profile:phone                Phone",
+  "  file      resume                       Resume/CV",
+  "  file      skip                         Cover Letter",
+  "  text      profile:linkedin             LinkedIn Profile",
+  "  text      skip                         Website",
+  "* combobox  ask:work_authorization       Are you legally eligible to work in the United States?",
+  "* combobox  ask:sponsorship              Will you now or in the future require sponsorship to work in the US?",
+  "* text      ask:salary                   What is your annual salary expectation in applying for this role?",
+  "* combobox  ask:relocation               Are you able to relocate as needed?",
+  "* combobox  ask:unknown                  Are you able to travel as necessary for work?",
+  "* combobox  ask:unknown                  Are you flexible with various work schedules and work hours as necessary?",
+  "* text      ask:notice_period            When is the earliest available start date if you were offered a position with us?",
+  "  text      skip                         Could you provide a name of LG Energy Solution Arizona employee who referred you to this position?",
+  "  combobox  ask:gender                   Gender",
+  "  combobox  ask:race                     Are you Hispanic/Latino?",
+  "  combobox  ask:veteran                  Veteran Status",
+]
+`;
+
+exports[`real forms, offline > greenhouse-quince.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "  text      profile:firstName            Preferred First Name",
+  "* text      profile:email                Email",
+  "  combobox  skip                         Country",
+  "  tel       profile:phone                Phone",
+  "  file      resume                       Resume/CV",
+  "  file      skip                         Cover Letter",
+  "* text      profile:linkedin             LinkedIn Profile",
+  "* text      ask:salary                   What's your current CTC? (In Lakhs)",
+  "* text      ask:notice_period            What's your notice period? (In days)",
+]
+`;
+
+exports[`real forms, offline > greenhouse-samsara.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* text      profile:email                Email",
+  "* combobox  ask:missing_profile_value    Country",
+  "* tel       profile:phone                Phone",
+  "* combobox  ask:missing_profile_value    Location (City)",
+  "* file      resume                       Resume/CV",
+  "  file      skip                         Cover Letter",
+  "* combobox  ask:consent                  I confirm that I reside within one of the following states: North Dakota, South Dakota, Nebraska, Minnesota, Wisconsin, Michigan, Ohio, Indiana, Illinois, Iowa.",
+  "  text      profile:linkedin             LinkedIn Profile",
+  "* combobox  ask:sponsorship              Will you now or in the future require Samsara to commence (“sponsor”) an immigration case in order to employ you?",
+  "  text      ask:gender                   At Samsara, we encourage employees to bring their whole selves to work (this includes applicants too!) Feel free to share your preferred name and pronouns (she/her, they/them, he/him, ze/zir etc.).",
+  "* combobox  ask:unknown                  Processing of Personal Data",
+  "* combobox  ask:unknown                  Have you been rejected for this role at Samsara within the past 6 months?",
+  "* combobox  ask:unknown                  How many years of experience do you have in a closing sales role?",
+  "* combobox  ask:unknown                  Do you have experience independently closing new deals larger than $10,000?",
+  "* combobox  ask:sponsorship              Are you currently legally authorized to work in the country in which this job is based (e.g. you are a citizen, you have a visa, etc.)?",
+  "* text      ask:unknown                  What is the zip code of your primary residence?",
+  "* combobox  ask:unknown                  How did you hear about this opportunity?",
+  "* text      profile:firstName            Preferred First Name",
+  "* text      profile:lastName             Preferred Last Name",
+  "* text      ask:missing_profile_value    Most Recent Employer",
+  "* combobox  ask:unknown                  Where have you learned about Samsara? Select all that apply.",
+  "  text      skip                         If you selected 'Other' for where you learned about Samsara, please share additional details.",
+  "* combobox  ask:unknown                  AI Policy for Interviewers",
+  "* combobox  ask:unknown                  Have you previously worked at Samsara?",
+  "* combobox  ask:gender                   How do you identify? (gender identity)",
+  "* combobox  ask:race                     How do you identify? (race/ethnicity)",
+  "* combobox  ask:veteran                  If you are based in the US, what is your veteran status?",
+  "* combobox  ask:disability               Do you have a physical or mental disability, impairment, or condition that substantially limits major life activity?",
+]
+`;
+
+exports[`real forms, offline > greenhouse-scaleops.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "  text      profile:firstName            Preferred First Name",
+  "* text      profile:email                Email",
+  "* combobox  ask:missing_profile_value    Country",
+  "* tel       profile:phone                Phone",
+  "* combobox  ask:missing_profile_value    Location (City)",
+  "  file      resume                       Resume/CV",
+  "  file      skip                         Cover Letter",
+  "* text      profile:linkedin             LinkedIn Profile",
+  "  text      skip                         Website",
+  "* combobox  ask:work_authorization       Are you legally authorized to work in the country where this position is located?",
+  "* text      ask:sponsorship              Will you now or in the future require visa sponsorship for employment authorization?",
+]
+`;
+
+exports[`real forms, offline > lever-360learning.html 1`] = `
+[
+  "  file      resume                       Resume/CV ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
+  "* text      profile:fullName             Full name",
+  "  checkbox_group ask:gender                   pronouns",
+  "  checkbox  ask:gender                   Custom",
+  "  text      ask:gender                   Write here...",
+  "* email     profile:email                Email",
+  "* text      profile:phone                Phone",
+  "  text      skip                         Current location No location found. Try entering a different location Loading",
+  "  text      skip                         Current company",
+  "  text      profile:linkedin             LinkedIn URL",
+  "  text      skip                         Twitter URL",
+  "  text      skip                         GitHub URL",
+  "  text      skip                         Portfolio URL",
+  "  text      skip                         Other website",
+  "* radio     ask:work_authorization       Are you currently legally authorized to work in the country where this role is listed?",
+  "* radio     ask:sponsorship              Will you now or in the future require employer sponsorship or immigration support to work in this country?",
+  "* textarea  ask:salary                   Please specify your precise salary expectations. Base, then bonus",
+  "  radio     ask:gender                   What gender do you identify as?",
+  "  checkbox  skip                         Yes, 360Learning can contact me about future job opportunities for up to 2 years",
+]
+`;
+
+exports[`real forms, offline > lever-commonwealth-fusion-systems.html 1`] = `
+[
+  "* file      resume                       Resume/CV  ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
+  "* text      profile:fullName             Full name",
+  "  checkbox_group ask:gender                   pronouns",
+  "  checkbox  ask:gender                   Custom",
+  "  text      ask:gender                   Write here...",
+  "* email     profile:email                Email",
+  "* text      profile:phone                Phone",
+  "  text      skip                         Current location No location found. Try entering a different location Loading",
+  "* text      ask:missing_profile_value    Current company",
+  "  text      profile:linkedin             LinkedIn URL",
+  "  text      skip                         Twitter URL",
+  "  text      skip                         GitHub URL",
+  "  text      skip                         Portfolio URL",
+  "  text      skip                         Other website",
+  "  file      skip                         Please Upload a Cover Letter",
+  "  textarea  skip                         Please tell us what interested you to apply to CFS",
+  "* radio     ask:unknown                  If offered a position at CFS, will you be able to start within 3 weeks?",
+  "  textarea  ask:notice_period            Optional: Additional information may be added in reference to a start date.",
+  "* radio     ask:unknown                  The following question is asked for the purpose of ensuring compliance with U.S. Export Control Laws. Are you one of the following: a U.S. citizen, a U.S. national, a lawful permanent resident of the U.S. (e.g. green card holder), or a protected individual as defined by 8 U.S.C. 1324b(a)(3) (e.g., a refugee or asylee)?",
+  "* text      ask:unknown                  If you answered “No” to the above, please provide the country or countries of which you are a current citizen or national, and if applicable, where you are currently granted lawful permanent resident status. If you answered “Yes,” please enter N/A",
+  "* textarea  ask:unknown                  Please tell us what interested you to apply to CFS",
+  "* textarea  ask:notice_period            Please list specific dates of internship availability- Include start date and end date.",
+  "* radio     ask:unknown                  Are you interested in an Intern position (3 months) or a Co-op position (4 or 6 months)",
+  "* radio     ask:unknown                  Most positions require the intern to be onsite at one of our locations. Will you be available to work onsite for the duration of the internship?",
+  "* textarea  ask:unknown                  Please list the school or university you will be enrolled in during the internship or co-op?",
+  "* radio     ask:unknown                  If offered a position at CFS, will you be able to start within 3 weeks?",
+  "  select    ask:gender                   Gender",
+  "  select    ask:race                     Race Hispanic or Latino A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin regardless of race. White (Not Hispanic or Latino) A person having origins in any of the original peoples of Europe, the Middle East, or North Africa. Black or African American (Not Hispanic or Latino) A person having origins in any of the black racial groups of Africa. Native Hawaiian or Other Pacific Islander (Not Hispanic or Latino) A person having origins in any of the peoples of Hawaii, Guam, Samoa, or other Pacific Islands. Asian (Not Hispanic or Latino) A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian Subcontinent, including, for example, Cambodia, China, India, Japan, Korea, Malaysia, Pakistan, the Philippine Islands, Thailand, and Vietnam. American Indian or Alaska Native (Not Hispanic or Latino) A person having origins in any of the original peoples of North and South America (including Central America), and who maintain tribal affiliation or community attachment. Two or More Races (Not Hispanic or Latino) All persons who identify with more than one of the above five races.",
+  "  select    ask:veteran                  Veteran status",
+]
+`;
+
+exports[`real forms, offline > lever-distro.html 1`] = `
+[
+  "* file      resume                       Resume/CV  ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
+  "* text      profile:fullName             Full name",
+  "* email     profile:email                Email",
+  "  text      profile:phone                Phone",
+  "* text      ask:missing_profile_value    Current location  No location found. Try entering a different location Loading",
+  "  text      skip                         Current company",
+  "  text      profile:linkedin             LinkedIn URL",
+  "  text      skip                         GitHub URL",
+  "  text      skip                         Portfolio URL",
+]
+`;
+
+exports[`real forms, offline > lever-institute-of-foundation-models.html 1`] = `
+[
+  "* file      resume                       Resume/CV  ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
+  "* text      profile:fullName             Full name",
+  "* email     profile:email                Email",
+  "* text      profile:phone                Phone",
+  "* text      ask:missing_profile_value    Current location  No location found. Try entering a different location Loading",
+  "  text      skip                         Current company",
+  "* text      profile:linkedin             LinkedIn URL",
+  "  text      skip                         GitHub URL",
+  "  text      skip                         Personal Website URL",
+  "  text      skip                         Google Scholar URL",
+  "* text      ask:unknown                  Other URL",
+  "* text      profile:email                Please enter your personal email ID (If you havent already)",
+  "  text      skip                         Current Location (City, State)",
+  "* text      ask:work_authorization       Are you legally authorized to work in the United States?",
+  "* text      ask:sponsorship              Will you now or in the future require sponsorship for employment visa status (e.g., H-1B visa status)?",
+  "  select    ask:gender                   Gender",
+  "  select    ask:race                     Race Hispanic or Latino A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin regardless of race. White (Not Hispanic or Latino) A person having origins in any of the original peoples of Europe, the Middle East, or North Africa. Black or African American (Not Hispanic or Latino) A person having origins in any of the black racial groups of Africa. Native Hawaiian or Other Pacific Islander (Not Hispanic or Latino) A person having origins in any of the peoples of Hawaii, Guam, Samoa, or other Pacific Islands. Asian (Not Hispanic or Latino) A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian Subcontinent, including, for example, Cambodia, China, India, Japan, Korea, Malaysia, Pakistan, the Philippine Islands, Thailand, and Vietnam. American Indian or Alaska Native (Not Hispanic or Latino) A person having origins in any of the original peoples of North and South America (including Central America), and who maintain tribal affiliation or community attachment. Two or More Races (Not Hispanic or Latino) All persons who identify with more than one of the above five races.",
+  "  select    ask:veteran                  Veteran status",
+]
+`;
+
+exports[`real forms, offline > lever-jobgether.html 1`] = `
+[
+  "* file      resume                       Resume/CV  ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
+  "* text      profile:fullName             Full name",
+  "* email     profile:email                Email",
+  "  text      profile:phone                Phone",
+  "  text      skip                         Current location No location found. Try entering a different location Loading",
+  "  text      skip                         Current company",
+]
+`;
+
+exports[`real forms, offline > lever-paytm.html 1`] = `
+[
+  "* file      resume                       Resume/CV  ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
+  "* text      profile:fullName             Full name",
+  "* email     profile:email                Email",
+  "* text      profile:phone                Phone",
+  "* text      ask:missing_profile_value    Current location  No location found. Try entering a different location Loading",
+  "* text      ask:missing_profile_value    Current company",
+  "  text      profile:linkedin             LinkedIn URL",
+  "  text      skip                         Github URL",
+  "  text      skip                         Other website",
+  "  textarea  ask:salary                   Current CTC",
+  "  textarea  ask:notice_period            Notice Period",
+  "  textarea  ask:salary                   Expected CTC",
+  "  select    skip                         What is your location?",
+  "  radio     ask:age                      What is your age range?",
+  "  checkbox_group ask:race                     I identify my ethnicity as Select all that apply",
+  "  radio     ask:gender                   What gender do you identify as?",
+]
+`;
+
+exports[`real forms, offline > lever-riocan.html 1`] = `
+[
+  "* file      resume                       Resume/CV  ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
+  "* text      profile:fullName             Full name",
+  "* email     profile:email                Email",
+  "* text      profile:phone                Phone",
+  "  text      skip                         Current location No location found. Try entering a different location Loading",
+  "  text      skip                         Current company",
+  "  text      profile:linkedin             LinkedIn URL",
+  "  text      skip                         Portfolio URL",
+  "  text      skip                         Other URL",
+  "* select    ask:work_authorization       Are you legally eligible to work in Canada?",
+  "* select    ask:unknown                  Are you comfortable with the posted range?",
+]
+`;
+
+exports[`real forms, offline > lever-zeta.html 1`] = `
+[
+  "* file      resume                       Resume/CV  ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
+  "* text      profile:fullName             Full name",
+  "* email     profile:email                Email",
+  "* text      profile:phone                Phone",
+  "  text      skip                         Current location No location found. Try entering a different location Loading",
+  "* text      ask:missing_profile_value    Current company",
+  "  text      profile:linkedin             LinkedIn URL",
+  "  text      skip                         Github / Stack Overflow URL",
+  "  text      skip                         Portfolio URL",
+  "  text      skip                         Other website",
+  "* radio     ask:unknown                  How many years of relevant work experience do you have in Banking Operations, Financial Operations, or Transaction Reconciliation?",
+  "* checkbox_group ask:unknown                  Which of the following industries have you worked in?",
+  "* checkbox_group ask:unknown                  Which type of transactions have you worked with?",
+  "* radio     ask:unknown                  What is your experience with transaction reconciliation and debit/credit posting?",
+  "* radio     ask:unknown                  What is your experience with banking/payment disputes, chargebacks, and regulatory reporting (including RBI submissions)?",
+  "* radio     ask:unknown                  How would you rate your proficiency in Excel?",
+  "* radio     ask:unknown                  How would you rate your proficiency in Power BI?",
+  "* radio     ask:unknown                  Are you comfortable working onsite five days a week at either our Mumbai or Bangalore office?",
+  "* radio     ask:salary                   What is your current annual CTC?",
+  "* radio     ask:salary                   What is your expected annual CTC?",
+  "* radio     ask:notice_period            What is your current notice period?",
+  "* select    ask:gender                   Gender",
+  "  select    ask:consent                  If you agree with our Privacy Policy, please check the box below. Our Privacy Policy is available at www.zeta.tech/in/careers/privacy_policy",
+]
+`;
+
+exports[`real forms, offline > personio-magazino.html 1`] = `
+[
+  "  text      profile:firstName            First",
+  "  text      profile:lastName             Last",
+  "* select    ask:gender                   Gender",
+  "* email     profile:email                Email",
+  "* text      ask:unknown                  Wie bist Du auf uns aufmerksam geworden? / How did you find out about us?",
+  "* text      ask:salary                   Expected salary",
+  "* text      ask:unknown                  Available from",
+  "  text      profile:phone                Phone",
+  "* text      ask:sponsorship              Visa situation",
+  "* file      resume                       CV",
+  "  file      skip                         Cover letter",
+  "  file      skip                         Employment reference",
+  "  file      skip                         Certificate",
+  "  file      skip                         Other",
+]
+`;
+
+exports[`real forms, offline > personio-oceonix.html 1`] = `
+[
+  "  text      profile:firstName            First",
+  "  text      profile:lastName             Last",
+  "* email     profile:email                Email",
+  "* text      profile:phone                Phone",
+  "* text      ask:missing_profile_value    Location",
+  "* text      ask:unknown                  Available from",
+  "* text      ask:salary                   Expected salary",
+  "* text      ask:work_authorization       Do you have the right to work in Malta?",
+  "  date      skip                         Birthday",
+  "  select    ask:gender                   Gender",
+  "  text      profile:linkedin             LinkedIn",
+  "* select    ask:unknown                  Office based role - are you willing to be office based 5 days per week (WFH available up to 30 days per year)",
+  "* text      ask:unknown                  Please provide a short paragraph about why you are interested in joining Oceonix. (Note: the system will only record the first 250 characters)",
+  "* file      resume                       CV",
+  "* file      ask:unknown                  Cover letter",
+  "  file      skip                         Certificate",
+  "  file      skip                         Other",
+]
+`;
+
+exports[`real forms, offline > recruitee-hostpoint.html 1`] = `
+[
+  "* text      profile:fullName             Vor- und Nachname",
+  "* email     profile:email                E-Mail-Adresse",
+  "  dropdown  profile:phone                Ländervorwahl auswählen: Schweiz",
+  "* tel       profile:phone                Telefonnummer",
+  "  file      skip                         Foto",
+  "* file      resume                       Lebenslauf",
+  "  file      skip                         Anschreiben",
+  "  file      resume                       Wenn du deinen Lebenslauf grad griffbereit hast, lad ihn doch gerne hier hoch (max. 50 MB). Ist aber kein Muss.",
+  "  file      skip                         Hier kannst du optional weitere Dokumente wie Arbeitszeugnisse, Diplome, etc. hochladen (max. 50 MB).",
+  "  textarea  skip                         Gibt es noch etwas, das du uns gern mitteilen möchtest?",
+  "* radio     ask:unknown                  So bin ich auf das Stellenangebot aufmerksam geworden",
+]
+`;
+
+exports[`real forms, offline > teamtailor-iprally.html 1`] = `
+[
+  "  text      profile:firstName            First name Required",
+  "  text      profile:lastName             Last name Required",
+  "  email     profile:email                Email Required",
+  "  tel       profile:phone                Phone",
+  "* file      resume                       Upload resume Required",
+  "  file      skip                         Additional files",
+  "  textarea  skip                         Cover letter",
+  "  checkbox  ask:consent                  Required. By submitting this application, I agree that I have read the Privacy Policy and confirm that IPRally store my personal details to be able to process my job application.",
+]
+`;
+
+exports[`real forms, offline > teamtailor-yousign.html 1`] = `
+[
+  "  text      profile:firstName            First name Required",
+  "  text      profile:lastName             Last name Required",
+  "  email     profile:email                Email Required",
+  "  tel       profile:phone                Phone Required",
+  "* file      resume                       Upload CV Required",
+  "  file      skip                         Additional files",
+  "  textarea  skip                         Cover letter",
+  "  checkbox  ask:consent                  Required. I have read the Privacy Policy and confirm that I allow Yousign to store my personal details to be able to process my job application.",
+  "  checkbox  skip                         Yes, Yousign can also contact me about future job opportunities.",
+]
+`;
+
+exports[`real forms, offline > workable-luxasia.html 1`] = `
+[
+  "* text      profile:firstName            First name",
+  "* text      profile:lastName             Last name",
+  "* email     profile:email                Email",
+  "  text      skip                         Headline",
+  "* tel       profile:phone                Phone",
+  "  text      skip                         Address",
+  "* file      ask:unknown                  Photo Choose file",
+  "  textarea  skip                         Summary",
+  "* file      resume                       Resume Choose file",
+  "  textarea  skip                         Cover letter",
+  "* text      ask:notice_period            When is the earliest you can start work?",
+]
+`;
+
+exports[`real forms, offline > workable-origin.html 1`] = `
+[
+  "* text      profile:firstName            First name",
+  "* text      profile:lastName             Last name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "  file      skip                         Photo Choose file",
+  "* file      resume                       Resume Choose file",
+  "  textarea  skip                         Cover letter",
+  "* textarea  ask:unknown                  When would be your earliest availability to join us?",
+  "* textarea  ask:salary                   What is your current CTC?",
+  "* textarea  ask:salary                   What is your expected CTC?",
+]
+`;
+
+exports[`real forms, offline > workable-our-future-health.html 1`] = `
+[
+  "* text      profile:firstName            First name",
+  "* text      profile:lastName             Last name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* text      ask:unknown                  Address",
+  "* file      resume                       Resume Choose file",
+  "  textarea  skip                         Cover letter",
+  "* textarea  ask:sponsorship              Will you now or in the future require visa sponsorship to live and work in the UK?",
+]
+`;
+
+exports[`real forms, offline > workable-revisionz.html 1`] = `
+[
+  "* text      profile:firstName            First name",
+  "* text      profile:lastName             Last name",
+  "* email     profile:email                Email",
+  "  text      skip                         Headline",
+  "* tel       profile:phone                Phone",
+  "  text      skip                         Address",
+  "* text      ask:missing_profile_value    What city do you live in?",
+  "* text      ask:unknown                  What state or province do you live in?",
+  "* file      resume                       Resume Choose file",
+  "  textarea  skip                         Cover letter",
+  "* text      ask:unknown                  What client business problem did you sell against most recently, and what services engagement came from it?",
+  "* text      ask:unknown                  At an existing client, what did you sell first, and what did you sell next that expanded the relationship?",
+  "* textarea  ask:unknown                  What titles you meet with regularly, and in which industry(ies)?",
+]
+`;
+
+exports[`real forms, offline > workable-weekday.html 1`] = `
+[
+  "* text      profile:firstName            First name",
+  "* text      profile:lastName             Last name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* file      resume                       Resume Choose file",
+  "* text      ask:salary                   What’s your current salary? (in lakhs per annum)",
+  "* text      ask:notice_period            How many days is your notice period?",
+]
+`;
+
+exports[`real forms, offline > workable-xtremax-pte-ltd-.html 1`] = `
+[
+  "* text      profile:firstName            First name",
+  "* text      profile:lastName             Last name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* text      ask:unknown                  Address",
+  "* file      resume                       Resume Choose file",
+  "  textarea  skip                         Cover letter",
+  "* textarea  ask:salary                   What is your current salary? (IDR)",
+]
+`;

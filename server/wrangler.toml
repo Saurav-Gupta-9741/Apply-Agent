@@ -1,0 +1,16 @@
+name = "applyagent-license"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+
+# Create with: npx wrangler kv namespace create LICENSES  (then paste the id below)
+[[kv_namespaces]]
+binding = "LICENSES"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+[vars]
+PUBLIC_BASE_URL = "https://applyagent-license.REPLACE.workers.dev"
+PRICE_INR_PAISE = "14900"   # ₹149
+PRICE_USD_CENTS = "900"     # $9 (needs international payments enabled on your Razorpay account)
+
+# Secrets (never commit): npx wrangler secret put <NAME>
+#   RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, RAZORPAY_WEBHOOK_SECRET, LICENSE_PRIVATE_JWK

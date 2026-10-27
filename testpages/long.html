@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Long application (local test page)</title></head>
+<body style="font:15px system-ui;max-width:640px;margin:32px auto;padding:0 16px">
+  <h1>Data Engineer</h1>
+  <form id="application-form">
+    <div class="field"><label for="fn">First Name *</label><input id="fn" required></div>
+    <div class="field"><label for="ln">Last Name *</label><input id="ln" required></div>
+    <div class="field"><label for="em">Email *</label><input id="em" type="email" required></div>
+    <div id="extra"></div>
+    <button type="submit">Submit</button>
+  </form>
+  <script>
+    // 60 optional questions plus a label containing markup that must never execute anywhere.
+    const extra = document.getElementById("extra");
+    for (let i = 1; i <= 60; i++) {
+      const div = document.createElement("div");
+      div.className = "field";
+      const label = document.createElement("label");
+      label.htmlFor = "q" + i;
+      label.textContent = i === 7 ? '<img src=x onerror="window.__xss=1"> Tricky question' : "Optional question number " + i;
+      const input = document.createElement(i % 3 === 0 ? "textarea" : "input");
+      input.id = "q" + i;
+      div.append(label, input);
+      extra.append(div);
+    }
+  </script>
+</body>
+</html>

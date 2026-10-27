@@ -1,0 +1,11 @@
+Real questions: 247
+Rules only:      fills 61, wrong 0
+Rules + model:   fills 61, wrong 0
+
+Newly filled by the model:
+
+No longer filled (doubted):
+
+Wrong with rules only:
+
+Wrong with rules + model:

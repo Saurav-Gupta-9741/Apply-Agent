@@ -1,0 +1,7013 @@
+{
+ "generatedAt": "2026-10-26T20:14:00.639Z",
+ "rows": [
+  {
+   "platform": "ashby",
+   "company": "Headway",
+   "url": "https://jobs.ashbyhq.com/headway/79549b79-af34-4d39-a053-43bf49adf05c",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Full Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Details",
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Name Pronunciation / Preferred Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Details",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Details",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone Number",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "section": "Details",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Resume",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Details",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Details",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn Profile URL",
+     "control": "url",
+     "required": true,
+     "options": 0,
+     "section": "Details",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Personal Website/Portfolio",
+     "control": "url",
+     "required": false,
+     "options": 0,
+     "section": "Details",
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Please enter your current working location",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Details",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Who is your current or previous employer?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Details",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "I understand and agree that Headway may contact additional references beyond the references you provide to validate your previous employment.",
+     "control": "radio",
+     "required": false,
+     "options": 1,
+     "section": "Details",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "ashby",
+   "company": "Cheiron",
+   "url": "https://jobs.ashbyhq.com/cheiron/a788fdc3-2418-481e-a6c2-3834bf1b8c3b",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Resume",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "resume",
+     "status": "filled"
+    }
+   ]
+  },
+  {
+   "platform": "ashby",
+   "company": "Rainmaker Technology Corporation",
+   "url": "https://jobs.ashbyhq.com/rainmaker/69d0b090-16bc-43cc-a43d-e4896e55eb0e",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Current company",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:currentCompany",
+     "status": "filled"
+    },
+    {
+     "label": "Current location",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Resume",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Additional information",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Twitter",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "GitHub",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:no github in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Portfolio",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "ashby",
+   "company": "Hadrian",
+   "url": "https://jobs.ashbyhq.com/hadrian-automation/7fd37625-df20-4dba-9b91-c4aacf7feabb",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First Name and Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone number",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Current Company",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:currentCompany",
+     "status": "filled"
+    },
+    {
+     "label": "Current Location",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Resume",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Linkedin",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Twitter/X",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Github",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:no github in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Stackoverflow",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Are you legally authorized to work in the United States?",
+     "control": "radio",
+     "required": false,
+     "options": 5,
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "To conform to U.S. Government space technology export regulations, including the International Traffic in Arms Regulations (ITAR) you must be a U.S. citizen, lawful permanent resident of the U.S., protected individual as defined by 8 U.S.C. 1324b(a)(3), or eligible to obtain the required authorizations from the U.S. Department of State. Will you be able to obtain said authorization by date of work start?",
+     "control": "radio",
+     "required": false,
+     "options": 2,
+     "decision": "skip:optional choice",
+     "status": "skipped"
+    },
+    {
+     "label": "This job will be physically based in the office location indicated on this job description. Which of the following describes your current or future situation?",
+     "control": "radio",
+     "required": false,
+     "options": 4,
+     "decision": "skip:optional choice",
+     "status": "skipped"
+    },
+    {
+     "label": "Where did you hear about Hadrian?",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Pre-interview questions",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Why are you applying? What excites you about the opportunity?",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Pre-interview questions",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "What relevant work makes you a great fit for this role?",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Pre-interview questions",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "ashby",
+   "company": "hims-and-hers",
+   "url": "https://jobs.ashbyhq.com/hims-and-hers/fd42066c-b89e-4be2-b369-7d2243795c0b",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Candidate Information",
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Candidate Information",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone Number",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "section": "Candidate Information",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Location",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Candidate Information",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "LinkedIn Profile URL",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Candidate Information",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Resume",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Candidate Information",
+     "decision": "resume",
+     "status": "filled"
+    }
+   ]
+  },
+  {
+   "platform": "ashby",
+   "company": "Mariana Minerals",
+   "url": "https://jobs.ashbyhq.com/marianaminerals/53447aaa-c7ce-439a-a0d1-1970dd34d4c3",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Full Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Email Address",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Resume",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "Location",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "LinkedIn Profile",
+     "control": "url",
+     "required": false,
+     "options": 0,
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Why are you interested in working for Mariana Minerals?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "ashby",
+   "company": "Jobber",
+   "url": "https://jobs.ashbyhq.com/jobber/638043f1-0683-4523-b26c-5b6468d3ae26",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "👤 Your Information",
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Preferred first name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "👤 Your Information",
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "👤 Your Information",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone Number",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "section": "👤 Your Information",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Resume",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "👤 Your Information",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "👤 Your Information",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "Location",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "👤 Your Information",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "LinkedIn Profile",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "👤 Your Information",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "How did you hear about this job?",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "❓Need-to-Know Questions",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "What are your salary expectations for your next role?",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "❓Need-to-Know Questions",
+     "decision": "ask:salary",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "ashby",
+   "company": "Cohere",
+   "url": "https://jobs.ashbyhq.com/cohere/ada41b39-21a9-467c-a22c-9e907524af40",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Phone Number",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Location",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "LinkedIn",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Resume",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Are you authorized to work in the country you currently reside in?",
+     "control": "radio",
+     "required": false,
+     "options": 2,
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "workable",
+   "company": "Lamour",
+   "url": "https://apply.workable.com/j/208E4D6B7B",
+   "outcome": "no_form"
+  },
+  {
+   "platform": "workable",
+   "company": "Xtremax Pte. Ltd.",
+   "url": "https://apply.workable.com/j/4E6898CDF1",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Address",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "ask:unknown",
+     "status": "already_filled"
+    },
+    {
+     "label": "Resume Choose file",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Profile",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover letter",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Details",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "What is your current salary? (IDR)",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Details",
+     "decision": "ask:salary",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "workable",
+   "company": "LUXASIA",
+   "url": "https://apply.workable.com/j/008E0FDBEE",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Headline",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Address",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "skip:optional, not in profile",
+     "status": "already_filled"
+    },
+    {
+     "label": "Photo Choose file",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Summary",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Profile",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Resume Choose file",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Profile",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover letter",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Details",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "When is the earliest you can start work?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Details",
+     "decision": "ask:notice_period",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "lever",
+   "company": "Commonwealth Fusion Systems",
+   "url": "https://jobs.lever.co/cfsenergy/a05832ae-41df-4e2d-ab86-dd3e2c4877d4",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Resume/CV  ATTACH RESUME/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Full name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "pronouns",
+     "control": "checkbox_group",
+     "required": false,
+     "options": 10,
+     "section": "Submit your application",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Custom",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Current location",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Current company",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:currentCompany",
+     "status": "filled"
+    },
+    {
+     "label": "LinkedIn URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Twitter URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "GitHub URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no github in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Portfolio URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Other website",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Please Upload a Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "Please tell us what interested you to apply to CFS",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "If offered a position at CFS, will you be able to start within 3 weeks?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Optional: Additional information may be added in reference to a start date.",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "decision": "ask:notice_period",
+     "status": "needs_user"
+    },
+    {
+     "label": "The following question is asked for the purpose of ensuring compliance with U.S. Export Control Laws. Are you one of the following: a U.S. citizen, a U.S. national, a lawful permanent resident of the U.S. (e.g. green card holder), or a protected individual as defined by 8 U.S.C. 1324b(a)(3) (e.g., a refugee or asylee)?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Export Control Laws 1.0",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "If you answered “No” to the above, please provide the country or countries of which you are a current citizen or national, and if applicable, where you are currently granted lawful permanent resident status. If you answered “Yes,” please enter N/A",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Export Control Laws 1.0",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Please tell us what interested you to apply to CFS",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Intern/Co-op",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Please list specific dates of internship availability- Include start date and end date.",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Intern/Co-op",
+     "decision": "ask:notice_period",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you interested in an Intern position (3 months) or a Co-op position (4 or 6 months)",
+     "control": "radio",
+     "required": true,
+     "options": 3,
+     "section": "Intern/Co-op",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Most positions require the intern to be onsite at one of our locations. Will you be available to work onsite for the duration of the internship?",
+     "control": "radio",
+     "required": true,
+     "options": 5,
+     "section": "Intern/Co-op",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Please list the school or university you will be enrolled in during the internship or co-op?",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Intern/Co-op",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "If offered a position at CFS, will you be able to start within 3 weeks?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Intern/Co-op",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Gender",
+     "control": "select",
+     "required": false,
+     "options": 3,
+     "section": "U.S. Equal Employment Opportunity information (Completion is voluntary and will ",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Race",
+     "control": "select",
+     "required": false,
+     "options": 8,
+     "section": "U.S. Equal Employment Opportunity information (Completion is voluntary and will ",
+     "decision": "ask:race",
+     "status": "needs_user"
+    },
+    {
+     "label": "Veteran status",
+     "control": "select",
+     "required": false,
+     "options": 3,
+     "section": "U.S. Equal Employment Opportunity information (Completion is voluntary and will ",
+     "decision": "ask:veteran",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "lever",
+   "company": "RioCan",
+   "url": "https://jobs.lever.co/riocan/a5b33eed-cd93-4137-aedf-ec527b3d6bdb",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Resume/CV  ATTACH RESUME/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Full name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Current location",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Current company",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:currentCompany",
+     "status": "filled"
+    },
+    {
+     "label": "LinkedIn URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Portfolio URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Other URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Are you legally eligible to work in Canada?",
+     "control": "select",
+     "required": true,
+     "options": 2,
+     "section": "General Application Questions",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you comfortable with the posted range?",
+     "control": "select",
+     "required": true,
+     "options": 2,
+     "section": "General Application Questions",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "lever",
+   "company": "EQ Bank",
+   "url": "https://jobs.lever.co/eqbank/c924506b-22ad-4906-aea5-61d9b79163f3",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Resume/CV  ATTACH RESUME/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Full name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Current location",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Current company",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:currentCompany",
+     "status": "filled"
+    },
+    {
+     "label": "What is the name of the school you are currently attending?",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "School Information",
+     "decision": "profile:school",
+     "status": "filled"
+    },
+    {
+     "label": "Which year of studies are you currently in?",
+     "control": "radio",
+     "required": true,
+     "options": 5,
+     "section": "Year of Studies",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Do you anticipate having any challenges with clearing a background check, including criminal, credit, education, employment Verification?",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Background check question",
+     "decision": "ask:criminal",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you legally entitled to work in Canada?",
+     "control": "select",
+     "required": true,
+     "options": 2,
+     "section": "Work Authorization",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "Gender Identity:",
+     "control": "radio",
+     "required": false,
+     "options": 5,
+     "section": "Demographic Survey for Equitable Bank",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Do you self-identify as an Indigenous or Aboriginal person of North America (Including First Nations, Métis, Inuit)?",
+     "control": "radio",
+     "required": false,
+     "options": 3,
+     "section": "Demographic Survey for Equitable Bank",
+     "decision": "skip:optional choice",
+     "status": "skipped"
+    },
+    {
+     "label": "Do you self-identify as a person with a disability? Visible Minority Persons - People experience disabilities in different ways, visible and invisible. Examples include (but are not limited to): • Acquired brain injury • ADHD • Autism spectrum disorder • Chronic health disability (e.g. Crohn’s disease, epilepsy, asthma, diabetes, HIV/AIDS, cancer, etc.) • Coordination/dexterity disability (e.g. arthritis, cerebral palsy, cystic fibrosis, multiple sclerosis) • Developmental impairment • Eating disorder • Hearing impairment • Learning disability (dyslexia, dyscalculia) • Mental health disability (e.g. chronic depression, anxiety disorder, bipolar disorder, etc.) • Mobility impairment • Speech impairment • Vision impairment (not correctable by glasses or contact lenses)",
+     "control": "radio",
+     "required": false,
+     "options": 3,
+     "section": "Demographic Survey for Equitable Bank",
+     "decision": "ask:disability",
+     "status": "needs_user"
+    },
+    {
+     "label": "Do you self-identify as a racialized person? Racialized persons - For the purposes of employment equity, members of such groups in Canada are persons other than Indigenous or Aboriginal People, who are non-Caucasian in race or non-white in colour, regardless of place of birth or citizenship. This includes (but is not limited to): • Black (including African, Caribbean, North American etc.) • Latin American/Hispanic (including Indigenous persons from Central and South America) • East Asian (e.g., Chinese, Japanese, Korean) • South Asian (e.g., Indian, Pakistani, Sri Lankan, etc.) • Southeast Asian (e.g.Filipino, Laotian, Vietnamese, etc.) • Middle Eastern (e.g., Syrian, Afghani, Iranian, etc.) • Persons of Mixed Origin (e.g., with one parent in one of the visible minority groups listed above)",
+     "control": "radio",
+     "required": false,
+     "options": 3,
+     "section": "Demographic Survey for Equitable Bank",
+     "decision": "ask:race",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "workable",
+   "company": "9D Technologies",
+   "url": "https://apply.workable.com/j/383C15296F",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Headline",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Address",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "skip:optional, not in profile",
+     "status": "already_filled"
+    },
+    {
+     "label": "Photo Choose file",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "Summary",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Profile",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Resume Choose file",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Profile",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover letter",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Details",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "workable",
+   "company": "TopFloor",
+   "url": "https://apply.workable.com/j/88D949113C",
+   "outcome": "no_form"
+  },
+  {
+   "platform": "lever",
+   "company": "Allegiant Air",
+   "url": "https://jobs.lever.co/allegiantair/dce29752-293e-4ee7-ada4-b99f52bf6d56",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Resume/CV  ATTACH RESUME/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Full name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "pronouns",
+     "control": "checkbox_group",
+     "required": false,
+     "options": 10,
+     "section": "Submit your application",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Custom",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Current location",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Current company",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:currentCompany",
+     "status": "filled"
+    },
+    {
+     "label": "LinkedIn URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Twitter URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "GitHub URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no github in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Portfolio URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Other website",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Are you at least 18 years of age?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Application Questions - General",
+     "decision": "ask:age",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you legally authorized to work in the United States?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Application Questions - General",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "Will you now or in the future require employment-based visa sponsorship to work in the US? If, when your current work authorization expires, you may require employment-based visa sponsorship to continue working with Allegiant, please select ‘Yes.’ Examples of statuses that may require current or future sponsorship include, but are not limited to: H-1B, H-1B1, E-2, E-3, L-1, TN, O-1, F-1 (CPT, OPT, and STEM OPT), and J-1. Allegiant is unable to provide employment sponsorship now or in the future.",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Application Questions - General",
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    },
+    {
+     "label": "What is the highest level of education completed? Do not include degrees that are in progress or with a future graduation date.",
+     "control": "select",
+     "required": true,
+     "options": 6,
+     "section": "Application Questions - General",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Please include your completed degree program and school name for verification purposes. (Example: B.S. in Business Administration, UNLV). If you selected “High School Diploma or GED,” enter your high school name.",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Application Questions - General",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "In the last 10 years, have you ever been involuntarily terminated or asked to resign your employment? If Yes - please explain below | If No - please answer N/A.",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Application Questions - General",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Do you have a non-compete agreement or other legal written restrictions that would restrict you from performing work required in this role? If Yes - please provide a copy of the non-compete agreement or other legal written restrictions to your recruiter.",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Application Questions - General",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Do you have recall rights to any airline role? If Yes - which airline? | If No - please answer N/A.",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Application Questions - General",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you related to anyone who is currently working for Allegiant? If Yes - please list the name of the person(s) and their relationship to you. | If No - please answer N/A.",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Application Questions - General",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Have you ever been employed by an Allegiant company, Sun Country, or through a Third Party Contractor Agency onsite?",
+     "control": "radio",
+     "required": true,
+     "options": 7,
+     "section": "Application Questions - General",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "I Acknowledge",
+     "control": "checkbox",
+     "required": true,
+     "options": 0,
+     "section": "Application Questions - General",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    },
+    {
+     "label": "What is your Legal First Name?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Application Questions - General",
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "What is your Legal Last Name?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Application Questions - General",
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Do you consent to Allegiant sharing your application and candidate information with Sun Country Airlines, an affiliated subsidiary of Allegiant Travel Company, for employment consideration?",
+     "control": "checkbox_group",
+     "required": true,
+     "options": 2,
+     "section": "Application Questions - General",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you currently enrolled in or have graduated within the past 12 months from an accredited college, university or state approved vocational program?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Intern $15-20/hour - Total Rewards",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "The internship pay is $15.00-$20.00 per hour. Does this fit within the range you are looking for?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Intern $15-20/hour - Total Rewards",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you able to work at least 30 hours per week Monday through Friday?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Intern $15-20/hour - Total Rewards",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "This position requires working at our Las Vegas, NV headquarters. Please select the option that best describes your current situation:",
+     "control": "radio",
+     "required": true,
+     "options": 3,
+     "section": "Intern $15-20/hour - Total Rewards",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "This Internship starts ASAP and is a 6 month commitment. Does this work for you?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "HR Intern",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Gender",
+     "control": "select",
+     "required": false,
+     "options": 3,
+     "section": "U.S. Equal Employment Opportunity information (Completion is voluntary and will ",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Race",
+     "control": "select",
+     "required": false,
+     "options": 8,
+     "section": "U.S. Equal Employment Opportunity information (Completion is voluntary and will ",
+     "decision": "ask:race",
+     "status": "needs_user"
+    },
+    {
+     "label": "Veteran status",
+     "control": "select",
+     "required": false,
+     "options": 3,
+     "section": "Self-identification of veteran status (Completion is voluntary and will not subj",
+     "decision": "ask:veteran",
+     "status": "needs_user"
+    },
+    {
+     "label": "Disability status",
+     "control": "select",
+     "required": false,
+     "options": 3,
+     "section": "How do you know if you have a disability?",
+     "decision": "ask:disability",
+     "status": "needs_user"
+    },
+    {
+     "label": "Allegiant has my consent to contact me about future job opportunities.",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "How do you know if you have a disability?",
+     "decision": "skip:optional choice",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "workable",
+   "company": "Workana Premium",
+   "url": "https://apply.workable.com/j/86F4ADCB73",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Address",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "ask:unknown",
+     "status": "already_filled"
+    },
+    {
+     "label": "Summary",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Profile",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Resume Choose file",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Profile",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "What is your expected MONTHLY salary in USD as a contractor?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Details",
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "Qual é a sua expectativa salarial mensal em R$ para atuar como PJ?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Details",
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "Which AI tools do you use in your daily work and what do you use them for? (Please list the tool and describe its specific use case.)",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Details",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "lever",
+   "company": "Service Wire Company",
+   "url": "https://jobs.lever.co/servicewire/a07d6af4-9aa9-4b8e-b14c-9e44f6c088e0",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Resume/CV  ATTACH RESUME/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Full name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Current location",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Current company",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:currentCompany",
+     "status": "filled"
+    },
+    {
+     "label": "LinkedIn URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Twitter URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "GitHub URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no github in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Portfolio URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Other website",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Did a current Service Wire employee refer you?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "TX/WV General Application Questions",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you willing to undergo a background check, in accordance with local law/regulations?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "TX/WV General Application Questions",
+     "decision": "ask:criminal",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you willing to take a drug test, in accordance with local law/regulations?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "TX/WV General Application Questions",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you legally authorized to work in the United States?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "TX/WV General Application Questions",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "Will you now, or in the future, require sponsorship for employment/STEM-OPT/student visa status (e.g. H-1B, F-1, M-1 etc...)",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "TX/WV General Application Questions",
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    },
+    {
+     "label": "I certify that all the information furnished in this application or, in connection, with this application is true and complete. I understand that any misstatement(s), falsification(s), or omission(s) of information are grounds for refusal to hire or, if hired, grounds for termination anytime Service Wire Company (referred hereto as the Company) becomes aware of such information.",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "TX/WV General Application Questions",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    },
+    {
+     "label": "I authorize the Company, or anyone acting on the Company’s behalf, to contact and obtain information from all references, employers, public agencies, licensing authorities, educational institutions, and otherwise to verify the accuracy of all furnished information.",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "TX/WV General Application Questions",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "I understand that nothing contained in this application is intended to create or imply a contract for continued employment. If hired, I understand that my employment will be “at-will” or can be terminated at anytime, with or without cause and/or notice, by either the Company or myself. I understand and agree that, if hired, I will be required to abide by all rules, policies, and regulations of the Company and those conditions of employment can be changed, in whole or in part, by the Company at anytime in its sole discretion.",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "TX/WV General Application Questions",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    },
+    {
+     "label": "I understand the Company is committed to maintaining a drug and alcohol free workplace. As permitted by law, I understand the Company requires drug and alcohol screening as part of the hiring process. If employed, I may be required to submit to alcohol/drug testing under certain circumstances, as permitted by law, during my employment. I consent to such testing and understand that I will be disqualified for employment consideration and/or further employment if I receive a confirmed, positive test result.",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "TX/WV General Application Questions",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    },
+    {
+     "label": "I understand that as a condition of employment, I will be required to provide current proof of identity and current legal authorization to work in the United States. Service Wire is an E-Verify participating employer.",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "TX/WV General Application Questions",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    },
+    {
+     "label": "I consent to receive information/marketing text messages from Service Wire. I am aware that message frequency will vary and that Msg & data rates may apply. I confirm that I understand I can respond \"STOP\" at any time to cancel, or \"HELP\" at any time for help",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "TX/WV General Application Questions",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    },
+    {
+     "label": "Do you live/go to school near our Culloden, WV facility? (30-40 miles)",
+     "control": "radio",
+     "required": false,
+     "options": 2,
+     "section": "Intern Question - CWV",
+     "decision": "skip:optional choice",
+     "status": "skipped"
+    },
+    {
+     "label": "If a current Service Wire employee referred you, list their name below, please.",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Employee Referral",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Gender",
+     "control": "select",
+     "required": false,
+     "options": 3,
+     "section": "U.S. Equal Employment Opportunity information (Completion is voluntary and will ",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Race",
+     "control": "select",
+     "required": false,
+     "options": 8,
+     "section": "U.S. Equal Employment Opportunity information (Completion is voluntary and will ",
+     "decision": "ask:race",
+     "status": "needs_user"
+    },
+    {
+     "label": "Veteran status",
+     "control": "select",
+     "required": false,
+     "options": 3,
+     "section": "U.S. Equal Employment Opportunity information (Completion is voluntary and will ",
+     "decision": "ask:veteran",
+     "status": "needs_user"
+    },
+    {
+     "label": "By applying for this position, your data will be processed as per Service Wire's .",
+     "control": "checkbox",
+     "required": true,
+     "options": 0,
+     "section": "U.S. Equal Employment Opportunity information (Completion is voluntary and will ",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Service Wire has my consent to contact me about future job opportunities.",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "U.S. Equal Employment Opportunity information (Completion is voluntary and will ",
+     "decision": "skip:optional choice",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "greenhouse",
+   "company": "LG Energy Solution Arizona",
+   "url": "https://job-boards.greenhouse.io/lgenergyaz/jobs/5454084008",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Preferred First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Resume/CV",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn Profile",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Website",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Are you legally eligible to work in the United States?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "Will you now or in the future require sponsorship to work in the US?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    },
+    {
+     "label": "What is your annual salary expectation in applying for this role?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you able to relocate as needed?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:relocation",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you able to travel as necessary for work?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you flexible with various work schedules and work hours as necessary?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "When is the earliest available start date if you were offered a position with us?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:notice_period",
+     "status": "needs_user"
+    },
+    {
+     "label": "Could you provide a name of LG Energy Solution Arizona employee who referred you to this position?",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Gender",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you Hispanic/Latino?",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:race",
+     "status": "needs_user"
+    },
+    {
+     "label": "Veteran Status",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:veteran",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "greenhouse",
+   "company": "Kinder's",
+   "url": "https://job-boards.greenhouse.io/kinders/jobs/5453366008",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Preferred First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Location (City)",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Resume/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn Profile",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Are you at least 18 years old?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you legally authorized to work in the United States?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "Will you now or in the future require sponsorship for employment visa status? Please note: Candidates working on F-1 OPT or STEM OPT should answer \"No\" only if they will never require employer sponsorship in the future.",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "greenhouse",
+   "company": "LogicSource",
+   "url": "https://job-boards.greenhouse.io/logicsource/jobs/4451303009",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Preferred First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Resume/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "Address",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "How did you hear about us?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Employee referring you?",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Have you ever worked for LogicSource Inc. or one of its clients?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "If you have ever worked for LogicSource or one of its clients, which one and when?",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "What is your preferred work arrangement?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "How often are you willing to travel?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Desired Salary Range",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you legally authorized to work in the United States?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "Will you now or in the future require sponsorship for employment authorization?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    },
+    {
+     "label": "I certify that my answers are true and complete to the best of my knowledge. If this application leads to employment, I understand that false or misleading information in my application or interview may result in my employment being terminated.",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    },
+    {
+     "label": "Gender",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you Hispanic/Latino?",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:race",
+     "status": "needs_user"
+    },
+    {
+     "label": "Veteran Status",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:veteran",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "greenhouse",
+   "company": "Baringa",
+   "url": "https://job-boards.eu.greenhouse.io/baringa/jobs/4836693101",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Preferred First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Resume/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "How did you hear about us?",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "What best describes your right to work status?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "Will you now or in the future require sponsorship for an employment Visa to work in the country for which you are applying?",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you comfortable with traveling to client site/local office?",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "What is your current notice period?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:notice_period",
+     "status": "needs_user"
+    },
+    {
+     "label": "Have you ever been employed at Baringa before?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Do you require any reasonable adjustments during your recruitment process?",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "greenhouse",
+   "company": "WPP",
+   "url": "https://job-boards.greenhouse.io/wpp/jobs/8829783002",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Location (City)",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Resume/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "What is your current CTC?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "What is your expected CTC?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "What is your notice period?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:notice_period",
+     "status": "needs_user"
+    },
+    {
+     "label": "What is your present resident location & PIN code?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Have you worked on the following aspect of Payroll?",
+     "control": "checkbox_group",
+     "required": true,
+     "options": 4,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "greenhouse",
+   "company": "Success Academy Charter Schools",
+   "url": "https://job-boards.greenhouse.io/successacademycharterschool/jobs/5096321008",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Preferred First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Location (City)",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Resume/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "School",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:school",
+     "status": "filled"
+    },
+    {
+     "label": "Degree",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:degree",
+     "status": "filled"
+    },
+    {
+     "label": "Street Address 1",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Street Address 2",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "City",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "State",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Zip Code",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "LinkedIn Profile",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Website",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "If you selected \"Other\" as your school, please list the name here.",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:school",
+     "status": "filled"
+    },
+    {
+     "label": "Have you completed your Bachelor's Degree?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "If Yes, please identify your cumulative undergraduate GPA",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Please list your current or most recent employer.",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:currentCompany",
+     "status": "filled"
+    },
+    {
+     "label": "How many years of relevant experience do you have?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "What are your salary expectations for a new position?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "Earliest Start Month",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:notice_period",
+     "status": "needs_user"
+    },
+    {
+     "label": "How did you hear about us?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Have you previously worked for Success Academy Charter Schools?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "If you have previously worked at Success Academy, please list your work email address.",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Are you a Success Academy alum?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "If yes, please list the name of the Success Academy school that you last attended.",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Are you a parent of a current or former Success Academy scholar?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "If you are a parent of a current or former Success Academy scholar, please provide their name.",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Do you have a family member or close personal relationship with anyone in the Success Academy Charter Schools' community (includes employees, students, and students' families)?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "If you have a family member or close personal relationship with anyone in the Success Academy Charter Schools' community, please provide their name.",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Are you authorized to work in the United States?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "Will you now or in the future require sponsorship for employment visa status in order to work for Success Academy Charter Schools? Before your employment begins, we will have to obtain verification of your authorization to work in the United States. Any offer of employment is contingent upon satisfactory verification of this professional requirement.",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you able and willing to work a hybrid schedule that requires in-office attendance on Tuesday, Wednesday, and Thursday?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you relocating for this position?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:relocation",
+     "status": "needs_user"
+    },
+    {
+     "label": "Do you foresee any conflicts with fulfilling the requirements of a full-time position due to school or other commitments?",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Would you like to receive communications via SMS and/or WhatsApp to the number provided about your application process?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Gender",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you Hispanic/Latino?",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:race",
+     "status": "needs_user"
+    },
+    {
+     "label": "Veteran Status",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:veteran",
+     "status": "needs_user"
+    },
+    {
+     "label": "Disability Status",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification of Disability",
+     "decision": "ask:disability",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "greenhouse",
+   "company": "Sony Music Entertainment",
+   "url": "https://job-boards.greenhouse.io/sonymusicentertainment/jobs/8871782002",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Preferred First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Resume/CV",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "School",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:school",
+     "status": "filled"
+    },
+    {
+     "label": "LinkedIn Profile",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Are you legally authorized to work in the United States?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "Will you now, or in the future, require immigration sponsorship by our company to attain or maintain your employment eligibility (e.g., H-1B, E-3, TN, O-1, STEM OPT, or any immigration work authorization requiring a written submission from the company to a government agency)?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    },
+    {
+     "label": "What is your desired salary target?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "Have you been previously employed at Sony Music Entertainment?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "I certify that all information I have supplied on this form is correct to the best of my knowledge. I understand that omissions or deliberate misinformation will disqualify my application and if hired, would serve as grounds for dismissal.",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    },
+    {
+     "label": "Gender",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you Hispanic/Latino?",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:race",
+     "status": "needs_user"
+    },
+    {
+     "label": "Veteran Status",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:veteran",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "greenhouse",
+   "company": "Alpha Sense",
+   "url": "https://job-boards.greenhouse.io/alphasense/jobs/8632430002",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Preferred First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Location (City)",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Resume/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn Profile",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Do you have experience in Live Chat with Customers?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "I confirm I have read, understood and accept the AlphaSense Candidate Privacy Notice and I consent to AlphaSense processing my personal data.",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "greenhouse",
+   "company": "AlphaSense India",
+   "url": "https://job-boards.greenhouse.io/alphasenseindia/jobs/8632429002",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Preferred First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Location (City)",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Resume/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn Profile",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Do you have experience in Live Chat with Customers?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "I confirm I have read, understood and accept the AlphaSense Candidate Privacy Notice and I consent to AlphaSense processing my personal data.",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "smartrecruiters",
+   "company": "ServiceNow",
+   "url": "https://jobs.smartrecruiters.com/ServiceNow/744000157740014-software-engineer",
+   "outcome": "robot_check",
+   "openedFromJobPage": true
+  },
+  {
+   "platform": "greenhouse",
+   "company": "Turing",
+   "url": "https://job-boards.greenhouse.io/turing/jobs/6115695004",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Preferred First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Location (City)",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Resume/CV",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn Profile",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Please share your highest qualification, college/university, graduation year, and exact degree specialization or branch. If you hold multiple degrees, please include your undergraduate qualification as well.",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Notice Period",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:notice_period",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "greenhouse",
+   "company": "SingleStore-LinkedIn",
+   "url": "https://job-boards.greenhouse.io/singlestore-linkedin/jobs/7954717",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Preferred First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Resume/CV",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn Profile",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Do you have experience in coding on one of the systems programming language and scripting?",
+     "control": "checkbox_group",
+     "required": true,
+     "options": 4,
+     "section": "Do you have experience in coding on one of the systems programming language and ",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "How many years of total/relevant work experience do you hold?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Do you have experience in coding on one of the systems programming language and ",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Experience with Low-level Monitoring & Profiling",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Do you have experience in coding on one of the systems programming language and ",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Do you have experience with Distributed SQL Databases",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Do you have experience in coding on one of the systems programming language and ",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you based in India?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Do you have experience in coding on one of the systems programming language and ",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "greenhouse",
+   "company": "Single Store",
+   "url": "https://job-boards.greenhouse.io/singlestore/jobs/7863285",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Preferred First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Resume/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "School",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:school",
+     "status": "filled"
+    },
+    {
+     "label": "Degree",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:degree",
+     "status": "filled"
+    },
+    {
+     "label": "Discipline",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:discipline",
+     "status": "filled"
+    },
+    {
+     "label": "Start date year",
+     "control": "number",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:notice_period",
+     "status": "needs_user"
+    },
+    {
+     "label": "End date year",
+     "control": "number",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn Profile",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Website",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "How many years of experience do you have debugging, optimizing, and maintaining complex software systems in a professional environment?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "What is the highest level of education you have completed?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Which programming languages have you used professionally?",
+     "control": "checkbox_group",
+     "required": true,
+     "options": 7,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "How did you hear about this opportunity? If you were referred by a current employee or contact, please provide their full name and email address.",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Which programming languages have you used professionally?",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Gender",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you Hispanic/Latino?",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:race",
+     "status": "needs_user"
+    },
+    {
+     "label": "Veteran Status",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:veteran",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "lever",
+   "company": "Keyloop",
+   "url": "https://jobs.lever.co/keyloop/2074d8c8-1c9b-46ae-a5c2-d77217e2abd3",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Resume/CV  ATTACH RESUME/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Full name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "pronouns",
+     "control": "checkbox_group",
+     "required": false,
+     "options": 10,
+     "section": "Submit your application",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Custom",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Current location",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Current company",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:currentCompany",
+     "status": "filled"
+    },
+    {
+     "label": "LinkedIn URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Twitter URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "GitHub URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no github in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Portfolio URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Other website",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Are you currently authorised to work in the country of the job without any restrictions?",
+     "control": "radio",
+     "required": false,
+     "options": 2,
+     "section": "Right to Work",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "Will you now or in future require visa sponsorship to work in country of the job",
+     "control": "radio",
+     "required": false,
+     "options": 2,
+     "section": "Right to Work",
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    },
+    {
+     "label": "Please confirm type of right to work document",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Right to Work Document Type",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "What is your experience with AI Tools like Claude?",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "AI Tools",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Do you have minimum 3+ years of full time experience with .NET & C#? (excluding internships)",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Please answer the screening questions mentioned below:",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "What is your official notice period? Please mention official LWD if serving notice.",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Please answer the screening questions mentioned below:",
+     "decision": "ask:notice_period",
+     "status": "needs_user"
+    },
+    {
+     "label": "What is your experience with AI-assisted development tools (e.g., GitHub Copilot, Cursor, Claude Code)?",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Please answer the screening questions mentioned below:",
+     "decision": "ask:missing_profile_value",
+     "status": "needs_user"
+    },
+    {
+     "label": "What is your annual salary expectations?",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Please answer the screening questions mentioned below:",
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "What is your location?",
+     "control": "select",
+     "required": false,
+     "options": 250,
+     "section": "Demographic Survey",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Yes, Keyloop can contact me about future job opportunities for up to 1 year Privacy policy",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "Demographic Survey for Keyloop",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "lever",
+   "company": "Pyka",
+   "url": "https://jobs.lever.co/pyka/374590a5-498f-4257-ac5f-fe884d42ca6f",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Resume/CV  ATTACH RESUME/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Full name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "pronouns",
+     "control": "checkbox_group",
+     "required": false,
+     "options": 10,
+     "section": "Submit your application",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Custom",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Current location",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Current company",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:currentCompany",
+     "status": "filled"
+    },
+    {
+     "label": "LinkedIn URL",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Links",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Twitter URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "GitHub URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no github in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Portfolio URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Other URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "This role is based in Alameda, CA, and requires on-site work five days per week. Are you able to reliably commute to Alameda for this schedule?",
+     "control": "select",
+     "required": true,
+     "options": 2,
+     "section": "Logistical Questions",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you legally authorized to work in the United States?",
+     "control": "select",
+     "required": true,
+     "options": 2,
+     "section": "Logistical Questions",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "How did you hear about this position?",
+     "control": "select",
+     "required": true,
+     "options": 15,
+     "section": "Logistical Questions",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "If you chose \"Other\" or \"Employee Referral\" above, please specify:",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Logistical Questions",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "What are your annual salary and variable pay expectations for this role?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Compensation expectations (salary and variable)",
+     "decision": "ask:salary",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "lever",
+   "company": "Shield AI",
+   "url": "https://jobs.lever.co/shieldai/1f8803d4-b87b-42a2-aa2a-85de9655702a",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "Resume/CV  ATTACH RESUME/CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Full name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Current location",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Current company",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Submit your application",
+     "decision": "profile:currentCompany",
+     "status": "filled"
+    },
+    {
+     "label": "LinkedIn URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Twitter URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "GitHub URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no github in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Portfolio URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Other website",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Links",
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Are you authorized to work in the United States?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Compliance with work authorization",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "Will you require sponsorship for employment now or in the future?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Compliance with work authorization",
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    },
+    {
+     "label": "If yes, what type of sponsorship?",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Compliance with work authorization",
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    },
+    {
+     "label": "This position may require access to information and technology that is subject to export controls, such as EAR. Are you any of the following?",
+     "control": "radio",
+     "required": true,
+     "options": 4,
+     "section": "Export Control Requirements",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "If you selected \"A protected Individual\" OR \"Other\" to the above question, please explain further.",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Export Control Requirements",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Shield AI provides technology, services, and support to the United States military and allied forces with their various missions. If selected for employment with Shield AI, your contributions will directly relate to and/or support these missions. Are there any reasons why you would not be able to fully contribute in support of the U.S. military and allied forces?",
+     "control": "radio",
+     "required": true,
+     "options": 3,
+     "section": "Mission",
+     "decision": "ask:veteran",
+     "status": "needs_user"
+    },
+    {
+     "label": "If you selected other or would like to expand on the above, feel free to do so below:",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Mission",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "How did you hear about us?",
+     "control": "radio",
+     "required": true,
+     "options": 9,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "If \"Industry Conference\" or \"Other,\" please provide more details:",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "How did you hear about us?",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Please state your full legal name:",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Full Legal Name",
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Are you a transitioning service member?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Fellowship question/Transitioning Service Member",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "If yes, what partnership program are you working with?",
+     "control": "radio",
+     "required": false,
+     "options": 3,
+     "section": "Fellowship question/Transitioning Service Member",
+     "decision": "skip:optional choice",
+     "status": "skipped"
+    },
+    {
+     "label": "If other, please provide further details",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Fellowship question/Transitioning Service Member",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "When are you available to start your fellowship?",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Fellowship question/Transitioning Service Member",
+     "decision": "ask:notice_period",
+     "status": "needs_user"
+    },
+    {
+     "label": "When are you available for full time work?",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Fellowship question/Transitioning Service Member",
+     "decision": "ask:notice_period",
+     "status": "needs_user"
+    },
+    {
+     "label": "What full time job(s) are you applying for?",
+     "control": "textarea",
+     "required": true,
+     "options": 0,
+     "section": "Fellowship question/Transitioning Service Member",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you local to or willing to relocate?",
+     "control": "select",
+     "required": true,
+     "options": 2,
+     "section": "Work Location Availability",
+     "decision": "ask:relocation",
+     "status": "needs_user"
+    },
+    {
+     "label": "What office(s) would you be willing to relocate to? (Select all that apply)",
+     "control": "checkbox_group",
+     "required": false,
+     "options": 7,
+     "section": "Work Location Availability",
+     "decision": "ask:relocation",
+     "status": "needs_user"
+    },
+    {
+     "label": "If you selected international, what location(s)?",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Work Location Availability",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Gender",
+     "control": "select",
+     "required": false,
+     "options": 3,
+     "section": "U.S. Equal Employment Opportunity information (Completion is voluntary and will ",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Race",
+     "control": "radio",
+     "required": false,
+     "options": 8,
+     "section": "U.S. Equal Employment Opportunity information (Completion is voluntary and will ",
+     "decision": "ask:race",
+     "status": "needs_user"
+    },
+    {
+     "label": "Veteran status",
+     "control": "select",
+     "required": false,
+     "options": 3,
+     "section": "Self-identification of veteran status (Completion is voluntary and will not subj",
+     "decision": "ask:veteran",
+     "status": "needs_user"
+    },
+    {
+     "label": "Disability status",
+     "control": "select",
+     "required": false,
+     "options": 3,
+     "section": "How do you know if you have a disability?",
+     "decision": "ask:disability",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "smartrecruiters",
+   "company": "reitmanscanadalteltd",
+   "url": "https://jobs.smartrecruiters.com/ReitmansCanadaLteLtd/744000157549109-manager-strategic-sourcing",
+   "outcome": "robot_check",
+   "openedFromJobPage": true
+  },
+  {
+   "platform": "smartrecruiters",
+   "company": "AECOM",
+   "url": "https://jobs.smartrecruiters.com/AECOM2/744000157537739-manager-advisory-project-finance-commercial-",
+   "outcome": "robot_check",
+   "openedFromJobPage": true
+  },
+  {
+   "platform": "smartrecruiters",
+   "company": "Wabtec",
+   "url": "https://jobs.smartrecruiters.com/Wabtec/3743990016379026-manager-it-applications-program-management",
+   "outcome": "robot_check",
+   "openedFromJobPage": true
+  },
+  {
+   "platform": "smartrecruiters",
+   "company": "Sia",
+   "url": "https://jobs.smartrecruiters.com/Sia/744000157511890-manager-transport-manufacturing-retail",
+   "outcome": "no_form"
+  },
+  {
+   "platform": "smartrecruiters",
+   "company": "Cornerstone Building Brands",
+   "url": "https://jobs.smartrecruiters.com/CornerstoneBuildingBrandsCareers/3743990016375566-manager-quality-assurance-",
+   "outcome": "robot_check",
+   "openedFromJobPage": true
+  },
+  {
+   "platform": "bamboohr",
+   "company": "adistec",
+   "url": "https://adistec.bamboohr.com/careers/829",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Address",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "City",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Province",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Postal Code",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "file-input",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Date Available",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Website, Blog or Portfolio",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Conoce a algún trabajador de Adistec? indique su nombre",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Tiene experiencia previa en el cargo a postular? Coméntanos",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Indique sus pretensiones de renta líquida",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "ask:salary",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "bamboohr",
+   "company": "maplr",
+   "url": "https://maplr.bamboohr.com/careers/169",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Address",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "City",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Postal Code",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "file-input",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Date Available",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Desired Pay",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "Website, Blog or Portfolio",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Parles-tu couramment le français ?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Ton niveau d'anglais te permet-il de travailler avec de la documentation et des interlocuteurs anglophones ?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Ton niveau d'anglais te permet-il de travailler avec de la documentation et des ",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "As-tu déjà le droit de travailler au Canada (citoyenneté, résidence permanente ou permis de travail valide) ?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "As-tu déjà le droit de travailler au Canada (citoyenneté, résidence permanente o",
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "Le mandat est hybride, avec 2 jours par semaine obligatoires sur place à Montréal. Est-ce que cela te convient ?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Le mandat est hybride, avec 2 jours par semaine obligatoires sur place à Montréa",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Décris un traitement AS/400 (IBM i) ou Mainframe que tu as développé ou supporté en production : quelles technologies (COBOL, CL, SQL/400, DB2, Control-M…), quel était ton rôle exact, et quelle criticité ou volumétrie ?",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Le mandat est hybride, avec 2 jours par semaine obligatoires sur place à Montréa",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Combien d'années d'expérience professionnelle as-tu sur AS/400 (IBM i) ou Mainframe ?",
+     "control": "radio",
+     "required": true,
+     "options": 4,
+     "section": "Combien d'années d'expérience professionnelle as-tu sur AS/400 (IBM i) ou Mainfr",
+     "workBlock": 0,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "As-tu au moins 5 ans d'expérience professionnelle sur AS/400 (IBM i) ou Mainframe ?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "As-tu au moins 5 ans d'expérience professionnelle sur AS/400 (IBM i) ou Mainfram",
+     "workBlock": 4,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Le mandat inclut une rotation de support sur appel et du travail certaines fins de semaine si requis. Est-ce que cela te convient ?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Le mandat inclut une rotation de support sur appel et du travail certaines fins ",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Acceptes-tu une enquête de sécurité (incluant une vérification de crédit) avant le démarrage du mandat ?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Acceptes-tu une enquête de sécurité (incluant une vérification de crédit) avant ",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Comment as-tu connu Maplr ?",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Acceptes-tu une enquête de sécurité (incluant une vérification de crédit) avant ",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "recruitee",
+   "company": "Sword Technologies N.V./S.A.",
+   "url": "https://swordtechnologies.recruitee.com/o/analyste-developpeur-front-end-javascript-vuejs",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Mes données",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Lettre de motivation",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Mes données",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "bamboohr",
+   "company": "Aterlo",
+   "url": "https://aterlo.bamboohr.com/careers/65",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Address",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "City",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Postal Code",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "file-input",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Date Available",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Desired Pay",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "Website, Blog or Portfolio",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Are you legally eligible to work in Canada?",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "recruitee",
+   "company": "aubay",
+   "url": "https://aubay.recruitee.com/o/analyste-programmeur-cobol-ref-470",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Mes données",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Lettre de motivation",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Mes données",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "breezy",
+   "company": "zero-hash",
+   "url": "https://zero-hash.breezy.hr/p/0316a5d4e2bd-engineering-manager-web-automation-open-banking-infrastructure",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "cResume",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Full Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Email Address",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone Number",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "smsConsent",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "Phone Number",
+     "decision": "skip:optional choice",
+     "status": "skipped"
+    },
+    {
+     "label": "Experience Summary",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Race or Ethnicity",
+     "control": "radio",
+     "required": true,
+     "options": 8,
+     "decision": "ask:race",
+     "status": "needs_user"
+    },
+    {
+     "label": "Gender",
+     "control": "radio",
+     "required": true,
+     "options": 3,
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "I've read the Privacy Notice below and consent the processing of my data as part of my job application.",
+     "control": "checkbox",
+     "required": true,
+     "options": 0,
+     "section": "CCPA Recruitment Privacy Notice",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "bamboohr",
+   "company": "nexii",
+   "url": "https://nexii.bamboohr.com/careers/89",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Address",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "City",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Postal Code",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "file-input",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional attachment",
+     "status": "skipped"
+    },
+    {
+     "label": "file-input",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Date Available",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Desired Pay",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "Website, Blog or Portfolio",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Do you have at least ten (10+) years of experience in construction, architecture, engineering, or a related field, with a focus on leadership and project delivery?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Do you have at least ten (10+) years of experience in construction, architecture",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "breezy",
+   "company": "Social Discovery Group",
+   "url": "https://social-discovery-ventures.breezy.hr/p/e0ec03401fc401-engineering-manager",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "cResume",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Full Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Email Address",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone Number",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Which location are you applying for",
+     "control": "select",
+     "required": true,
+     "options": 2,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Experience Summary",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "I've read the Privacy Notice below and consent the processing of my data as part of my job application.",
+     "control": "checkbox",
+     "required": true,
+     "options": 0,
+     "section": "Recruitment Privacy Notice",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "bamboohr",
+   "company": "icmarkets",
+   "url": "https://icmarkets.bamboohr.com/careers/216",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Address",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "City",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Province",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Postal Code",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "file-input",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional attachment",
+     "status": "skipped"
+    },
+    {
+     "label": "file-input",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Date Available",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Website, Blog or Portfolio",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "I acknowledge that this is a hybrid on-site working role",
+     "control": "checkbox",
+     "required": true,
+     "options": 0,
+     "decision": "ask:consent",
+     "status": "needs_user"
+    },
+    {
+     "label": "Do you currently reside in Cyprus?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Will you need sponsorship for a work visa?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    },
+    {
+     "label": "I agree to provide all needed information for my working eligibility evaluation",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "Will you need sponsorship for a work visa?",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    },
+    {
+     "label": "What are your gross annual salary expectations in € for this role?",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Will you need sponsorship for a work visa?",
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "Where did you hear about this role?",
+     "control": "radio",
+     "required": true,
+     "options": 6,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "bamboohr",
+   "company": "StoreForce",
+   "url": "https://storeforce.bamboohr.com/careers/71",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Address",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "City",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "ZIP",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "file-input",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Date Available",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Desired Pay",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "Website, Blog or Portfolio",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:no portfolio in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn URL",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Are you legally authorised to work in Poland?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "decision": "ask:work_authorization",
+     "status": "needs_user"
+    },
+    {
+     "label": "How many years of experience do you have in engineering leadership or management roles?",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Are you legally authorised to work in Poland?",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Have you used AI-powered coding tools (such as GitHub Copilot, Cursor, or similar) in your development work?",
+     "control": "radio",
+     "required": true,
+     "options": 2,
+     "section": "Have you used AI-powered coding tools (such as GitHub Copilot, Cursor, or simila",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "teamtailor",
+   "company": "Citation Group",
+   "url": "https://citationgroup.teamtailor.com/jobs/8519900-engineering-manager",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "Email address without domain",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Already working at Citation Group?",
+     "decision": "profile:email",
+     "status": "filled"
+    }
+   ]
+  },
+  {
+   "platform": "teamtailor",
+   "company": "IPRally",
+   "url": "https://iprally.teamtailor.com/jobs/8516295-engineering-manager-product-engineering",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First name Required",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last name Required",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email Required",
+     "control": "email",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Upload resume Required",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Additional files",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "skip:optional attachment",
+     "status": "skipped"
+    },
+    {
+     "label": "Cover letter",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Required. By submitting this application, I agree that I have read the Privacy Policy and confirm that IPRally store my personal details to be able to process my job application.",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "teamtailor",
+   "company": "Yousign",
+   "url": "https://yousign.teamtailor.com/jobs/8504139-engineering-manager",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First name Required",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last name Required",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email Required",
+     "control": "email",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone Required",
+     "control": "tel",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Upload CV Required",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Additional files",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "skip:optional attachment",
+     "status": "skipped"
+    },
+    {
+     "label": "Cover letter",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Required. I have read the Privacy Policy and confirm that I allow Yousign to store my personal details to be able to process my job application.",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    },
+    {
+     "label": "Yes, Yousign can also contact me about future job opportunities.",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "skip:optional choice",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "recruitee",
+   "company": "hardrockdigital",
+   "url": "https://hardrockdigital.recruitee.com/o/engineering-manager-sportsbook-backend",
+   "outcome": "closed"
+  },
+  {
+   "platform": "teamtailor",
+   "company": "Property Finder",
+   "url": "https://propertyfinder.teamtailor.com/jobs/8496424-engineering-manager",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First name Required",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last name Required",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email Required",
+     "control": "email",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone Required",
+     "control": "tel",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Upload CV Required",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Additional files",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "skip:optional attachment",
+     "status": "skipped"
+    },
+    {
+     "label": "Cover letter",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "section": "Personal information",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "breezy",
+   "company": "north-wind-group",
+   "url": "https://north-wind-group.breezy.hr/p/3dd4371dd2c6-engineering-technician-v-pcs-operations-maintenance-technician-nws-00940",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "cResume",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Full Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Email Address",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone Number",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "smsConsent",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "Phone Number",
+     "decision": "skip:optional choice",
+     "status": "skipped"
+    },
+    {
+     "label": "Address",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "teamtailor",
+   "company": "Nextlane",
+   "url": "https://nextlane.teamtailor.com/jobs/8486790-engineering-manager-platform",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "Email address without domain",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "section": "Already working at Nextlane?",
+     "decision": "profile:email",
+     "status": "filled"
+    }
+   ]
+  },
+  {
+   "platform": "breezy",
+   "company": "beex",
+   "url": "https://beex.breezy.hr/p/1dd3d13ce9a4-engineering-support-technician",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "cResume",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Full Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Email Address",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone Number",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Desired Salary",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "",
+     "control": "select",
+     "required": true,
+     "options": 4,
+     "section": "Desired Salary",
+     "decision": "ask:unknown",
+     "status": "already_filled"
+    }
+   ]
+  },
+  {
+   "platform": "personio",
+   "company": "magazino",
+   "url": "https://magazino.jobs.personio.com/job/2820886",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "First",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Gender",
+     "control": "select",
+     "required": true,
+     "options": 4,
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Email",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Wie bist Du auf uns aufmerksam geworden? / How did you find out about us?",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Expected salary",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "ask:salary",
+     "status": "needs_user"
+    },
+    {
+     "label": "Available from",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Phone",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Visa situation",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    },
+    {
+     "label": "CV",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "Documents",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Documents",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "Employment reference",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Documents",
+     "decision": "skip:optional attachment",
+     "status": "skipped"
+    },
+    {
+     "label": "Certificate",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Documents",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "Other",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Documents",
+     "decision": "skip:optional attachment",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "recruitee",
+   "company": "SnapSoft Kft.",
+   "url": "https://snapsoft.recruitee.com/o/engineering-manager-aws-cloud",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "Photo",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "My information",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "CV or resume",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "section": "My information",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "My information",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "breezy",
+   "company": "bear-robotics",
+   "url": "https://bear-robotics.breezy.hr/p/308ce43faf3b-engineering-program-manager-npi-hardware-software-integration",
+   "outcome": "form",
+   "openedFromJobPage": true,
+   "fields": [
+    {
+     "label": "cResume",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Full Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:fullName",
+     "status": "filled"
+    },
+    {
+     "label": "Email Address",
+     "control": "email",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Phone Number",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "smsConsent",
+     "control": "checkbox",
+     "required": false,
+     "options": 0,
+     "section": "Phone Number",
+     "decision": "skip:optional choice",
+     "status": "skipped"
+    },
+    {
+     "label": "Address",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Experience Summary",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "textarea",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "관련 증빙 서류 첨부",
+     "control": "file",
+     "required": true,
+     "options": 0,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "기타 첨부 서류",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "decision": "skip:optional attachment",
+     "status": "skipped"
+    }
+   ]
+  },
+  {
+   "platform": "greenhouse",
+   "company": "Atwell, LLC",
+   "url": "https://job-boards.greenhouse.io/atwellgroup/jobs/5261318007",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "First Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Last Name",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Email",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Country",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Phone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Location (City)",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Resume/CV",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Cover Letter",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "Do you have a valid drivers license?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Do you require government sponsorship to work legally in the United States, now or in the future?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:sponsorship",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you related to an Atwell employee?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Mailing address",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Phone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "By selecting YES, I consent to receive recruiting SMS messages from Atwell, LLC at the phone number provided above.",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Phone",
+     "decision": "ask:consent",
+     "status": "needs_user"
+    },
+    {
+     "label": "Gender",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:gender",
+     "status": "needs_user"
+    },
+    {
+     "label": "Are you Hispanic/Latino?",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:race",
+     "status": "needs_user"
+    },
+    {
+     "label": "Veteran Status",
+     "control": "combobox",
+     "required": false,
+     "options": 0,
+     "section": "Voluntary Self-Identification",
+     "decision": "ask:veteran",
+     "status": "needs_user"
+    }
+   ]
+  },
+  {
+   "platform": "greenhouse",
+   "company": "ShareGate ",
+   "url": "https://job-boards.greenhouse.io/sharegate/jobs/5250742007",
+   "outcome": "form",
+   "changed": [],
+   "untouched": true,
+   "fields": [
+    {
+     "label": "Prénom",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Nom",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:lastName",
+     "status": "filled"
+    },
+    {
+     "label": "Prénom préféré",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "decision": "profile:firstName",
+     "status": "filled"
+    },
+    {
+     "label": "Adresse e-mail",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "decision": "profile:email",
+     "status": "filled"
+    },
+    {
+     "label": "Pays",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Téléphone",
+     "decision": "profile:country",
+     "status": "filled"
+    },
+    {
+     "label": "Téléphone",
+     "control": "tel",
+     "required": true,
+     "options": 0,
+     "decision": "profile:phone",
+     "status": "filled"
+    },
+    {
+     "label": "Localisation (ville)",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Téléphone",
+     "decision": "profile:location",
+     "status": "filled"
+    },
+    {
+     "label": "Joindre",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Téléphone",
+     "decision": "resume",
+     "status": "filled"
+    },
+    {
+     "label": "Joindre",
+     "control": "file",
+     "required": false,
+     "options": 0,
+     "section": "Téléphone",
+     "decision": "skip:optional attachment (not your resume)",
+     "status": "skipped"
+    },
+    {
+     "label": "Website",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Téléphone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "LinkedIn Profile",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Téléphone",
+     "decision": "profile:linkedin",
+     "status": "filled"
+    },
+    {
+     "label": "Portfolio",
+     "control": "text",
+     "required": true,
+     "options": 0,
+     "section": "Téléphone",
+     "decision": "ask:missing_profile_value",
+     "status": "needs_user"
+    },
+    {
+     "label": "Quelle est ta langue préférée ?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Téléphone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Comment as-tu entendu parler de Workleap la première fois ?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Téléphone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Si tu as mentionné autre à la question précédente, s'il-te-plaît, préciser ici:",
+     "control": "text",
+     "required": false,
+     "options": 0,
+     "section": "Téléphone",
+     "decision": "skip:optional, not in profile",
+     "status": "skipped"
+    },
+    {
+     "label": "Es-tu légalement autorisé(e) à travailler au Canada ?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Téléphone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Pour des raisons de conformité en matière de droit du travail et de paie, indique la province canadienne dans laquelle tu es domicilié(e) :",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Téléphone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    },
+    {
+     "label": "Laquelle des affirmations suivantes décrit le mieux ta façon de travailler avec les outils d'IA aujourd'hui ?",
+     "control": "combobox",
+     "required": true,
+     "options": 0,
+     "section": "Téléphone",
+     "decision": "ask:unknown",
+     "status": "needs_user"
+    }
+   ]
+  }
+ ]
+}

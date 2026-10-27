@@ -1,0 +1,76 @@
+
+Running 1 test using 1 worker
+
+[1/1] e2e\coverage.spec.ts:91:1 › coverage of real application forms (read-only)
+e2e\coverage.spec.ts:91:1 › coverage of real application forms (read-only)
+1/34 form    greenhouse      Figma (19 fields)
+
+2/34 form    greenhouse      Samsara (30 fields)
+
+3/34 form    greenhouse      Stripe (23 fields)
+
+4/34 closed  greenhouse      Okta (0 fields)
+
+5/34 form    greenhouse      Grafana Labs (14 fields)
+
+6/34 closed  greenhouse      Databricks (0 fields)
+
+7/34 form    greenhouse      MongoDB (19 fields)
+
+8/34 form    greenhouse      Toast (18 fields)
+
+9/34 form    greenhouse      Airbnb (20 fields)
+
+10/34 form    greenhouse      Elastic (23 fields)
+
+11/34 form    greenhouse      Twilio (17 fields)
+
+12/34 form    greenhouse      Celonis (34 fields)
+
+13/34 form    greenhouse      GitLab (22 fields)
+
+14/34 form    greenhouse      Druva (23 fields)
+
+15/34 form    greenhouse      InMobi (22 fields)
+
+16/34 form    greenhouse      Glance (12 fields)
+
+17/34 form    greenhouse      Groww (11 fields)
+
+18/34 form    greenhouse      Coinbase (33 fields)
+
+19/34 form    greenhouse      Vercel (19 fields)
+
+20/34 form    greenhouse      Observe.AI (12 fields)
+
+21/34 form    lever           Zeta (23 fields)
+
+22/34 form    lever           Paytm (13 fields)
+
+23/34 form    lever           Meesho (21 fields)
+
+24/34 form    lever           CRED (11 fields)
+
+25/34 form    lever           MindTickle (23 fields)
+
+26/34 form    ashby           Notion (14 fields)
+
+27/34 form    ashby           Atlan (14 fields)
+
+28/34 form    ashby           Sarvam AI (4 fields)
+
+29/34 no_form smartrecruiters Swiggy (0 fields)
+
+30/34 closed  smartrecruiters Wise (0 fields)
+
+31/34 no_form smartrecruiters Freshworks (0 fields)
+
+32/34 no_form smartrecruiters Grab (0 fields)
+
+33/34 no_form smartrecruiters Canva (0 fields)
+
+34/34 error   workable        apna (0 fields)
+
+  Slow test file: e2e\coverage.spec.ts (6.3m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  1 passed (6.4m)

@@ -1,0 +1,186 @@
+
+Running 1 test using 1 worker
+
+[1/1] e2e\coverage.spec.ts:123:1 › coverage of real application forms (read-only)
+e2e\coverage.spec.ts:123:1 › coverage of real application forms (read-only)
+1/77 form    greenhouse      DRW (18 fields)
+
+2/77 form    greenhouse      esri (18 fields)
+
+3/77 form    greenhouse      Speechmatics (22 fields)
+
+4/77 form    greenhouse      Telnyx (23 fields)
+
+5/77 form    greenhouse      Cloudflare (17 fields)
+
+6/77 form    greenhouse      Nscale (16 fields)
+
+7/77 form    greenhouse      Ebury (13 fields)
+
+8/77 robot_check greenhouse      JFrog (0 fields)
+
+9/77 form    greenhouse      smartsheet (22 fields)
+
+10/77 form    greenhouse      Inter Carreiras (33 fields)
+
+11/77 form    greenhouse      Cast AI (16 fields)
+
+12/77 form    greenhouse      Schrödinger (14 fields)
+
+13/77 form    greenhouse      Anthropic (25 fields)
+
+14/77 form    greenhouse      Asana (26 fields)
+
+15/77 form    greenhouse      YOU.com (24 fields)
+
+16/77 form    greenhouse      Anduril Industries (23 fields)
+
+17/77 form    greenhouse      Affirm (23 fields)
+
+18/77 form    greenhouse      Lotlinx (13 fields)
+
+19/77 form    greenhouse      Quince (11 fields)
+
+20/77 form    greenhouse      Arcesium (11 fields)
+
+21/77 form    greenhouse      Veeam (22 fields)
+
+22/77 form    greenhouse      Jensen Hughes (28 fields)
+
+23/77 no_form greenhouse      ASM (0 fields)
+
+24/77 form    greenhouse      Anaplan (25 fields)
+
+25/77 form    greenhouse      Woolpert (26 fields)
+
+26/77 form    lever           Jobgether (6 fields)
+
+27/77 form    lever           Institute of Foundation Models (18 fields)
+
+28/77 form    lever           Xsolla (16 fields)
+
+29/77 form    lever           Boson Ai (14 fields)
+
+30/77 form    lever           Magnet Forensics (26 fields)
+
+31/77 form    lever           Great Gray (21 fields)
+
+32/77 form    lever           Weekday (9 fields)
+
+33/77 form    lever           ispace, inc. (23 fields)
+
+34/77 form    lever           seranbio (6 fields)
+
+35/77 form    lever           Allied (13 fields)
+
+36/77 form    lever           bhg-inc (18 fields)
+
+37/77 form    lever           Loft Orbital (23 fields)
+
+38/77 form    lever           Sophos (14 fields)
+
+39/77 form    lever           Theodo (12 fields)
+
+40/77 form    lever           Arc'teryx Equipment (16 fields)
+
+41/77 form    ashby           Airwallex (12 fields)
+
+42/77 form    ashby           Fireworks AI (16 fields)
+
+43/77 form    ashby           1Password (25 fields)
+
+44/77 form    ashby           Pinecone (23 fields)
+
+45/77 form    ashby           Kong (22 fields)
+
+46/77 form    ashby           InfluxData (3 fields)
+
+47/77 form    ashby           SigNoz (6 fields)
+
+48/77 form    ashby           ElevenLabs (14 fields)
+
+49/77 form    ashby           Creatify (4 fields)
+
+50/77 form    ashby           Agent (22 fields)
+
+51/77 form    ashby           Helius (8 fields)
+
+52/77 form    ashby           Liquid AI (13 fields)
+
+53/77 form    ashby           Socure (12 fields)
+
+54/77 form    ashby           Gladia (10 fields)
+
+55/77 closed  ashby           PostHog (0 fields)
+
+56/77 robot_check smartrecruiters CD PROJEKT RED (0 fields)
+
+57/77 robot_check smartrecruiters vitol (0 fields)
+
+58/77 robot_check smartrecruiters digitalvirgo (0 fields)
+
+59/77 no_form smartrecruiters kpmgnederland (0 fields)
+
+60/77 no_form smartrecruiters DohlerGmbH (0 fields)
+
+61/77 no_form smartrecruiters boulanger (0 fields)
+
+62/77 robot_check smartrecruiters larabidachildrenshospital (0 fields)
+
+63/77 robot_check smartrecruiters AbbVie (0 fields)
+
+64/77 robot_check smartrecruiters NBC Universal (0 fields)
+
+65/77 robot_check smartrecruiters PublicStorage (0 fields)
+
+66/77 form    workable        weekday (7 fields)
+
+67/77 form    workable        ReVisionz (13 fields)
+
+68/77 form    workable        HR factory (10 fields)
+
+69/77 form    workable        Interpath Advisory (7 fields)
+
+70/77 form    workable        Charger Logistics (11 fields)
+
+71/77 form    workable        The Pod Group (9 fields)
+
+72/77 form    workable        The Symicor Group (10 fields)
+
+73/77 form    workable        Huda Beauty (10 fields)
+
+74/77 form    workable        Nutrition International (13 fields)
+
+75/77 form    workable        Export Development Canada (8 fields)
+
+76/77 form    workable        Funding Societies (13 fields)
+
+77/77 form    workable        Blue Nile (16 fields)
+
+  1) e2e\coverage.spec.ts:123:1 › coverage of real application forms (read-only) ───────────────────
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "https://job-boards.greenhouse.io/quince/jobs/5407464008",
+    + ]
+
+      177 |   writeFileSync(`reports/coverage-${name}.json`, JSON.stringify({ generatedAt: new Date().toISOString(), rows }, null, 1));
+      178 |   // Reading never changes a page.
+    > 179 |   expect(rows.filter((r) => r.untouched === false).map((r) => r.url)).toEqual([]);
+          |                                                                       ^
+      180 | });
+      181 |
+        at E:\GenAI-part2-Rag-implementation-main\applyagent\e2e\coverage.spec.ts:179:71
+
+    Error Context: test-results\coverage-coverage-of-real-application-forms-read-only-\error-context.md
+
+
+  Slow test file: e2e\coverage.spec.ts (24.5m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  1 failed
+    e2e\coverage.spec.ts:123:1 › coverage of real application forms (read-only) ────────────────────

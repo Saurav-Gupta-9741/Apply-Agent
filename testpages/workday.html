@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Senior Data Engineer · Acme Careers (Workday-style test page)</title>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"JobPosting","title":"Senior Data Engineer"}</script>
+<style>
+  body { font: 15px system-ui; max-width: 680px; margin: 32px auto; padding: 0 16px; }
+  .banner { background: #fff3cd; padding: 8px 12px; border-radius: 6px; }
+  .field { display: flex; flex-direction: column; gap: 4px; margin: 12px 0; position: relative; }
+  [role=listbox] { list-style: none; padding: 0; margin: 0; border: 1px solid #999; background: #fff; }
+  [role=option] { padding: 4px 8px; cursor: pointer; }
+  .block { border: 1px solid #ddd; padding: 8px 12px; margin: 8px 0; border-radius: 6px; }
+</style>
+</head>
+<body>
+<p class="banner">Local practice page shaped like Workday: sign in first, then "Save and Continue" steps with
+  dropdown buttons, a location typeahead with slow results, MM/YYYY dates and an "Add" button for each job.
+  Submissions: <span id="submits">0</span>. <code>?signedin=1</code> skips the sign-in.</p>
+<h1>Senior Data Engineer</h1>
+<div id="app"></div>
+<script>
+  const app = document.getElementById("app");
+  let step = new URLSearchParams(location.search).has("signedin") ? 1 : 0;
+
+  /** A Workday-like dropdown: a button that opens a list a moment later. */
+  function dropdown(id, label, options, required) {
+    return `<div class="field"><label id="${id}-label">${label}${required ? " *" : ""}</label>
+      <button type="button" id="${id}" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="${id}-label"
+        aria-label="${label} Select One${required ? " Required" : ""}" ${required ? 'aria-required="true"' : ""}
+        data-options="${options.join("|")}">Select One</button></div>`;
+  }
+
+  const steps = [
+    // 0: sign-in wall
+    () => `<h2>Sign In</h2><form id="signin"><div class="field"><label for="si-email">Email Address</label><input id="si-email" type="email"></div>
+      <div class="field"><label for="si-pass">Password</label><input id="si-pass" type="password"></div>
+      <button type="submit">Sign In</button></form>`,
+    // 1: My Information
+    () => `<h2>My Information</h2><form id="wizard" novalidate>
+      <div class="field"><label for="given">Given Name(s) *</label><input id="given" required></div>
+      <div class="field"><label for="family">Family Name *</label><input id="family" required></div>
+      ${dropdown("country", "Country", ["United States of America", "India", "Germany"], true)}
+      <div class="field"><label for="city">Location (City) *</label>
+        <input id="city" role="combobox" aria-autocomplete="list" aria-controls="city-list" aria-expanded="false" required>
+        <ul id="city-list" role="listbox" hidden></ul></div>
+      <div class="field"><label for="email">Email Address *</label><input id="email" type="email" required></div>
+      ${dropdown("device", "Phone Device Type", ["Landline", "Mobile"], true)}
+      <div class="field"><label for="phone">Phone Number *</label><input id="phone" type="tel" required></div>
+      ${dropdown("hear", "How Did You Hear About Us?", ["Company Website", "Job Board", "Referral"], true)}
+      <button type="submit">Save and Continue</button></form>`,
+    // 2: My Experience
+    () => `<h2>My Experience</h2><form id="wizard" novalidate>
+      <section id="work"><h3>Work Experience</h3><div id="jobs"></div><button type="button" id="add-job">Add</button></section>
+      <section><h3>Education</h3>
+        <div class="field"><label for="school">School or University</label><input id="school"></div></section>
+      <button type="button">Back</button> <button type="submit">Save and Continue</button></form>`,
+    // 3: Review
+    () => `<h2>Review</h2><form id="wizard" novalidate><p>Check your application, then submit.</p>
+      <button type="submit">Submit</button></form>`,
+  ];
+
+  let jobs = 0;
+  function addJob() {
+    jobs++;
+    const n = jobs;
+    document.getElementById("jobs").insertAdjacentHTML("beforeend", `<div class="block" data-job="${n}"><h4>Work Experience ${n}</h4>
+      <div class="field"><label for="title-${n}">Job Title *</label><input id="title-${n}" required></div>
+      <div class="field"><label for="company-${n}">Company *</label><input id="company-${n}" required></div>
+      <div class="field"><label for="loc-${n}">Location</label><input id="loc-${n}"></div>
+      <div class="field"><label><input type="checkbox" id="current-${n}"> I currently work here</label></div>
+      <div class="field"><label for="from-${n}">From *</label><input id="from-${n}" placeholder="MM/YYYY" required></div>
+      <div class="field"><label for="to-${n}">To</label><input id="to-${n}" placeholder="MM/YYYY"></div>
+      <div class="field"><label for="desc-${n}">Role Description</label><textarea id="desc-${n}"></textarea></div></div>`);
+  }
+
+  const CITIES = ["Pune, Maharashtra, India", "Punta Gorda, Florida, United States", "Mumbai, Maharashtra, India"];
+
+  function wire() {
+    document.querySelectorAll("button[aria-haspopup=listbox]").forEach((button) => {
+      button.addEventListener("click", () => {
+        let list = button.parentElement.querySelector("[role=listbox]");
+        if (list) { list.remove(); button.setAttribute("aria-expanded", "false"); return; }
+        button.setAttribute("aria-expanded", "true");
+        setTimeout(() => { // the list opens a moment later
+          list = document.createElement("ul");
+          list.setAttribute("role", "listbox");
+          list.id = `${button.id}-list`;
+          button.setAttribute("aria-controls", list.id);
+          for (const text of button.dataset.options.split("|")) {
+            const li = document.createElement("li");
+            li.setAttribute("role", "option");
+            li.textContent = text;
+            li.addEventListener("click", () => { button.textContent = text; list.remove(); button.setAttribute("aria-expanded", "false"); });
+            list.append(li);
+          }
+          button.after(list);
+        }, 200);
+      });
+    });
+    const city = document.getElementById("city");
+    if (city) {
+      const list = document.getElementById("city-list");
+      let timer;
+      city.addEventListener("input", () => {
+        list.hidden = false;
+        list.innerHTML = `<li role="option" aria-disabled="true">Loading…</li>`; // results come from a "server"
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          list.innerHTML = "";
+          for (const c of CITIES.filter((x) => x.toLowerCase().startsWith(city.value.toLowerCase()))) {
+            const li = document.createElement("li");
+            li.setAttribute("role", "option");
+            li.textContent = c;
+            li.addEventListener("mousedown", () => { city.value = c; city.dataset.chosen = c; list.hidden = true; });
+            list.append(li);
+          }
+        }, 700);
+      });
+    }
+    document.getElementById("add-job")?.addEventListener("click", () => setTimeout(addJob, 150));
+    const signin = document.getElementById("signin");
+    signin?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (document.getElementById("si-pass").value) { step = 1; render(); }
+    });
+    const wizard = document.getElementById("wizard");
+    wizard?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const missing = [...wizard.querySelectorAll("[required]")].filter((el) => !el.value);
+      const unchosen = [...wizard.querySelectorAll("button[aria-required=true]")].filter((b) => b.textContent === "Select One");
+      if (missing.length || unchosen.length || (step === 1 && !document.getElementById("city").dataset.chosen)) {
+        wizard.insertAdjacentHTML("beforeend", `<p role="alert">Errors found: complete every required field.</p>`);
+        return;
+      }
+      if (step === 3) {
+        document.getElementById("submits").textContent = String(Number(document.getElementById("submits").textContent) + 1);
+        app.innerHTML = "<h2>Thank you for applying!</h2><p>Your application has been submitted.</p>";
+        return;
+      }
+      step++;
+      setTimeout(render, 200);
+    });
+  }
+
+  function render() {
+    jobs = 0;
+    app.innerHTML = steps[step]();
+    wire();
+  }
+  render();
+</script>
+</body>
+</html>

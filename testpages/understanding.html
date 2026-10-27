@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Questions in new words · Acme (local test page)</title>
+<style>body { font: 15px system-ui; max-width: 640px; margin: 32px auto; padding: 0 16px; } .field { display: flex; flex-direction: column; gap: 4px; margin: 12px 0; }</style></head>
+<body>
+<h1>Data Engineer</h1>
+<p>Questions worded in ways ApplyAgent's rules have no pattern for: the local model reads their meaning.</p>
+<form id="application-form">
+  <div class="field"><label for="fn">First name *</label><input id="fn" required></div>
+  <div class="field"><label for="em">Email *</label><input id="em" type="email" required></div>
+  <div class="field"><label for="heard">Where did you first hear about this role? *</label><input id="heard" required></div>
+  <div class="field"><label for="sex">Please identify your sex.</label>
+    <select id="sex"><option value="">Select…</option><option>Male</option><option>Female</option><option>Decline to self identify</option></select></div>
+  <div class="field"><label for="mentor">Do you have a mentor at our company? Their full name</label><input id="mentor"></div>
+  <button type="submit">Submit application</button>
+</form>
+</body>
+</html>

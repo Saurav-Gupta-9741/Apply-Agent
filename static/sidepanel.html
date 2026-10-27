@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ApplyAgent</title>
+  <link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+<div class="app">
+  <!-- Header -------------------------------------------------------------------------------------->
+  <header class="topbar">
+    <button id="nav-toggle" class="icon-btn nav-toggle" aria-label="Open navigation" aria-controls="drawer" aria-expanded="false">
+      <span data-icon="menu" data-size="20"></span>
+    </button>
+    <img class="brand-mark topbar-mark" src="brand/mark-intro.svg" alt="" width="28" height="28" />
+    <div class="topbar-title">
+      <span class="eyebrow">ApplyAgent</span>
+      <h1 id="section-title">Apply</h1>
+    </div>
+    <span id="plan-pill" class="plan-pill" title="Your plan"></span>
+  </header>
+
+  <!-- Navigation drawer ------------------------------------------------------------------------------>
+  <div id="scrim" class="scrim" hidden></div>
+  <nav id="drawer" class="drawer" aria-label="Sections">
+    <div class="drawer-brand">
+      <img class="brand-mark logo" src="brand/mark-intro.svg" alt="" width="34" height="34" />
+      <div>
+        <strong>ApplyAgent</strong>
+        <span class="muted">Applications on autopilot</span>
+      </div>
+      <button id="nav-close" class="icon-btn drawer-close" aria-label="Close navigation"><span data-icon="close"></span></button>
+    </div>
+    <ul class="nav-list">
+      <li><button class="nav-item" data-section="jobs"><span data-icon="jobs"></span><span>Jobs</span><span class="nav-count" data-count="jobs"></span></button></li>
+      <li><button class="nav-item" data-section="apply" aria-current="page"><span data-icon="apply"></span><span>Apply</span></button></li>
+      <li><button class="nav-item" data-section="queue"><span data-icon="queue"></span><span>Queue</span><span class="nav-count" data-count="queue"></span></button></li>
+      <li><button class="nav-item" data-section="tracker"><span data-icon="tracker"></span><span>Tracker</span><span class="nav-count" data-count="tracker"></span></button></li>
+      <li><button class="nav-item" data-section="answers"><span data-icon="answers"></span><span>Answers</span><span class="nav-count" data-count="answers"></span></button></li>
+      <li><button class="nav-item" data-section="profile"><span data-icon="profile"></span><span>Profile &amp; plan</span></button></li>
+    </ul>
+    <div class="drawer-foot">
+      <span data-icon="lock" data-size="14"></span>
+      <span>Your data stays in this browser</span>
+    </div>
+  </nav>
+
+  <main id="main">
+    <!-- Apply ---------------------------------------------------------------------------------------->
+    <section id="sec-apply" class="section" data-title="Apply">
+      <div id="setup-card" class="card setup" hidden>
+        <div class="card-head"><h2>Get set up</h2><span id="setup-progress" class="muted"></span></div>
+        <ol id="setup-steps" class="setup-steps"></ol>
+      </div>
+      <div class="card page-card">
+        <div class="page-card-head">
+          <span class="page-icon" data-icon="globe"></span>
+          <div class="page-meta">
+            <strong id="page-host">No page</strong>
+            <span id="page-url" class="muted truncate"></span>
+          </div>
+          <span id="page-access" class="chip"></span>
+        </div>
+        <div id="permission-box" class="callout" hidden>
+          <span data-icon="shield"></span>
+          <div><strong>Allow ApplyAgent on this site</strong><span class="muted">It only works on sites you allow, one at a time.</span></div>
+          <button id="allow-site" class="btn btn-secondary btn-sm">Allow</button>
+        </div>
+        <div id="detect-box" class="detect" aria-live="polite" hidden>
+          <span id="detect-icon" class="detect-icon" data-icon="info"></span>
+          <div class="detect-body">
+            <strong id="detect-title"></strong>
+            <span id="detect-text" class="muted"></span>
+          </div>
+          <button id="open-application" class="btn btn-secondary btn-sm" hidden><span data-icon="external" data-size="14"></span><span>Open the application</span></button>
+        </div>
+      </div>
+
+      <div class="segmented" role="radiogroup" aria-label="Submission mode">
+        <label><input type="radio" name="mode" value="review" checked /><span>Review first</span></label>
+        <label><input type="radio" name="mode" value="auto" /><span>Auto-submit</span></label>
+      </div>
+
+      <button id="run" class="btn btn-primary btn-lg btn-block"><span data-icon="apply"></span><span>Fill this application</span></button>
+      <button id="preview" class="btn btn-ghost btn-block" title="Reads the form only: types nothing, uploads nothing"><span data-icon="info" data-size="16"></span><span>Preview only (nothing is typed or uploaded)</span></button>
+      <p class="hint center shortcut-hint">Tip: press <kbd id="fill-shortcut">Alt+Shift+F</kbd> on any application, or right-click → <em>Fill this application with ApplyAgent</em>.</p>
+      <div id="status" class="banner" role="status" hidden></div>
+      <div id="questions" class="stack"></div>
+      <button id="submit" class="btn btn-primary btn-lg btn-block" hidden><span data-icon="send"></span><span>Submit application</span></button>
+      <details id="fields-box" class="card details" hidden>
+        <summary><span>Field details</span><span id="fields-summary" class="muted"></span></summary>
+        <ul id="fields" class="field-list"></ul>
+      </details>
+      <button id="report-problem" class="btn btn-ghost btn-sm report-btn" hidden
+        title="Copies what ApplyAgent saw on this page (questions and its decisions, never your answers) to send to the ApplyAgent team">
+        <span data-icon="alert" data-size="14"></span><span>Something wrong? Report a problem</span></button>
+    </section>
+
+    <!-- Jobs ------------------------------------------------------------------------------------------>
+    <section id="sec-jobs" class="section" data-title="Jobs" hidden>
+      <div class="card">
+        <div class="card-head"><h2>Job feed</h2><span class="muted">Verified jobs from employers' own career sites</span></div>
+        <div class="input-row">
+          <input type="url" id="feed-url" class="input" placeholder="https://…/feed.json" aria-label="Feed URL" />
+          <button id="feed-load" class="btn btn-secondary">Load</button>
+        </div>
+        <label class="file-btn"><input type="file" id="feed-file" accept=".json" /><span data-icon="upload" data-size="16"></span><span>Import a feed file</span></label>
+      </div>
+      <div id="feed-stats" class="stats" hidden>
+        <div class="stat"><span class="stat-value" data-stat="jobs">0</span><span class="stat-label">Jobs</span></div>
+        <div class="stat"><span class="stat-value" data-stat="matches">0</span><span class="stat-label">Matches</span></div>
+        <div class="stat"><span class="stat-value accent" data-stat="good">0</span><span class="stat-label">Great fit</span></div>
+        <div class="stat"><span class="stat-value" data-stat="filtered">0</span><span class="stat-label">Filtered</span></div>
+      </div>
+      <p id="feed-summary" class="hint">Load a feed, then set your target roles and locations in Profile to rank the jobs.</p>
+      <ul id="feed-list" class="cards"></ul>
+      <div id="feed-actions" class="action-bar" hidden>
+        <button id="feed-add-selected" class="btn btn-secondary">Add selected</button>
+        <button id="feed-add-good" class="btn btn-primary">Add great fits</button>
+      </div>
+    </section>
+
+    <!-- Queue ------------------------------------------------------------------------------------------>
+    <section id="sec-queue" class="section" data-title="Queue" hidden>
+      <div id="ats-callout" class="callout">
+        <span data-icon="shield"></span>
+        <div><strong>Allow job sites</strong><span class="muted">Greenhouse, Lever, Ashby, Workable, SmartRecruiters, Recruitee</span></div>
+        <button id="allow-ats" class="btn btn-secondary btn-sm">Allow</button>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>Add jobs</h2></div>
+        <textarea id="paste-urls" class="input" rows="3" placeholder="Paste job links, one per line"></textarea>
+        <div class="button-row">
+          <button id="add-pasted" class="btn btn-secondary btn-sm"><span data-icon="plus" data-size="16"></span><span>Add links</span></button>
+          <button id="add-current" class="btn btn-ghost btn-sm"><span data-icon="link" data-size="16"></span><span>Add this page</span></button>
+          <label class="btn btn-ghost btn-sm file-inline"><input type="file" id="import-csv" accept=".csv,.txt" /><span data-icon="upload" data-size="16"></span><span>Import CSV</span></label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="settings-grid">
+          <label class="field-label">At once
+            <select id="set-parallel" class="input"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+          <label class="field-label">Per day
+            <input type="text" id="set-cap" class="input" inputmode="numeric" /></label>
+          <label class="field-label">Mode
+            <select id="set-mode" class="input"><option value="review">Review first</option><option value="auto">Auto-submit</option></select></label>
+        </div>
+        <div class="button-row">
+          <button id="queue-start" class="btn btn-primary"><span data-icon="play" data-size="16"></span><span>Start</span></button>
+          <button id="queue-pause" class="btn btn-secondary"><span data-icon="pause" data-size="16"></span><span>Pause</span></button>
+          <button id="queue-clear" class="btn btn-ghost"><span data-icon="broom" data-size="16"></span><span>Clear finished</span></button>
+        </div>
+      </div>
+      <div class="queue-status"><span id="queue-state" class="chip"></span><div id="queue-summary" class="chips"></div></div>
+      <div id="inbox" class="stack" hidden></div>
+      <ul id="queue-list" class="cards"></ul>
+    </section>
+
+    <!-- Tracker --------------------------------------------------------------------------------------->
+    <section id="sec-tracker" class="section" data-title="Tracker" hidden>
+      <div id="tracker-stats" class="stats stats-3">
+        <div class="stat"><span class="stat-value accent" data-stat="applied">0</span><span class="stat-label">Applied</span></div>
+        <div class="stat"><span class="stat-value" data-stat="check">0</span><span class="stat-label">Needs check</span></div>
+        <div class="stat"><span class="stat-value" data-stat="month">0</span><span class="stat-label">This month</span></div>
+      </div>
+      <ul id="tracker-list" class="cards"></ul>
+    </section>
+
+    <!-- Answers --------------------------------------------------------------------------------------->
+    <section id="sec-answers" class="section" data-title="Answers" hidden>
+      <div id="quick-card"></div>
+      <p class="hint">Answers you gave once. They are reused only for the same question; sensitive ones only for the same topic.</p>
+      <ul id="answer-list" class="cards"></ul>
+    </section>
+
+    <!-- Profile & plan ---------------------------------------------------------------------------------->
+    <section id="sec-profile" class="section" data-title="Profile & plan" hidden>
+      <div class="card plan-card">
+        <div class="card-head"><h2>Plan</h2><span id="plan-badge" class="chip"></span></div>
+        <p id="plan-status" class="plan-status"></p>
+        <div class="meter" aria-hidden="true"><span id="plan-meter"></span></div>
+        <div id="buy-row" class="button-row" hidden>
+          <button id="buy-inr" class="btn btn-primary btn-sm">30-day Pro · ₹149</button>
+          <button id="buy-usd" class="btn btn-secondary btn-sm">Pay by card · $9</button>
+        </div>
+        <p class="hint">One-time payment. Never renews automatically.</p>
+        <div class="input-row">
+          <input type="text" id="license-key" class="input mono" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" aria-label="Licence key" />
+          <button id="activate" class="btn btn-secondary"><span data-icon="key" data-size="16"></span><span>Activate</span></button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Silent detection</h2></div>
+        <p class="hint">ApplyAgent quietly recognises application forms and shows what it can fill on its icon. It only reads; it never types until you press Fill. It never runs on LinkedIn, Naukri, Indeed and similar platforms.</p>
+        <label class="field-label">Detect application forms on
+          <select id="set-detection" class="input">
+            <option value="job_sites">Job sites only (ATS and careers sites I allowed)</option>
+            <option value="allowed_sites">Every site I allowed</option>
+            <option value="off">Off</option>
+          </select></label>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Question understanding</h2></div>
+        <p class="hint">A small AI model inside ApplyAgent reads what unusual questions mean ("Joining timeline?" is your notice period). It runs offline on this computer; nothing is sent anywhere. It only fills a question when it is sure and the question passes every safety check.</p>
+        <label class="check-label"><input type="checkbox" class="check" id="set-understanding" /> Understand questions with the local model</label>
+      </div>
+
+      <form id="profile-form" class="stack" novalidate></form>
+
+      <div class="card">
+        <div class="card-head"><h2>Resume</h2></div>
+        <label class="dropzone"><input type="file" id="resume" accept=".pdf,.doc,.docx" />
+          <span data-icon="file" data-size="22"></span>
+          <span id="resume-name">Upload your resume (PDF or DOCX, max 5 MB)</span></label>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>Backup &amp; move</h2></div>
+        <p class="hint">Save your profile, resume, answers and application history to a file, to restore them later or on another computer. The file contains your personal details: keep it private.</p>
+        <div class="button-row">
+          <button id="export-backup" class="btn btn-secondary btn-sm"><span data-icon="download" data-size="16"></span><span>Export backup</span></button>
+          <label class="btn btn-ghost btn-sm file-inline"><input type="file" id="import-backup" accept=".json,application/json" /><span data-icon="upload" data-size="16"></span><span>Restore from file</span></label>
+        </div>
+      </div>
+      <div class="sticky-foot"><button id="save-profile" class="btn btn-primary btn-block">Save profile</button></div>
+      <p class="hint center"><span data-icon="lock" data-size="14"></span> Your profile and resume never leave this browser.</p>
+    </section>
+  </main>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <dialog id="proof-dialog" class="dialog">
+    <div class="dialog-head"><strong>Confirmation screenshot</strong><button id="proof-close" class="icon-btn" aria-label="Close"><span data-icon="close"></span></button></div>
+    <img id="proof" alt="Confirmation page screenshot" />
+  </dialog>
+</div>
+<script src="sidepanel.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+Real questions: 675
+Rules only:      fills 248, wrong 2
+Rules + model:   fills 250, wrong 2
+
+Newly filled by the model:
+  + gender: Please identify your sex.
+  + heard_about: Where did you first hear about this role?
+
+No longer filled (doubted):
+
+Wrong with rules only:
+  ✗ portfolio ≠ open_question: Please provide a link to your visual merchandising portfolio or examples of your work, if 
+  ✗ linkedin ≠ other_links: Where are you most active online? Share a link to your X, LinkedIn, Reddit, YouTube, etc.
+
+Wrong with rules + model:
+  ✗ portfolio ≠ open_question: Please provide a link to your visual merchandising portfolio or examples of your work, if 
+  ✗ linkedin ≠ other_links: Where are you most active online? Share a link to your X, LinkedIn, Reddit, YouTube, etc.

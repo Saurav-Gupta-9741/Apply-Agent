@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ML Engineer · Acme (resume-autofill test page)</title>
+<style>
+  body { font: 15px system-ui; max-width: 640px; margin: 32px auto; padding: 0 16px; }
+  .banner { background: #fff3cd; padding: 8px 12px; border-radius: 6px; }
+  .field { display: flex; flex-direction: column; gap: 4px; margin: 12px 0; }
+</style>
+</head>
+<body>
+<p class="banner">Local practice page: uploading the resume makes the site "parse" it and fill some fields itself,
+  a moment later (like Ashby, Workday and many careers sites). One parsed value is wrong on purpose.</p>
+<h1>ML Engineer</h1>
+<form id="application-form">
+  <div class="field"><label for="resume">Resume *</label><input id="resume" name="resume" type="file" required><span id="parsing"></span></div>
+  <div class="field"><label for="first_name">First Name *</label><input id="first_name" name="first_name" required></div>
+  <div class="field"><label for="last_name">Last Name *</label><input id="last_name" name="last_name" required></div>
+  <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" required></div>
+  <div class="field"><label for="phone">Phone *</label><input id="phone" name="phone" type="tel" required></div>
+  <button type="submit">Submit application</button>
+</form>
+<script>
+  document.getElementById("resume").addEventListener("change", () => {
+    document.getElementById("parsing").textContent = "Reading your resume…";
+    setTimeout(() => { // the site's parser fills what it found, overwriting nothing it did not find
+      document.getElementById("first_name").value = "ASHA";
+      document.getElementById("last_name").value = "VERMA";
+      document.getElementById("phone").value = "+1 555 0100"; // parsed wrong
+      document.getElementById("parsing").textContent = "Done";
+    }, 1200);
+  });
+  document.getElementById("application-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    sessionStorage.setItem("autofillSubmits", String(Number(sessionStorage.getItem("autofillSubmits") || 0) + 1));
+  });
+</script>
+</body>
+</html>

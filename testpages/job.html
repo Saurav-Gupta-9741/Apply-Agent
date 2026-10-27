@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Data Engineer · Acme Careers (local test page)</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"JobPosting","title":"Data Engineer","hiringOrganization":{"@type":"Organization","name":"Acme"},
+ "jobLocation":{"@type":"Place","address":{"@type":"PostalAddress","addressLocality":"Pune","addressCountry":"IN"}},"datePosted":"2026-10-20"}
+</script>
+<style>
+  body { font: 15px system-ui; max-width: 640px; margin: 32px auto; padding: 0 16px; }
+  .banner { background: #fff3cd; padding: 8px 12px; border-radius: 6px; }
+  .field { display: flex; flex-direction: column; gap: 4px; margin: 12px 0; }
+</style>
+</head>
+<body>
+<p class="banner">Local practice job page. <code>?inline=1</code>: the Apply button opens the form on this page
+  (like Ashby and many careers sites) instead of linking to another page.</p>
+<h1>Data Engineer</h1>
+<p>Acme · Pune, India · Full-time</p>
+<p>About the role: build and run reliable data pipelines. 1-3 years of experience with Python and SQL.</p>
+<p id="apply-slot"><a id="apply-link" href="apply.html">Apply now</a></p>
+<div id="form-slot"></div>
+<script>
+  if (new URLSearchParams(location.search).has("inline")) {
+    const slot = document.getElementById("apply-slot");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = "Apply for this job";
+    slot.replaceChildren(button);
+    button.addEventListener("click", () => {
+      slot.remove();
+      // Rendered later, as a single-page app would after its "Apply" click.
+      setTimeout(() => {
+        document.getElementById("form-slot").innerHTML = `
+          <form id="application-form">
+            <div class="field"><label for="first_name">First Name *</label><input id="first_name" name="first_name" required></div>
+            <div class="field"><label for="last_name">Last Name *</label><input id="last_name" name="last_name" required></div>
+            <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" required></div>
+            <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel"></div>
+            <div class="field"><label for="resume">Resume/CV *</label><input id="resume" name="resume" type="file" required></div>
+            <div class="field"><label for="linkedin">LinkedIn Profile</label><input id="linkedin" name="linkedin"></div>
+            <button type="submit">Submit application</button>
+          </form>`;
+      }, 300);
+    });
+  }
+</script>
+</body>
+</html>

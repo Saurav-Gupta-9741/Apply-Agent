@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.zip
+dist-test/
+test-results/
+playwright-report/
+testpages/build/
+models/

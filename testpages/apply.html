@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Practice application · Acme (local test page)</title>
+<style>
+  body { font: 15px system-ui; max-width: 640px; margin: 32px auto; padding: 0 16px; }
+  .field { display: flex; flex-direction: column; gap: 4px; margin: 12px 0; }
+  fieldset { margin: 12px 0; }
+  .banner { background: #fff3cd; padding: 8px 12px; border-radius: 6px; }
+  #upload { display: none; }
+  [role=listbox] { list-style: none; padding: 0; margin: 0; border: 1px solid #ccc; }
+  [role=option] { padding: 4px 8px; cursor: pointer; }
+</style>
+</head>
+<body>
+<p class="banner">Local practice page for testing ApplyAgent. Nothing is sent anywhere.
+  Options: <code>?captcha=1</code> shows a CAPTCHA box, <code>?redirect=1</code> confirms on a new page,
+  <code>?fail=1</code> shows a server-side error after submit.</p>
+<h1 class="app-title">Backend Engineer</h1>
+<p>Thank you for your interest in Acme. Please complete the form below.</p>
+
+<form id="application-form">
+  <div class="field"><label for="first_name">First Name *</label><input id="first_name" name="first_name" required></div>
+  <div class="field"><label for="last_name">Last Name *</label><input id="last_name" name="last_name" required></div>
+  <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" required></div>
+  <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel"></div>
+  <div class="field"><label for="upload">Resume/CV *</label>
+    <button type="button" onclick="document.getElementById('upload').click()">Attach resume</button>
+    <input id="upload" name="resume" type="file" required><span id="file-name"></span></div>
+  <div class="field"><label for="linkedin">LinkedIn Profile</label><input id="linkedin" name="linkedin"></div>
+  <div class="field"><label for="exp">Total years of experience</label><input id="exp" name="exp"></div>
+  <div class="field"><label for="python">How many years of experience do you have with Python? *</label><input id="python" name="python" required></div>
+  <div class="field"><label for="city">Location (City) *</label>
+    <input id="city" name="city" role="combobox" aria-controls="city-list" autocomplete="off" required>
+    <ul id="city-list" role="listbox"></ul></div>
+  <div class="field"><label for="degree">Degree</label>
+    <select id="degree" name="degree"><option value="">Select...</option><option>Bachelor's Degree</option><option>Master's Degree</option><option>PhD</option></select></div>
+  <fieldset><legend>Are you legally authorized to work in India? *</legend>
+    <label><input type="radio" name="auth" value="yes" required> Yes</label>
+    <label><input type="radio" name="auth" value="no"> No</label></fieldset>
+  <div class="field"><label for="notice">What is your notice period? *</label>
+    <select id="notice" name="notice" required><option value="">Select...</option><option>Immediate</option><option>15 days</option><option>30 days</option><option>60+ days</option></select></div>
+  <div class="field"><label for="why">Why do you want to join Acme? *</label><textarea id="why" name="why" rows="4" required></textarea></div>
+  <div class="field"><label for="gender">Gender</label>
+    <select id="gender" name="gender"><option value="">Select...</option><option>Male</option><option>Female</option><option>Decline to self identify</option></select></div>
+  <div class="field"><label><input type="checkbox" name="alerts"> Email me about future jobs</label></div>
+  <div class="field"><label><input type="checkbox" name="privacy" required> I agree to the privacy policy *</label></div>
+  <div id="captcha-slot"></div>
+  <button type="submit">Submit Application</button>
+</form>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  if (params.has("captcha")) document.getElementById("captcha-slot").innerHTML = '<div class="h-captcha">[CAPTCHA would appear here]</div>';
+  const cities = ["Bengaluru, Karnataka, India", "Pune, Maharashtra, India", "Hyderabad, Telangana, India", "Punta Gorda, Florida, USA"];
+  const city = document.getElementById("city");
+  const list = document.getElementById("city-list");
+  city.addEventListener("input", () => {
+    setTimeout(() => {
+      const q = city.value.toLowerCase().slice(0, 3);
+      list.innerHTML = "";
+      for (const c of cities.filter((c) => c.toLowerCase().startsWith(q))) {
+        const li = document.createElement("li");
+        li.setAttribute("role", "option");
+        li.textContent = c;
+        li.addEventListener("click", () => { city.value = c; list.innerHTML = ""; });
+        list.append(li);
+      }
+    }, 150);
+  });
+  document.getElementById("upload").addEventListener("change", (e) => {
+    document.getElementById("file-name").textContent = e.target.files[0]?.name ?? "";
+  });
+  document.getElementById("application-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    // Counted across page loads so tests can prove there is never a double submission.
+    sessionStorage.setItem("submits", String(Number(sessionStorage.getItem("submits") || 0) + 1));
+    if (params.has("fail")) {
+      document.body.insertAdjacentHTML("beforeend", '<div role="alert">Server error: please try again later</div>');
+      return;
+    }
+    if (params.has("redirect")) { location.href = "thanks.html"; return; }
+    setTimeout(() => { document.body.innerHTML = "<h1>Thank you for applying!</h1><p>We received your application for Backend Engineer.</p>"; }, 400);
+  });
+</script>
+</body>
+</html>

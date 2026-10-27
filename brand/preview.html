@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ApplyAgent logo</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { margin: 0; font: 15px/1.5 system-ui, sans-serif; background: #0a0c11; color: #e8eaf0; }
+  main { max-width: 900px; margin: 0 auto; padding: 32px 16px; }
+  h1 { font-size: 22px; margin: 0 0 4px; } p { color: #9198aa; margin: 0 0 20px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; }
+  .card { background: #11141b; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 18px; text-align: center; }
+  .card img { width: 128px; height: 128px; display: block; margin: 0 auto 12px; }
+  button { font: inherit; color: inherit; background: #1c212c; border: 1px solid rgba(255,255,255,.12); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+  .sizes { display: flex; gap: 18px; align-items: end; flex-wrap: wrap; margin-top: 24px; padding: 18px; border-radius: 14px; background: #fff; }
+  .sizes.dark { background: #202124; }
+</style></head><body><main>
+<h1>ApplyAgent logo</h1><p>An "A" whose crossbar is a check mark: the application, done. The spark is the agent.</p>
+<div class="grid">
+  <div class="card"><img id="intro" src="mark-intro.svg" alt="Intro animation"><button onclick="replay('intro','mark-intro.svg')">Replay intro</button></div>
+  <div class="card"><img src="mark-working.svg" alt="Working animation"><div>Working (while filling)</div></div>
+  <div class="card"><img id="celebrate" src="mark-celebrate.svg" alt="Celebrate animation"><button onclick="replay('celebrate','mark-celebrate.svg')">Replay "Applied"</button></div>
+  <div class="card"><img src="mark.svg" alt="Still"><div>Still</div></div>
+</div>
+<div class="sizes"><img src="mark.svg" width="16" height="16" alt=""><img src="mark.svg" width="24" height="24" alt=""><img src="mark.svg" width="32" height="32" alt=""><img src="mark.svg" width="48" height="48" alt=""><img src="mark.svg" width="64" height="64" alt=""><img src="mark.svg" width="96" height="96" alt=""></div><div class="sizes dark"><img src="mark.svg" width="16" height="16" alt=""><img src="mark.svg" width="24" height="24" alt=""><img src="mark.svg" width="32" height="32" alt=""><img src="mark.svg" width="48" height="48" alt=""><img src="mark.svg" width="64" height="64" alt=""><img src="mark.svg" width="96" height="96" alt=""></div>
+<p style="margin-top:20px">Store art: <a style="color:#8b8cff" href="promo-tile-440x280.png">promo tile 440×280</a> · <a style="color:#8b8cff" href="icon128.png">icon 128×128</a></p>
+<script>
+  function replay(id, src) { const img = document.getElementById(id); img.src = "mark.svg"; requestAnimationFrame(() => (img.src = src + "?" + Date.now())); }
+</script>
+</main></body></html>

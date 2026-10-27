@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Platform Engineer · Acme (multi-step test page)</title>
+<style>
+  body { font: 15px system-ui; max-width: 640px; margin: 32px auto; padding: 0 16px; }
+  .banner { background: #fff3cd; padding: 8px 12px; border-radius: 6px; }
+  .field { display: flex; flex-direction: column; gap: 4px; margin: 12px 0; }
+  .steps { color: #666; }
+</style>
+</head>
+<body>
+<p class="banner">Local practice page: a three-step application in one page (like Workday or SmartRecruiters).
+  "Next" is a submit-type button underneath. Submissions: <span id="submits">0</span></p>
+<h1>Platform Engineer</h1>
+<p class="steps">Step <span id="step-no">1</span> of 3</p>
+<form id="wizard" novalidate><div id="step"></div></form>
+<script>
+  const steps = [
+    `<div class="field"><label for="fn">First name *</label><input id="fn" required></div>
+     <div class="field"><label for="ln">Last name *</label><input id="ln" required></div>
+     <div class="field"><label for="em">Email *</label><input id="em" type="email" required></div>
+     <button type="button">Apply with LinkedIn</button> <button type="submit">Next</button>`,
+    `<div class="field"><label for="ph">Phone number *</label><input id="ph" type="tel" required></div>
+     <div class="field"><label for="cv">Resume *</label><input id="cv" type="file" required></div>
+     <button type="button" onclick="history.back()">Back</button> <button type="submit">Continue</button>`,
+    `<div class="field"><label for="li">LinkedIn profile</label><input id="li"></div>
+     <div class="field"><label for="ct">City *</label><input id="ct" required></div>
+     <button type="button">Save draft</button> <button type="submit">Submit application</button>`,
+  ];
+  let index = 0;
+  const step = document.getElementById("step");
+  const render = () => {
+    step.innerHTML = steps[index];
+    document.getElementById("step-no").textContent = String(index + 1);
+  };
+  render();
+  document.getElementById("wizard").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const missing = [...step.querySelectorAll("[required]")].filter((el) => el.type === "file" ? !el.files.length : !el.value);
+    if (missing.length) {
+      step.insertAdjacentHTML("beforeend", `<p role="alert">Please complete every required field.</p>`);
+      return;
+    }
+    if (index === steps.length - 1) {
+      const n = Number(sessionStorage.getItem("wizardSubmits") || 0) + 1;
+      sessionStorage.setItem("wizardSubmits", String(n));
+      document.body.innerHTML = "<h1>Thank you for applying!</h1><p>Your application has been received.</p>";
+      return;
+    }
+    index++;
+    setTimeout(render, 150); // the next step renders a moment later, like a real single-page app
+  });
+</script>
+</body>
+</html>

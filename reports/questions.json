@@ -1,0 +1,3377 @@
+[
+{
+"label": "Are you at least 18 years of age/?",
+"control": "combobox",
+"rule": "ask:age"
+},
+{
+"label": "Are you 18 years of age or older?",
+"control": "combobox",
+"rule": "ask:age"
+},
+{
+"label": "What is your current age?",
+"control": "radio",
+"rule": "ask:age"
+},
+{
+"label": "Are you at least 18 years of age?",
+"control": "combobox",
+"rule": "ask:age"
+},
+{
+"label": "By selecting yes to this question you confirm that you have read Esri’s Applicant Privacy Notice.",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "I confirm that my application details, including work history, education, and former Ebury employment status, are accurate and truthful. I understand that providing false, misleading, or omitted information may result in the rejection of my application or the withdrawal of any employment offer.",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "By checking this box, I agree to allow Ebury to retain my data for future opportunities for employment for up to 365 days after the conclusion of consideration of my current application for employment.",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "By checking this box, I consent to Smartsheet collecting, storing, and processing my responses to the demographic data surveys above.",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "Concordo que os dados pessoais serão coletados, tratados e compartilhados pelo Grupo Inter nos termos da Politica de Privacidade do Grupo Inter disponível para consulta, a qualquer tempo, por meio do site https://www.bancointer.com.br/politica-de-privacidade/. Ainda, o Inter esclarecerá suas dúvidas relacionadas à privacidade pelo e-mail privacidade@inter.co",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "We use Metaview to help our interviewers focus on the conversation instead of taking notes. Do you consent to Metaview transcribing our interviews? Metaview privacy policy: https://www.metaview.ai/privacy-policy",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "Applicant Privacy Policy",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "I acknowledge that I have reviewed and understood the Applicant Privacy Policy (link below).",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "By checking this box, I consent to Asana collecting, storing, and processing my responses to the demographic data surveys above.",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "Candidate Notice: Please read and accept the Global Personal Data Privacy Notice for Candidates.",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "By checking this box, I agree to allow Veeam Software to store and process my data for the purpose of considering my eligibility regarding my current application for employment.",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "By checking this box, I agree to allow Jensen Hughes to store and process my data for the purpose of considering my eligibility regarding my current application for employment.",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "If selected, I understand that completing a CLEAR verification check is required prior to receiving an offer of employment.",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "Yes, Magnet Forensics can contact me about future job opportunities for up to 1 year Privacy policy",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "Yes, Sophos can contact me about future job opportunities for up to 1 year Privacy policy",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "I understand",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "Do you consent to Socure processing your data to verify your identity under Socure's Recruiting Privacy Policy?",
+"control": "radio",
+"rule": "ask:consent"
+},
+{
+"label": "I confirm that I reside within one of the following states: North Dakota, South Dakota, Nebraska, Minnesota, Wisconsin, Michigan, Ohio, Indiana, Illinois, Iowa.",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "By checking this box, I consent to MongoDB collecting, storing, and processing my responses to the demographic data surveys above.",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "By selecting \"I agree\", I understand that the information I have provided as part of this job application will be processed in accordance with Toast's Applicant Privacy Statement.",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "Reconozco recepción y acepto el Aviso de Privacidad de Airbnb. (I acknowledge receipt and accept the Airbnb Privacy Notice.)",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "By selecting 'I acknowledge' and submitting this application, you confirm that you have read Elastic's Candidate Privacy Statement and understand how your data will be processed to evaluate your candidacy. In jurisdictions where consent is legally required, your submission constitutes express consent to the processing of your personal data for recruitment purposes.",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "By checking this box, I consent to Twilio collecting, storing, and processing my responses to the demographic data surveys above.",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "I confirm that I will be based in Munich throughout the duration of this internship.",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "I confirm that I am currently enrolled in a university degree.",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "I confirm that I am proficient in English, both written and spoken, at a C1+ level.",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "I confirm that I am proficient in German, both written and spoken, at a C1+ level.",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "I confirm, that I have read the Celonis Privacy Notice for the handling of my personal data in the application process.",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "I confirm the information provided in this application, including but not limited to my resume and the above information, is true and correct. I understand that false statements or material omissions of any kind during the hiring process may result in the rescinding of any offer of employment or dismissal once employed.",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "By checking this box, I consent to Celonis collecting, storing, and processing my responses to the demographic data surveys above.",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "I understand that Coinbase may use AI tools to assist in the application and interview process.",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "By submitting my application, I acknowledge that I have read and understand Vercel’s Job Applicant Privacy Notice - https://vercel.com/legal/job-applicant-privacy-notice",
+"control": "combobox",
+"rule": "ask:consent"
+},
+{
+"label": "If you agree with our Privacy Policy, please check the box below. Our Privacy Policy is available at www.zeta.tech/in/careers/privacy_policy",
+"control": "select",
+"rule": "ask:consent"
+},
+{
+"label": "Yes, Mindtickle can contact me about future job opportunities for up to 2 years Privacy policy",
+"control": "checkbox",
+"rule": "ask:consent"
+},
+{
+"label": "Do you have a disability or chronic condition (physical, visual, auditory, cognitive, mental, emotional, or other) that substantially limits one or more of your major life activities, including mobility, communication (seeing, hearing, speaking), and learning?",
+"control": "combobox",
+"rule": "ask:disability"
+},
+{
+"label": "Você se autodeclara pessoa com deficiência (PCD), nos termos da legislação brasileira?",
+"control": "combobox",
+"rule": "ask:disability"
+},
+{
+"label": "Se respondido \"Sim\" na pergunta anterior, indique a categoria que melhor descreve sua deficiência",
+"control": "combobox",
+"rule": "ask:disability"
+},
+{
+"label": "Disability status",
+"control": "select",
+"rule": "ask:disability"
+},
+{
+"label": "Person with disability",
+"control": "checkbox",
+"rule": "ask:disability"
+},
+{
+"label": "Do you have a physical or mental disability, impairment, or condition that substantially limits major life activity?",
+"control": "combobox",
+"rule": "ask:disability"
+},
+{
+"label": "¿Cuenta usted con una discapacidad/enfermedad? (Do you have a disability/illness?) - Mexico",
+"control": "combobox",
+"rule": "ask:disability"
+},
+{
+"label": "Gender",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "How would you describe your gender identity? (mark all that apply)",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "Do you identify as transgender?",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "I identify my gender as:",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "I identify as transgender:",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "[Optional] Pronouns - how should we refer to you in the third person?",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "[Optional, if \"other\" is selected above] My pronouns are",
+"control": "text",
+"rule": "ask:gender"
+},
+{
+"label": "How would you describe your gender identity?",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "Pronouns",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "How do you identify? (gender identity)",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "pronouns",
+"control": "checkbox_group",
+"rule": "ask:gender"
+},
+{
+"label": "Custom",
+"control": "checkbox",
+"rule": "ask:gender"
+},
+{
+"label": "What gender do you identify as?",
+"control": "radio",
+"rule": "ask:gender"
+},
+{
+"label": "Helping you bring your best self to the recruitment process means a lot to us. Other than your ethnicity, gender, and disability status (survey below), is there anything you would like to share with us, or information to help us accommodate you?",
+"control": "textarea",
+"rule": "ask:gender"
+},
+{
+"label": "What is your gender identity?",
+"control": "radio",
+"rule": "ask:gender"
+},
+{
+"label": "At Samsara, we encourage employees to bring their whole selves to work (this includes applicants too!) Feel free to share your preferred name and pronouns (she/her, they/them, he/him, ze/zir etc.).",
+"control": "text",
+"rule": "ask:gender"
+},
+{
+"label": "Gender Identity (Select one)",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "Gender Identity",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "Por favor identifique su género (Please identify your Gender) - Mexico",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "Gender Pronouns (She/Her/Hers, He/Him/His, They/Them/Theirs, etc.)",
+"control": "text",
+"rule": "ask:gender"
+},
+{
+"label": "Voluntary Self-Identification of Gender",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "Please indicate your gender identity",
+"control": "combobox",
+"rule": "ask:gender"
+},
+{
+"label": "As part of our commitment to creating a diverse and inclusive workplace, we invite you to voluntarily disclose your gender. This information is collected for record-keeping and statistical purposes only and will not be used in any hiring decisions or affect your job application process in any way. Please note that Meesho is an Equal Opportunity Employer, and all applicants will be considered for employment without regard to gender, race, ethnicity, disability, or any other characteristic protected by law. Your response will be kept confidential and will only be accessible to limited authorized personnel on need to know basis. Please select the option that best describes your gender:",
+"control": "radio",
+"rule": "ask:gender"
+},
+{
+"label": "What pronouns would you like our team to use when addressing you?",
+"control": "radio",
+"rule": "ask:gender"
+},
+{
+"label": "CPF",
+"control": "text",
+"rule": "ask:identity"
+},
+{
+"label": "GitHub Profile",
+"control": "text",
+"rule": "ask:missing_profile_value"
+},
+{
+"label": "Please share 3–5 links that best represent your work. These could include: Code you’ve written (GitHub repos, OSS contributions); Technical writing (tutorials, deep dives, comparisons); Talks, demos, or workshops (recordings or slides); Community engagement (threads, discussions where you helped others or shared insights).",
+"control": "textarea",
+"rule": "ask:missing_profile_value"
+},
+{
+"label": "Personal Website",
+"control": "text",
+"rule": "ask:missing_profile_value"
+},
+{
+"label": "Please provide a link to your visual merchandising portfolio or examples of your work, if available.",
+"control": "textarea",
+"rule": "ask:missing_profile_value"
+},
+{
+"label": "What is your Notice Period?",
+"control": "text",
+"rule": "ask:notice_period"
+},
+{
+"label": "Mês da data de início",
+"control": "combobox",
+"rule": "ask:notice_period"
+},
+{
+"label": "Ano da data de início",
+"control": "text",
+"rule": "ask:notice_period"
+},
+{
+"label": "Are you subject to a notice period at your current employer?",
+"control": "combobox",
+"rule": "ask:notice_period"
+},
+{
+"label": "If the answer to the question above is yes, what is the length of the notice period?",
+"control": "text",
+"rule": "ask:notice_period"
+},
+{
+"label": "What's your notice period? (In days)",
+"control": "text",
+"rule": "ask:notice_period"
+},
+{
+"label": "Start date year",
+"control": "number",
+"rule": "ask:notice_period"
+},
+{
+"label": "What is your notice period?",
+"control": "textarea",
+"rule": "ask:notice_period"
+},
+{
+"label": "What is your available start date?",
+"control": "text",
+"rule": "ask:notice_period"
+},
+{
+"label": "What is your notice period to begin working with Magnet Forensics?",
+"control": "select",
+"rule": "ask:notice_period"
+},
+{
+"label": "What is your notice period (in days)? (mention 0 if immediately available)",
+"control": "select",
+"rule": "ask:notice_period"
+},
+{
+"label": "What is your notice period and when would you be available to start?",
+"control": "text",
+"rule": "ask:notice_period"
+},
+{
+"label": "If offered a position, what is your ideal start-date?",
+"control": "text",
+"rule": "ask:notice_period"
+},
+{
+"label": "What is your required notice period?",
+"control": "radio",
+"rule": "ask:notice_period"
+},
+{
+"label": "How many days is your notice period?",
+"control": "text",
+"rule": "ask:notice_period"
+},
+{
+"label": "What is your notice period/ availability?",
+"control": "text",
+"rule": "ask:notice_period"
+},
+{
+"label": "How long is your Notice Period?",
+"control": "text",
+"rule": "ask:notice_period"
+},
+{
+"label": "Start date month",
+"control": "combobox",
+"rule": "ask:notice_period"
+},
+{
+"label": "Notice period Current notice period duration: Earliest possible joining date:",
+"control": "text",
+"rule": "ask:notice_period"
+},
+{
+"label": "Notice Period",
+"control": "text",
+"rule": "ask:notice_period"
+},
+{
+"label": "What is your current notice period?",
+"control": "radio",
+"rule": "ask:notice_period"
+},
+{
+"label": "Notice Period (In days)",
+"control": "text",
+"rule": "ask:notice_period"
+},
+{
+"label": "Are you Hispanic/Latino?",
+"control": "combobox",
+"rule": "ask:race"
+},
+{
+"label": "How would you describe your racial/ethnic background? (mark all that apply)",
+"control": "combobox",
+"rule": "ask:race"
+},
+{
+"label": "I identify my race / ethnicity as (select all that apply):",
+"control": "combobox",
+"rule": "ask:race"
+},
+{
+"label": "Please identify your race.",
+"control": "combobox",
+"rule": "ask:race"
+},
+{
+"label": "Please identify your ethnicity.",
+"control": "combobox",
+"rule": "ask:race"
+},
+{
+"label": "How would you describe your racial/ethnic background?",
+"control": "combobox",
+"rule": "ask:race"
+},
+{
+"label": "How do you identify? (race/ethnicity)",
+"control": "combobox",
+"rule": "ask:race"
+},
+{
+"label": "Race",
+"control": "select",
+"rule": "ask:race"
+},
+{
+"label": "I identify my ethnicity as Select all that apply",
+"control": "checkbox_group",
+"rule": "ask:race"
+},
+{
+"label": "Hispanic, Latinx or of Spanish Origin",
+"control": "checkbox",
+"rule": "ask:race"
+},
+{
+"label": "Hispanic or Latine",
+"control": "checkbox",
+"rule": "ask:race"
+},
+{
+"label": "Race/Ethnicity (Select all that apply)",
+"control": "combobox",
+"rule": "ask:race"
+},
+{
+"label": "Por favor identifique su origen étnico (Please identify your ethnic origin) - Mexico",
+"control": "combobox",
+"rule": "ask:race"
+},
+{
+"label": "Are you able to work onsite in the Esri location of this job posting, or relocate to do so?",
+"control": "combobox",
+"rule": "ask:relocation"
+},
+{
+"label": "Do you currently live or are you willing to relocate to the job’s location?",
+"control": "combobox",
+"rule": "ask:relocation"
+},
+{
+"label": "Are you open to relocation for this role?",
+"control": "combobox",
+"rule": "ask:relocation"
+},
+{
+"label": "What is the address from which you plan on working? If you would need to relocate, please type \"relocating\".",
+"control": "text",
+"rule": "ask:relocation"
+},
+{
+"label": "Are you open to relocation?",
+"control": "combobox",
+"rule": "ask:relocation"
+},
+{
+"label": "If you are open to relocate, where specifically?",
+"control": "text",
+"rule": "ask:relocation"
+},
+{
+"label": "If no, what is your anticipated timeline for relocating?",
+"control": "textarea",
+"rule": "ask:relocation"
+},
+{
+"label": "Are you within a commutable distance or willing to relocate?",
+"control": "radio",
+"rule": "ask:relocation"
+},
+{
+"label": "If not, would you be open to relocating? Please note, we do provide relocation assistance",
+"control": "select",
+"rule": "ask:relocation"
+},
+{
+"label": "Are you open to relocation to Pune? (Yes/No)",
+"control": "combobox",
+"rule": "ask:relocation"
+},
+{
+"label": "Are you willing to relocate to Bangalore?",
+"control": "radio",
+"rule": "ask:relocation"
+},
+{
+"label": "What is your annual salary range requirement?",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "Could you please let us know a rough idea of your salary expectations? Please specify currency.",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What is your Compensation expectations?",
+"control": "textarea",
+"rule": "ask:salary"
+},
+{
+"label": "Informe seu salário atual/último:",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "Salary expectations:",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What's your current CTC? (In Lakhs)",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What is your Current Salary?",
+"control": "textarea",
+"rule": "ask:salary"
+},
+{
+"label": "What is your Expected Salary?",
+"control": "textarea",
+"rule": "ask:salary"
+},
+{
+"label": "What is your desired salary?",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What are your total annual salary expectations (OTE)?",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What are your salary expectations for this position?",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What’s your current salary? (in lakhs per annum)",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What are your salary expectations?",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What is your salary expectation for this role?",
+"control": "textarea",
+"rule": "ask:salary"
+},
+{
+"label": "Salary Expectations",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "Do you have any initial compensation expectations?",
+"control": "number",
+"rule": "ask:salary"
+},
+{
+"label": "What is your monthly salary expectation in USD? (Full-time)",
+"control": "number",
+"rule": "ask:salary"
+},
+{
+"label": "What are your compensation expectations?",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What are your annual salary expectations? Please share the minimum amount you are looking for.",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "Expected Salary",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "Desired Salary",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What are your base salary expectations?",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What is your Expected Gross Salary?",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "Salary Expectation",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "Current CTC",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "Expected CTC SOPs:",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "Please provide your base salary expectations. (Note: We do not request or consider salary history.)",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "CTC",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What's your current compensation?",
+"control": "combobox",
+"rule": "ask:salary"
+},
+{
+"label": "What is your current annual CTC?",
+"control": "radio",
+"rule": "ask:salary"
+},
+{
+"label": "What is your expected annual CTC?",
+"control": "radio",
+"rule": "ask:salary"
+},
+{
+"label": "Expected CTC",
+"control": "textarea",
+"rule": "ask:salary"
+},
+{
+"label": "Current Compensation (Yearly)",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "Expected Compensation (Yearly)",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What is your current CTC? Please share the breakup of Fixed, Variable/Bonus, and ESOPs, if applicable.",
+"control": "textarea",
+"rule": "ask:salary"
+},
+{
+"label": "What are your CTC expectations?",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "What are your compensation expectations for this role?",
+"control": "text",
+"rule": "ask:salary"
+},
+{
+"label": "How would you describe your sexual orientation? (mark all that apply)",
+"control": "combobox",
+"rule": "ask:sexual_orientation"
+},
+{
+"label": "How would you describe your sexual orientation?",
+"control": "combobox",
+"rule": "ask:sexual_orientation"
+},
+{
+"label": "What experience do you have partnering with Store Planning, Store Design, or Store Development on new stores, remodels, or changes to store layouts and fixtures?",
+"control": "textarea",
+"rule": "ask:signature"
+},
+{
+"label": "What visual merchandising, space-planning, design, or planogram software are you proficient in? And what tools or software have you used to create planograms, floor plans, fixture layouts, visual directives, or in-store execution guides?",
+"control": "textarea",
+"rule": "ask:signature"
+},
+{
+"label": "How many years of experience do you have in B2B SaaS Product Design?",
+"control": "text",
+"rule": "ask:signature"
+},
+{
+"label": "Do you have experience designing content platforms or content management experiences?",
+"control": "textarea",
+"rule": "ask:signature"
+},
+{
+"label": "Have you designed AI-powered content creation or generative AI experiences?",
+"control": "text",
+"rule": "ask:signature"
+},
+{
+"label": "Have you designed complex workflows for enterprise users?",
+"control": "text",
+"rule": "ask:signature"
+},
+{
+"label": "Please share your portfolio highlighting relevant AI/product design work. If your portfolio is password-protected, please include the password.",
+"control": "textarea",
+"rule": "ask:signature"
+},
+{
+"label": "Will you now or in the future require DRW to sponsor you in the UK?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require visa sponsorship from Esri for employment (e.g., H-1B visa)?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Do you now or in the future require Visa sponsorship for employment?  Please note that visa sponsorship is not automatically provided for all positions and varies depending on the specific role and its requirements.",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Do you now or will you in the future require immigration sponsorship to work at Cloudflare?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "If you have a visa, please share all relevant details (visa type, expirations, deadlines, etc)",
+"control": "text",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require Nscale to sponsor or support an immigration application for you to be authorized to work in the role's country?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require visa sponsorship to work in the country of this position?",
+"control": "text",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Para tornar nosso processo seletivo ainda mais eficiente, o Inter utiliza um sistema de inteligência artificial (IA), que nos auxilia a analisar a transcrição das entrevistas realizadas com candidatos que participam dos processos seletivos. Dessa forma, conseguimos registrar com mais precisão as informações fornecidas pelos candidatos, facilitando a análise das competências que buscamos. Destacamos que o sistema de inteligência artificial utilizado pelo Inter serve apenas como uma ferramenta de apoio nos processos seletivos. As tomadas de decisão sempre são realizadas por pessoas. Ao selecionar o campo abaixo, você autoriza que o Inter utilize sistema de inteligência artificial para transcrição da(s) entrevista(s) e utilize os dados fornecidos na entrevista transcrita, no currículo e no processo de inscrição para analisar se suas competências estão alinhadas com o que buscamos neste processo seletivo. Informamos, ainda, que o sistema de inteligência artificial não utilizará dados sensíveis para análise de suas competências. Além disso, reforçamos que você poderá, a qualquer tempo, exercer seus direitos previstos na Lei Geral de Proteção de Dados Pessoais (LGPD), inclusive o direito de revogar o consentimento e solicitar revisão das análises realizadas por inteligência artificial. Para exercer direitos relacionados à privacidade e/ou determinar suas preferências no tratamento dos seus dados pessoais pelo Inter, você pode acessar gratuitamente a Central de Privacidade no Super App, e/ou entrar em contato conosco através do e-mail \"privacidade@inter.co\". Por fim, reforçamos que você pode optar por não fornecer o consentimento, sem que isso gere qualquer tipo de prejuízo na sua candidatura a este processo seletivo. Caso tenha alguma dúvida sobre como o Inter trata os seus dados pessoais, consulte a nossa Política de Privacidade.",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you require a visa sponsorship/work permit?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Do you require visa sponsorship?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or will you in the future require employment visa sponsorship to work in the country in which the job you're applying for is located?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Do you now, or will you in the future, require immigration sponsorship for work authorization to work in this location?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require visa sponsorship?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you require sponsorship from Anduril for employment now or in the future (e.g, H1B visa)?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Do you require immigration sponsorship to work for Affirm in the United States?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you require immigration sponsorship at any point in the future to maintain authorization to work in the United States?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require company sponsorship for a visa or work authorization to work in the country where this role is based?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require sponsorship to work in the country this position is located in?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require visa sponsorship for employment at Anaplan?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Do you now or will you at any time in the future require sponsorship?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require sponsorship for employment visa status (e.g., H-1B visa status)?",
+"control": "text",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you require sponsorship or other assistance or support to be authorized to, or otherwise, work from your country of residence?",
+"control": "select",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Do you now or will you in the future require visa sponsorship or transfer of visa sponsorship (e.g., H-1B, O-1, TN, E-3) from another employer to maintain work authorization in the United States?",
+"control": "radio",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require sponsorship for an employment visa (e.g., H-1B)?",
+"control": "radio",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require employer sponsorship to work in the United States?",
+"control": "select",
+"rule": "ask:sponsorship"
+},
+{
+"label": "If you selected “Yes” to requiring sponsorship now or in the future, please specify your current visa or work authorization status (e.g. H-1B, TN, OPT, etc.)",
+"control": "textarea",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Applicants must have authorization to work in the jurisdiction where the position is posted, without requiring employer sponsorship. By submitting this application, you are affirming that you have or reasonably expect to have such work authorization by the expected start date.",
+"control": "radio",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require Samsara to commence (“sponsor”) an immigration case in order to employ you?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Are you currently legally authorized to work in the country in which this job is based (e.g. you are a citizen, you have a visa, etc.)?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you require Stripe to sponsor you for a work permit now or in the future for the location(s) you selected in in your previous response?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Do you now or in the future require visa sponsorship to continue working in your country of residence?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require employment sponsorship?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Do you now, or will you ever, require employment sponsorship to work in the country where this job is located?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require company sponsorship to retain or extend your work authorization in the country where the job is located?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you require Elastic's sponsorship to continue or extend your work authorization status?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require immigration sponsorship for employment visa status?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now or in the future require sponsorship for a visa to remain in your current location?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you now, or in the future, require sponsorship for employment visa status (e.g., H-1B visa status)?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you require sponsorship for employment visa status now or in the future?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Will you require Visa Sponsorship now, or in the future?",
+"control": "combobox",
+"rule": "ask:sponsorship"
+},
+{
+"label": "Do you have a current UK work permit?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "How did you hear about this job?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "How did you hear about us?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you worked for Speechmatics in the past?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you currently a Speechmatics employee?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Please link a demo, sample app, or tutorial you built that other developers have used.",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Please share with us a hardware or edge project you've built (Arduino, ESP32, Raspberry Pi, cellular, or similar).",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Anything else you're proud of? A talk, article, open source contribution, or side project. Share the link.",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "OFAC: Please indicate whether you are either a citizen or lawful permanent resident of any of the following countries: Cuba, Crimea, Iran, North Korea, Russia, Syria or Sudan.",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Acknowledge/Confirm",
+"control": "checkbox",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you willing to work in a hybrid capacity from the office location(s) associated with this role?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "What is your preferred name?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "We're committed to ensuring an inclusive and accessible recruitment process. Do you require any adjustments or accommodations to support you during the interview?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Collaboration within our tech hubs is important to us, can you work 4 days from the office and 1 day per week from home?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Nome da empresa",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Cargo",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Mês da data de término",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Ano da data de término",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Você trabalha atualmente no Inter?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Considerando que nosso modelo de trabalho é presencial, em qual ou quais escritórios você tem interesse em atuar?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Você conhece alguém que trabalha no Inter?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Você possui alguma certificação?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Qual seu nível de fluência na língua inglesa?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Qual o seu nível de fluência na língua espanhola?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Você possui curso superior completo?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Caso você tenha respondido SIM para a pergunta anterior, em qual curso você se formou? Caso você tenha respondido NÃO, preencha o campo abaixo com NA",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Informe seus Benefícios atuais/últimos:",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Você deseja informar alguma necessidade de acessibilidade para participar das etapas do processo seletivo?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Quais recursos ou adaptações podem contribuir para sua participação no processo seletivo?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Please confirm if you are currently residing within the EU, UK or Ukraine",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "What is your tax residence?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Where do you currently engage with other developers? (links encouraged)",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you used developer tools related to AI, LLMs, or infrastructure (e.g. inference, orchestration, agentic workflows)?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you open to working in-person in one of our offices 25% of the time?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "AI Policy for Application",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Why Anthropic?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you ever interviewed at Anthropic before?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Please read the arbitration agreement below",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Agreement to Arbitrate",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you been employed, or otherwise engaged, by an Asana entity in the past? (Previous independent contractors, select \"Yes.\")",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Asana is seeking the below information for the exclusive and limited purpose of complying with U.S. export control laws given that the position for which you are applying may require access to technology subject to those laws. We will not use the information that you provide for any other purpose. Are you a citizen or legal permanent resident of Cuba, Iran, North Korea, Syria or Ukraine (Crimea region)?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you currently work for or have you ever worked for a U.S. government entity, either as a contractor or employee?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "If you answered “Yes,” please list the U.S. government entity you worked for. If not applicable, type 'N/A.'",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Please identify your sex.",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you able to work in our San Francisco office on Tuesdays and Thursdays?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "CLEARANCE ELIGIBILITY - This position requires eligibility to obtain and maintain a U.S. security clearance.",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "If you have held a U.S. security clearance in the past, what clearance level have you held?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "EXPORT CONTROLS - This position requires access to information and technology that is subject to U.S. export controls. Your responses to the questions below will be used solely to determine your eligibility under U.S. law to receive information and materials subject to U.S. export controls.",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "HISTORY WITH ANDURIL",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you ever been employed by Anduril or any company that Anduril has acquired?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "CONFLICT OF INTEREST",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "How did you hear about Anduril?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you willing to travel up to 25% of the time?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Preferred Name",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Which U.S. State or Canadian Province do you reside in?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "How did you first learn about Affirm as an employer?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you previously been employed at Affirm for any length of time?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you presently possess documentation to legally work in the U.S.?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you previously worked for Veeam (including as a contractor or intern)? Current Veeam employees are required to apply through the Internal Job Board.",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you currently own, operate, or provide services to any other business or organization (e.g., consultancy, freelance, board membership, or contractual engagement)?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "If yes, please describe the nature of the activity, your role, and whether it may overlap with the responsibilities or interests of Veeam.",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Street Address",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you subject to a non-compete agreement?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Address Line 1",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Zip/Postal Code",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "State/Province",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "What is the highest level of education you’ve completed?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you consent to receiving follow up communication via text message (or SMS message) regarding your application to the phone number you provided?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Acknowledge/Accept",
+"control": "checkbox",
+"rule": "ask:unknown"
+},
+{
+"label": "Other URL",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you previously been employed by Magnet Forensics (or acquired/merged company) in any capacity? (i.e. employee, contractor, co-op, vendor)?",
+"control": "checkbox_group",
+"rule": "ask:unknown"
+},
+{
+"label": "Yes",
+"control": "checkbox",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you have at least 6 years of experience in Customer Success, Strategic Account Management, Technical Account Management, or a related customer-facing role?",
+"control": "checkbox_group",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you have at least 2 years of experience leading technical, customer-facing teams?",
+"control": "checkbox_group",
+"rule": "ask:unknown"
+},
+{
+"label": "Which of the following experience do you have? Select all that apply.",
+"control": "checkbox_group",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you based in the United Kingdom and able to work a Sunday-to-Thursday schedule aligned to 9:00 a.m.–5:00 p.m. Arabia Standard Time?",
+"control": "checkbox_group",
+"rule": "ask:unknown"
+},
+{
+"label": "Which of the following qualifications do you have? Select all that apply.",
+"control": "checkbox_group",
+"rule": "ask:unknown"
+},
+{
+"label": "Address",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you subject to any restrictive covenants that would preclude you from fully performing your work with another employer?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "When are you available to start a new position?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you currently located within commuting distance to the assigned office location for this role?",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "Great Gray's Hybrid Work Policy, which currently requires in-office attendance four (4) days per week, applies to this position. Please indicate your understanding of and ability to comply with this requirement below.",
+"control": "checkbox_group",
+"rule": "ask:unknown"
+},
+{
+"label": "What inspired you to apply to this position at Allied?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you bilingual (French and English)?",
+"control": "select",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you have experience managing Service Desk operations using an ITSM/ticketing platform such as Jira Service Management, ServiceNow, or a similar platform, including ticket queues, SLAs, and escalations?",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you have experience overseeing employee technology lifecycle processes, including new hire equipment provisioning, asset inventory/CMDB management, and equipment recovery for separated employees?",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you willing and able to work on-site in Davie, Florida five days per week and travel periodically to other company locations, including Syracuse, New York?",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you willing and able to provide after-hours on-call support and occasionally work evenings, weekends, and holidays to support critical business operations?",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "How did you hear about us? (LinkedIn, job board, recruiter outreach, employee referral, etc.)",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Tu es...",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "Comment as-tu entendu parler de Theodo ?",
+"control": "checkbox_group",
+"rule": "ask:unknown"
+},
+{
+"label": "How did you first hear about Airwallex?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Why are you interested in Fireworks AI?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Any thing else you want to share on why you could be a good fit for this role",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Share links to previous talks you've given publicly (not counting internal talks). How comfortable do you feel on stage?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "How important is DevRel in your opinion? Can a company do well without a DevRel team?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "What companies do DevRel very well in your opinion? Why?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "What do you think ElevenLabs is currently missing from a DevRel point of view? Any platforms or content that we're missing?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you previously configured, integrated, or troubleshooting CRM systems (e.g., ActiveCampaign, HubSpot, Salesforce, or custom CRMs) with field tracking, tags, and automated triggers? If yes, share an example (briefly).",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Which AI tools do you actively use in your daily workflow to assist with code drafting, debugging, or task automation?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you built or configured AI agents, custom connectors, or automated workflows (e.g., using Claude, OpenAI APIs, or custom harnesses) to deliver automated reports or assets to other departments?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Why are you interested in this job at Socure?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Tell us about one developer community or program you built or grew. What did you do, and what changed as a result (numbers welcome)? 150 words max",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "What state or province do you live in?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "What client business problem did you sell against most recently, and what services engagement came from it?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "At an existing client, what did you sell first, and what did you sell next that expanded the relationship?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "What titles you meet with regularly, and in which industry(ies)?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Can you describe your experience providing therapy to young children and their families? Please include the types of therapeutic approaches you've used and the settings in which you've worked.",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "This role oversees a team of supervisors and front-line staff. In what roles have staff reported to you directly?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Date Available",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "What types of retail environments or product categories have you supported in your visual merchandising career?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you developed visual merchandising standards or direction intended to be executed across multiple store locations? If so, briefly describe the scope.",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "What visual merchandising strategies, standards, or tools have you personally developed? Please provide examples and briefly describe your role in creating them.",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Why do you want to join Figma?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "From where do you intend to work?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you ever worked for Figma before, as an employee or a contractor/consultant?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Processing of Personal Data",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you been rejected for this role at Samsara within the past 6 months?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "How many years of experience do you have in a closing sales role?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you have experience independently closing new deals larger than $10,000?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "What is the zip code of your primary residence?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "How did you hear about this opportunity?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Where have you learned about Samsara? Select all that apply.",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "AI Policy for Interviewers",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you previously worked at Samsara?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you ever been employed by Stripe or a Stripe affiliate?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "___________________________________________________________________________________",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "__________________________________________________________________________________",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "To ensure we can focus fully on our conversation, we use BrightHire to record and transcribe interviews. This helps us get to know you better without the distraction of note-taking. We also use BrightHire to help us analyze interview notes and for internal Stripe interview quality training and assurance purposes. After the recruitment process ends, recordings may be shared internally for recruiter and interviewer training to help us improve our interview processes. Please confirm if you consent to BrightHire being enabled for this interview and for your personal data to be collected and processed for the purposes mentioned above, by responding below",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "What time zone are you located in?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "How did you hear about this opportunity at Grafana?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you ever worked at MongoDB before?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you able to communicate fluently in English?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you able to communicate fluently in Spanish?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "What's your postal code?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Por favor indique su número CURP - Clave Única de Registro de Población (Please note your CURP number) - México",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you currently subject to any non-compete or non-solicitation agreement that would impact your ability to work at Airbnb or prevent you from accepting a job offer from Airbnb?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you currently or have you ever worked for Airbnb in any capacity? This could include, but is not limited to, a full-time employee, intern, apprentice, or contingent worker.",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "This role requires working on-site at the Airbnb office five days a week. Please confirm you are able to meet this requirement.",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you located in one of the following countries or regions: Belarus, Cuba, Iran, North Korea (DPRK), Syria, or Russia, including the Ukrainian territories annexed by Russia (The Crimea region of Ukraine, The Donetsk People's Republic (DNR), The Luhansk People's Republic (LNR), Kherson or Zaporizhzhia)",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Is your most recent legal permanent residency in one of the following countries: Cuba, Iran, North Korea (DPRK), or Syria?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you been the maintainer or contributor for an open-source project? (Maintaining includes tasks such as triaging issues, reviewing pull requests, managing releases, or overseeing community contributions.)",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you currently based in EST / MST?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "How should we communicate with you?",
+"control": "checkbox_group",
+"rule": "ask:unknown"
+},
+{
+"label": "How did you hear about Twilio?",
+"control": "checkbox_group",
+"rule": "ask:unknown"
+},
+{
+"label": "Acknowledge",
+"control": "checkbox",
+"rule": "ask:unknown"
+},
+{
+"label": "I will be available for the internship, full-time, starting in February/ March 2027.",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "I will be available for this internship full-time (40h/ week) for at least five months.",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you speak fluent German?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you actively used Salesforce as your primary CRM in a professional role?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Which of the following best describes your experience in a sales development, business development, or outbound sales role within the technology industry?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you previously worked at or consulted for GitLab?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you have any relatives or close family members currently employed with Druva?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "ECTC",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you willing to work for 5 days a week, from our Bangalore office?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Company name",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Title",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Have you previously been employed by Coinbase in any capacity?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Which of the following best describes how you use AI tools today?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you a current government official or were you a government official in the last five years (e.g., employee of a government agency or a government owned/controlled company, holder of public office or a civil service position)?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you a close relative of a government official (i.e., child/step-child, spouse/partner, parent/guardian, aunt/uncle, first cousin, in-law)?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "To your knowledge, do you or a close relative currently hold a role, have a significant financial interest in, or maintain a close personal relationship with a senior leader at a company connected to Coinbase that could create an actual or perceived conflict of interest?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "To your knowledge, were you referred to this position by a senior leader or decision‑maker at a current or prospective institutional client, business partner, or vendor of Coinbase?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you have professional-level proficiency in English, including reading, writing, and speaking?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you have professional-level proficiency in French, including reading, writing, and speaking?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you have at least 3 years of experience in financial services, crypto, investigations, legal or tech industry?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you currently based in any of these countries? Please note these are the only countries where we are accepting applications",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you live in one of the following states? Alabama, Alaska, Delaware, Kansas, Maine, Mississippi, Montana, Nebraska, New Mexico, North Dakota, South Dakota, West Virginia, or Wyoming.",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Where did you first hear about this role?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "Please double-check all the information provided above. Ensuring accuracy is crucial, as any errors or omissions may impact the review of your application.",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "How many years of experience do you have in Infrastructure Security?",
+"control": "combobox",
+"rule": "ask:unknown"
+},
+{
+"label": "How many years of relevant work experience do you have in Banking Operations, Financial Operations, or Transaction Reconciliation?",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "Which of the following industries have you worked in?",
+"control": "checkbox_group",
+"rule": "ask:unknown"
+},
+{
+"label": "Which type of transactions have you worked with?",
+"control": "checkbox_group",
+"rule": "ask:unknown"
+},
+{
+"label": "What is your experience with transaction reconciliation and debit/credit posting?",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "What is your experience with banking/payment disputes, chargebacks, and regulatory reporting (including RBI submissions)?",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "How would you rate your proficiency in Excel?",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "How would you rate your proficiency in Power BI?",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you comfortable working onsite five days a week at either our Mumbai or Bangalore office?",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "Relevant Experience in Product",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you based out of Bangalore ?",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "Do you have experience Managing Team?",
+"control": "radio",
+"rule": "ask:unknown"
+},
+{
+"label": "How did you get to know about this role?",
+"control": "select",
+"rule": "ask:unknown"
+},
+{
+"label": "Are you comfortable working from our Pune or Bengaluru office at least 3 days a week?",
+"control": "text",
+"rule": "ask:unknown"
+},
+{
+"label": "Tell us about something you’ve built with AI for your own work in the last year that someone else now relies on. What’s changed since the first version? When and What tools did you use to build it?",
+"control": "textarea",
+"rule": "ask:unknown"
+},
+{
+"label": "Veteran Status",
+"control": "combobox",
+"rule": "ask:veteran"
+},
+{
+"label": "Are you a veteran or active member of the United States Armed Forces?",
+"control": "combobox",
+"rule": "ask:veteran"
+},
+{
+"label": "My veteran status is:",
+"control": "combobox",
+"rule": "ask:veteran"
+},
+{
+"label": "Please identify your veteran status.",
+"control": "combobox",
+"rule": "ask:veteran"
+},
+{
+"label": "Veteran status",
+"control": "select",
+"rule": "ask:veteran"
+},
+{
+"label": "Veteran/Military Service Status",
+"control": "radio",
+"rule": "ask:veteran"
+},
+{
+"label": "Veteran",
+"control": "checkbox",
+"rule": "ask:veteran"
+},
+{
+"label": "If you are based in the US, what is your veteran status?",
+"control": "combobox",
+"rule": "ask:veteran"
+},
+{
+"label": "Are you legally permitted to work in the UK?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you authorised to work in the country where this job is located?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "If \"yes\" to the previous questions, what is the basis of your current work authorization and when does it expire?",
+"control": "textarea",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you currently legally authorized to work in the country where this role is based?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Do you currently have the right to work in the country of this position without restriction?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you authorized to work in the country specified for this role?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you legally authorized to work in the United States?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "U.S. WORK AUTHORIZATION",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you eligible to work in the country where this role is posted?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you legally authorized to work in the country in which the job you are applying for is located for any employer?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you legally eligible to work in the country in which you are applying?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Work authorization",
+"control": "select",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you legally authorized to work in the country you are applying to?",
+"control": "radio",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you legally authorized to work in the United States as per the below ITAR requirements? To conform to U.S. Government space technology export regulations, including the International Traffic in Arms Regulations (ITAR), you must be a U.S. citizen, lawful permanent resident of the U.S., protected individual as defined by 8 U.S.C. 1324b(a)(3), or eligible to obtain the required authorizations from the U.S. Department of State.",
+"control": "radio",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you legally eligible to work in Canada on a permanent basis?",
+"control": "select",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you currently legally authorized to work in the United States?",
+"control": "select",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you authorized to work in the country for which you applied?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you authorized to work in the location(s) you selected in your previous response?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you currently eligible to work in your country of residence?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you legally authorized to work in the country where this job is located?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you legally authorized to work in the country where the job is located?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "In what countries do you have the unrestricted right to work?",
+"control": "text",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you legally authorized to work in the country in which this role is located?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "What is the source of your right to work where this role is listed?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Are you legally authorized to work in the country where this position is located?",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Your authorization to work in the country where you live. Please choose the option that describes your work authorization.",
+"control": "combobox",
+"rule": "ask:work_authorization"
+},
+{
+"label": "Country",
+"control": "combobox",
+"rule": "profile:country"
+},
+{
+"label": "País",
+"control": "combobox",
+"rule": "profile:country"
+},
+{
+"label": "Country of Residence",
+"control": "combobox",
+"rule": "profile:country"
+},
+{
+"label": "Please enter the country you are legally registered to work in.",
+"control": "text",
+"rule": "profile:country"
+},
+{
+"label": "Please select the country where you currently reside.",
+"control": "combobox",
+"rule": "profile:country"
+},
+{
+"label": "Is your most recent country of citizenship one of the following countries: Cuba, Iran, North Korea (DPRK), or Syria?",
+"control": "combobox",
+"rule": "profile:country"
+},
+{
+"label": "Please choose the country in which you are located.",
+"control": "combobox",
+"rule": "profile:country"
+},
+{
+"label": "What is your current country of residence?",
+"control": "combobox",
+"rule": "profile:country"
+},
+{
+"label": "What is your current or most recent employer?",
+"control": "text",
+"rule": "profile:currentCompany"
+},
+{
+"label": "Current Company",
+"control": "text",
+"rule": "profile:currentCompany"
+},
+{
+"label": "Current company",
+"control": "text",
+"rule": "profile:currentCompany"
+},
+{
+"label": "Most Recent Employer",
+"control": "text",
+"rule": "profile:currentCompany"
+},
+{
+"label": "Are you subject to any employment agreements and/or post-employment restrictions with your current employer or a past employer?",
+"control": "combobox",
+"rule": "profile:currentCompany"
+},
+{
+"label": "Current company name",
+"control": "text",
+"rule": "profile:currentCompany"
+},
+{
+"label": "Please list your most recent Employer here.",
+"control": "text",
+"rule": "profile:currentCompany"
+},
+{
+"label": "Current Title",
+"control": "text",
+"rule": "profile:currentTitle"
+},
+{
+"label": "Most Recent Job Title",
+"control": "text",
+"rule": "profile:currentTitle"
+},
+{
+"label": "Degree",
+"control": "combobox",
+"rule": "profile:degree"
+},
+{
+"label": "En quelle année as-tu/vas-tu recevoir ton diplôme ?",
+"control": "select",
+"rule": "profile:degree"
+},
+{
+"label": "Discipline",
+"control": "combobox",
+"rule": "profile:discipline"
+},
+{
+"label": "Email",
+"control": "text",
+"rule": "profile:email"
+},
+{
+"label": "E-mail",
+"control": "text",
+"rule": "profile:email"
+},
+{
+"label": "Please enter your personal email ID (If you havent already)",
+"control": "text",
+"rule": "profile:email"
+},
+{
+"label": "Have you independently managed full outbound prospecting sequences (calls, email, and social) in a tech sales role?",
+"control": "combobox",
+"rule": "profile:email"
+},
+{
+"label": "What is your total work experience?",
+"control": "combobox",
+"rule": "profile:experienceYears"
+},
+{
+"label": "Total Years of Experience",
+"control": "text",
+"rule": "profile:experienceYears"
+},
+{
+"label": "First Name",
+"control": "text",
+"rule": "profile:firstName"
+},
+{
+"label": "Preferred First Name",
+"control": "text",
+"rule": "profile:firstName"
+},
+{
+"label": "Legal First Name",
+"control": "textarea",
+"rule": "profile:firstName"
+},
+{
+"label": "Nome",
+"control": "text",
+"rule": "profile:firstName"
+},
+{
+"label": "First name",
+"control": "text",
+"rule": "profile:firstName"
+},
+{
+"label": "Legal Name (if different than above)",
+"control": "text",
+"rule": "profile:fullName"
+},
+{
+"label": "Se sim para pergunta anterior, qual é o nome completo do colaborador?",
+"control": "text",
+"rule": "profile:fullName"
+},
+{
+"label": "Full Legal Name",
+"control": "text",
+"rule": "profile:fullName"
+},
+{
+"label": "Full name",
+"control": "text",
+"rule": "profile:fullName"
+},
+{
+"label": "Full Name",
+"control": "text",
+"rule": "profile:fullName"
+},
+{
+"label": "Legal Name",
+"control": "text",
+"rule": "profile:fullName"
+},
+{
+"label": "Name",
+"control": "text",
+"rule": "profile:fullName"
+},
+{
+"label": "Anticipated graduation date",
+"control": "text",
+"rule": "profile:graduationYear"
+},
+{
+"label": "Last Name",
+"control": "text",
+"rule": "profile:lastName"
+},
+{
+"label": "Legal Last Name",
+"control": "textarea",
+"rule": "profile:lastName"
+},
+{
+"label": "Sobrenome",
+"control": "text",
+"rule": "profile:lastName"
+},
+{
+"label": "Preferred Last Name",
+"control": "text",
+"rule": "profile:lastName"
+},
+{
+"label": "Last Name / Surname",
+"control": "text",
+"rule": "profile:lastName"
+},
+{
+"label": "Last name",
+"control": "text",
+"rule": "profile:lastName"
+},
+{
+"label": "LinkedIn Profile",
+"control": "text",
+"rule": "profile:linkedin"
+},
+{
+"label": "Where are you most active online? Share a link to your X, LinkedIn, Reddit, YouTube, etc.",
+"control": "text",
+"rule": "profile:linkedin"
+},
+{
+"label": "LinkedIn Profile:",
+"control": "text",
+"rule": "profile:linkedin"
+},
+{
+"label": "LinkedIn URL",
+"control": "text",
+"rule": "profile:linkedin"
+},
+{
+"label": "Where can we learn more about you? (LinkedIn, portfolio) URL",
+"control": "text",
+"rule": "profile:linkedin"
+},
+{
+"label": "Linkedin",
+"control": "text",
+"rule": "profile:linkedin"
+},
+{
+"label": "Linkedin URL",
+"control": "text",
+"rule": "profile:linkedin"
+},
+{
+"label": "Link to your LinkedIn profile",
+"control": "text",
+"rule": "profile:linkedin"
+},
+{
+"label": "Linkedin Profile URL",
+"control": "textarea",
+"rule": "profile:linkedin"
+},
+{
+"label": "LinkedIn Profile/Website",
+"control": "text",
+"rule": "profile:linkedin"
+},
+{
+"label": "Share 2–3 links to technical content you created and are proud of (e.g., tutorials, blog posts, talks, videos, sample apps, docs). Add your main public profile (GitHub, LinkedIn, X…) if relevant.",
+"control": "textarea",
+"rule": "profile:linkedin"
+},
+{
+"label": "Professional Profile (LinkedIn, Github, Website, etc)",
+"control": "text",
+"rule": "profile:linkedin"
+},
+{
+"label": "LinkedIn profile",
+"control": "text",
+"rule": "profile:linkedin"
+},
+{
+"label": "Location (City)",
+"control": "combobox",
+"rule": "profile:location"
+},
+{
+"label": "Where are you located?",
+"control": "text",
+"rule": "profile:location"
+},
+{
+"label": "Your current location?",
+"control": "textarea",
+"rule": "profile:location"
+},
+{
+"label": "City",
+"control": "text",
+"rule": "profile:location"
+},
+{
+"label": "Current location",
+"control": "text",
+"rule": "profile:location"
+},
+{
+"label": "Current Location (City, State)",
+"control": "text",
+"rule": "profile:location"
+},
+{
+"label": "What is your location?",
+"control": "select",
+"rule": "profile:location"
+},
+{
+"label": "This role requires at least 3 days a week in the office, are you able to easily commute to the location the role is based in?",
+"control": "select",
+"rule": "profile:location"
+},
+{
+"label": "Location",
+"control": "combobox",
+"rule": "profile:location"
+},
+{
+"label": "Current Location",
+"control": "combobox",
+"rule": "profile:location"
+},
+{
+"label": "Where are you located/working from?",
+"control": "text",
+"rule": "profile:location"
+},
+{
+"label": "What city do you live in?",
+"control": "text",
+"rule": "profile:location"
+},
+{
+"label": "What is your current location?",
+"control": "text",
+"rule": "profile:location"
+},
+{
+"label": "Current location :",
+"control": "text",
+"rule": "profile:location"
+},
+{
+"label": "Are you comfortable commuting to and working onsite at our New York City office location?",
+"control": "combobox",
+"rule": "profile:location"
+},
+{
+"label": "Phone",
+"control": "tel",
+"rule": "profile:phone"
+},
+{
+"label": "Telefone",
+"control": "tel",
+"rule": "profile:phone"
+},
+{
+"label": "Phone Number",
+"control": "tel",
+"rule": "profile:phone"
+},
+{
+"label": "Phone/WhatsApp",
+"control": "tel",
+"rule": "profile:phone"
+},
+{
+"label": "Phone number",
+"control": "tel",
+"rule": "profile:phone"
+},
+{
+"label": "School",
+"control": "combobox",
+"rule": "profile:school"
+},
+{
+"label": "Which institution do you attend?",
+"control": "textarea",
+"rule": "profile:school"
+},
+{
+"label": "Which Celonis campus event or university career fair did you attend?",
+"control": "combobox",
+"rule": "profile:school"
+},
+{
+"label": "Resume/CV",
+"control": "file",
+"rule": "resume"
+},
+{
+"label": "This position requires a portfolio submission. Please attach your portfolio if it is not linked in your resume or cover letter.",
+"control": "file",
+"rule": "resume"
+},
+{
+"label": "Anexar",
+"control": "file",
+"rule": "resume"
+},
+{
+"label": "Resume/CV  ATTACH RESUME/CV",
+"control": "file",
+"rule": "resume"
+},
+{
+"label": "Resume",
+"control": "file",
+"rule": "resume"
+},
+{
+"label": "Resume (Must be formatted in English)",
+"control": "file",
+"rule": "resume"
+},
+{
+"label": "Resume Choose file",
+"control": "file",
+"rule": "resume"
+},
+{
+"label": "GitHub",
+"control": "text",
+"rule": "skip:no github in profile"
+},
+{
+"label": "GitHub URL",
+"control": "text",
+"rule": "skip:no github in profile"
+},
+{
+"label": "Github Profile URL",
+"control": "text",
+"rule": "skip:no github in profile"
+},
+{
+"label": "Link to your GitHub",
+"control": "text",
+"rule": "skip:no github in profile"
+},
+{
+"label": "Github",
+"control": "text",
+"rule": "skip:no github in profile"
+},
+{
+"label": "Github / Stack Overflow URL",
+"control": "text",
+"rule": "skip:no github in profile"
+},
+{
+"label": "Github URL",
+"control": "text",
+"rule": "skip:no github in profile"
+},
+{
+"label": "Portfolio",
+"control": "text",
+"rule": "skip:no portfolio in profile"
+},
+{
+"label": "Website/Portfolio",
+"control": "text",
+"rule": "skip:no portfolio in profile"
+},
+{
+"label": "Personal Website URL",
+"control": "text",
+"rule": "skip:no portfolio in profile"
+},
+{
+"label": "Portfolio URL",
+"control": "text",
+"rule": "skip:no portfolio in profile"
+},
+{
+"label": "Other website",
+"control": "text",
+"rule": "skip:no portfolio in profile"
+},
+{
+"label": "Other (e.g. portfolio, etc.) URL",
+"control": "text",
+"rule": "skip:no portfolio in profile"
+},
+{
+"label": "Cover Letter",
+"control": "file",
+"rule": "skip:optional attachment"
+},
+{
+"label": "If you would like to share additional documents (such as a portfolio, work samples, or certifications), please upload them here",
+"control": "file",
+"rule": "skip:optional attachment"
+},
+{
+"label": "Photo Choose file",
+"control": "file",
+"rule": "skip:optional attachment"
+},
+{
+"label": "Função atual",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Yes.",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "London, UK",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "New York, NY",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Remote, US",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "San Mateo, CA",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Singapore",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Interview Recording Consent",
+"control": "radio",
+"rule": "skip:optional choice"
+},
+{
+"label": "I don't wish to answer",
+"control": "checkbox_group",
+"rule": "skip:optional choice"
+},
+{
+"label": "I prefer to self describe",
+"control": "checkbox_group",
+"rule": "skip:optional choice"
+},
+{
+"label": "Queer",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Lesbian",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Heterosexual",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Gay",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Bisexual and/or pansexual",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Asexual",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "White or European",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Southeast Asian",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "South Asian",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Native Hawaiian or Pacific Islander",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Middle Eastern or North African",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Indigenous, American Indian or Alaska Native",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "East Asian",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Black or of African descent",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Woman",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Non-binary",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Man",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Bisexual",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Heterosexual / straight",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Other",
+"control": "checkbox_group",
+"rule": "skip:optional choice"
+},
+{
+"label": "I prefer not to answer",
+"control": "checkbox_group",
+"rule": "skip:optional choice"
+},
+{
+"label": "Asian or Asian American",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Black or African American",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Indigenous or Native American",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Native Hawaiian or Other Pacific Islander",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "White",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Neurodiverse",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Parent",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Refugee or immigrant",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "None of the above",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "How did you hear about ElevenLabs?",
+"control": "radio",
+"rule": "skip:optional choice"
+},
+{
+"label": "What is your level of English proficiency?",
+"control": "radio",
+"rule": "skip:optional choice"
+},
+{
+"label": "JavaScript / TypeScript",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "React / Next.js",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Node.js",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "REST APIs / Webhooks / JSON",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "MongoDB",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "ActiveCampaign / CRM tagging",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "AirCall / SalesMsg / VoIP tools",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Calendly / Scheduling tools",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "GoDaddy DNS Management / Domain routing",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Read.ai / Automated meeting recorders",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Framer / Web landing pages",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "LinkedIn",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Twitter/X",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Hugging Face",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Research Paper",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Referral",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Recruiter",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "SMS",
+"control": "radio",
+"rule": "skip:optional choice"
+},
+{
+"label": "WhatsApp",
+"control": "radio",
+"rule": "skip:optional choice"
+},
+{
+"label": "Current role",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Glassdoor",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Notion Blog",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Notion Employee",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Notion Website",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Billboard/Outdoor Ads",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Conference or Meetup",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Acknowledge/ Confirm",
+"control": "checkbox",
+"rule": "skip:optional choice"
+},
+{
+"label": "Website",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Please provide additional detail if appropriate.",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Would you like to make us aware of any adjustments needed for your interview process?",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Would you like to include your LinkedIn profile, personal website or blog?",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Are you subject to any prior or existing agreements which would limit, restrict, or prevent you from performing the duties of the position for which you have applied, such as a non-solicitation or a non-competition agreement?",
+"control": "combobox",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "If the answer to the question above is yes, please provide additional information relating to your obligations and/or employment restrictions.",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Personal Preferences",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "When is the earliest you would want to start working with us?",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Do you have any deadlines or timeline considerations we should be aware of?",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Additional Information",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "[Optional] Preferred Full Name (The name that you would like to be referred to as. Please input your legal name in the first and last name fields above.)",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Website Password",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "If other, please specify",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Name Pronunciation",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Twitter",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Other Links",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "How did you hear about this position?",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "When are you available for employment?",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "End date year",
+"control": "number",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Website / other links",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Do you agree to be a part of the talent community for future career opportunities at Veeam? Your information will be retained for up to 2 years.",
+"control": "combobox",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Middle Name (If applicable)",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Postal Code",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "List any professional licensure or certifications you may have.",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Address Line 2",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "If Employee Referral, please list the employee's name.",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Google Scholar URL",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Which location are you applying for?",
+"control": "select",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Twitter URL",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Where can we find samples of your code? URL",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Where can we find your publications, papers, or research? URL",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "If you were referred to Magnet, who referred you? (Note: We may verify referral details internally.)",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Were you referred for this opportunity by a current employee at the organization? If yes, which employee?",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Please provide 2 professional references that we may contact. These ideally would be individuals that were in a supervisory role or worked closely with you that can speak in detail of your history.",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Is there an ispace crewmember we can thank for referring you to this opportunity?",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Any other information you would like us to know?",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Are you able to work from our Manchester office 3 days a week?",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Middle Name",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "If Yes, please share their name here",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Preferred Name (if applicable)",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Where are you currently located?",
+"control": "combobox",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "X (formerly Twitter) URL",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "What brought you to this job posting",
+"control": "combobox",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "If you responded \"other\" to the question above, let us know how you found this job posting",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Have you worked on Web applications previously? If so, what technologies did you use?",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Imagine you’re building a button component that will be used across many different applications. What questions would you ask before you start coding?",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "If other, please specify below",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "What makes you excited about the ElevenLabs mission?",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Finally, tell us about a hard problem in your past!",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "How did you first hear about Helius?",
+"control": "combobox",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "If you selectd Referral or Other - tell us more...",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "When would you be available to start?",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Headline",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Cover letter",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Summary",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Other Website",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "If you selected 'Other' for where you learned about Samsara, please share additional details.",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Are you currently a student? Please select all that apply.",
+"control": "combobox",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Anything else you'd like to share with our hiring team?",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Would you like to stay up to date with MongoDB Culture and Careers content?",
+"control": "combobox",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "How did you learn about this job?",
+"control": "combobox",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "If you answered MongoDB Employee, MongoDB Event, or Other, please specify here:",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Receive alerts for similar jobs?",
+"control": "combobox",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "End date month",
+"control": "combobox",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "What does \"The Best Team Wins\" mean to you?",
+"control": "combobox",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "What's the name you'd prefer us to use throughout the interview process?",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "It is important to us to create an accessible and inclusive interview experience. Please let us know if there are any adjustments we can make to assist you during the hiring and interview process.",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "How many years of experience do you have in technical customer-facing roles?",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Total year of experience?",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "How many years of experience do you have in a consulting or professional services role?",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Do you have hands-on experience implementing, configuring, or troubleshooting enterprise backup and recovery solutions?",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Have you worked on backup and restore across enterprise workloads such as VMware, NAS, SQL databases, AWS/Azure VMs, Microsoft 365, or Google Workspace?",
+"control": "textarea",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Are you ready to work in US shift (evening)",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "Naukri URL",
+"control": "text",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "How did you learn about this opportunity with Atlan?",
+"control": "combobox",
+"rule": "skip:optional, not in profile"
+},
+{
+"label": "As mentioned in the job description, this internship is intentionally designed as a pathway for full-time employment, contingent on availability and individual performance. Please confirm that you have either graduated, or will be graduating by January 2027",
+"control": "radio",
+"rule": "skip:signature: entered by you only"
+},
+{
+"label": "Have you led or supported end-to-end customer implementations, including requirement discovery, solution design, deployment, and post-deployment optimization?",
+"control": "textarea",
+"rule": "skip:signature: entered by you only"
+}
+]
