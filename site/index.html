@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ApplyAgent – fills job applications for you</title>
+  <meta name="description" content="A Chrome extension that fills job applications on company career sites from your profile. It asks before anything sensitive, and you press Submit." />
+  <link rel="icon" href="mark.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html"><img src="mark.svg" alt="" />ApplyAgent</a>
+  <nav class="links" aria-label="Main">
+    <a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="privacy.html">Privacy</a>
+  </nav>
+</div></header>
+
+<main>
+  <div class="wrap hero">
+    <h1>Fill job applications in seconds.<br />You stay in control.</h1>
+    <p class="lead">ApplyAgent types your details into application forms on company career sites, attaches your resume,
+      and leaves the questions only you can answer for you. You press Submit.</p>
+    <a class="cta" href="{{STORE_URL}}">Add to Chrome — free</a>
+    <p class="note">For Chrome, Edge and Brave on Windows, Mac, Linux and Chromebook.
+      On a phone? <a href="#phone">Send it to your computer</a>.</p>
+  </div>
+
+  <section id="how"><div class="wrap">
+    <h2>How it works</h2>
+    <div class="grid">
+      <div class="card"><div class="step">Step 1</div><h3>Save your details once</h3>
+        <p>Profile, resume and a few quick answers: notice period, work permit, expected salary.</p></div>
+      <div class="card"><div class="step">Step 2</div><h3>Open an application, press Fill</h3>
+        <p>Greenhouse, Lever, Ashby, Workable, BambooHR, Teamtailor, Breezy, Recruitee, Personio and company career pages.</p></div>
+      <div class="card"><div class="step">Step 3</div><h3>Check it and submit</h3>
+        <p>Questions that need you are highlighted. "Applied" is recorded only when the employer confirms it.</p></div>
+    </div>
+    <p><img class="shot" src="screenshot-fill.png" width="1280" height="800" alt="A job application filled by ApplyAgent, with its panel listing one question left for the user" /></p>
+  </div></section>
+
+  <section><div class="wrap grid">
+    <div class="card"><h3>Careful by design</h3>
+      <ul class="checks">
+        <li>Understands unusual wordings with a small AI that runs on your computer, offline</li>
+        <li>Fills only when it is sure; anything unclear is asked</li>
+        <li>Never overwrites what you typed</li>
+        <li>Works on multi-step forms and forms in 7 languages</li>
+      </ul></div>
+    <div class="card"><h3>What it never does</h3>
+      <ul class="checks never">
+        <li>Never runs on LinkedIn, Naukri, Indeed or Glassdoor</li>
+        <li>Never handles passwords or CAPTCHAs</li>
+        <li>Never submits without your choice</li>
+        <li>Never sends your data anywhere: it stays in your browser</li>
+      </ul></div>
+  </div></section>
+
+  <section id="pricing"><div class="wrap">
+    <h2>Pricing</h2>
+    <div class="grid">
+      <div class="card plan"><h3>Free</h3>
+        <div class="price">₹0 <small>forever</small></div>
+        <ul class="checks"><li>20 applications a month</li><li>Every feature, including the offline AI</li></ul></div>
+      <div class="card plan featured"><h3>Pro pass <span class="badge">{{LAUNCH_BADGE}}</span></h3>
+        <div class="price">{{PRICE_INR}} <small>/ 30 days</small></div>
+        <ul class="checks"><li>Unlimited applications</li><li>Queue several applications at once</li>
+          <li>One-time payment, no auto-renewal</li><li>Outside India: {{PRICE_USD}} / 30 days</li></ul></div>
+    </div>
+    <p class="note">Refund within 7 days if it does not work for you. See the <a href="refund.html">refund policy</a>.</p>
+  </div></section>
+
+  <section id="faq"><div class="wrap">
+    <h2>Questions</h2>
+    <details><summary>Is my data safe?</summary>
+      <p>Your profile, resume and answers are stored only in your browser. ApplyAgent has no account and no database of
+        users' details. The question-understanding AI runs offline inside the extension.</p></details>
+    <details><summary>Why not LinkedIn or Naukri?</summary>
+      <p>Those platforms do not allow automated tools, and accounts can be restricted. ApplyAgent works on companies' own
+        application pages, where your application goes straight to the employer.</p></details>
+    <details><summary>Will it answer every question?</summary>
+      <p>No, on purpose. On real forms about half the fields are your details, which it fills. The rest are your real
+        choices (why this company, screening questions), which it highlights for you.</p></details>
+    <details id="phone"><summary>Does it work on my phone?</summary>
+      <p>Not yet: Chrome on Android and iPhone does not run extensions. Open this page on your laptop or desktop, or send
+        yourself the link. Your saved details stay on the computer where you use it.</p></details>
+    <details><summary>Which browsers?</summary>
+      <p>Chrome, Microsoft Edge and Brave on Windows, Mac, Linux and Chromebook. Opera works too, with ApplyAgent opening
+        in its own small window.</p></details>
+  </div></section>
+</main>
+
+<footer><div class="wrap">
+  <span>© {{YEAR}} ApplyAgent</span>
+  <span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="refund.html">Refunds</a> ·
+    <a href="mailto:{{CONTACT_EMAIL}}">Contact</a></span>
+</div></footer>
+</body>
+</html>

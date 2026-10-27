@@ -161,6 +161,20 @@ function setCount(name: string, value: number, attention = false): void {
 /** The tab the panel acts on: the active tab, or (when opened as a page, e.g. in tests) ?tabId=<id>. */
 const pinnedTabId = Number(new URLSearchParams(location.search).get("tabId")) || undefined;
 
+/** The keyboard shortcuts as this user has them (they can change them, and a Mac shows ⌥⇧F). */
+const keys = { fill: "Alt+Shift+F", open: "Alt+Shift+A" };
+const MAC = /Mac/i.test(navigator.platform || navigator.userAgent);
+const keyLabel = (shortcut: string) => (MAC ? shortcut.replace(/Alt\+?|Option\+?/g, "⌥").replace(/Shift\+?/g, "⇧").replace(/(Command|⌘)\+?/g, "⌘").replace(/(Ctrl|MacCtrl)\+?/g, "⌃") : shortcut);
+async function loadShortcuts(): Promise<void> {
+  const commands = await chrome.commands.getAll().catch(() => []);
+  const fill = commands.find((c) => c.name === "fill-application")?.shortcut ?? "";
+  const open = commands.find((c) => c.name === "_execute_action")?.shortcut ?? "";
+  keys.fill = fill ? keyLabel(fill) : "";
+  keys.open = open ? keyLabel(open) : "";
+  const hint = $("fill-shortcut");
+  hint.textContent = keys.fill || "a shortcut (set one at chrome://extensions/shortcuts)";
+}
+
 async function activeTab(): Promise<chrome.tabs.Tab | undefined> {
   if (pinnedTabId !== undefined) return chrome.tabs.get(pinnedTabId).catch(() => undefined);
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -222,7 +236,7 @@ async function refreshPage(): Promise<void> {
   $("page-url").classList.toggle("truncate", !!pattern);
   $("page-url").textContent = pattern ? url
     : embedded ? "The application form embedded in this page is on a site you allowed."
-    : unknownPage ? "Click the ApplyAgent icon (or press Alt+Shift+A) while on this page to use ApplyAgent here."
+    : unknownPage ? `Click the ApplyAgent icon${keys.open ? ` (or press ${keys.open})` : ""} while on this page to use ApplyAgent here.`
     : "Open a job application in this window.";
   const access = $("page-access");
   access.textContent = handsOff ? "Hands-off" : allowed ? "Allowed" : oneTime ? "This visit" : embedded ? "Form allowed" : pattern ? "Not allowed" : "";
@@ -680,7 +694,7 @@ async function run(): Promise<void> {
       report = await send({ type: "RUN", mode: runMode });
     }
     if (!report && moved && oneTimeOnly) {
-      setStatus("The next step opened on a new page. Click the ApplyAgent icon there (or press Alt+Shift+F) to continue, or allow the site so it continues by itself.", "warn");
+      setStatus(`The next step opened on a new page. Click the ApplyAgent icon there${keys.fill ? ` (or press ${keys.fill})` : ""} to continue, or allow the site so it continues by itself.`, "warn");
       return;
     }
     showReport(report);
@@ -1591,6 +1605,7 @@ void renderSetup();
 void renderQuick();
 void runRequested();
 void renderDetectionSetting();
+void loadShortcuts();
 void renderAnswers();
 void renderTracker();
 void (async () => {

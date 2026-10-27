@@ -3,7 +3,7 @@
 Chrome extension that finds well-matched jobs, fills applications on company career sites (up to 5 at once),
 asks you before answering anything sensitive, and records "applied" only when the employer's site confirms it.
 Plan: `../AI_APPLY_AGENT_PLAN.md` · Testing: `TESTING.md` · Deployment & payments: `DEPLOY.md` · Privacy: `PRIVACY.md`
-Hinglish guide to the whole project: `PROJECT_GUIDE_HINGLISH.md` · Store listing + screenshots: `store/`
+Hinglish guide to the whole project: `PROJECT_GUIDE_HINGLISH.md` · Store listing + screenshots: `store/` · Price, costs, marketing, obstacles: `LAUNCH_PLAN.md` · Website: `site/`
 
 ## Build and load
 ```bash

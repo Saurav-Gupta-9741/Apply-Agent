@@ -18,6 +18,12 @@ async function ensurePage(): Promise<void> {
   await creating;
 }
 
+/** The model needs ~150 MB while it runs. On computers with 1 GB of memory or less it is not started: rules alone. */
+export function modelFits(): boolean {
+  const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
+  return memory === undefined || memory > 1;
+}
+
 export async function understand(texts: string[]): Promise<Array<Reading | null>> {
   const unknown = [...new Set(texts.filter((t) => t && !remembered.has(t)))];
   if (unknown.length) {

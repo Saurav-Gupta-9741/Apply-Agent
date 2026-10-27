@@ -6,7 +6,7 @@ import { loadApplications, loadQueue, loadSettings, saveApplications, setQueueRu
 import { isHandsOff } from "../shared/platforms";
 import { clearDetection, recordDetection, syncDetector } from "./detector";
 import { setWorking } from "./icon";
-import { understand } from "./understand";
+import { modelFits, understand } from "./understand";
 import { isValidJobUrl } from "./queue";
 import { onTabClosed, onTabReport, pendingQuestions, pump, queueStatusFor, runInTab, updateQueue } from "./runner";
 
@@ -18,12 +18,33 @@ const FILL_MENU = "applyagent-fill";
 
 chrome.runtime.onInstalled.addListener(() => {
   // The icon click is handled below (it opens the panel and tells it to re-read the page).
-  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false }).catch(() => undefined);
+  chrome.sidePanel?.setPanelBehavior({ openPanelOnActionClick: false }).catch(() => undefined);
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({ id: FILL_MENU, title: "Fill this application with ApplyAgent", contexts: ["page", "editable", "frame"] });
   });
   resyncDetector();
 });
+
+/** Opens the panel beside this tab. Browsers without Chrome's side panel (Opera, some Edge builds) get the same panel
+ * in a small window of its own, tied to this tab. Called synchronously from the user's action: Chrome opens the side
+ * panel only while that action is still current. */
+function openPanel(tab: chrome.tabs.Tab): void {
+  if (tab.id === undefined) return;
+  if (typeof chrome.sidePanel?.open !== "function") {
+    void openPanelWindow(tab);
+    return;
+  }
+  chrome.sidePanel.open({ tabId: tab.id }).catch(() => void openPanelWindow(tab));
+}
+
+async function openPanelWindow(tab: chrome.tabs.Tab): Promise<void> {
+  const around = tab.windowId !== undefined ? await chrome.windows.get(tab.windowId).catch(() => undefined) : undefined;
+  const width = 420;
+  await chrome.windows.create({
+    url: chrome.runtime.getURL(`sidepanel.html?tabId=${tab.id}`), type: "popup", width, height: Math.min(around?.height ?? 820, 900),
+    left: around ? (around.left ?? 0) + Math.max(0, (around.width ?? 1200) - width) : undefined, top: around?.top,
+  }).catch(() => undefined);
+}
 
 /** Keyboard shortcut (Alt+Shift+F) and right-click menu: open the panel on this tab and let it run Fill there,
  * so the user sees every question and result. Both count as the user's own action, which also gives one-time
@@ -31,7 +52,7 @@ chrome.runtime.onInstalled.addListener(() => {
 function fillFromShortcut(tab: chrome.tabs.Tab | undefined): void {
   if (tab?.id === undefined) return;
   // Opened first and synchronously: Chrome only lets the panel open while the user's action is still current.
-  chrome.sidePanel.open({ tabId: tab.id }).catch(() => undefined);
+  openPanel(tab);
   // An open panel hears this change; a panel that is still loading reads it when it starts.
   void chrome.storage.session.set({ panelRun: { tabId: tab.id, at: Date.now() } });
 }
@@ -39,7 +60,7 @@ function fillFromShortcut(tab: chrome.tabs.Tab | undefined): void {
 /** The toolbar icon (and Alt+Shift+A) gives one-time access to this page. Without the "tabs" permission the panel
  * would not otherwise know, so it is told to re-read the page. */
 chrome.action.onClicked.addListener((tab) => {
-  if (tab.id !== undefined) chrome.sidePanel.open({ tabId: tab.id }).catch(() => undefined);
+  openPanel(tab);
   chrome.runtime.sendMessage({ type: "PANEL_REFRESH" } satisfies Message).catch(() => undefined); // no panel open yet: fine
 });
 
@@ -188,7 +209,7 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse: (r
       return false;
     case "UNDERSTAND":
       // Switched off in Profile & plan: no readings, and the model is not even loaded.
-      loadSettings().then((s) => (s.understanding ? understand(message.texts) : null)).then(sendResponse, () => sendResponse(null));
+      loadSettings().then((s) => (s.understanding && modelFits() ? understand(message.texts) : null)).then(sendResponse, () => sendResponse(null));
       return true;
     case "AGENT_BUSY":
       if (sender.tab?.id !== undefined) void setWorking(sender.tab.id, message.busy);
