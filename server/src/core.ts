@@ -53,11 +53,21 @@ export async function signLicense(payload: LicensePayload, privateJwk: JsonWebKe
 }
 
 /** Human-friendly licence key: 4 groups of 5 characters from an alphabet without look-alikes (100 bits). */
-export function newLicenseKey(): string {
+function keyFrom(bytes: Uint8Array): string {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 32 symbols, no I/O/0/1
-  const bytes = crypto.getRandomValues(new Uint8Array(20));
-  const chars = Array.from(bytes, (b) => alphabet[b % 32]);
+  const chars = Array.from(bytes.slice(0, 20), (b) => alphabet[b % 32]);
   return [0, 5, 10, 15].map((i) => chars.slice(i, i + 5).join("")).join("-");
+}
+
+export function newLicenseKey(): string {
+  return keyFrom(crypto.getRandomValues(new Uint8Array(20)));
+}
+
+/** The key for a new purchase, derived from its payment: the payment page's redirect and Razorpay's webhook can arrive
+ * at the same moment (and the store may not show one's write to the other yet); both then issue the same key. */
+export async function licenseKeyForPayment(secret: string, paymentId: string): Promise<string> {
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  return keyFrom(new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`license:${paymentId}`))));
 }
 
 export const LICENSE_KEY_FORMAT = /^[A-HJ-NP-Z2-9]{5}(-[A-HJ-NP-Z2-9]{5}){3}$/;

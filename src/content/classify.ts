@@ -10,7 +10,9 @@ import { factDecision, HEARD_ABOUT, type PageFacts } from "./facts";
 const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   // Checked first: identity numbers and signatures are never filled or remembered by the agent.
   ["identity", /personalausweis|steuer ?id|steueridentifikationsnummer|\biban\b|securite sociale|\bdni\b|\bnie\b|\bcpf\b|codice fiscale|\bbsn\b|aadhaa?r|\bpan\b( card| number| no)?|passport (number|no)|social security|\bssn\b|national (id|insurance)|bank account|\bifsc\b|account number|routing number|tax (id|identification)|driver'?s? licen[cs]e (number|no)/],
-  ["signature", /unterschrift|assinatura|handtekening|signature|\be ?sign(ature)?\b|sign here|type your (full )?(legal )?name to (sign|confirm|acknowledge)|electronically sign/],
+  // A typed name that signs something ("Signed (full name)", "Declaration: Full name", "I hereby declare… Name of the
+  // candidate:") is a signature: the user types it.
+  ["signature", /unterschrift|assinatura|handtekening|signature|\be ?sign(ature)?\b|sign here|\bsigned\b|type your (full )?(legal )?name|electronically sign|\bdeclaration\b|hereby declare|\backnowledg\w*\b.*\bname\b|\binitials\b/],
   ["sponsorship", /sponsor|visa|visum/],
   ["work_authorization", /\bwork permit\b|arbeitserlaubnis|aufenthaltstitel|arbeitsgenehmigung|permis de travail|autorisation de travail|autorizacion de trabajo|permiso de trabajo|autorizacao de trabalho|permesso di (lavoro|soggiorno)|werkvergunning|authori[sz]ed to work|work authori[sz]ation|right to work|eligible to work|legally (able|permitted|entitled)/],
   ["salary", /gehalt|salaire|salari|retribuzione|stipendio|pretension|salary|compensation|\bctc\b|pay expectation|expected pay|desired pay|remuneration/],
@@ -34,8 +36,8 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["firstName", /first ?name|given ?name|^(what is |whats )?your preferred name$|^preferred name$|\bfname\b|forename|vorname|\bprenom\b|^nombre$|primer nombre|primeiro nome|voornaam/],
   ["lastName", /last ?name|family ?name|surname|\blname\b|nachname|familienname|nom de famille|^nom$|apellido|sobrenome|cognome|achternaam/],
   ["fullName", /^(full )?name$|^your name$|full name|legal name|vollstandiger name|vor und nachname|nom complet|nombre completo|nombre y apellidos|nome completo|volledige naam/],
-  ["email", /e ?mail|courriel|correo/],
-  ["phone", /phone|mobile|\btel\b|contact number|telef|\bhandy|rufnummer|portable|movil|celular|cellulare|mobiel/],
+  ["email", /e ?mail|courriel|correo|メール|ईमेल|이메일|电子邮件|電子郵件/],
+  ["phone", /phone|mobile|\btel\b|contact number|telef|\bhandy|rufnummer|portable|movil|celular|cellulare|mobiel|電話|电话|फ़?ोन|मोबाइल|전화/],
   ["linkedin", /linked ?in/],
   ["github", /git ?hub/],
   ["portfolio", /portfolio|personal (web)?site|^website$|website url|blog/],
@@ -50,7 +52,7 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["country", /country|^land$|\bpays\b|\bpais\b|\bpaese\b/],
   // Where the user WANTS to work, before where they live.
   ["preferredLocations", /preferred (job |work )?(location|cit(y|ies))|location preference|desired (job |work )?location|where would you (like|prefer) to work|bevorzugte[rn]? (arbeits)?ort|lieu souhaite|ubicacion (deseada|preferida)/],
-  ["location", /\bcity\b|location|where are you (currently )?(based|located)|where do you (currently )?(live|reside)|current address|town|wohnort|\bstadt\b|\bort\b|\bville\b|ciudad|localidad|cidade|\bcitta\b|woonplaats/],
+  ["location", /\bcity\b|location|where are you (currently )?(based|located)|where do you (currently )?(live|reside)|town|wohnort|\bstadt\b|\bort\b|\bville\b|ciudad|localidad|cidade|\bcitta\b|woonplaats/],
 ];
 
 const AUTOCOMPLETE: Record<string, ProfileKey | "fullName"> = {
@@ -176,11 +178,13 @@ function workDecision(field: FieldDescriptor, profile: Profile): Decision | unde
 /** Questions about SOMEONE ELSE (emergency contact, referee, referrer, manager…): the user's own name, email or
  * phone must never go there, even when the field is an email or phone box. */
 // Word starts matter: "preferred" contains "referr", "management" is not "manager".
-const OTHER_PERSON = /\bemployee\b|colaborador|funcionari|empleado|mitarbeiter|emergency|next of kin|\bkin\b|\breferr|\breferee|\breference|\brecommender|manager|supervisor|reporting to|recruiter|spouse|\bpartner\b|\bparent|guardian|father|mother|nominee|contact person|\bfriend|colleague|notfall|ansprechpartner|vorgesetzt|referenz|personne a contacter|urgence|emergencia|referencia|responsavel|emergenza/;
+const OTHER_PERSON = /\bemployee\b|colaborador|funcionari|empleado|mitarbeiter|emergency|next of kin|\bkin\b|\breferr|\breferee|\breference|\brecommender|manager|supervisor|reporting to|recruiter|spouse|\bpartner\b|\bparent|guardian|father|mother|nominee|contact person|\bfriend|colleague|notfall|ansprechpartner|vorgesetzt|referenz|personne a contacter|urgence|emergencia|referencia|responsavel|emergenza|husband|\bwifes?\b|sibling|brother|sister|\bson\b|daughter|relative|team leads?\b|advis[oe]r|mentor|professor|\bhr (contact|email|manager|person|representative)\b|human resources|point of contact|\bpoc\b|hiring|interviewer/;
+/** "Husband's phone", "Company's email": a possessive names someone else, unless it is the user ("candidate's name"). */
+const SOMEONE_ELSES = /\b(?!(candidate|applicant|student|user|your|my|company|employer|organi[sz]ation|school|universit\w*|college|institut\w*)['’])[a-z]+['’]s (e-?mail|phone|mobile|name|number|address|contact|details)\b/i;
 
 /** Section headings that announce someone else's details. Narrower than OTHER_PERSON: headings such as
  * "Manager approval" are rare, but "References" and "Emergency contact" sections are common. */
-const OTHER_PERSON_SECTION = /emergency|next of kin|\breferences?\b|\breferee|\breferr|contact person|notfall|referenz|urgence|emergencia|referencia|emergenza/;
+const OTHER_PERSON_SECTION = /emergency|next of kin|\breferences?\b|\breferee|\breferr|contact person|notfall|referenz|urgence|emergencia|referencia|emergenza|supervisor|manager|spouse|partner|parent|guardian|family|relative|nominee|husband|\bwifes?\b/;
 
 /** A yes/no question ("Are you comfortable commuting to our office location?", "Is your country of citizenship one
  * of…") or a choice about the job ("Which location are you applying for?") is never answered with a profile fact,
@@ -189,7 +193,7 @@ const OTHER_PERSON_SECTION = /emergency|next of kin|\breferences?\b|\breferee|\b
  * location(s)?"), details of a past job at this company ("…please list your work email address"), part of a value
  * ("Email address without domain"), "What is your experience with GitHub Copilot?", requests to describe something
  * ("Describe any training or qualifications…") and full street addresses (a city is not one). */
-const NOT_A_FACT = /^(are|is|do|does|did|have|has|had|will|would|can|could|should|were|was|may|might|shall|sind|haben|hast|bist|konnen|wurden|etes|avez|pouvez|seriez|esta|estas|tiene|tienes|puede|eres|voce|tem)\b|\b(applying|apply) (for|to)\b|\bdid you attend\b|\binterested in\b|\bif (different|yes|so)\b|^se sim\b|^si oui\b|^wenn ja\b|^if (you )?(selected|chose|choose|answered|picked|ticked|checked)\b|\bif you (have )?(previously|ever|formerly) (worked|been employed)\b|\b(work|company|corporate) email\b|without (the )?domain|before the @|\bexperience (with|in|using|of)\b|^(please )?(briefly )?(describe|tell us|explain|elaborate)\b|\bstreet\b|\bzip\b|postal code|\bpin ?code\b/;
+const NOT_A_FACT = /^(are|is|do|does|did|have|has|had|will|would|can|could|should|were|was|may|might|shall|sind|haben|hast|bist|konnen|wurden|etes|avez|pouvez|seriez|esta|estas|tiene|tienes|puede|eres|voce|tem)\b|\b(applying|apply) (for|to)\b|^(?!(which|what)\b).*\bdid you attend\b|\binterested in\b|\bif (different|yes|so)\b|^se sim\b|^si oui\b|^wenn ja\b|^if (you )?(selected|chose|choose|answered|picked|ticked|checked)\b|\bif you (have )?(previously|ever|formerly) (worked|been employed)\b|\b(work|company|corporate) email\b|without (the )?domain|before the @|\bexperience (with|in|using|of)\b|^(please )?(briefly )?(describe|tell us|explain|elaborate)\b|\bstreet\b|\bzip\b|postal code|\bpin ?code\b|\b(want|wish|plan|hope|like) to (attend|study|join|work)\b|\b(target|preferred|desired|dream|future)\b (school|universit\w*|college|institut\w*|compan\w*|employer|job|role|position|title)|\bhigh school\b|\bsecondary\b|\b(10th|12th|tenth|twelfth|ssc|hsc|matric\w*|intermediate)\b|\bbirth\b|\bcitizenship\b|\bcountry code\b|\bdial\w*\b|\bpass ?(word|code)\b|\bpin\b|\b(event|fair|conference|meetup|webinar|info session)\b/;
 /** "…3 days a week in the office, are you able to commute to the location?" asks yes or no, wherever the "are you" is.
  * Questions that open with a question word ("Where are you located?") still ask for a fact. */
 const YES_NO_INSIDE = /\b(are|do|would|will|can|could|should|have) you\b/;
@@ -207,7 +211,7 @@ export function notAProfileFact(field: FieldDescriptor): boolean {
   if (NOT_A_FACT.test(asked)) return true;
   if (YES_NO_INSIDE.test(asked) && !OPENS_WITH_QUESTION_WORD.test(asked)) return true;
   if (asked.split(" ").length > MAX_FACT_WORDS) return true;
-  if (OTHER_PERSON.test(normalize(`${field.label} ${field.name.replace(/([a-z])([A-Z])/g, "$1 $2")}`))) return true;
+  if (OTHER_PERSON.test(normalize(`${field.label} ${field.name.replace(/([a-z])([A-Z])/g, "$1 $2")}`)) || SOMEONE_ELSES.test(field.label)) return true;
   return !!field.section && OTHER_PERSON_SECTION.test(normalize(field.section));
 }
 
@@ -244,7 +248,9 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
     const entry = findAnswer(field, answers, topic);
     if (entry) return { kind: "answer", value: entry.answer, question: entry.question };
     // The user's quick answers, only where the question clearly is that question (see facts.ts).
-    return factDecision(field, profile, topic, page) ?? { kind: "ask", reason: "sensitive", topic };
+    const someoneElse = OTHER_PERSON.test(normalize(field.label)) || SOMEONE_ELSES.test(field.label)
+      || (!!field.section && OTHER_PERSON_SECTION.test(normalize(field.section)));
+    return (someoneElse ? undefined : factDecision(field, profile, topic, page)) ?? { kind: "ask", reason: "sensitive", topic };
   }
 
   if (field.control === "file") {

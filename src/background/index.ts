@@ -2,13 +2,15 @@
  * State lives in chrome.storage, never in memory, because the worker is stopped when idle. */
 
 import type { ApplicationRecord, ApplicationStatus, Message, RunReport } from "../shared/types";
-import { loadApplications, loadQueue, loadSettings, saveApplications, setQueueRunning } from "../shared/storage";
+import { loadApplications, loadQueue, loadSettings, setQueueRunning, updateApplications as updateStoredApplications } from "../shared/storage";
 import { isHandsOff } from "../shared/platforms";
 import { clearDetection, recordDetection, syncDetector } from "./detector";
 import { setWorking } from "./icon";
 import { modelFits, understand } from "./understand";
 import { isValidJobUrl } from "./queue";
-import { onTabClosed, onTabReport, pendingQuestions, pump, queueStatusFor, runInTab, updateQueue } from "./runner";
+import { onTabClosed, onTabReport, pendingQuestions, pump, queueStatusFor, runInTab, updateQueue, working } from "./runner";
+import { PENDING_MS, pendingSubmission, type PendingSubmission } from "../shared/frames";
+import { currentLicense, remainingSubmissions } from "../shared/license";
 
 const PUMP_ALARM = "queue-pump";
 
@@ -80,29 +82,60 @@ chrome.permissions.onRemoved.addListener(resyncDetector);
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "local" && changes.settings) resyncDetector();
 });
-chrome.alarms.onAlarm.addListener((alarm) => alarm.name === PUMP_ALARM && void pump());
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name !== PUMP_ALARM) return;
+  void expireSubmissions();
+  void pump();
+});
+chrome.runtime.onStartup.addListener(() => void expireSubmissions());
 
 // --- tracker (serialised writes: several tabs can report at the same moment) ---------------------------
 let trackerChain: Promise<unknown> = Promise.resolve();
 
 function updateApplications(change: (records: ApplicationRecord[]) => ApplicationRecord[]): Promise<void> {
-  const next = trackerChain.then(async () => saveApplications(change(await loadApplications())));
+  const next = trackerChain.then(() => updateStoredApplications(change)); // shared lock with the panel's restore
   trackerChain = next.catch(() => undefined);
   return next;
 }
 
+/** Submissions the free plan (or the user's pass) still allows today and this month. */
+async function allowance(): Promise<number> {
+  return remainingSubmissions(await currentLicense(), await loadApplications(), new Date());
+}
+
+/** Mark a queue item as being worked on, unless it already is: two clicks (or a click and the queue) never run or
+ * submit the same application twice. */
+async function claim(id: string, note: string): Promise<boolean> {
+  let claimed = false;
+  await updateQueue((queue) => queue.map((q) => {
+    if (q.id !== id || q.status === "running") return q;
+    claimed = true;
+    return { ...q, status: "running" as const, note, updatedAt: new Date().toISOString() };
+  }));
+  return claimed;
+}
+
+/** Records still "submitting" long after Submit was pressed (no confirmation page came, or the worker restarted):
+ * the user checks them. They count as submissions meanwhile, so limits stay honest. */
+async function expireSubmissions(now = Date.now()): Promise<void> {
+  await updateApplications((records) => records.map((r) =>
+    r.status === "in_progress" && now - Date.parse(r.createdAt) > PENDING_MS ? { ...r, status: "needs_check" as const } : r));
+}
+
 /** Tabs where the agent pressed (or the user approved) Submit: only these may record an application. */
-async function pendingTabs(): Promise<Record<string, string>> {
+async function pendingTabs(): Promise<Record<string, PendingSubmission>> {
   const data = await chrome.storage.session.get("pending");
-  return (data.pending as Record<string, string> | undefined) ?? {};
+  return (data.pending as Record<string, PendingSubmission> | undefined) ?? {};
 }
 
 let pendingChain: Promise<unknown> = Promise.resolve();
 
+/** A submission belongs to its tab for a few minutes only (PENDING_MS): a later page in the same tab ("Application
+ * submitted" in the user's candidate portal, another job applied for by hand) is never recorded as this one. */
 function setPending(tabId: number, applicationId: string | null): Promise<void> {
   const next = pendingChain.then(async () => {
     const pending = await pendingTabs();
-    if (applicationId) pending[String(tabId)] = applicationId;
+    if (applicationId) pending[String(tabId)] = { id: applicationId, at: Date.now() };
     else delete pending[String(tabId)];
     await chrome.storage.session.set({ pending });
   });
@@ -131,8 +164,8 @@ async function screenshot(tab: chrome.tabs.Tab, id: string): Promise<string | un
 
 async function recordResult(report: RunReport, tab: chrome.tabs.Tab): Promise<void> {
   if (tab.id === undefined) return;
-  const id = (await pendingTabs())[String(tab.id)];
-  if (!id) return; // a confirmation page the agent did not submit: not ours to record
+  const id = (await pendingSubmission(tab.id))?.id;
+  if (!id) return; // a confirmation page the agent did not submit (or long after it): not ours to record
   if (report.status === "needs_user") {
     // The site rejected the submission (error, CAPTCHA, validation): nothing was applied, so drop the placeholder.
     await updateApplications((records) => records.filter((r) => !(r.id === id && r.status === "in_progress")));
@@ -168,7 +201,7 @@ chrome.tabs.onUpdated.addListener((tabId, info) => {
   if (info.status === "loading") void setWorking(tabId, false); // a new page: the agent there starts afresh
   if (info.status !== "complete") return;
   (async () => {
-    if (!(await pendingTabs())[String(tabId)]) return;
+    if (!(await pendingSubmission(tabId))) return;
     await chrome.scripting.executeScript({ target: { tabId, allFrames: true }, files: ["content.js"] });
   })().catch(() => undefined);
 });
@@ -198,8 +231,13 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse: (r
     }
     case "RUN_RESULT":
       if (sender.tab?.id !== undefined) {
-        void recordResult(message.report, sender.tab).catch(() => undefined);
-        void onTabReport(sender.tab.id, message.report);
+        const tab = sender.tab;
+        (async () => {
+          // Read before recording (which may clear it): only a tab where ApplyAgent submitted can mark its job applied.
+          const submitted = !!(await pendingSubmission(tab.id!));
+          await recordResult(message.report, tab).catch(() => undefined);
+          await onTabReport(tab.id!, message.report, submitted);
+        })();
       }
       return false;
     case "DETECTED":
@@ -267,9 +305,10 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse: (r
           void pump();
           return sendResponse(true);
         }
-        const settings = await loadSettings();
-        await updateQueue((queue) => queue.map((q) => (q.id === item.id ? { ...q, status: "running" as const, note: "Filling your new answers…", updatedAt: new Date().toISOString() } : q)));
-        const report = await runInTab(tab.id, { type: "RUN", mode: settings.mode });
+        if (!(await claim(item.id, "Filling your new answers…"))) return sendResponse(false); // already being worked on
+        // Auto mode submits: only while the plan allows another submission.
+        const mode = (await loadSettings()).mode === "auto" && (await allowance()) > 0 ? "auto" : "review";
+        const report = await working(item.id, () => runInTab(tab.id!, { type: "RUN", mode }));
         const { status, note } = queueStatusFor(report);
         await updateQueue((queue) => queue.map((q) => (q.id === item.id
           ? { ...q, status, note, questions: pendingQuestions(report), updatedAt: new Date().toISOString() } : q)));
@@ -292,7 +331,13 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse: (r
       (async () => {
         const item = (await loadQueue()).find((q) => q.id === message.id);
         if (item?.tabId === undefined) return sendResponse(false);
-        const report = await runInTab(item.tabId, { type: "SUBMIT" });
+        if ((await allowance()) <= 0) {
+          await updateQueue((queue) => queue.map((q) => (q.id === item.id
+            ? { ...q, note: "No submissions left on your plan. Submit in the tab yourself, or get Pro.", updatedAt: new Date().toISOString() } : q)));
+          return sendResponse(false);
+        }
+        if (!(await claim(item.id, "Submitting…"))) return sendResponse(false); // a Submit is already under way
+        const report = await working(item.id, () => runInTab(item.tabId!, { type: "SUBMIT" }));
         const { status, note } = queueStatusFor(report);
         await updateQueue((queue) => queue.map((q) => (q.id === item.id
           ? { ...q, status, note, questions: pendingQuestions(report), updatedAt: new Date().toISOString() } : q)));

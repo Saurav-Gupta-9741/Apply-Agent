@@ -7,6 +7,7 @@ import {
 } from "../shared/storage";
 import { applicationUrl, planNext, reconcileQueue, submittedToday } from "./queue";
 import { currentLicense, remainingSubmissions } from "../shared/license";
+import { pendingSubmission, sendToApplication } from "../shared/frames";
 
 const PAGE_LOAD_TIMEOUT_MS = 30_000;
 const FORM_RETRIES = 3; // single-page apps often render the form a moment after "load"
@@ -99,10 +100,21 @@ async function loaded(tabId: number, timeoutMs = 15_000): Promise<void> {
   }
 }
 
-/** Run the agent in a tab and return its report. A form that renders late gets a few retries; a multi-step
- * application that loads a new page per step (which ends the agent on the old page) continues on the new page,
- * up to MAX_PAGE_STEPS pages. A Submit is never repeated. */
+/** After Submit, the page that loads is the site's answer: it is never filled. Its confirmation (or not) is recorded by
+ * the tab's own report; meanwhile the item waits for the user to check. */
+function awaitingConfirmation(): RunReport {
+  return {
+    status: "submitted_unconfirmed", platform: "", url: "", jobTitle: "", fields: [], captcha: false,
+    errors: ["Submitted. Waiting for the site's confirmation: check the tab or your email."],
+  };
+}
+
+/** Run the agent in a tab and return its report. Only the frame holding the application gets the message. A form that
+ * renders late gets a few retries; a multi-step application that loads a new page per step (which ends the agent on
+ * the old page) continues on the new page, up to MAX_PAGE_STEPS pages, unless the agent pressed Submit: the page
+ * after a Submit is never filled. A Submit is never repeated. */
 export async function runInTab(tabId: number, message: Message): Promise<RunReport | undefined> {
+  const before = await pendingSubmission(tabId);
   let loads = 0;
   const onLoad = (id: number, info: chrome.tabs.TabChangeInfo) => {
     if (id === tabId && info.status === "loading") loads++;
@@ -115,16 +127,14 @@ export async function runInTab(tabId: number, message: Message): Promise<RunRepo
     let pages = 0;
     let seenLoads = 0;
     while (misses < retries && pages <= MAX_PAGE_STEPS) {
-      await chrome.scripting.executeScript({ target: { tabId, allFrames: true }, files: ["content.js"] }).catch(() => undefined);
-      try {
-        const report = (await chrome.tabs.sendMessage(tabId, message)) as RunReport | undefined;
-        if (report) return report;
-      } catch {
-        // no frame answered, or the page changed under the agent
-      }
+      const step: Message = message.type === "RUN" && pages > 0 ? { ...message, continuing: true } : message;
+      const report = await sendToApplication(tabId, step);
+      if (report) return report;
       if (message.type === "SUBMIT") return undefined;
       await new Promise((resolve) => setTimeout(resolve, 2500));
       if (loads !== seenLoads) {
+        const submitted = await pendingSubmission(tabId);
+        if (submitted && submitted.id !== before?.id) return awaitingConfirmation(); // the new page answers a Submit
         // The page moved on (the next step of the application): continue there, without spending a retry.
         seenLoads = loads;
         pages++;
@@ -163,7 +173,25 @@ async function openApplication(tabId: number): Promise<boolean> {
 }
 
 // --- running one item ----------------------------------------------------------------------------------
+/** Items this worker is working on right now. A long application (many steps, slow pages) is not "stuck": only
+ * items the worker lost (it was stopped, or the browser restarted) are repaired by reconcileQueue. */
+const active = new Set<string>();
+
+/** Run fn for a queue item, marked as actively worked on meanwhile. */
+export async function working<T>(id: string, fn: () => Promise<T>): Promise<T> {
+  active.add(id);
+  try {
+    return await fn();
+  } finally {
+    active.delete(id);
+  }
+}
+
 async function startItem(item: QueueItem): Promise<void> {
+  return working(item.id, () => runItem(item));
+}
+
+async function runItem(item: QueueItem): Promise<void> {
   const url = applicationUrl(item.url);
   const pattern = originPattern(url);
   if (!pattern || !(await chrome.permissions.contains({ origins: [pattern] }))) {
@@ -195,8 +223,11 @@ async function startItem(item: QueueItem): Promise<void> {
     });
     return;
   }
+  // A job description (or its job-alert form) answers "not a form": open the application first, as a person would.
   let report = await runInTab(tab.id, { type: "RUN", mode: settings.mode });
-  if (!report && (await openApplication(tab.id))) report = await runInTab(tab.id, { type: "RUN", mode: settings.mode });
+  if ((!report || report.status === "not_a_form") && (await openApplication(tab.id))) {
+    report = await runInTab(tab.id, { type: "RUN", mode: settings.mode, continuing: true }); // the application we opened
+  }
   const { status, note } = queueStatusFor(report);
   await setItem(item.id, { status, note, title: item.title || report?.jobTitle || "", questions: pendingQuestions(report) });
   // Finished tabs close; tabs that need the user stay open for them.
@@ -250,12 +281,13 @@ export async function pump(): Promise<void> {
 async function reconcile(): Promise<void> {
   const liveTabs = new Set((await chrome.tabs.query({})).map((t) => t.id).filter((id): id is number => id !== undefined));
   const applications = await loadApplications();
-  await updateQueue((queue) => reconcileQueue(queue, liveTabs, applications, Date.now()));
+  await updateQueue((queue) => reconcileQueue(queue, liveTabs, applications, Date.now(), active));
 }
 
-/** A report from any tab (including the user finishing an application by hand) updates its queue item. */
-export async function onTabReport(tabId: number, report: RunReport): Promise<void> {
+/** A page in a queued item's tab reported. "Applied" only counts where ApplyAgent submitted in that tab (submitted). */
+export async function onTabReport(tabId: number, report: RunReport, submitted: boolean): Promise<void> {
   const { status, note } = queueStatusFor(report);
+  if (status === "applied" && !submitted) return;
   await updateQueue((queue) => queue.map((q) =>
     q.tabId === tabId && q.status !== "applied"
       ? { ...q, status, note, questions: pendingQuestions(report), updatedAt: new Date().toISOString() }

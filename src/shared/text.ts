@@ -20,10 +20,10 @@ export function normalize(text: string): string {
   return text
     .toLowerCase()
     .normalize("NFKD")
-    .replace(/\p{M}+/gu, "") // accents
+    .replace(/(\p{Script=Latin})\p{M}+/gu, "$1") // accents (Latin only: in Hindi and other scripts the marks are letters' vowels)
     .replace(/ß/g, "ss")
     .replace(/['’]/g, "") // "Master's" and "Masters" are the same word
-    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .replace(/[^\p{L}\p{M}\p{N}]+/gu, " ")
     .trim();
 }
 

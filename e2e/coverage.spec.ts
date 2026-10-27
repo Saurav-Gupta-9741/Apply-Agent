@@ -165,7 +165,7 @@ test("coverage of real application forms (read-only)", async ({ ext, context }) 
       await waitForForm(page);
       const text = (await page.locator("body").innerText().catch(() => "")).slice(0, 4000);
       if ((response?.status() ?? 200) >= 400) row.outcome = "closed";
-      const before = await stableValues(page);
+      let before = await stableValues(page);
       let report = await ask(ext, page, { type: "SCAN" });
       if (!report?.fields.length) {
         // A job description page: do what the panel's "Open the application" button does, then read again.
@@ -174,15 +174,15 @@ test("coverage of real application forms (read-only)", async ({ ext, context }) 
         if (opened?.href || opened?.clicked) {
           row.openedFromJobPage = true;
           await waitForForm(page);
+          before = await stableValues(page); // the application page as it opened: nothing may change from here
           report = await ask(ext, page, { type: "SCAN" });
         }
       }
       if (report?.fields.length) {
         row.outcome = "form";
-        if (!row.openedFromJobPage) {
-          row.changed = changedFields(before, await valuesOf(page));
-          row.untouched = !row.changed.length;
-        }
+        // Every form is checked, including those opened from a job page (they used to be skipped).
+        row.changed = changedFields(before, await valuesOf(page));
+        row.untouched = !row.changed.length;
         row.fields = report.fields.map((f) => ({
           label: f.field.label, control: f.field.control, required: f.field.required, options: f.field.options.length,
           section: f.field.section, workBlock: f.field.workBlock, decision: describeDecision(f.decision), status: f.status,
@@ -206,5 +206,6 @@ test("coverage of real application forms (read-only)", async ({ ext, context }) 
   const name = LIST ? LIST.replace(/^.*[\\/]/, "").replace(/\.json$/, "") : "feed";
   writeFileSync(`reports/coverage-${name}.json`, JSON.stringify({ generatedAt: new Date().toISOString(), rows }, null, 1));
   // Reading never changes a page.
-  expect(rows.filter((r) => r.untouched === false).map((r) => r.url)).toEqual([]);
+  // Every form read must have been checked, and unchanged.
+  expect(rows.filter((r) => r.outcome === "form" && r.untouched !== true).map((r) => r.url)).toEqual([]);
 });

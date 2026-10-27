@@ -1,0 +1,1138 @@
+[
+{
+"i": 0,
+"label": "Why are you interested in this role? Why AG1?",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "open_question"
+},
+{
+"i": 1,
+"label": "How many years of experience do you have?",
+"control": "text",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "experienceYears"
+},
+{
+"i": 2,
+"label": "What is your current address?",
+"control": "text",
+"rule": "profile:location",
+"platform": "greenhouse",
+"intent": "address"
+},
+{
+"i": 3,
+"label": "Do you have experience working for a fast-paced, hyper growth company and/or startup experience?",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "open_question"
+},
+{
+"i": 4,
+"label": "What is the name of your current (or previous) Company?",
+"control": "text",
+"rule": "profile:currentCompany",
+"platform": "greenhouse",
+"intent": "currentCompany"
+},
+{
+"i": 5,
+"label": "What are your compensation expectations? Please provide a numerical range.",
+"control": "text",
+"rule": "ask:salary",
+"platform": "greenhouse",
+"intent": "salary_expected"
+},
+{
+"i": 6,
+"label": "Is your right to work currently tied to another employer?",
+"control": "combobox",
+"rule": "ask:work_authorization",
+"platform": "greenhouse",
+"intent": "other"
+},
+{
+"i": 7,
+"label": "Would you, now or in future, require sponsorship to work in country which this role is based?",
+"control": "combobox",
+"rule": "ask:sponsorship",
+"platform": "greenhouse",
+"intent": "sponsorship"
+},
+{
+"i": 8,
+"label": "Are you currently based in Ireland, or willing to relocate there at your own expense?",
+"control": "combobox",
+"rule": "ask:relocation",
+"platform": "greenhouse",
+"intent": "relocation"
+},
+{
+"i": 9,
+"label": "Do you have at least 3+ years of experience managing major retail accounts in CPG, FMCG or supplements in the UK, Ireland or Europe?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "skills_experience"
+},
+{
+"i": 10,
+"label": "Have you personally managed a retailer’s supplier or vendor portal (item setup, content updates and performance data) and run promotional planning for that account?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "skills_experience"
+},
+{
+"i": 11,
+"label": "We operate under a hybrid work schedule, which incudes three days in-person at our office located in the Merchandise Mart, downtown Chicago. Are you able to commit to the commute and be in the office with our team three days a week?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "onsite"
+},
+{
+"i": 12,
+"label": "Are you a current or former employee of Berlin Packaging?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "previous_employee"
+},
+{
+"i": 13,
+"label": "How did you learn about this position?",
+"control": "text",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "heard_about"
+},
+{
+"i": 14,
+"label": "Will you now, or at any point in the future, require sponsorship (a work visa, visa extension, change of status, or green card) - including if a green card process has already started with a different employer?\"",
+"control": "combobox",
+"rule": "ask:sponsorship",
+"platform": "greenhouse",
+"intent": "sponsorship"
+},
+{
+"i": 15,
+"label": "Do you require an accommodation for the interview process? If yes, please explain.",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "accommodation"
+},
+{
+"i": 16,
+"label": "What is your desired pay?",
+"control": "text",
+"rule": "ask:salary",
+"platform": "greenhouse",
+"intent": "salary_expected"
+},
+{
+"i": 17,
+"label": "Are you over the age of 18 ?",
+"control": "combobox",
+"rule": "ask:age",
+"platform": "greenhouse",
+"intent": "age"
+},
+{
+"i": 18,
+"label": "How did you hear about Fanatics?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "heard_about"
+},
+{
+"i": 19,
+"label": "Do you now require visa sponsorship for employment?",
+"control": "combobox",
+"rule": "ask:sponsorship",
+"platform": "greenhouse",
+"intent": "sponsorship"
+},
+{
+"i": 20,
+"label": "Will you in future require visa sponsorship to maintain work authorization?",
+"control": "combobox",
+"rule": "ask:sponsorship",
+"platform": "greenhouse",
+"intent": "sponsorship"
+},
+{
+"i": 21,
+"label": "Are you able to provide proof of your legal work authorization?",
+"control": "combobox",
+"rule": "ask:work_authorization",
+"platform": "greenhouse",
+"intent": "work_authorization"
+},
+{
+"i": 22,
+"label": "Are you now, or have you ever been employed by Fanatics, Inc. or any of its affiliates or subsidiaries?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "previous_employee"
+},
+{
+"i": 23,
+"label": "Are you bound by any restrictive covenants (non-compete, non-solicitation)?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "legal_declaration"
+},
+{
+"i": 24,
+"label": "What is your base salary compensation expectation?",
+"control": "text",
+"rule": "ask:salary",
+"platform": "greenhouse",
+"intent": "salary_expected"
+},
+{
+"i": 25,
+"label": "Have you worked for Loenbro or any of its affiliates in the past?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "previous_employee"
+},
+{
+"i": 26,
+"label": "What is your desired salary range?",
+"control": "text",
+"rule": "ask:salary",
+"platform": "greenhouse",
+"intent": "salary_expected"
+},
+{
+"i": 27,
+"label": "Are you local and within commuting distance to this job?",
+"control": "combobox",
+"rule": "skip:optional, not in profile",
+"platform": "greenhouse",
+"intent": "onsite"
+},
+{
+"i": 28,
+"label": "Are you willing to relocate to the required job location?",
+"control": "combobox",
+"rule": "ask:relocation",
+"platform": "greenhouse",
+"intent": "relocation"
+},
+{
+"i": 29,
+"label": "Please list any additional education, training or certifications relevant to the job (ie. OSHA, TWIC, etc.).",
+"control": "textarea",
+"rule": "skip:optional, not in profile",
+"platform": "greenhouse",
+"intent": "skills_experience"
+},
+{
+"i": 30,
+"label": "What is your preferred language?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "other"
+},
+{
+"i": 31,
+"label": "What is your current place of residence (city and state)?",
+"control": "text",
+"rule": "profile:location",
+"platform": "greenhouse",
+"intent": "location"
+},
+{
+"i": 32,
+"label": "Do you have any relatives or close personal friends who currently work at Loenbro? If yes, please list name(s), relationship, and department/role. Place N/A if none.",
+"control": "text",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "other_person"
+},
+{
+"i": 33,
+"label": "I consent to the collection and use of my personal data for recruitment purposes and understand the privacy policy.",
+"control": "checkbox_group",
+"rule": "ask:consent",
+"platform": "ashby",
+"intent": "consent"
+},
+{
+"i": 34,
+"label": "How did you initially hear about this job?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "heard_about"
+},
+{
+"i": 35,
+"label": "If you chose Braze Employee, Conference / Event / Career Fair, or Other, please specify here:",
+"control": "text",
+"rule": "skip:optional, not in profile",
+"platform": "greenhouse",
+"intent": "other"
+},
+{
+"i": 36,
+"label": "Select ‘Yes’ to join Braze’s Talent Community and receive newsletters to help you stay up to date on career-related news, events and opportunities at Braze.",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "consent"
+},
+{
+"i": 37,
+"label": "Will you be able to regularly commute and work in an office in job posting location?",
+"control": "combobox",
+"rule": "skip:optional, not in profile",
+"platform": "greenhouse",
+"intent": "onsite"
+},
+{
+"i": 38,
+"label": "Voluntary Self-Identification of Race/Ethnicity (Check all that apply)",
+"control": "combobox",
+"rule": "ask:race",
+"platform": "greenhouse",
+"intent": "race"
+},
+{
+"i": 39,
+"label": "Voluntary Self-Identification of Gender and Gender Identity (Select one)",
+"control": "combobox",
+"rule": "ask:gender",
+"platform": "greenhouse",
+"intent": "gender"
+},
+{
+"i": 40,
+"label": "Voluntary Self-Identification of Veteran Status (Select one)",
+"control": "combobox",
+"rule": "ask:veteran",
+"platform": "greenhouse",
+"intent": "veteran"
+},
+{
+"i": 41,
+"label": "By checking this box, I agree to allow Braze to retain my data for future opportunities for employment for up to 730 days after the conclusion of consideration of my current application for employment.",
+"control": "checkbox",
+"rule": "ask:consent",
+"platform": "greenhouse",
+"intent": "consent"
+},
+{
+"i": 42,
+"label": "By checking this box, I consent to Braze collecting, storing, and processing my responses to the demographic data surveys above.",
+"control": "checkbox",
+"rule": "ask:consent",
+"platform": "greenhouse",
+"intent": "consent"
+},
+{
+"i": 43,
+"label": "Do you hold a completed bachelor’s degree?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "education_level"
+},
+{
+"i": 44,
+"label": "In which environments have you professionally worked on marketing analytics or advertising campaign measurement? Select all that apply. Select “None of the above” only if no other option applies.",
+"control": "checkbox_group",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "skills_experience"
+},
+{
+"i": 45,
+"label": "Which advertising platforms have you personally used to execute campaigns or extract and analyze campaign performance data? Select all that apply. Select “None of the above” only if no other option applies.",
+"control": "checkbox_group",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "skills_experience"
+},
+{
+"i": 46,
+"label": "Which types of campaigns have you professionally analyzed or supported with performance measurement?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "skills_experience"
+},
+{
+"i": 47,
+"label": "Which activities have you personally performed in a professional marketing analytics role? Select all that apply. Select “None of the above” only if no other option applies.",
+"control": "checkbox_group",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "skills_experience"
+},
+{
+"i": 48,
+"label": "How many years of professional experience do you have analyzing marketing or advertising campaign performance? Exclude academic projects.",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "skills_experience"
+},
+{
+"i": 49,
+"label": "Which option best describes your experience communicating analytical findings and managing requests from clients or vendors? Select the highest level you have performed.",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "skills_experience"
+},
+{
+"i": 50,
+"label": "Which option best describes your professional use of Excel and PowerPoint?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "skills_experience"
+},
+{
+"i": 51,
+"label": "What is your current English proficiency level?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "language_proficiency"
+},
+{
+"i": 52,
+"label": "What are your gross monthly salary expectations? Please include the amount and currency (COP or MXN).",
+"control": "text",
+"rule": "ask:salary",
+"platform": "greenhouse",
+"intent": "salary_expected"
+},
+{
+"i": 53,
+"label": "I consent to WPP Media processing my personal data for the purposes of recruitment and hiring related to my application.",
+"control": "combobox",
+"rule": "ask:consent",
+"platform": "greenhouse",
+"intent": "consent"
+},
+{
+"i": 54,
+"label": "I consent to my personal data being stored and used for consideration in future job openings within WPP Media.",
+"control": "combobox",
+"rule": "ask:consent",
+"platform": "greenhouse",
+"intent": "consent"
+},
+{
+"i": 55,
+"label": "If you have a LinkedIn profile, please share it here:",
+"control": "combobox",
+"rule": "profile:linkedin",
+"platform": "greenhouse",
+"intent": "linkedin"
+},
+{
+"i": 56,
+"label": "Do you currently live in the United States?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "other"
+},
+{
+"i": 57,
+"label": "Will you now or in the future require sponsorship to work in the United States?",
+"control": "combobox",
+"rule": "ask:sponsorship",
+"platform": "greenhouse",
+"intent": "sponsorship"
+},
+{
+"i": 58,
+"label": "Do you have an active SECRET or TOP SECRET clearance?",
+"control": "text",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "legal_declaration"
+},
+{
+"i": 59,
+"label": "If someone referred you, what is their name?",
+"control": "text",
+"rule": "skip:optional, not in profile",
+"platform": "greenhouse",
+"intent": "other_person"
+},
+{
+"i": 60,
+"label": "What is your desired compensation?",
+"control": "text",
+"rule": "ask:salary",
+"platform": "greenhouse",
+"intent": "salary_expected"
+},
+{
+"i": 61,
+"label": "Are you a former LINQ Employee, intern, or contractor?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "previous_employee"
+},
+{
+"i": 62,
+"label": "Will you now or in the future require work visa sponsorship (e.g. H-1B, TN, E-3, F-1 Stem Eligible) for employment?",
+"control": "combobox",
+"rule": "ask:sponsorship",
+"platform": "greenhouse",
+"intent": "sponsorship"
+},
+{
+"i": 63,
+"label": "Where did you hear about us?",
+"control": "checkbox_group",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "heard_about"
+},
+{
+"i": 64,
+"label": "Do you currently reside in the United States?",
+"control": "combobox",
+"rule": "ask:unknown",
+"platform": "greenhouse",
+"intent": "other"
+},
+{
+"i": 65,
+"label": "If hired by BridgeBio or one of its affiliates, will you now or in the future require sponsorship for employment visa status (e.g. H-1B, TN, OPT, etc)?",
+"control": "combobox",
+"rule": "ask:sponsorship",
+"platform": "greenhouse",
+"intent": "sponsorship"
+},
+{
+"i": 66,
+"label": "If you answered, \"yes\" to the previous question, please provide additional context below.",
+"control": "text",
+"rule": "skip:optional, not in profile",
+"platform": "greenhouse",
+"intent": "open_question"
+},
+{
+"i": 67,
+"label": "If other, please further explain",
+"control": "text",
+"rule": "skip:optional, not in profile",
+"platform": "greenhouse",
+"intent": "other"
+},
+{
+"i": 68,
+"label": "Are you open to relocating to the San Francisco Bay Area?",
+"control": "combobox",
+"rule": "ask:relocation",
+"platform": "greenhouse",
+"intent": "relocation"
+},
+{
+"i": 69,
+"label": "Your LinkedIn Profile",
+"control": "url",
+"rule": "profile:linkedin",
+"platform": "ashby",
+"intent": "linkedin"
+},
+{
+"i": 70,
+"label": "Why do you want to be the Executive Assistant to UniversalAGI's CEO?",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "ashby",
+"intent": "open_question"
+},
+{
+"i": 71,
+"label": "Tell us about the highest-stakes mistake you prevented that nobody asked you to catch. What tipped you off, and what did you do right after?",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "ashby",
+"intent": "open_question"
+},
+{
+"i": 72,
+"label": "Two meetings get double-booked 15 minutes from now: ‘Jordan 1:1’ and ‘Q3 Renewal, Partner Sync.’ You don’t know who Jordan is or anything about the renewal, and the CEO is unreachable until then. Both organizers have just asked if the CEO is still joining. What do you do, and why?",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "ashby",
+"intent": "open_question"
+},
+{
+"i": 73,
+"label": "Please provide a link to your portfolio.",
+"control": "text",
+"rule": "ask:missing_profile_value",
+"platform": "ashby",
+"intent": "portfolio"
+},
+{
+"i": 74,
+"label": "If necessary, provide the portfolio password",
+"control": "text",
+"rule": "skip:no portfolio in profile",
+"platform": "ashby",
+"intent": "other"
+},
+{
+"i": 75,
+"label": "How many years of professional experience do you have designing for life sciences, healthcare or hard science companies? Please list 2-3 relevant companies/clients and describe what drew you to work in these sectors.",
+"control": "text",
+"rule": "ask:unknown",
+"platform": "ashby",
+"intent": "skills_experience"
+},
+{
+"i": 76,
+"label": "Describe a situation where you had to guide a project through significant feedback from scientific or technical subject matter experts who disagreed with your creative direction. How did you navigate this, and what was the outcome?",
+"control": "text",
+"rule": "ask:unknown",
+"platform": "ashby",
+"intent": "open_question"
+},
+{
+"i": 77,
+"label": "What are your base salary expectations for this role?",
+"control": "text",
+"rule": "ask:salary",
+"platform": "ashby",
+"intent": "salary_expected"
+},
+{
+"i": 78,
+"label": "Recent Job Title",
+"control": "text",
+"rule": "profile:currentTitle",
+"platform": "ashby",
+"intent": "currentTitle"
+},
+{
+"i": 79,
+"label": "Recent Employer",
+"control": "text",
+"rule": "profile:currentCompany",
+"platform": "ashby",
+"intent": "currentCompany"
+},
+{
+"i": 80,
+"label": "Highest level of education",
+"control": "radio",
+"rule": "skip:optional choice",
+"platform": "ashby",
+"intent": "education_level"
+},
+{
+"i": 81,
+"label": "How would you best describe your experience owning a product or major product area?",
+"control": "radio",
+"rule": "skip:optional choice",
+"platform": "ashby",
+"intent": "skills_experience"
+},
+{
+"i": 82,
+"label": "Which best reflects the environment you’ve operated in most recently?",
+"control": "radio",
+"rule": "skip:optional choice",
+"platform": "ashby",
+"intent": "other"
+},
+{
+"i": 83,
+"label": "How do you typically engage in technical discussions with engineering?",
+"control": "radio",
+"rule": "skip:optional choice",
+"platform": "ashby",
+"intent": "other"
+},
+{
+"i": 84,
+"label": "How do you most often inform product priorities and roadmap decisions?",
+"control": "radio",
+"rule": "skip:optional choice",
+"platform": "ashby",
+"intent": "other"
+},
+{
+"i": 85,
+"label": "Full Permanent Address",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "ashby",
+"intent": "address"
+},
+{
+"i": 86,
+"label": "LinkedIn Profile Link/Handle",
+"control": "text",
+"rule": "profile:linkedin",
+"platform": "ashby",
+"intent": "linkedin"
+},
+{
+"i": 87,
+"label": "Website Link (github, portfolio, other..)",
+"control": "text",
+"rule": "skip:no github in profile",
+"platform": "ashby",
+"intent": "other_links"
+},
+{
+"i": 88,
+"label": "When are you available to start?",
+"control": "text",
+"rule": "ask:notice_period",
+"platform": "ashby",
+"intent": "notice_period"
+},
+{
+"i": 89,
+"label": "What is your desired annual salary? (include currency symbol)",
+"control": "text",
+"rule": "ask:salary",
+"platform": "ashby",
+"intent": "salary_expected"
+},
+{
+"i": 90,
+"label": "Current address",
+"control": "text",
+"rule": "profile:location",
+"platform": "ashby",
+"intent": "address"
+},
+{
+"i": 91,
+"label": "How you learned about the job",
+"control": "text",
+"rule": "skip:optional, not in profile",
+"platform": "ashby",
+"intent": "heard_about"
+},
+{
+"i": 92,
+"label": "Preferred start date",
+"control": "text",
+"rule": "ask:notice_period",
+"platform": "ashby",
+"intent": "notice_period"
+},
+{
+"i": 93,
+"label": "Notice to start a new position",
+"control": "text",
+"rule": "ask:unknown",
+"platform": "ashby",
+"intent": "notice_period"
+},
+{
+"i": 94,
+"label": "Are you willing to work onsite?",
+"control": "text",
+"rule": "ask:unknown",
+"platform": "ashby",
+"intent": "onsite"
+},
+{
+"i": 95,
+"label": "Name (first & last)",
+"control": "text",
+"rule": "ask:unknown",
+"platform": "ashby",
+"intent": "fullName"
+},
+{
+"i": 96,
+"label": "If you selected \"Other\", please specify below",
+"control": "text",
+"rule": "skip:optional, not in profile",
+"platform": "ashby",
+"intent": "other"
+},
+{
+"i": 97,
+"label": "Do you require any adjustments to be made to the recruitment process?",
+"control": "textarea",
+"rule": "skip:optional, not in profile",
+"platform": "ashby",
+"intent": "accommodation"
+},
+{
+"i": 98,
+"label": "Flexible Working",
+"control": "radio",
+"rule": "skip:optional choice",
+"platform": "ashby",
+"intent": "other"
+},
+{
+"i": 99,
+"label": "Working Rights",
+"control": "radio",
+"rule": "skip:optional choice",
+"platform": "ashby",
+"intent": "work_authorization"
+},
+{
+"i": 100,
+"label": "If you require any visa assistance (either now or in the future), please let us know details below.",
+"control": "textarea",
+"rule": "ask:sponsorship",
+"platform": "ashby",
+"intent": "sponsorship"
+},
+{
+"i": 101,
+"label": "What approach do you take when starting a piece of work?",
+"control": "radio",
+"rule": "skip:optional choice",
+"platform": "ashby",
+"intent": "other"
+},
+{
+"i": 102,
+"label": "Which statement best describes how you use AI in your work?",
+"control": "radio",
+"rule": "skip:optional choice",
+"platform": "ashby",
+"intent": "other"
+},
+{
+"i": 103,
+"label": "Which statement best describes how you judge AI's output?",
+"control": "radio",
+"rule": "skip:optional choice",
+"platform": "ashby",
+"intent": "other"
+},
+{
+"i": 104,
+"label": "Which statement best describes your approach to AI accountability?",
+"control": "radio",
+"rule": "skip:optional choice",
+"platform": "ashby",
+"intent": "other"
+},
+{
+"i": 105,
+"label": "Do you have a valid license to practice law in the state you are applying for?",
+"control": "radio",
+"rule": "ask:unknown",
+"platform": "breezy",
+"intent": "other"
+},
+{
+"i": 106,
+"label": "Please confirm your gender",
+"control": "radio",
+"rule": "ask:gender",
+"platform": "ashby",
+"intent": "gender"
+},
+{
+"i": 107,
+"label": "Please confirm your salary expectations",
+"control": "number",
+"rule": "ask:salary",
+"platform": "ashby",
+"intent": "salary_expected"
+},
+{
+"i": 108,
+"label": "If yes, please specify their name and role within Allica Bank (if no, please add N/A)",
+"control": "text",
+"rule": "ask:unknown",
+"platform": "ashby",
+"intent": "other_person"
+},
+{
+"i": 109,
+"label": "Are you able to work on-site at least 3 days per week in either Thousand Oaks or San Francisco?",
+"control": "radio",
+"rule": "ask:unknown",
+"platform": "bamboohr",
+"intent": "onsite"
+},
+{
+"i": 110,
+"label": "Are you currently located in, or willing to relocate to, the Thousand Oaks area or San Francisco Bay area?",
+"control": "radio",
+"rule": "ask:relocation",
+"platform": "bamboohr",
+"intent": "relocation"
+},
+{
+"i": 111,
+"label": "What do you believe is the role of procurement and risk management in an organisation, and how would you approach these areas to create value while managing risk effectively?",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "workable",
+"intent": "open_question"
+},
+{
+"i": 112,
+"label": "How do you approach supplier evaluation and selection? If you have used any systems, describe how they helped you achieve effective procurement and risk management.",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "workable",
+"intent": "open_question"
+},
+{
+"i": 113,
+"label": "Why do you want to be an Associate Teacher at Veritas Prep?",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "workable",
+"intent": "open_question"
+},
+{
+"i": 114,
+"label": "If you were referred, please provide the name of the person who referred you (or write N/A).",
+"control": "text",
+"rule": "ask:unknown",
+"platform": "workable",
+"intent": "other_person"
+},
+{
+"i": 115,
+"label": "Please provide the names, email addresses, and phone numbers of 3 professional references below.",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "workable",
+"intent": "other_person"
+},
+{
+"i": 116,
+"label": "Are you a licensed Professional Engineer in the State of Louisiana?",
+"control": "radio",
+"rule": "ask:unknown",
+"platform": "bamboohr",
+"intent": "other"
+},
+{
+"i": 117,
+"label": "Will you now or in the future require sponsorship for an immigration-related employment benefit?”",
+"control": "radio",
+"rule": "ask:sponsorship",
+"platform": "bamboohr",
+"intent": "sponsorship"
+},
+{
+"i": 118,
+"label": "Desired Compensation?",
+"control": "text",
+"rule": "ask:salary",
+"platform": "workable",
+"intent": "salary_expected"
+},
+{
+"i": 119,
+"label": "Have you successfully worked in a fully remote role? If yes, please briefly share how you stayed organized, communicated with your team, and met deadlines.",
+"control": "text",
+"rule": "ask:unknown",
+"platform": "workable",
+"intent": "open_question"
+},
+{
+"i": 120,
+"label": "Please share a link to your portfolio or samples of recent learning solutions you've personally designed (e.g., eLearning modules, storyboards, scripts, or workshop materials). For one sample, briefly describe your role and the tools you used.",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "workable",
+"intent": "open_question"
+},
+{
+"i": 121,
+"label": "Which of Prominence's core values resonates with you and why?",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "workable",
+"intent": "open_question"
+},
+{
+"i": 122,
+"label": "Cover Letter File Choose file",
+"control": "file",
+"rule": "skip:optional attachment (not your resume)",
+"platform": "workable",
+"intent": "cover_letter"
+},
+{
+"i": 123,
+"label": "Transcript Choose file",
+"control": "file",
+"rule": "skip:optional attachment (not your resume)",
+"platform": "workable",
+"intent": "other_document"
+},
+{
+"i": 124,
+"label": "Writing Sample Choose file",
+"control": "file",
+"rule": "skip:optional attachment (not your resume)",
+"platform": "workable",
+"intent": "other_document"
+},
+{
+"i": 125,
+"label": "What is your requested salary?",
+"control": "text",
+"rule": "ask:salary",
+"platform": "workable",
+"intent": "salary_expected"
+},
+{
+"i": 126,
+"label": "Are you legally authorized to work in the USA?",
+"control": "radio",
+"rule": "ask:work_authorization",
+"platform": "bamboohr",
+"intent": "work_authorization"
+},
+{
+"i": 127,
+"label": "I acknowledge I have read and agree with the Corcym Candidate Privacy Policy: https://corcym.s3.eu-central-1.amazonaws.com/Corcym+Policy+-+Candidates+(online+applications).pdf",
+"control": "radio",
+"rule": "ask:consent",
+"platform": "bamboohr",
+"intent": "consent"
+},
+{
+"i": 128,
+"label": "Do you currently reside in the geographic location specified in the posting?",
+"control": "radio",
+"rule": "ask:unknown",
+"platform": "bamboohr",
+"intent": "other"
+},
+{
+"i": 129,
+"label": "What is your expected annual base salary?",
+"control": "text",
+"rule": "ask:salary",
+"platform": "bamboohr",
+"intent": "salary_expected"
+},
+{
+"i": 130,
+"label": "What is your expected annual variable compensation (ex. Commission)?",
+"control": "text",
+"rule": "ask:salary",
+"platform": "bamboohr",
+"intent": "salary_expected"
+},
+{
+"i": 131,
+"label": "Briefly explain your work experience related to Cardiovascular or relative implantable medical device sales.",
+"control": "textarea",
+"rule": "skip:optional, not in profile",
+"platform": "bamboohr",
+"intent": "open_question"
+},
+{
+"i": 132,
+"label": "Describe a situation where you had to make a difficult decision to uphold patient safety, even if it conflicted with other priorities.",
+"control": "textarea",
+"rule": "skip:optional, not in profile",
+"platform": "bamboohr",
+"intent": "open_question"
+},
+{
+"i": 133,
+"label": "What is your expected monthly salary in USD?",
+"control": "text",
+"rule": "ask:salary",
+"platform": "workable",
+"intent": "salary_expected"
+},
+{
+"i": 134,
+"label": "What is your earliest possible start date?",
+"control": "text",
+"rule": "ask:notice_period",
+"platform": "workable",
+"intent": "notice_period"
+},
+{
+"i": 135,
+"label": "Please provide your LinkedIn profile URL.",
+"control": "text",
+"rule": "profile:linkedin",
+"platform": "workable",
+"intent": "linkedin"
+},
+{
+"i": 136,
+"label": "If you were referred by a Pearl Talent employee or one of our affiliate partners (influencers, community connectors, etc.), please share their full name (first and last name). If not, write “N/A”.",
+"control": "text",
+"rule": "ask:unknown",
+"platform": "workable",
+"intent": "other_person"
+},
+{
+"i": 137,
+"label": "Please explain why you want to work for Family Promise of Spokane.",
+"control": "text",
+"rule": "skip:optional, not in profile",
+"platform": "bamboohr",
+"intent": "open_question"
+},
+{
+"i": 138,
+"label": "Please confirm your current location?",
+"control": "text",
+"rule": "profile:location",
+"platform": "workable",
+"intent": "location"
+},
+{
+"i": 139,
+"label": "What is your notice period(in weeks)?",
+"control": "text",
+"rule": "ask:notice_period",
+"platform": "workable",
+"intent": "notice_period"
+},
+{
+"i": 140,
+"label": "What is your salary expectation? (Please specify Monthly/Annually with Currency).",
+"control": "text",
+"rule": "ask:salary",
+"platform": "workable",
+"intent": "salary_expected"
+},
+{
+"i": 141,
+"label": "Do you have any technical certifications? Please detail",
+"control": "textarea",
+"rule": "ask:unknown",
+"platform": "workable",
+"intent": "skills_experience"
+}
+]

@@ -6,8 +6,9 @@ import type {
 } from "../shared/types";
 import {
   EMPTY_PROFILE, isQueueRunning, loadAnswers, loadApplications, loadProfile, loadQueue, loadSettings, saveAnswers,
-  saveProfile, saveSettings, upsertAnswer,
+  saveProfile, saveSettings, updateAnswers, updateApplications, upsertAnswer,
 } from "../shared/storage";
+import { pendingSubmission, sendToApplication } from "../shared/frames";
 import { isValidJobUrl, parseJobList } from "../background/queue";
 import { GOOD_MATCH, parseFeed, rankFeed } from "../shared/fit";
 import { aiStatus, checkDraft, draftAnswer } from "../shared/ai";
@@ -301,7 +302,7 @@ async function waitUntilLoaded(tabId: number): Promise<void> {
  * opened in this tab, or its "Apply" button is pressed (forms that open on the same page). Never "Apply with
  * LinkedIn" and the like, and never a cookie banner: those choices are the user's. */
 async function openApplicationForm(): Promise<boolean> {
-  const tab = await activeTab();
+  const tab = runTabId !== undefined ? await chrome.tabs.get(runTabId).catch(() => undefined) : await activeTab();
   if (tab?.id === undefined) return false;
   const result = (await send({ type: "OPEN_APPLICATION" })) as unknown as { href?: string; clicked?: boolean } | undefined;
   if (result?.href) {
@@ -328,7 +329,8 @@ async function sendUntilForm(message: Message, tries = 4): Promise<RunReport | u
 async function viaApplicationPage(message: Message, report: RunReport | undefined): Promise<RunReport | undefined> {
   if (report && (report.fields.length || report.status !== "not_a_form")) return report;
   setStatus("This is the job description. Opening the application form…", "info");
-  return (await openApplicationForm()) ? sendUntilForm(message) : report;
+  // The page we open is the application: no second guess about it (its own "Apply" button may still show).
+  return (await openApplicationForm()) ? sendUntilForm(message.type === "RUN" ? { ...message, continuing: true } : message) : report;
 }
 
 $("open-application").addEventListener("click", async () => {
@@ -417,16 +419,20 @@ function mode(): Mode {
   return (document.querySelector<HTMLInputElement>("input[name='mode']:checked")?.value as Mode) ?? "review";
 }
 
+/** The tab a Fill, Preview or Submit started on: every later step of it goes there, even if the user switches tabs
+ * meanwhile (a step or a Submit must never land on another application). */
+let runTabId: number | undefined;
+
 async function send(message: Message): Promise<RunReport | undefined> {
-  const tab = await activeTab();
-  if (tab?.id === undefined) return undefined;
-  // Inject on demand (all frames, so embedded application iframes are covered). The script ignores double loads.
-  await chrome.scripting.executeScript({ target: { tabId: tab.id, allFrames: true }, files: ["content.js"] }).catch(() => undefined);
-  try {
-    return (await chrome.tabs.sendMessage(tab.id, message)) as RunReport | undefined;
-  } catch {
-    return undefined; // no frame found an application form
+  const tabId = runTabId ?? (await activeTab())?.id;
+  if (tabId === undefined) return undefined;
+  if (message.type === "OPEN_APPLICATION") {
+    // The job description's Apply button may be in any frame: the first frame that finds one answers.
+    await chrome.scripting.executeScript({ target: { tabId, allFrames: true }, files: ["content.js"] }).catch(() => undefined);
+    return (await chrome.tabs.sendMessage(tabId, message).catch(() => undefined)) as RunReport | undefined;
   }
+  // Only the frame holding the application acts (never a search box on the page around an embedded form).
+  return sendToApplication(tabId, message);
 }
 
 type Tone = "ok" | "warn" | "bad" | "info";
@@ -578,7 +584,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     }
     const entry: AnswerEntry = { question: questionKey(r.field), answer: value, topic, updatedAt: new Date().toISOString() };
     busy(save, true);
-    await saveAnswers(upsertAnswer(await loadAnswers(), entry));
+    await updateAnswers((answers) => upsertAnswer(answers, entry));
     await ctx.onSaved();
     busy(save, false);
   });
@@ -607,10 +613,11 @@ function renderQuestions(report: RunReport): void {
 }
 
 /** The last run on this page, for "Report a problem". */
-let lastReport: { report: RunReport | undefined; url: string } | undefined;
+let lastReport: { report: RunReport | undefined; url: string; tabId?: number } | undefined;
 
 function showReport(report: RunReport | undefined): void {
-  void activeTab().then((tab) => (lastReport = { report, url: report?.url ?? tab?.url ?? "" }));
+  const tabId = runTabId;
+  void activeTab().then((tab) => (lastReport = { report, url: report?.url ?? tab?.url ?? "", tabId: tabId ?? tab?.id }));
   $("report-problem").hidden = false;
   ($("submit") as HTMLButtonElement).hidden = true;
   $("questions").replaceChildren();
@@ -664,11 +671,14 @@ async function run(): Promise<void> {
   // Over the free allowance, still fill (useful) but never auto-submit.
   const runMode = mode() === "auto" && !(await canSubmit()) ? "review" : mode();
   busy($("run"), true);
+  ($("submit") as HTMLButtonElement).hidden = true; // no Submit while a fill is under way
   markState("working");
   setStatus("Reading the form and filling what it knows…", "info");
   agentRunning = true;
+  const tabId = (await activeTab())?.id ?? -1;
+  runTabId = tabId;
+  const submittedBefore = (await pendingSubmission(tabId))?.id;
   try {
-    const tabId = (await activeTab())?.id ?? -1;
     // One-time access ends when the page changes: a next step on a site that is not allowed is out of reach.
     const oneTimeOnly = $("page-access").textContent === "This visit";
     let loads = navigations.get(tabId) ?? 0;
@@ -690,8 +700,14 @@ async function run(): Promise<void> {
       if (now === loads) break; // the page did not move on: there really is no form here
       loads = now;
       moved = true;
+      // The agent pressed Submit (auto mode) and the site's answer loaded: never fill that page.
+      const submitted = await pendingSubmission(tabId);
+      if (submitted && submitted.id !== submittedBefore) {
+        setStatus("Submitted. Waiting for the employer's confirmation: check the tab or your email.", "info");
+        return;
+      }
       setStatus("Moved to the next step. Filling it…", "info");
-      report = await send({ type: "RUN", mode: runMode });
+      report = await send({ type: "RUN", mode: runMode, continuing: true });
     }
     if (!report && moved && oneTimeOnly) {
       setStatus(`The next step opened on a new page. Click the ApplyAgent icon there${keys.fill ? ` (or press ${keys.fill})` : ""} to continue, or allow the site so it continues by itself.`, "warn");
@@ -700,6 +716,7 @@ async function run(): Promise<void> {
     showReport(report);
   } finally {
     agentRunning = false;
+    runTabId = undefined;
     busy($("run"), false);
     markState("idle");
     await refreshPage();
@@ -733,6 +750,7 @@ $("preview").addEventListener("click", async () => {
   busy($("preview"), true);
   markState("working");
   agentRunning = true;
+  runTabId = (await activeTab())?.id;
   try {
     const report = await viaApplicationPage({ type: "SCAN" }, await send({ type: "SCAN" }));
     showReport(report);
@@ -746,12 +764,20 @@ $("preview").addEventListener("click", async () => {
     }
   } finally {
     agentRunning = false;
+    runTabId = undefined;
     busy($("preview"), false);
     markState("idle");
   }
 });
 $("submit").addEventListener("click", async () => {
   if (!(await canSubmit())) return;
+  // Submit only the application that was filled and reviewed, in its own tab.
+  const filledTab = lastReport?.tabId;
+  if (filledTab === undefined || filledTab !== (await activeTab())?.id) {
+    setStatus("Go back to the tab you filled to submit it (or press Fill on this one first).", "warn");
+    return;
+  }
+  runTabId = filledTab;
   busy($("submit"), true);
   markState("working");
   setStatus("Submitting and waiting for the employer's confirmation…", "info");
@@ -760,6 +786,7 @@ $("submit").addEventListener("click", async () => {
     showReport(await send({ type: "SUBMIT" }));
   } finally {
     agentRunning = false;
+    runTabId = undefined;
     busy($("submit"), false);
     markState("idle");
   }
@@ -1018,7 +1045,7 @@ async function renderAnswers(): Promise<void> {
   for (const a of [...answers].sort((x, y) => y.updatedAt.localeCompare(x.updatedAt))) {
     const remove = iconButton("trash", "Delete answer", true);
     remove.addEventListener("click", async () => {
-      await saveAnswers((await loadAnswers()).filter((x) => x.question !== a.question));
+      await updateAnswers((answers) => answers.filter((x) => x.question !== a.question));
       toast("Answer deleted");
       await renderAnswers();
     });
@@ -1045,7 +1072,7 @@ async function renderAnswers(): Promise<void> {
           toast("An answer can't be empty. Delete it instead.", "warn");
           return;
         }
-        await saveAnswers(upsertAnswer(await loadAnswers(), { ...a, answer: value, updatedAt: new Date().toISOString() }));
+        await updateAnswers((answers) => upsertAnswer(answers, { ...a, answer: value, updatedAt: new Date().toISOString() }));
         toast("Answer updated");
         await renderAnswers();
       });
@@ -1501,8 +1528,8 @@ $("import-backup").addEventListener("change", async (event) => {
   const replacing = !!(current.firstName || current.email);
   if (replacing && !confirm(`Replace your current profile with the one in this backup (from ${backup.exportedAt.slice(0, 10) || "an unknown date"})? Answers and history are merged, not replaced.`)) return;
   await saveProfile(backup.profile);
-  await saveAnswers(mergeAnswers(await loadAnswers(), backup.answers));
-  await chrome.storage.local.set({ applications: mergeApplications(await loadApplications(), backup.applications) });
+  await updateAnswers((answers) => mergeAnswers(answers, backup.answers));
+  await updateApplications((records) => mergeApplications(records, backup.applications));
   await saveSettings(backup.settings);
   await renderProfile();
   await renderSetup();

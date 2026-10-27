@@ -289,7 +289,8 @@ export interface Detection {
 
 /** Messages between the extension's parts. */
 export type Message =
-  | { type: "RUN"; mode: Mode }
+  /** continuing: a later step of a run already under way (a new page of the same application). */
+  | { type: "RUN"; mode: Mode; continuing?: boolean }
   /** Read-only preview: what the agent would do, without touching the page. */
   | { type: "SCAN" }
   /** Sent by the silent detector after reading a page (nothing typed). */

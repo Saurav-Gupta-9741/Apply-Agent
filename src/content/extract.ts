@@ -41,12 +41,23 @@ function isHoneypot(el: FieldElement): boolean {
   const describedAs = [el.getAttribute("name"), el.id, el.getAttribute("placeholder"), el.getAttribute("aria-label"),
     ...Array.from(el.labels ?? [], (l) => l.textContent)].join(" ");
   if (HONEYPOT_WORDS.test(describedAs)) return true;
+  // Where the browser has laid the page out: a box of a pixel or less, or placed far outside the page, is not for people.
+  const rect = el.getBoundingClientRect();
+  const laidOut = el.ownerDocument.documentElement.getBoundingClientRect().width > 0;
+  if (laidOut && el.getClientRects().length && (rect.width <= 1 || rect.height <= 1 || rect.right < -100 || rect.bottom < -100)) return true;
+  // The same from the styles (also where nothing is laid out yet): see-through, moved off-screen, clipped, or 1 px.
+  const far = (v: string) => {
+    const m = /^(-\d+(?:\.\d+)?)(px|em|rem)$/.exec(v);
+    return !!m && parseFloat(m[1]!) * (m[2] === "px" ? 1 : 16) <= -500;
+  };
   for (let node: Element | null = el; node; node = node.parentElement) {
     const style = node.ownerDocument.defaultView?.getComputedStyle(node);
     if (!style) continue;
     if (style.opacity === "0") return true;
-    const offscreen = (v: string) => /^-\d+px$/.test(v) && parseFloat(v) <= -500;
-    if ((style.position === "absolute" || style.position === "fixed") && (offscreen(style.left) || offscreen(style.top))) return true;
+    if ((style.position === "absolute" || style.position === "fixed") && (far(style.left) || far(style.top))) return true;
+    if (/translate[xy3d]*\(\s*-\d{3,}/i.test(style.transform)) return true;
+    if (/rect\(\s*0(px)?[ ,]+0(px)?[ ,]+0(px)?[ ,]+0(px)?\s*\)/.test(style.clip) || /inset\(\s*50%|circle\(\s*0/.test(style.clipPath)) return true;
+    if (node === el && (/^[01](\.\d+)?px$/.test(style.width) || /^[01](\.\d+)?px$/.test(style.height))) return true;
   }
   return false;
 }
@@ -144,6 +155,7 @@ function rawLabel(el: FieldElement, root: ParentNode): string {
     () => (MACHINE_NAME.test(el.getAttribute("aria-label") ?? "") ? "" : el.getAttribute("aria-label") ?? ""),
     () => questionText(el, [el], root instanceof Element ? root : undefined),
     () => el.getAttribute("placeholder") ?? "",
+    () => (isChoice ? "" : labelAfter(el)),
     () => humanName(el.getAttribute("name") || el.id),
   ];
   for (const get of candidates) {
@@ -186,6 +198,22 @@ function groupRaw(group: HTMLInputElement[], root: ParentNode): string {
     || humanName(first.name);
 }
 
+const groupKeys = new WeakMap<Element, string>();
+let groupCount = 0;
+function groupKey(container: Element | null): string | undefined {
+  if (!container) return undefined;
+  if (!groupKeys.has(container)) groupKeys.set(container, `__group${groupCount++}`);
+  return groupKeys.get(container);
+}
+
+/** A label right after its box with nothing tying them ("<input><label>Email</label>"): the next sibling, if it is short. */
+function labelAfter(el: Element): string {
+  const next = el.nextElementSibling;
+  if (!next || !next.matches("label, span, small") || next.querySelector("input, select, textarea")) return "";
+  const text = (next.textContent ?? "").trim();
+  return text.length <= 80 ? text : "";
+}
+
 export function extractFields(root: ParentNode): ExtractedField[] {
   const out: ExtractedField[] = [];
   const groups = new Map<string, HTMLInputElement[]>();
@@ -203,7 +231,8 @@ export function extractFields(root: ParentNode): ExtractedField[] {
     if (isHoneypot(el)) continue;
     // Radios, and checkboxes sharing a name, are one question with several options.
     if (el instanceof HTMLInputElement && (el.type === "radio" || (el.type === "checkbox" && el.name))) {
-      const key = `${el.type}:${el.name || `__${counter++}`}`;
+      // Radios without a name: one question per fieldset or radio group (a stray one stands alone).
+      const key = `${el.type}:${el.name || groupKey(el.closest("fieldset, [role='radiogroup'], [role='group']")) || `__${counter++}`}`;
       groups.set(key, [...(groups.get(key) ?? []), el]);
       continue;
     }

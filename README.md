@@ -93,6 +93,11 @@ per run so a reading never depends on the other questions on the form (batching 
   |---|---|---|---|
   | 2: 247 questions, 54 forms | 57.9% | 88.5% | 8 of 69 |
   | 3: 249 questions, 52 forms | 71.9% | 90.0% | 4 of 75 |
+  | 4: 142 questions, 41 forms | 82.4% | 90.2% | 5 of 47 |
+
+  Round 4 also ran a multi-agent review (an attacker writing 266 tricky cases in `test/adversarial.test.ts`, a code
+  reviewer, and a verifier): 37 findings, all confirmed and fixed — including submit safety (one run per page, only the
+  application's frame acts, the tab is pinned during a run, nothing is filled after Submit, pending submissions expire).
 
   Every wrong fill was traced to a general pattern, fixed, and pinned in `test/real-findings.test.ts`; after the
   fixes all three sets have no wrong fills beyond 2 borderline ones (a link where "examples of your work" were asked).
@@ -108,9 +113,10 @@ per run so a reading never depends on the other questions on the form (batching 
 ## Real-form coverage
 `e2e/coverage.spec.ts` reads real application forms (one per company) without typing, uploading or submitting
 anything, and checks that no field changed. Three rounds so far: 228 real pages → 196 forms (Greenhouse, Lever,
-Ashby, Workable, BambooHR, Teamtailor, Breezy, Recruitee, Personio), about 3,000 fields, no page ever changed; summary
+Ashby, Workable, BambooHR, Teamtailor, Breezy, Recruitee, Personio), about 3,000 fields; summary
 in `reports/coverage.md`. About 45% of fields fill with no quick answers saved (BambooHR rose from 36% to 51% after
-round 2). Every wrong mapping found is fixed and pinned in `test/real-findings.test.ts`; 30 of the forms are replayed
+round 2). Until round 4 the "nothing changed" check skipped forms opened from a job page; it now covers every form.
+Every wrong mapping found is fixed and pinned in `test/real-findings.test.ts`; 30 of the forms are replayed
 offline in `test/corpus.test.ts`.
 SmartRecruiters shows automated browsers a DataDome robot check, so it could not be read in this test (people in
 normal Chrome usually pass straight through; ApplyAgent now recognises that check and asks the user to solve it).

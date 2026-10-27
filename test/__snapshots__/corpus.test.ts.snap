@@ -50,6 +50,22 @@ exports[`real forms, offline > ashby-atlan.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > ashby-bridgepoint-consulting.html 1`] = `
+[
+  "  file      skip                         ",
+  "* file      resume                       Resume",
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone Number",
+  "  combobox  skip                         Location",
+  "* text      profile:linkedin             LinkedIn Profile URL",
+  "  checkbox  ask:work_authorization       Are you legally authorized to work in the United States?",
+  "  checkbox  ask:sponsorship              Will you now, or in the future, require sponsorship?",
+  "  checkbox_group ask:consent                  I consent to the collection and use of my personal data for recruitment purposes and understand the privacy policy.",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
 exports[`real forms, offline > ashby-fireworks-ai.html 1`] = `
 [
   "  file      skip                         ",
@@ -191,6 +207,24 @@ exports[`real forms, offline > ashby-rainmaker-technology-corporati.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > ashby-universalagi.html 1`] = `
+[
+  "  file      skip                         ",
+  "* text      profile:fullName             Name",
+  "* email     profile:email                Email",
+  "* file      resume                       Resume",
+  "* url       profile:linkedin             Your LinkedIn Profile",
+  "* textarea  ask:unknown                  Why do you want to be the Executive Assistant to UniversalAGI's CEO?",
+  "* textarea  ask:unknown                  Tell us about the highest-stakes mistake you prevented that nobody asked you to catch. What tipped you off, and what did you do right after?",
+  "* textarea  ask:unknown                  Two meetings get double-booked 15 minutes from now: ‘Jordan 1:1’ and ‘Q3 Renewal, Partner Sync.’ You don’t know who Jordan is or anything about the renewal, and the CEO is unreachable until then. Both organizers have just asked if the CEO is still joining. What do you do, and why?",
+  "  checkbox  skip                         What’s the proudest system, process, or tool you’ve built to make an executive more effective? What was broken before, what did you build, and what changed?",
+  "  checkbox  ask:work_authorization       Are you legally authorized to work in the country where this role is located, for any employer?",
+  "  checkbox  ask:sponsorship              Will you now or will you in the future require employment visa sponsorship?",
+  "  checkbox  skip                         Are you able to work onsite in San Francisco 5 days a week?",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
 exports[`real forms, offline > bamboohr-adistec.html 1`] = `
 [
   "  text      profile:firstName            First Name",
@@ -212,6 +246,26 @@ exports[`real forms, offline > bamboohr-adistec.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > bamboohr-couples-resorts.html 1`] = `
+[
+  "  text      profile:firstName            First Name",
+  "  text      profile:lastName             Last Name",
+  "  text      profile:email                Email",
+  "  text      profile:phone                Phone",
+  "  text      skip                         Address",
+  "  text      skip                         City",
+  "  text      skip                         Province",
+  "  text      skip                         Postal Code",
+  "  file      skip                         Cover Letter",
+  "* file      resume                       Resume",
+  "  text      skip                         Date Available",
+  "  text      ask:salary                   Desired Pay",
+  "  text      skip                         Website, Blog or Portfolio",
+  "  text      profile:linkedin             LinkedIn URL",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
 exports[`real forms, offline > bamboohr-hinterlandgroup.html 1`] = `
 [
   "  text      profile:firstName            First Name",
@@ -226,6 +280,26 @@ exports[`real forms, offline > bamboohr-hinterlandgroup.html 1`] = `
   "  text      ask:salary                   Desired Pay",
   "  text      skip                         Website, Blog or Portfolio",
   "  text      profile:linkedin             LinkedIn URL",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > bamboohr-latigobio.html 1`] = `
+[
+  "  text      profile:firstName            First Name",
+  "  text      profile:lastName             Last Name",
+  "  text      profile:email                Email",
+  "  text      profile:phone                Phone",
+  "  text      skip                         Address",
+  "  text      skip                         City",
+  "  text      skip                         ZIP",
+  "* file      resume                       Resume",
+  "  text      skip                         Date Available",
+  "  text      ask:salary                   Desired Pay",
+  "  text      skip                         Website, Blog or Portfolio",
+  "  text      profile:linkedin             LinkedIn URL",
+  "* radio     ask:unknown                  Are you able to work on-site at least 3 days per week in either Thousand Oaks or San Francisco?",
+  "* radio     ask:relocation               Are you currently located in, or willing to relocate to, the Thousand Oaks area or San Francisco Bay area?",
   "  textarea  skip                         g recaptcha response",
 ]
 `;
@@ -306,6 +380,23 @@ exports[`real forms, offline > breezy-social-discovery-group.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > breezy-spark-power.html 1`] = `
+[
+  "* file      resume                       cResume",
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email Address",
+  "* text      profile:phone                Phone Number",
+  "  checkbox  skip                         smsConsent",
+  "* text      ask:unknown                  Address",
+  "  select    ask:salary                   salaryCurrency",
+  "* text      ask:salary                   Desired Salary",
+  "* select    ask:unknown                  ",
+  "* select    ask:unknown                  Which location are you applying for",
+  "* textarea  ask:unknown                  Experience Summary",
+  "  textarea  skip                         Cover Letter",
+]
+`;
+
 exports[`real forms, offline > breezy-taqar.html 1`] = `
 [
   "* file      resume                       cResume",
@@ -315,6 +406,18 @@ exports[`real forms, offline > breezy-taqar.html 1`] = `
   "  textarea  skip                         Experience Summary",
   "  textarea  skip                         Cover Letter",
   "* checkbox  ask:consent                  I've read the Privacy Notice below and consent the processing of my data as part of my job application.",
+]
+`;
+
+exports[`real forms, offline > breezy-wealthy-group-of-companies-llc.html 1`] = `
+[
+  "* file      resume                       cResume",
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email Address",
+  "* text      profile:phone                Phone Number",
+  "  checkbox  skip                         smsConsent",
+  "  textarea  skip                         Experience Summary",
+  "  textarea  skip                         Cover Letter",
 ]
 `;
 
@@ -330,6 +433,59 @@ exports[`real forms, offline > breezy-zero-hash.html 1`] = `
   "* radio     ask:race                     Race or Ethnicity",
   "* radio     ask:gender                   Gender",
   "* checkbox  ask:consent                  I've read the Privacy Notice below and consent the processing of my data as part of my job application.",
+]
+`;
+
+exports[`real forms, offline > greenhouse-ag1.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* text      profile:email                Email",
+  "* combobox  ask:missing_profile_value    Country",
+  "* tel       profile:phone                Phone",
+  "* file      resume                       Resume/CV",
+  "  file      skip                         Cover Letter",
+  "  combobox  skip                         School",
+  "  combobox  profile:degree               Degree",
+  "  text      profile:linkedin             LinkedIn Profile",
+  "* textarea  ask:unknown                  Why are you interested in this role? Why AG1?",
+  "* text      ask:unknown                  How many years of experience do you have?",
+  "* text      ask:unknown                  What is your current address?",
+  "* textarea  ask:unknown                  Do you have experience working for a fast-paced, hyper growth company and/or startup experience?",
+  "* text      ask:unknown                  What is the name of your current (or previous) Company?",
+  "* text      ask:salary                   What are your compensation expectations? Please provide a numerical range.",
+  "* combobox  ask:work_authorization       Is your right to work currently tied to another employer?",
+  "* combobox  ask:sponsorship              Would you, now or in future, require sponsorship to work in country which this role is based?",
+  "* combobox  ask:relocation               Are you currently based in Ireland, or willing to relocate there at your own expense?",
+  "* combobox  ask:unknown                  Do you have at least 3+ years of experience managing major retail accounts in CPG, FMCG or supplements in the UK, Ireland or Europe?",
+  "* combobox  ask:unknown                  Have you personally managed a retailer’s supplier or vendor portal (item setup, content updates and performance data) and run promotional planning for that account?",
+]
+`;
+
+exports[`real forms, offline > greenhouse-berlin-packaging.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "  text      profile:firstName            Preferred First Name",
+  "* text      profile:email                Email",
+  "* combobox  ask:missing_profile_value    Country",
+  "* tel       profile:phone                Phone",
+  "* file      resume                       Resume/CV",
+  "  file      skip                         Cover Letter",
+  "  combobox  skip                         School",
+  "  combobox  profile:degree               Degree",
+  "* combobox  ask:unknown                  We operate under a hybrid work schedule, which incudes three days in-person at our office located in the Merchandise Mart, downtown Chicago. Are you able to commit to the commute and be in the office with our team three days a week?",
+  "* combobox  ask:unknown                  Are you a current or former employee of Berlin Packaging?",
+  "* text      ask:unknown                  How did you learn about this position?",
+  "* combobox  ask:age                      Are you at least 18 years of age?",
+  "* combobox  ask:work_authorization       Are you legally authorized to work in the United States?",
+  "* combobox  ask:sponsorship              Will you now, or at any point in the future, require sponsorship (a work visa, visa extension, change of status, or green card) - including if a green card process has already started with a different employer?"",
+  "* textarea  ask:unknown                  Do you require an accommodation for the interview process? If yes, please explain.",
+  "  text      ask:salary                   What is your desired pay?",
+  "  text      profile:linkedin             LinkedIn Profile",
+  "  combobox  ask:gender                   Gender",
+  "  combobox  ask:race                     Are you Hispanic/Latino?",
+  "  combobox  ask:veteran                  Veteran Status",
 ]
 `;
 
@@ -803,6 +959,17 @@ exports[`real forms, offline > teamtailor-yousign.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > workable-cp-axtra.html 1`] = `
+[
+  "* text      profile:firstName            First name",
+  "* text      profile:lastName             Last name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* text      ask:unknown                  Address",
+  "* file      resume                       Resume Choose file",
+]
+`;
+
 exports[`real forms, offline > workable-luxasia.html 1`] = `
 [
   "* text      profile:firstName            First name",
@@ -866,6 +1033,18 @@ exports[`real forms, offline > workable-revisionz.html 1`] = `
 `;
 
 exports[`real forms, offline > workable-weekday.html 1`] = `
+[
+  "* text      profile:firstName            First name",
+  "* text      profile:lastName             Last name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* file      resume                       Resume Choose file",
+  "* text      ask:salary                   What’s your current salary? (in lakhs per annum)",
+  "* text      ask:notice_period            How many days is your notice period?",
+]
+`;
+
+exports[`real forms, offline > workable-weekday-1.html 1`] = `
 [
   "* text      profile:firstName            First name",
   "* text      profile:lastName             Last name",

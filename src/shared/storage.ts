@@ -82,6 +82,21 @@ export async function saveAnswers(answers: AnswerEntry[]): Promise<void> {
   await chrome.storage.local.set({ [KEYS.answers]: answers });
 }
 
+/** Read, change and write one stored list as one step. Two saves close together (two clicks, two panel windows, the
+ * panel and the background) each see the other's result instead of overwriting it. */
+async function exclusive<T>(name: string, fn: () => Promise<T>): Promise<T> {
+  const locks = (globalThis.navigator as Navigator | undefined)?.locks;
+  return locks ? locks.request(`applyagent:${name}`, fn) : fn();
+}
+
+export function updateAnswers(change: (answers: AnswerEntry[]) => AnswerEntry[]): Promise<void> {
+  return exclusive("answers", async () => saveAnswers(change(await loadAnswers())));
+}
+
+export function updateApplications(change: (records: ApplicationRecord[]) => ApplicationRecord[]): Promise<void> {
+  return exclusive("applications", async () => saveApplications(change(await loadApplications())));
+}
+
 export async function loadApplications(): Promise<ApplicationRecord[]> {
   const data = await chrome.storage.local.get(KEYS.applications);
   return (data[KEYS.applications] as ApplicationRecord[] | undefined) ?? [];

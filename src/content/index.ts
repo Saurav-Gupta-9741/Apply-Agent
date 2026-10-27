@@ -6,6 +6,7 @@ import { generic, pickAdapter } from "./adapters";
 import { highlightField, runOnce, scanForm, submitForm } from "./agent";
 import { detectConfirmation, hasCaptcha } from "./detect";
 import { findApplyControl, sensePage } from "./sense";
+import { isApplicationPage } from "./target";
 import { HANDS_OFF_MESSAGE, platformFor, shouldDetect } from "../shared/platforms";
 
 declare global {
@@ -99,9 +100,24 @@ async function startSilentDetection(): Promise<void> {
   new MutationObserver(() => scheduleDetect()).observe(document.documentElement, { childList: true, subtree: true });
 }
 
+/** One run at a time per page: a second Fill, Save-and-refill or Submit while one is under way would type into the
+ * same fields twice, or press Submit twice. */
+let busy = false;
+
+function plainReport(status: RunReport["status"], error: string): RunReport {
+  const sense = sensePage(document, location.href);
+  return { status, platform: sense.platform, url: location.href, jobTitle: sense.jobTitle, fields: [], captcha: false, errors: error ? [error] : [] };
+}
+
 // Guard against double injection (registered detector + on-demand injection).
 if (!window.__applyAgentLoaded) {
   window.__applyAgentLoaded = true;
+  // Each frame rates its own page, so the extension can send its messages to the one frame holding the application
+  // (never to a search box or newsletter form on the page around an embedded application). See shared/frames.ts.
+  (globalThis as { __applyAgentRate?: () => unknown }).__applyAgentRate = () => {
+    const sense = sensePage(document, location.href);
+    return { score: sense.score, kind: sense.kind, form: !!formRoot(), handsOff: platform.policy === "hands_off" };
+  };
 
   chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse: (r: unknown) => void) => {
     const acting = ["RUN", "SUBMIT", "SCAN", "HIGHLIGHT", "OPEN_APPLICATION"].includes(message.type);
@@ -138,7 +154,17 @@ if (!window.__applyAgentLoaded) {
     }
     if (message.type === "SCAN") {
       if (!formRoot()) return false;
-      (async () => sendResponse(await scanForm(document, { profile: await loadProfile(), answers: await loadAnswers(), understand })))();
+      if (!isApplicationPage(document)) {
+        sendResponse(plainReport("not_a_form", "")); // the job description: the panel opens the application
+        return false;
+      }
+      (async () => {
+        try {
+          sendResponse(await scanForm(document, { profile: await loadProfile(), answers: await loadAnswers(), understand }));
+        } catch (error) {
+          sendResponse(plainReport("needs_user", `Could not read this form: ${String(error)}`));
+        }
+      })();
       return true;
     }
     if ((message.type === "RUN" || message.type === "SUBMIT") && !hasApplicationForm() && window === window.top) {
@@ -160,6 +186,17 @@ if (!window.__applyAgentLoaded) {
       }
     }
     if ((message.type !== "RUN" && message.type !== "SUBMIT") || !hasApplicationForm()) return false;
+    if (busy) {
+      sendResponse(plainReport("needs_user", "ApplyAgent is already working on this page. Wait for it to finish."));
+      return false;
+    }
+    // A job description with its own small form (job alerts, newsletter) is not the application: the caller opens
+    // the application instead. Later steps of a run under way are trusted.
+    if (message.type === "RUN" && !message.continuing && !isApplicationPage(document)) {
+      sendResponse(plainReport("not_a_form", ""));
+      return false;
+    }
+    busy = true;
     const markSubmitting = async (r: RunReport) => {
       await chrome.runtime.sendMessage({
         type: "MARK_SUBMITTING", url: r.url, jobTitle: r.jobTitle, platform: r.platform,
@@ -174,7 +211,11 @@ if (!window.__applyAgentLoaded) {
           : await submitForm(document, 20000, markSubmitting);
         sendResponse(report);
         chrome.runtime.sendMessage({ type: "RUN_RESULT", report } satisfies Message).catch(() => undefined);
+      } catch (error) {
+        // Never leave the panel or the queue waiting forever: say what went wrong.
+        sendResponse(plainReport("needs_user", `Something on this page stopped ApplyAgent (${String(error)}). Check the form, then press Fill again.`));
       } finally {
+        busy = false;
         void working(false);
       }
     })();

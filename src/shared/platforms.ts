@@ -51,13 +51,19 @@ const ATS: Array<[RegExp, string]> = [
   [/(^|\.)freshteam\.com$/, "Freshteam"],
 ];
 
-export function platformFor(url: string): PlatformInfo {
-  let host = "";
+/** A URL's host as the platform lists expect it: lower case, without the trailing dot browsers accept
+ * ("www.linkedin.com." is LinkedIn too). Empty for a URL that cannot be read. */
+export function hostnameOf(url: string): string {
   try {
-    host = new URL(url).hostname.toLowerCase();
+    return new URL(url).hostname.toLowerCase().replace(/\.+$/, "");
   } catch {
-    return { name: "", policy: "assist", ats: false };
+    return "";
   }
+}
+
+export function platformFor(url: string): PlatformInfo {
+  const host = hostnameOf(url);
+  if (!host) return { name: "", policy: "assist", ats: false };
   for (const [pattern, name] of HANDS_OFF) if (pattern.test(host)) return { name, policy: "hands_off", ats: false };
   for (const [pattern, name] of ATS) if (pattern.test(host)) return { name, policy: "assist", ats: true };
   return { name: host.replace(/^www\./, ""), policy: "assist", ats: false };
@@ -83,7 +89,7 @@ export function shouldDetect(detection: "off" | "job_sites" | "allowed_sites", h
   if (detection === "off") return false;
   if (detection === "allowed_sites") return true;
   try {
-    return isJobHost(new URL(href).hostname);
+    return isJobHost(hostnameOf(href));
   } catch {
     return false;
   }

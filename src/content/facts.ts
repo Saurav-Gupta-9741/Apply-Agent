@@ -51,10 +51,32 @@ export interface PageFacts {
   jobCountries: string[];
 }
 
+/** The question itself: brackets and statements around it ("This role is not eligible for visa sponsorship.") are
+ * context. Several questions in one label ("Are you authorized…? If not, will you need sponsorship?") have no single
+ * yes or no: undefined. */
+function theQuestion(label: string): string | undefined {
+  const sentences = label.replace(/\([^)]*\)|\[[^\]]*\]/g, " ").split(/(?<=[.?!])\s+/).map((x) => x.trim()).filter(Boolean);
+  const asked = sentences.filter((x) => /\?\s*$/.test(x));
+  if (asked.length > 1) return undefined;
+  return normalize(asked[0] ?? sentences[sentences.length - 1] ?? "");
+}
+
+/** What a yes/no about working there means: the user's right to work, or their need for a visa. */
+const ABOUT_WORKING = /authori[sz]|eligib|entitled|right to work|permitted|legally|sponsor|visa|immigration|work permit|permission to work|droit de travailler|droit au travail|derecho a trabajar|direito de trabalhar|arbeitsberechtigung|berechtigt|arbeitserlaubnis|arbeitsgenehmigung|visum|autoris|permis de travail|autoriz|permiso de trabajo|werkvergunning|permesso|parrainage|patrocinio/;
+/** "Do you still wish to proceed?", "Is your right to work tied to another employer?", "…in any country other than
+ * India?", "Are you NOT authorized…?": another question, or one turned round in a way a rule must not guess. */
+const NOT_A_PLAIN_ASK = /\b(not|never|neither|nor|except|apart from|besides|other than|wish|proceed|acknowledge|understand|agree|tied|restricted|restriction|type of|kind of)\b|n t\b/;
+/** Asking whether the user NEEDS something (a visa, sponsorship, a permit), in the languages the rules read. */
+const NEEDS = /\b(require|requires|required|need|needs|needed|benotig\w*|brauch\w*|besoin|necesit\w*|precis\w*|nodig|richied\w*|bisogno|necessit\w*)\b/;
+
 function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts, page?: PageFacts): Decision | undefined {
   const allowed = canonicalCountries(facts.workCountries);
   if (!allowed.length || !yesNoField(field)) return undefined;
-  const q = normalize(field.label);
+  const q = theQuestion(field.label);
+  // What follows "without" is what the user would not need ("…without the need for a visa", "…without restriction"):
+  // it neither makes the question another one nor turns it round.
+  const asked = q?.replace(/\bwithout\b.*$/, "") ?? "";
+  if (!q || !ABOUT_WORKING.test(normalize(field.label)) || NOT_A_PLAIN_ASK.test(asked)) return undefined;
   let places = countriesIn(field.label);
   if (!places.length && /country (of residence|where you (currently )?(live|reside))|where you (currently )?(live|reside)|your (current )?country/.test(q)) {
     places = countriesIn(profile.country);
@@ -65,28 +87,62 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   if (!places.length) return undefined; // the job's country is not known: the user decides
   const can = places.map((c) => canWorkIn(c, allowed));
   if (!can.every((x) => x === can[0])) return undefined; // "the US or Canada" with a yes for one and a no for the other
-  // Polarity from the words: "Will you require sponsorship?" is answered the other way round from "Are you authorized?".
-  // "…the right to work in Poland without the need for employer support (a visa or work permit)?" asks about the right
-  // to work: what follows "without" is what the user would NOT need, so it does not turn the question round.
-  const asked = q.replace(/\bwithout\b.*$/, "");
-  const needs = /\b(require|requires|required|need|needs|needed)\b/.test(asked) || /sponsor/.test(asked);
+  // Polarity from the question's own words ("…the right to work in Poland without the need for a visa?" asks about the
+  // right to work).
+  const needs = NEEDS.test(asked) || /sponsor/.test(asked);
   const yes = needs ? !can[0] : can[0];
   return answer(yes ? "Yes" : "No", needs ? "sponsorship" : "work authorization");
 }
 
+const CURRENCY: Array<[string, RegExp]> = [
+  ["INR", /₹|\brs\b|\binr\b|rupees?|\blpa\b|lakhs?|lacs?|crores?/],
+  ["USD", /\$|\busd\b|dollars?/],
+  ["EUR", /€|\beur\b|euros?/],
+  ["GBP", /£|\bgbp\b|\bpounds?\b/],
+  ["OTHER", /¥|₩|₪|₺|\b(chf|sgd|aud|cad|nzd|hkd|jpy|cny|rmb|aed|sar|qar|sek|nok|dkk|pln|czk|huf|zar|myr|idr|php|thb|vnd|brl|mxn|krw|ils|try|ron|bgn)\b|francs?|dirhams?|riyals?|\byen\b|yuan/],
+];
+const PERIOD: Array<[string, RegExp]> = [
+  ["month", /\bmonth(ly)?\b|per month|\bp ?m\b|a month|in hand/],
+  ["hour", /\bhour(ly)?\b|per hour|\bhr\b|\bp ?h\b/],
+  ["week", /\bweek(ly)?\b|per week/],
+  ["day", /\bdaily\b|per day/],
+  ["year", /\bannual(ly)?\b|per annum|\byearly\b|per year|\bp ?a\b|\blpa\b|\bctc\b|a year/],
+];
+const kindOf = (text: string, kinds: Array<[string, RegExp]>) => kinds.find(([, re]) => re.test(text.toLowerCase()))?.[0];
+
+/** Salary from the quick answers, only when the question asks for exactly that value in the same currency and over
+ * the same period (never converted), as one answer (not "current and expected"), and not as a yes/no question. */
 function salaryAnswer(field: FieldDescriptor, facts: QuickFacts): Decision | undefined {
   const q = normalize(field.label);
-  const expected = /expect|desired|requirement|range|asking|looking for|anticipated/.test(q);
-  const current = !expected && /\b(current|present|existing|last drawn|now|today)\b/.test(q);
-  const value = expected ? facts.expectedCtc.trim() : current ? facts.currentCtc.trim() : "";
+  // "Is your current salary negotiable?" asks yes or no. "Could you please share your expectations?" asks for the amount.
+  const politeAsk = /^(could|can|would) you (please )?(let us know|tell|share|specify|provide|give|indicate|state)\b/.test(q);
+  if (YES_NO_QUESTION.test(q) && !politeAsk && field.control !== "number") return undefined;
+  const asksExpected = /expect|desired|requirement|range|asking|looking for|anticipated|expectativa|pretens|esperad|souhait|gewunscht|erwart|vorstellung/.test(q);
+  const asksCurrent = /\b(current|present|existing|last drawn|now|today|atual|actual|aktuell\w*|actuel\w*|attuale|huidig\w*)\b/.test(q);
+  if (asksExpected && asksCurrent) return undefined; // two values in one box
+  const value = asksExpected ? facts.expectedCtc.trim() : asksCurrent ? facts.currentCtc.trim() : "";
   if (!value) return undefined;
-  const currency = /[$€£]|\b(usd|eur|gbp|dollars?|euros?|pounds?)\b/i;
-  if (currency.test(field.label) && !currency.test(value)) return undefined; // asked in dollars, answered in lakhs
+  const what = asksExpected ? "expected CTC" : "current CTC";
+  const asked = `${field.label} ${field.placeholder}`;
+  const askedCurrency = kindOf(asked, CURRENCY);
+  const valueCurrency = kindOf(value, CURRENCY);
+  // Asked in a currency: the saved value must say the same one (a bare number is only taken as rupees).
+  if (askedCurrency && askedCurrency !== (valueCurrency ?? "INR")) return undefined;
+  // "Please specify Monthly/Annually": the form takes either, so it names no period.
+  const periods = PERIOD.filter(([, re]) => re.test(asked.toLowerCase())).length;
+  const askedPeriod = periods > 1 ? "year" : kindOf(asked, PERIOD) ?? "year";
+  const valuePeriod = kindOf(value, PERIOD) ?? "year"; // a CTC is yearly unless it says otherwise
+  if (askedPeriod !== valuePeriod) return undefined;
   if (field.control === "number") {
+    // A number box takes a plain amount: "18 LPA" is 18 only where the box itself is in lakhs.
+    const inLakhs = /\blakhs?\b|\blacs?\b|\blpa\b/;
     const n = /\d+(\.\d+)?/.exec(value.replace(/,/g, ""))?.[0];
-    return n ? answer(n, expected ? "expected CTC" : "current CTC") : undefined;
+    if (!n) return undefined;
+    if (inLakhs.test(value.toLowerCase())) return inLakhs.test(q) ? answer(n, what) : undefined;
+    if (/\d\s*(k|m|cr|crores?)\b/i.test(value)) return undefined;
+    return answer(n, what);
   }
-  return answer(value, expected ? "expected CTC" : "current CTC");
+  return answer(value, what);
 }
 
 const DECLINE = /decline|don ?t wish|do not wish|prefer not|choose not|not to (say|answer|disclose|self identify)|rather not/;
@@ -134,8 +190,11 @@ function diversityAnswer(field: FieldDescriptor, facts: QuickFacts, topic: Sensi
       return v ? answer(v, "race/ethnicity") : undefined;
     }
     if (!field.options.length || field.control === "text") return undefined;
-    const v = bestOption(field.options, facts.race, 0.75);
-    return v ? answer(v, "race/ethnicity") : undefined;
+    // Exactly one choice that is the saved answer, or starts with it as a whole word ("Asian (Not Hispanic or Latino)").
+    // Several sub-groups that all start with it ("Asian or Asian British - Indian / - Pakistani…") are the user's pick.
+    const saved = normalize(facts.race);
+    const fits = field.options.filter((o) => normalize(o) === saved || normalize(o).startsWith(`${saved} `));
+    return fits.length === 1 ? answer(fits[0]!, "race/ethnicity") : undefined;
   }
   return undefined;
 }
@@ -151,10 +210,21 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
   if (topic === "notice_period") {
     // A date picker or a "month"/"year" box needs a date, not "30 days".
     // "Are you subject to a notice period?" is a yes/no question: "30 days" is not its answer.
-    if (!facts.noticePeriod.trim() || field.control === "date" || /\b(month|year|day)\b$/.test(q) || YES_NO_QUESTION.test(q)) return undefined;
+    const notice = facts.noticePeriod.trim();
+    if (!notice || field.control === "date" || YES_NO_QUESTION.test(q)) return undefined;
+    // A date ("Start date", a DD/MM/YYYY mask in the label or placeholder) needs a date, not "30 days".
+    const shape = normalize(`${field.label} ${field.placeholder}`);
+    if (/\b(dd|mm|yyyy|jjjj|aaaa)\b/.test(shape) || /\b(month|year)\b$/.test(q) || /last (working )?day/.test(q)) return undefined;
+    // A box in a unit ("Notice period (months)", "in days") or a number box takes a number in the saved unit, or nothing.
+    const unit = /\b(days?|weeks?|months?)\b/.exec(shape)?.[1]?.replace(/s$/, "");
+    const saved = /^(\d+)\s*(day|week|month)s?$/i.exec(notice);
+    if (unit || field.control === "number") {
+      if (!saved || (unit && saved[2]!.toLowerCase() !== unit)) return undefined;
+      return answer(field.control === "number" ? saved[1]! : notice, "notice period");
+    }
     // "Please list specific dates of availability, start and end date", "Additional information about a start date".
     if (/additional information|\bend date\b|\blist (the |your |specific )?dates\b|^optional\b/.test(q)) return undefined;
-    return answer(facts.noticePeriod.trim(), "notice period");
+    return answer(notice, "notice period");
   }
   if (topic === "relocation") {
     if (!facts.relocate || !/^(are you |would you be |will you be )?(willing|open|able|ready) to relocate( if (needed|required|necessary))?$/.test(q)) return undefined;

@@ -10,7 +10,7 @@
  */
 
 import {
-  escapeHtml, extendedUntil, LICENSE_KEY_FORMAT, newLicenseKey, signLicense, verifyPaymentLinkCallback, verifyWebhook,
+  escapeHtml, extendedUntil, LICENSE_KEY_FORMAT, licenseKeyForPayment, signLicense, verifyPaymentLinkCallback, verifyWebhook,
   type PaymentLinkCallback,
 } from "./core";
 
@@ -64,11 +64,14 @@ async function getJson<T>(kv: KV, key: string): Promise<T | null> {
 
 /** Issue a new key or extend an existing one, exactly once per payment. */
 async function fulfil(env: Env, refId: string, paymentId: string): Promise<string | null> {
+  const done = await env.LICENSES.get(`pay:${paymentId}`);
+  if (done) return done; // this payment was already turned into a pass
   const ref = await getJson<PendingRef>(env.LICENSES, `ref:${refId}`);
   if (!ref) return null;
   if (ref.used && ref.issuedKey) return ref.issuedKey; // redirect and webhook both arrived: idempotent
-  const key = ref.key && LICENSE_KEY_FORMAT.test(ref.key) ? ref.key : newLicenseKey();
+  const key = ref.key && LICENSE_KEY_FORMAT.test(ref.key) ? ref.key : await licenseKeyForPayment(env.RAZORPAY_WEBHOOK_SECRET, paymentId);
   const existing = await getJson<LicenseRecord>(env.LICENSES, `lic:${key}`);
+  if (existing?.payments.includes(paymentId)) return key; // already counted: never extend twice for one payment
   const now = Date.now();
   const record: LicenseRecord = {
     paidUntil: extendedUntil(existing?.paidUntil, now),
@@ -80,6 +83,8 @@ async function fulfil(env: Env, refId: string, paymentId: string): Promise<strin
   await env.LICENSES.put(`pay:${paymentId}`, key);
   return key;
 }
+
+const LINK_HOURS = 24;
 
 async function buy(url: URL, env: Env): Promise<Response> {
   const currency = url.searchParams.get("currency") === "USD" ? "USD" : "INR";
@@ -103,6 +108,8 @@ async function buy(url: URL, env: Env): Promise<Response> {
       description: "ApplyAgent Pro - 30-day pass (one-time, no auto-renewal)",
       callback_url: `${env.PUBLIC_BASE_URL}/thanks`,
       callback_method: "get",
+      // The link closes long before its reference is forgotten (7 days), so every payment can be fulfilled.
+      expire_by: Math.floor(Date.now() / 1000) + LINK_HOURS * 3600,
     }),
   });
   const link = (await response.json()) as { short_url?: string };

@@ -185,6 +185,22 @@ function visibleOptions(scope: ParentNode): HTMLElement[] {
   });
 }
 
+/** The list a dropdown opened, when it does not name it: the one inside the field's own group, else the only open list
+ * on the page. Never every option on the page: another open list, or a menu built of options, is not this field's. */
+function listNear(owner: HTMLElement): ParentNode | undefined {
+  let node: Element | null = owner.parentElement;
+  for (let depth = 0; node && depth < 5; depth++, node = node.parentElement) {
+    if (visibleOptions(node).length) return node;
+  }
+  const lists = deepQueryAll<HTMLElement>(owner.ownerDocument, "[role='listbox']").filter((l) => visibleOptions(l).length);
+  if (lists.length === 1) return lists[0];
+  if (lists.length) return undefined;
+  // Options with no list around them (a portal at the end of the page): only when they all sit together.
+  const options = visibleOptions(owner.ownerDocument);
+  const parents = new Set(options.map((o) => o.parentElement));
+  return parents.size === 1 ? owner.ownerDocument : undefined;
+}
+
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -203,7 +219,11 @@ async function pickFromList(owner: HTMLElement, value: string, timeoutMs: number
   const deadline = Date.now() + timeoutMs;
   let seen: string[] = [];
   while (Date.now() < deadline) {
-    const scope: ParentNode = (listId && (scopeOf(owner).getElementById(listId) ?? doc.getElementById(listId))) || doc;
+    const scope: ParentNode | undefined = (listId && (scopeOf(owner).getElementById(listId) ?? doc.getElementById(listId))) || listNear(owner);
+    if (!scope) {
+      await sleep(150); // the list has not opened yet, or there are several and none is clearly this one
+      continue;
+    }
     const options = visibleOptions(scope).filter((o) => !NOT_AN_OPTION.test(cleanLabel(o.textContent ?? "")));
     const labels = options.map((o) => cleanLabel(o.textContent ?? ""));
     const match = bestOption(labels, value);

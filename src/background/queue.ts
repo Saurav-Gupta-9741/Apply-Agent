@@ -1,5 +1,6 @@
 /** Pure scheduling rules for the application queue (no Chrome APIs, so they are unit-tested). */
 
+import { hostnameOf } from "../shared/platforms";
 import type { ApplicationRecord, QueueItem, Settings } from "../shared/types";
 
 export const DEFAULT_SETTINGS: Settings = { mode: "review", maxParallel: 3, perHostMax: 2, dailyCap: 25, cooldownDays: 30, detection: "job_sites", understanding: true };
@@ -26,11 +27,7 @@ export function clampSettings(s: Partial<Settings>): Settings {
 }
 
 export function hostOf(url: string): string {
-  try {
-    return new URL(url).hostname.toLowerCase();
-  } catch {
-    return "";
-  }
+  return hostnameOf(url);
 }
 
 /** The employer behind a URL: on shared job-board hosts it is the first path segment (boards.greenhouse.io/acme). */
@@ -137,10 +134,10 @@ export const STUCK_AFTER_MS = 120_000;
  *  - tab gone, nothing submitted → back to the queue
  *  - tab still open but silent → "needs you" (the user looks at the form; nothing is resubmitted) */
 export function reconcileQueue(
-  queue: QueueItem[], liveTabIds: Set<number>, applications: ApplicationRecord[], now: number,
+  queue: QueueItem[], liveTabIds: Set<number>, applications: ApplicationRecord[], now: number, active: Set<string> = new Set(),
 ): QueueItem[] {
   return queue.map((q) => {
-    if (q.status !== "running") return q;
+    if (q.status !== "running" || active.has(q.id)) return q; // still being worked on by this worker
     const age = now - Date.parse(q.updatedAt);
     const tabAlive = q.tabId !== undefined && liveTabIds.has(q.tabId);
     const stamp = new Date(now).toISOString();
