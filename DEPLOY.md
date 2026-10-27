@@ -57,6 +57,8 @@ you land on `/thanks` with a licence key.
    - No `tabs` permission (so no "Read your browsing history" warning): queued jobs open with `chrome.tabs.create`,
      which needs no permission; a tab's address is only read on sites the user allowed or after they opened ApplyAgent there.
    - `contextMenus`: the "Fill this application with ApplyAgent" right-click entry. `alarms`: resume the queue after Chrome restarts.
+   - `offscreen`: runs the offline question-understanding model (WebAssembly); nothing leaves the computer.
+   - Copy-paste text for every field, and the screenshots: `store/LISTING.md`.
    - Content script registered at runtime (`scripting.registerContentScripts`) only on sites the user allowed, never on
      LinkedIn/Indeed/Naukri and similar platforms; it reads pages only when silent detection is on for that site.
 8. Start as **Unlisted** for the beta, then **Public**.
