@@ -132,6 +132,27 @@ exports[`real forms, offline > ashby-headway.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > ashby-linear.html 1`] = `
+[
+  "  file      skip                         ",
+  "* text      profile:fullName             Name",
+  "* email     profile:email                Email",
+  "* file      resume                       Resume",
+  "* textarea  ask:unknown                  Cover letter",
+  "* text      ask:missing_profile_value    Github",
+  "  text      profile:linkedin             LinkedIn",
+  "  text      skip                         X",
+  "  checkbox  skip                         Are you based in a EU or equivalent timezone?",
+  "* text      ask:missing_profile_value    What country are you based in?",
+  "* text      ask:notice_period            Notice Period",
+  "* textarea  ask:unknown                  What would you want to work on? Tell us about the features you would want to implement in your first month.",
+  "* textarea  ask:unknown                  Tell us of a time you had to put your PM hat on to solve a complex product problem.",
+  "* textarea  ask:unknown                  What are you extremely good at? What could you teach the team?",
+  "  text      skip                         Has someone at Linear referred you for this role? If so, please include their name here:",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
 exports[`real forms, offline > ashby-lio.html 1`] = `
 [
   "* text      profile:firstName            First Name",
@@ -203,6 +224,25 @@ exports[`real forms, offline > ashby-rainmaker-technology-corporati.html 1`] = `
   "  text      skip                         Twitter",
   "  text      skip                         GitHub",
   "  text      skip                         Portfolio",
+  "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > ashby-resend.html 1`] = `
+[
+  "  file      skip                         ",
+  "* text      profile:fullName             Name",
+  "* email     profile:email                Email",
+  "* file      resume                       Resume",
+  "* textarea  ask:unknown                  Why do you want to join us?",
+  "* textarea  ask:unknown                  Tell us about how you uniquely raise the security bar of an organization.",
+  "  checkbox  skip                         Are you in an Americas time zone?",
+  "  combobox  skip                         What country are you based in?",
+  "* text      ask:missing_profile_value    GitHub",
+  "* text      profile:linkedin             LinkedIn",
+  "  text      skip                         Twitter/X",
+  "  text      skip                         Other",
+  "* textarea  ask:unknown                  How did you hear about us?",
   "  textarea  skip                         g recaptcha response",
 ]
 `;
@@ -345,6 +385,45 @@ exports[`real forms, offline > bamboohr-otstaffing.html 1`] = `
   "  text      ask:salary                   Desired Pay",
   "* radio     ask:unknown                  Do you have a valid Driver License?",
   "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > breezy-aimpoint-digital.html 1`] = `
+[
+  "* file      resume                       cResume",
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email Address",
+  "* text      profile:phone                Phone Number",
+  "  checkbox  skip                         smsConsent",
+  "* text      ask:unknown                  Address",
+  "  textarea  skip                         Experience Summary",
+  "  textarea  skip                         Cover Letter",
+]
+`;
+
+exports[`real forms, offline > breezy-in-all-media.html 1`] = `
+[
+  "* file      resume                       cResume",
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email Address",
+  "* text      profile:phone                Phone Number",
+  "  checkbox  skip                         smsConsent",
+  "* select    ask:unknown                  Which location are you applying for",
+  "  textarea  skip                         Experience Summary",
+  "  textarea  skip                         Cover Letter",
+  "* text      ask:missing_profile_value    Where are you currently based (City, Country)?",
+  "* select    ask:missing_profile_value    How many years of relevant work experience do you have for this role?",
+  "* text      ask:unknown                  What is your expected hourly rate in USD?",
+  "* radio     ask:notice_period            Do you have a notice period at your current job before being able to start a new role?",
+  "* date      ask:notice_period            What is your earliest possible start date?",
+  "* radio     ask:unknown                  Would you be interested in a long-term full-time (40 hours/week, 8 hours/day) vendor contracting arrangement?",
+  "* text      ask:unknown                  Do you have any planned time off in the next 3 months? If yes, please specify the dates.",
+  "* text      ask:unknown                  Do you have a personal computer for work? If so, could you share its specifications (RAM, processor, operating system)?",
+  "* text      ask:unknown                  Are you currently participating in other recruitment processes? If yes, how advanced are you in them?",
+  "* radio     ask:unknown                  As a vendor, In All Media pays within the last week of the month following the one in which work was completed. Does this timeline work for you?",
+  "* select    ask:unknown                  Which of the following payment methods do you prefer?",
+  "* radio     ask:unknown                  Where did you learn about this opportunity?",
+  "* text      ask:unknown                  Please record a short (about 60 seconds) audio introduction in English using https://vocaroo.com. Once you’re done, simply copy the Vocaroo link here",
 ]
 `;
 
@@ -591,6 +670,37 @@ exports[`real forms, offline > greenhouse-gomotive.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > greenhouse-gusto.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "  text      profile:firstName            Preferred First Name",
+  "* text      profile:email                Email",
+  "* combobox  ask:missing_profile_value    Country",
+  "* tel       profile:phone                Phone",
+  "* combobox  ask:missing_profile_value    Location (City)",
+  "* file      resume                       Resume/CV",
+  "  file      skip                         Cover Letter",
+  "* text      ask:unknown                  Zip Code / Postal Code (Non-U.S. based candidates, please enter "00000")",
+  "  text      profile:linkedin             LinkedIn Profile",
+  "* checkbox_group ask:unknown                  How did you hear about this opportunity? (select all that apply)",
+  "* combobox  ask:work_authorization       Are you legally authorized to work in the country where you are applying?",
+  "* combobox  ask:sponsorship              Will you now or in the future require visa sponsorship for employment?",
+  "* combobox  ask:unknown                  Do you have experience building with AI tools? For example: designing and deploying AI agents, automations, or workflows that execute multi-step work.",
+  "* checkbox_group ask:unknown                  What AI tools have you used to build?",
+  "* combobox  ask:unknown                  Do you have direct experience in program management?",
+  "* combobox  ask:unknown                  Do you currently reside in the Denver Metro area?",
+  "* combobox  ask:unknown                  Have you ever, or are you currently working at Gusto or Symmetry in any capacity (ie: employee or contingent worker)?",
+  "* combobox  ask:gender                   How would you describe your gender identity (please select one)?",
+  "* combobox  ask:gender                   I identify as transgender (please select one):",
+  "* combobox  ask:sexual_orientation       I identify my sexual orientation as (please select one):",
+  "* combobox  ask:race                     I identify my race/ethnicity as (mark all that apply):",
+  "* combobox  ask:veteran                  Veteran Status (please select one):",
+  "* combobox  ask:disability               I have a disability (please select one):",
+  "* combobox  ask:unknown                  I identify as a first-generation professional (please select one):",
+]
+`;
+
 exports[`real forms, offline > greenhouse-kinder-s.html 1`] = `
 [
   "* text      profile:firstName            First Name",
@@ -704,6 +814,48 @@ exports[`real forms, offline > greenhouse-scaleops.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > greenhouse-twitch.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* text      profile:email                Email",
+  "* combobox  ask:missing_profile_value    Country",
+  "* tel       profile:phone                Phone",
+  "* combobox  ask:missing_profile_value    Location (City)",
+  "* file      resume                       Resume/CV",
+  "  file      skip                         Cover Letter",
+  "  combobox  skip                         School",
+  "  combobox  profile:degree               Degree",
+  "  combobox  skip                         Discipline",
+  "  combobox  ask:notice_period            Start date month",
+  "  number    ask:notice_period            Start date year",
+  "  combobox  skip                         End date month",
+  "  number    skip                         End date year",
+  "  text      profile:linkedin             LinkedIn Profile",
+  "  text      skip                         Website",
+  "* combobox  ask:unknown                  How would you describe your experience with Twitch? (Select one)",
+  "* combobox  ask:unknown                  How many years have you been active on the platform?",
+  "* checkbox_group ask:unknown                  Do you have experience in the Creator Economy beyond Twitch?",
+  "* combobox  ask:unknown                  Are you currently a Twitch employee?",
+  "* combobox  ask:relocation               Are you open to relocation?",
+  "* combobox  ask:unknown                  Are you a current employee with Amazon or any Amazon subsidiary (outside of Twitch)?",
+  "* combobox  ask:unknown                  Have you previously applied to Amazon or any Amazon subsidiary?",
+  "* combobox  ask:unknown                  Have you previously been employed by Amazon or any Amazon subsidiary?",
+  "* combobox  ask:unknown                  Are you subject to a non-competition agreement or other agreement that would preclude or restrict your employment at Amazon?",
+  "* combobox  ask:unknown                  If offered employment by Amazon, would you be legally eligible to begin employment immediately?",
+  "* combobox  ask:sponsorship              Your response is mandatory when applying for a U.S.-based position. Do you need, or will you need in the future, any immigration related support or sponsorship from Amazon in order to begin or continue employment with Amazon?",
+  "* combobox  ask:unknown                  Have you held H-1B status, or had an H-1B petition approved on your behalf, within the preceding 6 years for an employer other than a cap exempt institution?",
+  "* combobox  ask:unknown                  In which country/region do you have citizenship?",
+  "* combobox  ask:sponsorship              Since obtaining your most recent citizenship, did you afterwards become a permanent resident in any other country/region? This does not include temporary statuses such as student visas or time-limited work permits.",
+  "* combobox  ask:unknown                  For the sole purpose of determining export licensing requirements, please provide your country of citizenship or legal permanent residence, whichever was obtained last.",
+  "  text      ask:salary                   What is your expected total base pay compensation for your next role. Please do not disclose current or past compensation.",
+  "* combobox  ask:unknown                  Would you like to be considered for future opportunities at Twitch when you apply?",
+  "  combobox  ask:gender                   Gender",
+  "  combobox  ask:race                     Are you Hispanic/Latino?",
+  "  combobox  ask:veteran                  Veteran Status",
+]
+`;
+
 exports[`real forms, offline > lever-360learning.html 1`] = `
 [
   "  file      resume                       Resume/CV ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
@@ -810,6 +962,33 @@ exports[`real forms, offline > lever-jobgether.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > lever-palantir.html 1`] = `
+[
+  "* file      resume                       Resume/CV  ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
+  "* text      profile:fullName             Full name",
+  "* email     profile:email                Email",
+  "  text      profile:phone                Phone",
+  "* text      ask:missing_profile_value    Current location  No location found. Try entering a different location Loading",
+  "  text      skip                         Current company",
+  "  text      profile:linkedin             LinkedIn URL",
+  "  text      skip                         GitHub URL",
+  "  text      skip                         Portfolio URL",
+  "* checkbox_group ask:unknown                  Language Skill(s) (Check all that apply)",
+  "  text      skip                         Preferred Name | What would you like us to call you?",
+  "  text      ask:gender                   Name Pronunciation | How do you pronounce your name?",
+  "* radio     ask:work_authorization       Are you legally authorized to work in the country for which you are applying?",
+  "* radio     ask:sponsorship              Will you now or in the future require sponsorship for employment visa status (e.g., H-1B, etc.)?",
+  "* select    ask:unknown                  Which university are you currently attending or did you last attend? Please select "Other (School Not Listed)" if your school is not listed.",
+  "* select    ask:unknown                  Please tell us how you heard about this opportunity.",
+  "  textarea  skip                         What has been your favorite project or proudest accomplishment? Why?",
+  "  textarea  skip                         Why do you want to work at Palantir?",
+  "* radio     ask:consent                  As part of our interview process, we may use AI notetakers to transcribe conversations for accuracy and efficiency. Please see our candidate privacy policy for more information on how we process your data. Your decision to opt in or out of this tooling will not impact your candidacy.",
+  "* radio     ask:unknown                  Are you a Singapore citizen?",
+  "* radio     ask:unknown                  Are you a Singapore permanent resident?",
+  "  textarea  skip                         Additional information",
+]
+`;
+
 exports[`real forms, offline > lever-paytm.html 1`] = `
 [
   "* file      resume                       Resume/CV  ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
@@ -844,6 +1023,34 @@ exports[`real forms, offline > lever-riocan.html 1`] = `
   "  text      skip                         Other URL",
   "* select    ask:work_authorization       Are you legally eligible to work in Canada?",
   "* select    ask:unknown                  Are you comfortable with the posted range?",
+]
+`;
+
+exports[`real forms, offline > lever-spotify.html 1`] = `
+[
+  "* file      resume                       Resume/CV  ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
+  "* text      profile:fullName             Full name",
+  "  checkbox_group ask:gender                   pronouns",
+  "  checkbox  ask:gender                   Custom",
+  "  text      ask:gender                   Write here...",
+  "* email     profile:email                Email",
+  "* text      profile:phone                Phone",
+  "* text      ask:missing_profile_value    Current location  No location found. Try entering a different location Loading",
+  "* text      ask:missing_profile_value    Current company",
+  "  text      profile:linkedin             LinkedIn URL",
+  "  text      skip                         GitHub URL",
+  "  text      skip                         Portfolio URL",
+  "  text      skip                         Other website",
+  "* checkbox_group ask:unknown                  Have you ever been previously employed by Spotify?",
+  "  select    skip                         What is your location?",
+  "  radio     ask:gender                   What best describes your gender?",
+  "  radio     ask:race                     What is your race/ethnicity?:",
+  "  radio     ask:veteran                  Are you a veteran/have you served in the military?",
+  "  radio     ask:gender                   What best describes your gender?",
+  "  radio     ask:gender                   What gender do you identify with?",
+  "  radio     ask:gender                   What best describes your gender?",
+  "  radio     ask:race                     What best describes your ethnicity?",
+  "  checkbox  skip                         Spotify has my consent to contact me about future job opportunities.",
 ]
 `;
 
