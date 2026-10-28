@@ -4,7 +4,8 @@
 import {
   NEVER_REMEMBER, type AnswerEntry, type Decision, type FieldDescriptor, type Profile, type ProfileKey, type SensitiveTopic, type WorkEntry,
 } from "../shared/types";
-import { bestOption, normalize, sameQuestionScore } from "../shared/text";
+import { bestOption, normalize, sameQuestionScore, yesNoOption } from "../shared/text";
+import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion } from "../shared/screening";
 import { factDecision, HEARD_ABOUT, type PageFacts } from "./facts";
 
 const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
@@ -97,12 +98,27 @@ export function questionKey(field: Pick<FieldDescriptor, "label" | "section">): 
 export function findAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic?: SensitiveTopic): AnswerEntry | undefined {
   const label = field.label ? questionKey(field) : "";
   if (!label) return undefined;
+
+  // Company- or place-specific questions must never match general saved answers: ask the user.
+  if (isCompanyOrPlaceSpecific(label)) return undefined;
+  // Questions with exception clauses ("unless", "other than", "except") must never match general answers.
+  if (hasExceptionClause(label)) return undefined;
+
+  const labelPolarity = questionPolarity(label);
+
   let best: AnswerEntry | undefined;
   let bestScore = 0;
   for (const entry of answers) {
     // A sensitive answer is only reused for a question about the same topic.
-    if (topic && entry.topic !== topic) continue;
-    const score = normalize(entry.question) === normalize(label) || sameKindOfQuestion(entry.question, label)
+    const entryTopic = entry.topic ?? sensitiveTopic({ label: entry.question, name: "", control: "text", required: false, options: [], autocomplete: "", placeholder: "", key: "" });
+    if (topic && entryTopic !== topic) continue;
+
+    // Strict polarity: a saved answer is reused only for a question with the same polarity.
+    if (questionPolarity(entry.question) !== labelPolarity) continue;
+
+    const score = normalize(entry.question) === normalize(label)
+      || sameKindOfQuestion(entry.question, label)
+      || sameScreeningQuestion(entry.question, label)
       ? 1 : sameQuestionScore(entry.question, label);
     if (score > bestScore) {
       bestScore = score;
@@ -246,7 +262,14 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   }
   if (topic) {
     const entry = findAnswer(field, answers, topic);
-    if (entry) return { kind: "answer", value: entry.answer, question: entry.question };
+    if (entry) {
+      let val = entry.answer;
+      if (field.options.length) {
+        const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
+        if (match) val = match;
+      }
+      return { kind: "answer", value: val, question: entry.question };
+    }
     // The user's quick answers, only where the question clearly is that question (see facts.ts).
     const someoneElse = OTHER_PERSON.test(normalize(field.label)) || SOMEONE_ELSES.test(field.label)
       || (!!field.section && OTHER_PERSON_SECTION.test(normalize(field.section)));
@@ -274,7 +297,14 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   if (work) return work;
 
   const remembered = findAnswer(field, answers);
-  if (remembered) return { kind: "answer", value: remembered.answer, question: remembered.question };
+  if (remembered) {
+    let val = remembered.answer;
+    if (field.options.length) {
+      const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
+      if (match) val = match;
+    }
+    return { kind: "answer", value: val, question: remembered.question };
+  }
   const quick = factDecision(field, profile, undefined);
   if (quick) return quick;
 

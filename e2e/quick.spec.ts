@@ -46,3 +46,19 @@ test("one-click prefer not to say sets all diversity quick answers to Decline", 
   expect(stored.profile?.facts?.veteran).toBe("Decline");
   expect(stored.profile?.facts?.disability).toBe("Decline");
 });
+
+test("screening pre-answers are saved in the panel and written to answers bank", async ({ ext }) => {
+  await setStorage(ext, { profile: PROFILE, answers: [] });
+  await ext.reload();
+  await goTo(ext, "answers");
+  const form = ext.locator("#screening-form");
+  await form.locator("summary").click();
+  await form.locator('select[data-screening="Do you have a valid driver\'s license?"]').selectOption("Yes");
+  await form.locator('select[data-screening="Are you bound by a non-compete agreement?"]').selectOption("No");
+  await form.locator("#save-screening").click();
+  await expect(ext.locator("#toasts")).toContainText("Screening answers saved");
+  const stored = await ext.evaluate(() => chrome.storage.local.get("answers"));
+  expect(stored.answers).toHaveLength(2);
+  expect(stored.answers.find((a: any) => a.question === "Do you have a valid driver's license?").answer).toBe("Yes");
+  expect(stored.answers.find((a: any) => a.question === "Are you bound by a non-compete agreement?").answer).toBe("No");
+});

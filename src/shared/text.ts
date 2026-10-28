@@ -86,3 +86,18 @@ export function bestOption(options: string[], wanted: string, minScore = 0.6): s
   }
   return bestScore >= minScore ? best : undefined;
 }
+
+/** Match a Yes or No answer to choice options (e.g. ["Yes", "No"], ["Yes, I do", "No, I do not"], ["I agree", "I disagree"]). */
+export function yesNoOption(options: string[], wanted: string): string | undefined {
+  const match = bestOption(options, wanted);
+  if (match) return match;
+  const isYes = /^(yes|y|true|agree)\b/i.test(wanted.trim());
+  const isNo = /^(no|n|false|disagree)\b/i.test(wanted.trim());
+  if (isYes) {
+    return options.find((o) => /^(yes|y|true|agree|i agree)\b/i.test(normalize(o)));
+  }
+  if (isNo) {
+    return options.find((o) => /^(no|n|false|disagree|i disagree)\b/i.test(normalize(o)));
+  }
+  return undefined;
+}

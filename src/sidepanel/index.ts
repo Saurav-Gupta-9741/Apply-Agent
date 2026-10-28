@@ -19,6 +19,7 @@ import { NEVER_REMEMBER, type PendingQuestion } from "../shared/types";
 import { findAnswer, questionKey } from "../content/classify";
 import { HANDS_OFF_MESSAGE, isHandsOff, platformFor } from "../shared/platforms";
 import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shared/backup";
+import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
 import { buildDiagnostic } from "../shared/diagnostic";
 
 // --- DOM helpers ----------------------------------------------------------------------------------
@@ -1050,8 +1051,65 @@ async function renderQuick(): Promise<void> {
   $("quick-card").replaceChildren(card);
 }
 
+
+async function renderScreening(): Promise<void> {
+  const container = $("screening-card");
+  if (!container) return;
+  const answers = await loadAnswers();
+  const byQ = new Map(answers.map((a) => [a.question.trim().toLowerCase(), a.answer]));
+
+  const save = button("Save screening answers", { variant: "primary", size: "sm" });
+  save.id = "save-screening";
+
+  const selects = new Map<string, HTMLSelectElement>();
+  const formRows = COMMON_SCREENING_QUESTIONS.map((q) => {
+    const select = h("select", { class: "input", "data-screening": q.question, "aria-label": q.question }) as HTMLSelectElement;
+    select.append(h("option", { value: "" }, "Ask me on each form"));
+    select.append(h("option", { value: "Yes" }, "Yes"));
+    select.append(h("option", { value: "No" }, "No"));
+    const current = byQ.get(q.question.trim().toLowerCase());
+    if (current === "Yes" || current === "No") select.value = current;
+    selects.set(q.question, select);
+    const label = h("label", { class: "field-label span-2" }, q.question, select);
+    return label;
+  });
+
+  const card = h("form", { class: "card quick", id: "screening-form", novalidate: true },
+    h("div", { class: "card-head" }, h("h2", {}, "Common screening questions"), h("span", { class: "muted" }, "Pre-answer yes/no questions")),
+    h("p", { class: "hint" }, "Pre-answer general yes/no questions commonly asked across job applications. Unanswered questions will be asked on each form."),
+    h("details", { class: "details-inline" },
+      h("summary", {}, `Screening questions (${COMMON_SCREENING_QUESTIONS.length})`),
+      h("div", { class: "form-grid" }, ...formRows),
+      h("div", { class: "button-row" }, save)));
+
+  card.addEventListener("submit", (e) => e.preventDefault());
+  save.addEventListener("click", async () => {
+    let currentAnswers = await loadAnswers();
+    for (const q of COMMON_SCREENING_QUESTIONS) {
+      const select = selects.get(q.question);
+      if (!select) continue;
+      const val = select.value.trim();
+      if (val === "Yes" || val === "No") {
+        currentAnswers = upsertAnswer(currentAnswers, {
+          question: q.question,
+          answer: val,
+          updatedAt: new Date().toISOString(),
+        });
+      } else {
+        currentAnswers = currentAnswers.filter((a) => a.question.trim().toLowerCase() !== q.question.trim().toLowerCase());
+      }
+    }
+    await saveAnswers(currentAnswers);
+    toast("Screening answers saved");
+    await renderAnswers();
+  });
+
+  container.replaceChildren(card);
+}
+
 // --- Answers -----------------------------------------------------------------------------------------
 async function renderAnswers(): Promise<void> {
+  void renderScreening();
   const answers = await loadAnswers();
   setCount("answers", answers.length);
   const list = $("answer-list");
