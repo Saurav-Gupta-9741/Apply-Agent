@@ -1010,15 +1010,33 @@ async function renderQuick(): Promise<void> {
   const facts = { ...EMPTY_FACTS, ...((await loadProfile()).facts ?? {}) };
   const save = button("Save quick answers", { variant: "primary", size: "sm" });
   save.id = "save-quick";
+  const declineDiversity = button("Answer all diversity questions with 'Prefer not to say'", { variant: "ghost", size: "sm" });
+  declineDiversity.id = "decline-diversity";
+  declineDiversity.type = "button";
   const card = h("form", { class: "card quick", id: "quick-form", novalidate: true },
     h("div", { class: "card-head" }, h("h2", {}, "Quick answers"), h("span", { class: "muted" }, "Answer once, used on every form")),
     h("p", { class: "hint" }, "Most forms ask these in their own words. ApplyAgent uses an answer only where the question clearly matches it; anything unclear is still asked. Leave a box empty to be asked on each form."),
     h("div", { class: "form-grid" }, ...QUICK_MAIN.map((f) => quickInput(f, facts))),
     h("details", { class: "details-inline" }, h("summary", {}, "Diversity questions (mostly US forms, optional)"),
       h("p", { class: "hint" }, "Used only where a form lists choices and one clearly matches; never typed as text."),
+      h("div", { class: "button-row" }, declineDiversity),
       h("div", { class: "form-grid" }, ...QUICK_DIVERSITY.map((f) => quickInput(f, facts)))),
     h("div", { class: "button-row" }, save));
   card.addEventListener("submit", (e) => e.preventDefault());
+  declineDiversity.addEventListener("click", async () => {
+    for (const key of ["gender", "hispanic", "race", "veteran", "disability"]) {
+      const select = card.querySelector<HTMLSelectElement>(`[data-fact="${key}"]`);
+      if (select) select.value = "Decline";
+    }
+    const next = { ...EMPTY_FACTS };
+    card.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-fact]").forEach((el) => {
+      (next as Record<string, string>)[el.dataset.fact!] = el.value.trim();
+    });
+    const current = await loadProfile();
+    await saveProfile({ ...current, facts: next });
+    profile = { ...profile, facts: next };
+    toast("Diversity answers set to 'Prefer not to say'");
+  });
   save.addEventListener("click", async () => {
     const next = { ...EMPTY_FACTS };
     card.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-fact]").forEach((el) => {

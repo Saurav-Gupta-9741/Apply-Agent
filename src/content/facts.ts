@@ -145,7 +145,7 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts): Decision | und
   return answer(value, what);
 }
 
-const DECLINE = /decline|don ?t wish|do not wish|prefer not|choose not|not to (say|answer|disclose|self identify)|rather not/;
+const DECLINE = /decline|don ?t (wish|want)|do not (wish|want)|prefer not|choose not|not to (say|answer|disclose|self identify)|rather not/;
 
 /** The form's choice that clearly means the user's answer, or (for search-as-you-type lists whose choices are not
  * known yet) the words to type that find it. */

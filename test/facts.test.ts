@@ -118,3 +118,36 @@ describe("without quick answers nothing changes", () => {
     expect(value(decide(field("What is your notice period?", "text", []), ME, saved))).toBe("60 days");
   });
 });
+
+describe("diversity questions set to Decline ('Prefer not to say')", () => {
+  const DECLINE_FACTS: QuickFacts = {
+    ...FACTS,
+    gender: "Decline",
+    hispanic: "Decline",
+    race: "Decline",
+    veteran: "Decline",
+    disability: "Decline",
+  };
+  const DECLINE_ME: Profile = { ...PROFILE, country: "India", facts: DECLINE_FACTS };
+
+  it("choosing it fills a decline option when the form has one", () => {
+    expect(value(decide(field("Gender", "select", ["Male", "Female", "Prefer not to say"]), DECLINE_ME, []))).toBe("Prefer not to say");
+    expect(value(decide(field("Are you Hispanic/Latino?", "select", ["Yes", "No", "Decline to specify"]), DECLINE_ME, []))).toBe("Decline to specify");
+    expect(value(decide(field("Race", "select", ["Asian", "White", "Prefer not to disclose"]), DECLINE_ME, []))).toBe("Prefer not to disclose");
+    expect(value(decide(field("Veteran Status", "select", ["I am a veteran", "I am not a veteran", "I don't wish to answer"]), DECLINE_ME, []))).toBe("I don't wish to answer");
+    expect(value(decide(field("Disability Status", "select", ["Yes", "No", "I do not want to answer"]), DECLINE_ME, []))).toBe("I do not want to answer");
+  });
+
+  it("fills nothing (asks user) when the form has no decline option", () => {
+    expect(decide(field("Gender", "select", ["Male", "Female"]), DECLINE_ME, []).kind).toBe("ask");
+    expect(decide(field("Are you Hispanic/Latino?", "select", ["Yes", "No"]), DECLINE_ME, []).kind).toBe("ask");
+    expect(decide(field("Race", "select", ["Asian", "White"]), DECLINE_ME, []).kind).toBe("ask");
+    expect(decide(field("Veteran Status", "select", ["Yes", "No"]), DECLINE_ME, []).kind).toBe("ask");
+    expect(decide(field("Disability Status", "select", ["Yes", "No"]), DECLINE_ME, []).kind).toBe("ask");
+  });
+
+  it("'Is your spouse a veteran?' stays unanswered", () => {
+    expect(decide(field("Is your spouse a veteran?", "select", ["Yes", "No", "Prefer not to say"]), DECLINE_ME, []).kind).toBe("ask");
+    expect(decide(field("Is your partner a veteran?", "select", ["Yes", "No", "Prefer not to say"]), DECLINE_ME, []).kind).toBe("ask");
+  });
+});
