@@ -116,7 +116,7 @@ describe("content script correction tracking (trackCorrection)", () => {
       },
     };
 
-    trackCorrection(document, field, "Original");
+    trackCorrection(document, field);
 
     // Blurring without change does nothing
     input.dispatchEvent(new Event("blur"));
@@ -169,7 +169,7 @@ describe("content script correction tracking (trackCorrection)", () => {
       },
     };
 
-    trackCorrection(document, field, "Secret");
+    trackCorrection(document, field);
     input.value = "New Person";
     input.dispatchEvent(new Event("blur"));
     expect(messages.length).toBe(0);

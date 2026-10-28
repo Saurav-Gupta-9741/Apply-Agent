@@ -7,7 +7,7 @@ import type {
 import {
   EMPTY_PROFILE, isQueueRunning, loadAnswers, loadApplications, loadProfile, loadQueue, loadSettings, saveAnswers,
   saveProfile, saveSettings, updateAnswers, updateApplications, upsertAnswer,
-  loadCorrections, updateCorrections,
+  loadCorrections,
 } from "../shared/storage";
 import { pendingSubmission, sendToApplication } from "../shared/frames";
 import { isValidJobUrl, parseJobList } from "../background/queue";
@@ -18,12 +18,16 @@ import { FREE_MONTHLY_SUBMISSIONS, SUPPORT_EMAIL } from "../shared/config";
 import { hydrateIcons, icon } from "./icons";
 import { NEVER_REMEMBER, type PendingQuestion } from "../shared/types";
 import { findAnswer, questionKey } from "../content/classify";
+import { isAppliedBeforeQuestion } from "../content/facts";
 import { HANDS_OFF_MESSAGE, isHandsOff, platformFor } from "../shared/platforms";
 import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shared/backup";
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
 import { isPrivacyConsentCheckbox } from "../shared/consent";
-import { applyCorrection, findSuggestedCorrection } from "../shared/corrections";
+import { findSuggestedCorrection } from "../shared/corrections";
 import { buildDiagnostic } from "../shared/diagnostic";
+
+let cachedCorrections: UserCorrection[] = [];
+void loadCorrections().then((c) => { cachedCorrections = c; });
 
 // --- DOM helpers ----------------------------------------------------------------------------------
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -520,14 +524,17 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   const sensitive = r.decision.kind === "ask" && r.decision.reason === "sensitive";
   const youOnly = topic !== undefined && NEVER_REMEMBER.has(topic);
   const upload = r.field.control === "file";
+  const appliedBefore = isAppliedBeforeQuestion(r.field.label);
+  const onPageOnly = youOnly || upload || appliedBefore;
   const why = youOnly ? NEVER_TEXT[topic!]!
     : upload ? "Attach this file yourself on the page. ApplyAgent only attaches your resume."
-      : sensitive ? "Sensitive: only you answer this. Saved for this topic."
-        : r.decision.kind === "ask" && r.decision.reason === "missing_profile_value" ? "Missing from your profile."
-          : r.status === "failed" ? `Could not fill: ${r.detail ?? "unknown reason"}` : "New question: answer once, reused next time.";
+      : appliedBefore ? "Company-specific: answer it on the page."
+        : sensitive ? "Sensitive: only you answer this. Saved for this topic."
+          : r.decision.kind === "ask" && r.decision.reason === "missing_profile_value" ? "Missing from your profile."
+            : r.status === "failed" ? `Could not fill: ${r.detail ?? "unknown reason"}` : "New question: answer once, reused next time.";
   const whyRow = h("span", { class: "question-why" });
-  whyRow.append(icon(youOnly ? "lock" : sensitive ? "shield" : upload ? "upload" : "info", 14), h("span", {}, why));
-  const card = h("div", { class: `question${sensitive || youOnly ? " sensitive" : ""}` },
+  whyRow.append(icon(youOnly ? "lock" : appliedBefore ? "lock" : sensitive ? "shield" : upload ? "upload" : "info", 14), h("span", {}, why));
+  const card = h("div", { class: `question${sensitive || youOnly || appliedBefore ? " sensitive" : ""}` },
     h("div", { class: "question-title" }, (r.field.label && questionKey(r.field)) || "(unlabelled field)"), whyRow);
   const foot = h("div", { class: "question-foot" });
   const left = h("div", { class: "button-row" });
@@ -536,7 +543,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     show.addEventListener("click", ctx.showOnPage);
     left.append(show);
   }
-  if (youOnly || upload) {
+  if (onPageOnly) {
     // Nothing to type here: the user acts on the page itself.
     foot.append(left);
     card.append(foot);
@@ -547,7 +554,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   if (r.field.maxLength && !(input instanceof HTMLSelectElement)) input.maxLength = r.field.maxLength;
   card.append(input);
   const suggested = findSuggestedCorrection(ctx.corrections ?? [], r.field.label);
-  if (suggested && suggested.count === 1 && !youOnly && !upload) {
+  if (suggested && suggested.count === 1 && !onPageOnly) {
     const chipBtn = button(`Use previous correction: "${suggested.answer}"`, {
       variant: "ghost",
       size: "sm",
@@ -605,11 +612,8 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     }
     const entry: AnswerEntry = { question: questionKey(r.field), answer: value, topic, updatedAt: new Date().toISOString() };
     busy(save, true);
+    // An answer to a question ApplyAgent asked goes straight to the answer bank; only edits of filled fields are corrections.
     await updateAnswers((answers) => upsertAnswer(answers, entry));
-    await updateCorrections((corrections) => {
-      const res = applyCorrection(corrections, questionKey(r.field), value);
-      return res.updatedCorrections;
-    });
     await ctx.onSaved();
     busy(save, false);
   });
@@ -618,13 +622,13 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   return card;
 }
 
-async function renderQuestions(report: RunReport): Promise<void> {
+function renderQuestions(report: RunReport): void {
   const box = $("questions");
   box.replaceChildren();
   const pending = report.fields.filter((f) => f.status === "needs_user" || (f.status === "failed" && f.field.required));
   if (!pending.length) return;
   box.append(h("p", { class: "section-label" }, `Needs your answer · ${pending.length}`));
-  const corrections = await loadCorrections();
+  const corrections = cachedCorrections;
 
   const hasConsent = pending.some((f) => f.field.control === "checkbox" && isPrivacyConsentCheckbox(f.field.label));
   if (hasConsent) {
@@ -1451,6 +1455,7 @@ $("queue-clear").addEventListener("click", () => void queueMessage({ type: "QUEU
 // Live updates while the queue runs in the background.
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== "local") return;
+  if (changes.corrections?.newValue) cachedCorrections = changes.corrections.newValue as UserCorrection[];
   if (changes.queue || changes.queueRunning || changes.settings) void renderQueue();
   if (changes.applications) void renderTracker();
   if (changes.answers) {

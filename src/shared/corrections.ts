@@ -8,7 +8,6 @@
  */
 
 import type { AnswerEntry, UserCorrection } from "./types";
-import { upsertAnswer } from "./storage";
 
 /** Patterns that must NEVER be learned as user corrections. */
 const FORBIDDEN_PATTERNS: RegExp[] = [

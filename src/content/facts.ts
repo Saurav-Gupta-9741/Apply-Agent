@@ -125,7 +125,7 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts): Decision | und
   const asksExpected = /expect|desired|requirement|range|asking|looking for|anticipated|expectativa|pretens|esperad|souhait|gewunscht|erwart|vorstellung/.test(q);
   const asksCurrent = /\b(current|present|existing|last drawn|now|today|atual|actual|aktuell\w*|actuel\w*|attuale|huidig\w*)\b/.test(q);
   if (asksExpected && asksCurrent) return undefined; // two values in one box
-  const value = asksExpected ? facts.expectedCtc.trim() : asksCurrent ? facts.currentCtc.trim() : "";
+  const value = (asksExpected ? facts.expectedCtc?.trim() : asksCurrent ? facts.currentCtc?.trim() : "") ?? "";
   if (!value) return undefined;
   const what = asksExpected ? "expected CTC" : "current CTC";
   const asked = `${field.label} ${field.placeholder}`;
@@ -208,9 +208,13 @@ function diversityAnswer(field: FieldDescriptor, facts: QuickFacts, topic: Sensi
 export function companyDomain(url: string): string {
   try {
     const u = new URL(url);
-    if (/(greenhouse\.io|lever\.co|ashbyhq\.com|workable\.com|smartrecruiters\.com|bamboohr\.com|teamtailor\.com|breezy\.hr|personio\.(de|com))$/i.test(u.hostname)) {
+    // Company in the path: boards.greenhouse.io/acme, jobs.lever.co/acme, apply.workable.com/acme, …
+    if (/(greenhouse\.io|lever\.co|ashbyhq\.com|workable\.com|smartrecruiters\.com)$/i.test(u.hostname)) {
       return (u.searchParams.get("for") ?? u.pathname.split("/").filter(Boolean)[0] ?? "").toLowerCase();
     }
+    // Company in the subdomain: acme.bamboohr.com, acme.teamtailor.com, acme.breezy.hr, acme.jobs.personio.de
+    const sub = /^([^.]+)\.(?:jobs\.)?(?:bamboohr\.com|teamtailor\.com|breezy\.hr|personio\.(?:de|com))$/i.exec(u.hostname);
+    if (sub) return sub[1]!.toLowerCase();
     return u.hostname.replace(/^(www|careers|jobs)\./i, "").toLowerCase();
   } catch {
     return "";
@@ -277,7 +281,7 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
   if (topic === "notice_period") {
     if (isStartImmediatelyQuestion(field.label)) {
       if (!yesNoField(field)) return undefined;
-      const notice = facts.noticePeriod.trim();
+      const notice = facts.noticePeriod?.trim() ?? "";
       const val = startImmediatelyValue(notice);
       if (!val) return undefined;
       let ans: string = val;
@@ -290,7 +294,7 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     }
     // A date picker or a "month"/"year" box needs a date, not "30 days".
     // "Are you subject to a notice period?" is a yes/no question: "30 days" is not its answer.
-    const notice = facts.noticePeriod.trim();
+    const notice = facts.noticePeriod?.trim() ?? "";
     if (!notice || field.control === "date" || YES_NO_QUESTION.test(q)) return undefined;
     // A date ("Start date", a DD/MM/YYYY mask in the label or placeholder) needs a date, not "30 days".
     const shape = normalize(`${field.label} ${field.placeholder}`);
@@ -311,6 +315,6 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     return yesNoField(field) ? answer(facts.relocate, "relocation") : undefined;
   }
   if (topic && ["gender", "race", "veteran", "disability"].includes(topic)) return diversityAnswer(field, facts, topic);
-  if (!topic && facts.heardFrom.trim() && HEARD_ABOUT.test(q) && field.control !== "textarea") return answer(facts.heardFrom.trim(), "how you heard");
+  if (!topic && facts.heardFrom?.trim() && HEARD_ABOUT.test(q) && field.control !== "textarea") return answer(facts.heardFrom.trim(), "how you heard");
   return undefined;
 }

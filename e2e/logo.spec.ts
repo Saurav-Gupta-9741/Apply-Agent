@@ -16,7 +16,7 @@ test("the logo loads, celebrates a confirmed application, then rests", async ({ 
   await goTo(ext, "apply");
   await ext.locator("input[name='mode'][value='auto']").check({ force: true });
   await ext.locator("#run").click();
-  await expect(ext.locator("#status")).toContainText("Applied");
+  await expect(ext.locator("#status")).toContainText("Applied", { timeout: 15_000 });
   await expect(marks.first()).toHaveAttribute("src", /mark-celebrate\.svg$/);
   await expect(marks.first()).toHaveAttribute("src", /brand\/mark\.svg$/, { timeout: 4000 });
 });

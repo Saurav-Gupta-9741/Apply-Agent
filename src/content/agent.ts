@@ -238,17 +238,20 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
     uploads.push(result);
   }
   // Resume parsers start a moment after the upload and take a few seconds: give them time before typing.
-  if (uploaded.size) await settle(doc, 1000, 10_000, 2000);
+  // Start pre-reading question meanings concurrently while the resume parser settles:
+  const preRemaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file");
+  const meaningsPromise = readMeanings(preRemaining, ctx);
+  if (uploaded.size) await settle(doc, 1000, 10_000, 1500);
   // 2. One block per job in the work history ("Add another" in a repeating experience section).
   await addWorkBlocks(doc, ctx);
   // 3. Everything else, read again: the page may have changed meanwhile.
   const rest: FieldResult[] = [];
   const remaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file"); // files: step 1
-  const meanings = await readMeanings(remaining, ctx);
+  const meanings = await meaningsPromise;
   for (const field of remaining) {
     const res = await fillOne(field, ctx, meanings.get(field.descriptor.label));
     if (res.status === "filled" && (res.decision.kind === "profile" || res.decision.kind === "answer" || res.decision.kind === "work")) {
-      trackCorrection(doc, field, res.decision.value);
+      trackCorrection(doc, field);
     }
     rest.push(res);
   }

@@ -95,20 +95,21 @@ export function questionKey(field: Pick<FieldDescriptor, "label" | "section">): 
   return field.section && OTHER_PERSON_SECTION.test(normalize(field.section)) ? `${field.section} › ${field.label}` : field.label;
 }
 
+/** A single tick box, or choices that include both a Yes and a No. */
+function yesNoChoice(field: FieldDescriptor): boolean {
+  if (field.control === "checkbox") return true;
+  return field.options.length > 0 && !!yesNoOption(field.options, "Yes") && !!yesNoOption(field.options, "No");
+}
+
 export function findAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic?: SensitiveTopic): AnswerEntry | undefined {
   const label = field.label ? questionKey(field) : "";
   if (!label) return undefined;
-
-  // Company- or place-specific questions must never match general saved answers: ask the user.
-  if (isCompanyOrPlaceSpecific(label)) return undefined;
-  // Questions with exception clauses ("unless", "other than", "except") must never match general answers.
-  if (hasExceptionClause(label)) return undefined;
 
   const labelPolarity = questionPolarity(label);
 
   let best: AnswerEntry | undefined;
   let bestScore = 0;
-  for (const entry of answers) {
+  for (const entry of (answers ?? [])) {
     // A sensitive answer is only reused for a question about the same topic.
     const entryTopic = entry.topic ?? sensitiveTopic({ label: entry.question, name: "", control: "text", required: false, options: [], autocomplete: "", placeholder: "", key: "" });
     if (topic && entryTopic !== topic) continue;
@@ -116,9 +117,19 @@ export function findAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic
     // Strict polarity: a saved answer is reused only for a question with the same polarity.
     if (questionPolarity(entry.question) !== labelPolarity) continue;
 
-    const score = normalize(entry.question) === normalize(label)
-      || sameKindOfQuestion(entry.question, label)
-      || sameScreeningQuestion(entry.question, label)
+    // An exact match always reuses the user's saved answer to this exact question.
+    if (normalize(entry.question) === normalize(label)) {
+      bestScore = 1;
+      best = entry;
+      break;
+    }
+
+    // A general screening answer or fuzzy match must never match company/place-specific questions or questions with exceptions.
+    if (isCompanyOrPlaceSpecific(label) || hasExceptionClause(label)) continue;
+
+    // A common screening answer is a bare Yes/No: reused only where the form asks for exactly that.
+    const score = sameKindOfQuestion(entry.question, label)
+      || yesNoChoice(field) && sameScreeningQuestion(entry.question, label)
       ? 1 : sameQuestionScore(entry.question, label);
     if (score > bestScore) {
       bestScore = score;
@@ -256,6 +267,12 @@ export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" |
 
 export function decide(field: FieldDescriptor, profile: Profile, answers: AnswerEntry[], page?: PageFacts): Decision {
   if (isStartImmediatelyQuestion(field.label)) {
+    // An answer the user saved for this kind of question (never a notice period such as "30 days"), else the quick answer.
+    const entry = findAnswer(field, answers, "notice_period");
+    if (entry && isStartImmediatelyQuestion(entry.question)) {
+      const val = field.options.length ? yesNoOption(field.options, entry.answer) ?? bestOption(field.options, entry.answer) : entry.answer;
+      if (val) return { kind: "answer", value: val, question: entry.question };
+    }
     const quick = factDecision(field, profile, "notice_period", page);
     return quick ?? { kind: "ask", reason: "sensitive", topic: "notice_period" };
   }

@@ -3,65 +3,56 @@
  * - NEVER learn for fields ApplyAgent asked about.
  * - NEVER learn passwords, numbers, legal declarations, or someone else's details.
  * - Save only on blur / change, or when Next / Submit is pressed.
+ * - Compare against what the field showed right after filling (a phone box holds only the national number, a radio
+ *   button's value can be a code), so a reformatted fill or tabbing through is never mistaken for a correction.
  */
 
 import type { Message } from "../shared/types";
 import type { ExtractedField } from "./extract";
+import { currentValue } from "./fill";
 import { isLearnableCorrection } from "../shared/corrections";
 
-const filledValues = new WeakMap<Element, string>();
-const trackedElements = new Set<HTMLElement>();
-
-function getElementValue(el: HTMLElement): string {
-  if (el instanceof HTMLInputElement) {
-    if (el.type === "checkbox") return el.checked ? "Yes" : "No";
-    if (el.type === "radio") return el.checked ? el.value : "";
-    return el.value;
-  }
-  if (el instanceof HTMLTextAreaElement) return el.value;
-  if (el instanceof HTMLSelectElement) {
-    if (el.multiple) return Array.from(el.selectedOptions, (o) => o.text || o.value).join(", ");
-    return el.options[el.selectedIndex]?.text || el.value;
-  }
-  return "";
+interface Tracked {
+  field: ExtractedField;
+  question: string;
+  /** The field's value as last seen: right after the fill, then after each recorded correction. */
+  last: string;
 }
 
-function flushElementCorrection(el: HTMLElement, question: string): void {
-  const initial = filledValues.get(el);
-  if (initial === undefined) return;
-  const current = getElementValue(el).trim();
-  if (current && current.toLowerCase() !== initial.trim().toLowerCase()) {
-    filledValues.set(el, current);
-    if (typeof chrome !== "undefined" && chrome?.runtime?.sendMessage) {
-      chrome.runtime.sendMessage({
-        type: "RECORD_CORRECTION",
-        question,
-        answer: current,
-      } satisfies Message).catch?.(() => undefined);
-    }
+const tracked = new WeakMap<Element, Tracked>();
+
+function flush(state: Tracked): void {
+  const current = currentValue(state.field).trim();
+  if (!current || current.toLowerCase() === state.last.toLowerCase()) return;
+  state.last = current;
+  if (typeof chrome !== "undefined" && chrome?.runtime?.sendMessage) {
+    chrome.runtime.sendMessage({
+      type: "RECORD_CORRECTION",
+      question: state.question,
+      answer: current,
+    } satisfies Message).catch?.(() => undefined);
   }
 }
 
-/** Track a filled field so user edits are recorded as corrections. */
-export function trackCorrection(doc: Document, field: ExtractedField, filledValue: string): void {
+/** Track a field ApplyAgent just filled, so user edits are recorded as corrections. */
+export function trackCorrection(doc: Document, field: ExtractedField): void {
   const question = field.descriptor.label?.trim();
   if (!question || !isLearnableCorrection(question, field.descriptor.control)) return;
 
+  const known = field.elements.find((el) => tracked.has(el));
+  if (known) {
+    // Filled again (e.g. after the user saved an answer): what it shows now is the new starting point.
+    const state = tracked.get(known)!;
+    state.field = field;
+    state.last = currentValue(field).trim();
+    return;
+  }
+  const state: Tracked = { field, question, last: currentValue(field).trim() };
+  const handler = () => flush(state);
   for (const el of field.elements) {
     if (!(el instanceof HTMLElement)) continue;
-    filledValues.set(el, filledValue.trim());
-    if (trackedElements.has(el)) continue;
-    trackedElements.add(el);
-
-    const handler = () => flushElementCorrection(el, question);
+    tracked.set(el, state);
     el.addEventListener("blur", handler);
     el.addEventListener("change", handler);
   }
-
-  // Also flush on form submit
-  doc.addEventListener("submit", () => {
-    for (const el of field.elements) {
-      if (el instanceof HTMLElement) flushElementCorrection(el, question);
-    }
-  }, { capture: true, once: true });
 }
