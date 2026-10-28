@@ -6,7 +6,7 @@ import {
 } from "../shared/types";
 import { bestOption, normalize, sameQuestionScore, yesNoOption } from "../shared/text";
 import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion } from "../shared/screening";
-import { factDecision, HEARD_ABOUT, type PageFacts } from "./facts";
+import { factDecision, hasConfirmedApplication, HEARD_ABOUT, isAppliedBeforeQuestion, isStartImmediatelyQuestion, type PageFacts } from "./facts";
 
 const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   // Checked first: identity numbers and signatures are never filled or remembered by the agent.
@@ -17,7 +17,7 @@ const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   ["sponsorship", /sponsor|visa|visum/],
   ["work_authorization", /\bwork permit\b|arbeitserlaubnis|aufenthaltstitel|arbeitsgenehmigung|permis de travail|autorisation de travail|autorizacion de trabajo|permiso de trabajo|autorizacao de trabalho|permesso di (lavoro|soggiorno)|werkvergunning|authori[sz]ed to work|work authori[sz]ation|right to work|eligible to work|legally (able|permitted|entitled)/],
   ["salary", /gehalt|salaire|salari|retribuzione|stipendio|pretension|salary|compensation|\bctc\b|pay expectation|expected pay|desired pay|remuneration/],
-  ["notice_period", /when (are|would|will|could) you (be )?available|available to start|available for employment|^date available$|earliest (date )?(you|to) (could |would |can )?start|kundigungsfrist|eintrittstermin|fruhester eintritt|preavis|disponibilite|preaviso|disponibilidad|fecha de incorporacion|aviso previo|preavviso|opzegtermijn|notice period|start date|when can you (start|join)|earliest (start|joining)|availability to start/],
+  ["notice_period", /when (are|would|will|could) you (be )?available|available to start|available for employment|^date available$|earliest (date )?(you|to) (could |would |can )?start|kundigungsfrist|eintrittstermin|fruhester eintritt|preavis|disponibilite|preaviso|disponibilidad|fecha de incorporacion|aviso previo|preavviso|opzegtermijn|notice period|start date|when can you (start|join)|earliest (start|joining)|availability to start|can you start (immediately|right away)|are you (able|available) to start (immediately|right away)|start (immediately|right away)/],
   ["relocation", /relocat|umzug|umziehen|demenag|reubic|mudanza|trasferi|verhuiz/],
   ["gender", /gender|pronoun|geschlecht|\bgenre\b|\bsexe\b|genero|\bsexo\b|\bsesso\b|geslacht/],
   ["race", /\brace\b|ethnic|hispanic|latin[oax]|\betnia\b|etnicidad|origine ethnique/],
@@ -255,6 +255,22 @@ export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" |
 }
 
 export function decide(field: FieldDescriptor, profile: Profile, answers: AnswerEntry[], page?: PageFacts): Decision {
+  if (isStartImmediatelyQuestion(field.label)) {
+    const quick = factDecision(field, profile, "notice_period", page);
+    return quick ?? { kind: "ask", reason: "sensitive", topic: "notice_period" };
+  }
+  if (isAppliedBeforeQuestion(field.label)) {
+    if (hasConfirmedApplication(page)) {
+      let val = "Yes";
+      if (field.options.length) {
+        const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
+        if (match) val = match;
+      }
+      return { kind: "answer", value: val, question: "Tracker › confirmed previous application" };
+    }
+    return { kind: "ask", reason: "unknown" };
+  }
+
   const topic = sensitiveTopic(field);
   // Identity numbers and signatures: the user types them on the page; optional ones stay blank.
   if (topic && NEVER_REMEMBER.has(topic)) {

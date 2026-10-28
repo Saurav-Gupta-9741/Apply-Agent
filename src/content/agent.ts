@@ -1,7 +1,7 @@
 /** The agent: reads the form, decides every field, fills and verifies, and submits only when everything
  * required is filled, no CAPTCHA is waiting, and (in review mode) the user has pressed Submit. */
 
-import type { AnswerEntry, Decision, FieldResult, Mode, Profile, RunReport } from "../shared/types";
+import type { AnswerEntry, ApplicationRecord, Decision, FieldResult, Mode, Profile, RunReport } from "../shared/types";
 import { generic, pickAdapter } from "./adapters";
 import { workEntries } from "./classify";
 import { codeOptionFor, dialCodePickerFor, isDialCodePicker, JUST_A_DIAL_CODE, phoneBoxFor, selectedCode, splitPhone } from "./phone";
@@ -49,6 +49,7 @@ export interface AgentContext {
   page?: PageFacts;
   /** The local question model: what each question means (absent in tests and when the model cannot run). */
   understand?: (texts: string[]) => Promise<Array<Meaning | null> | null>;
+  applications?: ApplicationRecord[];
 }
 
 const UNDERSTAND_TIMEOUT_MS = 10_000;
@@ -80,7 +81,7 @@ export async function scanForm(doc: Document, ctx: Omit<AgentContext, "mode">): 
   const { adapter, root } = locate(doc);
   const report = baseReport(doc, adapter.platform, adapter.jobTitle(doc));
   if (!root) return report;
-  const page: PageFacts = ctx.page ?? { jobCountries: jobCountries(doc) };
+  const page: PageFacts = ctx.page ?? { jobCountries: jobCountries(doc), url: doc.location?.href ?? "", applications: ctx.applications };
   const fields = extractFields(root);
   const meanings = await readMeanings(fields, ctx);
   report.fields = fields.map((field) => {
@@ -217,7 +218,7 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
 /** Fill everything the agent is allowed to fill. Never overwrites a value already present. */
 export async function fillForm(doc: Document, context: AgentContext): Promise<RunReport> {
   // Where the job is, read once: it answers "Will you require sponsorship to work here?" (see facts.ts).
-  const ctx: AgentContext = { ...context, page: context.page ?? { jobCountries: jobCountries(doc) } };
+  const ctx: AgentContext = { ...context, page: context.page ?? { jobCountries: jobCountries(doc), url: doc.location?.href ?? "", applications: context.applications } };
   const { adapter, root } = locate(doc);
   const report = baseReport(doc, adapter.platform, adapter.jobTitle(doc));
   if (!root) {

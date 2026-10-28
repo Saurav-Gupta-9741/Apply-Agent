@@ -302,7 +302,7 @@ describe("e) notice period, start dates and yes/no availability", () => {
     ["Date available to start", "text", null, { placeholder: "dd/mm/yyyy" }],
     ["Start date - Month", "select", null, { options: ["January", "February", "March"] }],
     ["Availability – Year", "select", null, { options: ["2026", "2027"] }],
-    ["Can you start immediately?", "select", null, { options: ["Yes", "No"] }],
+    ["Can you start immediately?", "select", { oneOf: ["No", null] }, { options: ["Yes", "No"] }],
     ["Are you currently serving your notice period?", "select", null, { options: ["Yes", "No"] }],
     ["Is your notice period negotiable?", "select", null, { options: ["Yes", "No"] }],
     ["Can you join within 15 days?", "select", null, { options: ["Yes", "No"] }],

@@ -1,7 +1,7 @@
 /** Content script: runs inside the job page (and inside embedded application iframes). */
 
 import type { Detection, Message, RunReport } from "../shared/types";
-import { loadAnswers, loadProfile, loadSettings } from "../shared/storage";
+import { loadAnswers, loadApplications, loadProfile, loadSettings } from "../shared/storage";
 import { generic, pickAdapter } from "./adapters";
 import { highlightField, runOnce, scanForm, submitForm, tickConsentCheckboxes } from "./agent";
 import { detectConfirmation, hasCaptcha } from "./detect";
@@ -61,7 +61,7 @@ async function detect(): Promise<void> {
   };
   if (sense.kind === "application_form") {
     // What the agent WOULD do. Nothing is typed or uploaded.
-    const scan = await scanForm(document, { profile: await loadProfile(), answers: await loadAnswers(), understand });
+    const scan = await scanForm(document, { profile: await loadProfile(), answers: await loadAnswers(), applications: await loadApplications(), understand });
     detection.total = scan.fields.length;
     detection.fill = scan.fields.filter((f) => f.status === "filled").length;
     detection.ask = scan.fields.filter((f) => f.status === "needs_user").length;
@@ -166,7 +166,7 @@ if (!window.__applyAgentLoaded) {
       }
       (async () => {
         try {
-          sendResponse(await scanForm(document, { profile: await loadProfile(), answers: await loadAnswers(), understand }));
+          sendResponse(await scanForm(document, { profile: await loadProfile(), answers: await loadAnswers(), applications: await loadApplications(), understand }));
         } catch (error) {
           sendResponse(plainReport("needs_user", `Could not read this form: ${String(error)}`));
         }
@@ -213,7 +213,7 @@ if (!window.__applyAgentLoaded) {
       void working(true); // the toolbar icon animates while this tab is being filled
       try {
         const report = message.type === "RUN"
-          ? await runOnce(document, { profile: await loadProfile(), answers: await loadAnswers(), mode: message.mode, understand }, markSubmitting)
+          ? await runOnce(document, { profile: await loadProfile(), answers: await loadAnswers(), applications: await loadApplications(), mode: message.mode, understand }, markSubmitting)
           : await submitForm(document, 20000, markSubmitting);
         sendResponse(report);
         chrome.runtime.sendMessage({ type: "RUN_RESULT", report } satisfies Message).catch(() => undefined);

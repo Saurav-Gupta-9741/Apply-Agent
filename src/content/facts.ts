@@ -6,9 +6,10 @@
  *  - relocation: only the general question "Are you willing to relocate?"
  *  - diversity questions: only where the form offers choices, and only a choice that clearly matches */
 
-import type { Decision, FieldDescriptor, Profile, QuickFacts, SensitiveTopic } from "../shared/types";
+import type { ApplicationRecord, Decision, FieldDescriptor, Profile, QuickFacts, SensitiveTopic } from "../shared/types";
 import { canonicalCountries, canWorkIn, countriesIn } from "../shared/countries";
-import { bestOption, normalize } from "../shared/text";
+import { bestOption, normalize, yesNoOption } from "../shared/text";
+import { hasExceptionClause, isCompanyOrPlaceSpecific } from "../shared/screening";
 
 /** "How did you hear about this job?" in its many wordings. */
 export const HEARD_ABOUT = /how did you (hear|learn|find out|come across)|where did you (hear|learn|find)|how did you find (out about )?(us|this)|where have you (learned|heard) about|how you heard about|source of (your )?application|referral source/;
@@ -49,6 +50,10 @@ function yesNoField(field: FieldDescriptor): boolean {
 export interface PageFacts {
   /** Countries the job is in, from its structured data or location line (empty when unknown). */
   jobCountries: string[];
+  /** URL of the application page, to identify the company and check application history. */
+  url?: string;
+  /** Confirmed application history from the tracker. */
+  applications?: ApplicationRecord[];
 }
 
 /** The question itself: brackets and statements around it ("This role is not eligible for visa sponsorship.") are
@@ -199,6 +204,68 @@ function diversityAnswer(field: FieldDescriptor, facts: QuickFacts, topic: Sensi
   return undefined;
 }
 
+/** Determine the company domain or identifier from a job application URL. */
+export function companyDomain(url: string): string {
+  try {
+    const u = new URL(url);
+    if (/(greenhouse\.io|lever\.co|ashbyhq\.com|workable\.com|smartrecruiters\.com|bamboohr\.com|teamtailor\.com|breezy\.hr|personio\.(de|com))$/i.test(u.hostname)) {
+      return (u.searchParams.get("for") ?? u.pathname.split("/").filter(Boolean)[0] ?? "").toLowerCase();
+    }
+    return u.hostname.replace(/^(www|careers|jobs)\./i, "").toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
+/** Check if the tracker has a confirmed application to the same company domain. */
+export function hasConfirmedApplication(page?: PageFacts): boolean {
+  if (!page?.url || !page?.applications?.length) return false;
+  const current = companyDomain(page.url);
+  if (!current) return false;
+  return page.applications.some((app) => app.status === "applied_confirmed" && companyDomain(app.url) === current);
+}
+
+/** Recognises "Can you start immediately?" in its affirmative yes/no wordings. */
+export function isStartImmediatelyQuestion(label: string): boolean {
+  if (!answerableLength(label)) return false;
+  if (isCompanyOrPlaceSpecific(label)) return false;
+  if (hasExceptionClause(label)) return false;
+  const q = normalize(label);
+  if (WANTS_DETAILS.test(q) || WH_QUESTION.test(q)) return false;
+  if (/\b(not|unable|cannot|can t|cant|wont|won t)\b/.test(q)) return false;
+  if (/\b(january|february|march|april|may|june|july|august|september|october|november|december|monday|tuesday|wednesday|thursday|friday|saturday|sunday|am|pm|o clock)\b/.test(q)) return false;
+  if (/\b\d{1,4}[\/\.-]\d{1,2}[\/\.-]\d{1,4}\b/.test(label)) return false;
+  return /^(can you|are you (able|available) to|could you|would you be able to)\s+(start(\s+work(ing)?)?|begin|commence)\s+(immediately|right away)$/.test(q)
+    || /^(available|able)\s+to\s+(start(\s+work(ing)?)?|begin|commence)\s+(immediately|right away)$/.test(q)
+    || /^start\s+(immediately|right away)$/.test(q);
+}
+
+/** "Immediately"/"0 days" -> Yes; a number of days or weeks > 0 -> No; anything else asks. */
+export function startImmediatelyValue(notice: string): "Yes" | "No" | undefined {
+  const norm = normalize(notice);
+  if (!norm) return undefined;
+  if (/^(immediate(ly)?|0(\s*(days?|weeks?|months?))?|none|no notice)$/.test(norm)) {
+    return "Yes";
+  }
+  if (/^([1-9]\d*)\s*(days?|weeks?|months?)$/.test(norm)) {
+    return "No";
+  }
+  return undefined;
+}
+
+/** Recognises "Have you applied here before?" in its yes/no forms. */
+export function isAppliedBeforeQuestion(label: string): boolean {
+  if (!answerableLength(label)) return false;
+  const q = normalize(label);
+  if (WANTS_DETAILS.test(q) || WH_QUESTION.test(q)) return false;
+  if (/\b(visa|permit|authoriz|other compan|where else|interview|work(ed)?|working|employ(ed|ee|er)?)\b/.test(q)) return false;
+  const hasApply = /\bappl(ied|y|ying)\b/.test(q);
+  const hasPrior = /\b(before|previously|prior|past|earlier|already)\b/.test(q);
+  if (!hasApply || !hasPrior) return false;
+  return /^(have you|did you|were you|are you)\s+(ever\s+|previously\s+)?appl(ied|y)\b|\b(previously|already)\s+appl(ied|y)\b|\bappl(ied|y)\s+(here|before|previously|in the past|to us|with us)\b/.test(q)
+    || /^(have you|did you)\s+.*appl(ied|y)\b.*\b(before|previously|in the past|prior)\b/.test(q);
+}
+
 /** The quick answer for this question, if the user gave one and the question clearly is that question. */
 export function factDecision(field: FieldDescriptor, profile: Profile, topic: SensitiveTopic | undefined, page?: PageFacts): Decision | undefined {
   const facts = profile.facts;
@@ -208,6 +275,19 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
   if (topic === "work_authorization" || topic === "sponsorship") return facts.workCountries ? workAnswer(field, profile, facts, page) : undefined;
   if (topic === "salary") return salaryAnswer(field, facts);
   if (topic === "notice_period") {
+    if (isStartImmediatelyQuestion(field.label)) {
+      if (!yesNoField(field)) return undefined;
+      const notice = facts.noticePeriod.trim();
+      const val = startImmediatelyValue(notice);
+      if (!val) return undefined;
+      let ans: string = val;
+      if (field.options.length) {
+        const match = yesNoOption(field.options, ans) ?? bestOption(field.options, ans);
+        if (!match) return undefined;
+        ans = match;
+      }
+      return answer(ans, "start immediately");
+    }
     // A date picker or a "month"/"year" box needs a date, not "30 days".
     // "Are you subject to a notice period?" is a yes/no question: "30 days" is not its answer.
     const notice = facts.noticePeriod.trim();
