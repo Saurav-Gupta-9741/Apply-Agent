@@ -3,23 +3,20 @@
  * After 2 identical corrections, it is promoted to the answer bank and automatically reused.
  */
 
-import { BASE, expect, goTo, PROFILE, setStorage, test } from "./fixtures";
+import { BASE, expect, PROFILE, runIn, setStorage, test } from "./fixtures";
 
 test("editing a filled field records a correction and remembers it", async ({ ext, context }) => {
   const initialAnswers = [
     { question: "Why do you want to join Acme?", answer: "I love building software", updatedAt: new Date().toISOString() },
   ];
   await setStorage(ext, { profile: PROFILE, answers: initialAnswers, corrections: [] });
-  await ext.reload();
 
   const page = await context.newPage();
   await page.goto(`${BASE}/apply.html`);
-  const tabId = await ext.evaluate(async (url) => (await chrome.tabs.query({})).find((t) => t.url === url)!.id!, page.url());
-  await ext.goto(`${ext.url().split("?")[0]}?tabId=${tabId}`);
-  await goTo(ext, "apply");
 
   // 1. First run fills #why with initial answer
-  await ext.locator("#run").click();
+  const report = await runIn(ext, page, { type: "RUN", mode: "review" });
+  expect(report?.status).toBe("needs_user");
   await expect(page.locator("#why")).toHaveValue("I love building software");
 
   // 2. User edits the field to a new answer and blurs
