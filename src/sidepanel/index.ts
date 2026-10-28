@@ -20,6 +20,7 @@ import { findAnswer, questionKey } from "../content/classify";
 import { HANDS_OFF_MESSAGE, isHandsOff, platformFor } from "../shared/platforms";
 import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shared/backup";
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
+import { isPrivacyConsentCheckbox } from "../shared/consent";
 import { buildDiagnostic } from "../shared/diagnostic";
 
 // --- DOM helpers ----------------------------------------------------------------------------------
@@ -600,6 +601,26 @@ function renderQuestions(report: RunReport): void {
   const pending = report.fields.filter((f) => f.status === "needs_user" || (f.status === "failed" && f.field.required));
   if (!pending.length) return;
   box.append(h("p", { class: "section-label" }, `Needs your answer · ${pending.length}`));
+
+  const hasConsent = pending.some((f) => f.field.control === "checkbox" && isPrivacyConsentCheckbox(f.field.label));
+  if (hasConsent) {
+    const consentBtn = button("Tick the privacy/data-processing consent boxes on this page", {
+      variant: "secondary",
+      icon: "check",
+    });
+    consentBtn.id = "tick-consent";
+    consentBtn.style.marginBottom = "8px";
+    consentBtn.style.width = "100%";
+    consentBtn.addEventListener("click", async () => {
+      busy(consentBtn, true);
+      const res = (await send({ type: "TICK_CONSENT" })) as { count?: number } | undefined;
+      const count = res?.count ?? 0;
+      toast(count > 0 ? `Ticked ${count} privacy consent box${count === 1 ? "" : "es"}` : "No privacy consent boxes found to tick");
+      await run();
+      busy(consentBtn, false);
+    });
+    box.append(consentBtn);
+  }
   const job = { title: report.jobTitle, company: companyFromUrl(report.url) };
   for (const r of pending) {
     box.append(questionCard(r, {

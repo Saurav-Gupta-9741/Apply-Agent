@@ -3,7 +3,7 @@
 import type { Detection, Message, RunReport } from "../shared/types";
 import { loadAnswers, loadProfile, loadSettings } from "../shared/storage";
 import { generic, pickAdapter } from "./adapters";
-import { highlightField, runOnce, scanForm, submitForm } from "./agent";
+import { highlightField, runOnce, scanForm, submitForm, tickConsentCheckboxes } from "./agent";
 import { detectConfirmation, hasCaptcha } from "./detect";
 import { findApplyControl, sensePage } from "./sense";
 import { isApplicationPage } from "./target";
@@ -120,7 +120,7 @@ if (!window.__applyAgentLoaded) {
   };
 
   chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse: (r: unknown) => void) => {
-    const acting = ["RUN", "SUBMIT", "SCAN", "HIGHLIGHT", "OPEN_APPLICATION"].includes(message.type);
+    const acting = ["RUN", "SUBMIT", "SCAN", "HIGHLIGHT", "OPEN_APPLICATION", "TICK_CONSENT"].includes(message.type);
     if (acting && platform.policy === "hands_off") {
       // Answer once: from the top frame, or from the frame that holds the form when the page around it is not ours.
       if (window !== window.top && !formRoot()) return false;
@@ -147,6 +147,12 @@ if (!window.__applyAgentLoaded) {
       return false;
     }
     // Every frame receives the message; only the frame holding the form answers.
+    if (message.type === "TICK_CONSENT") {
+      if (!formRoot()) return false;
+      const count = tickConsentCheckboxes(document);
+      sendResponse({ count });
+      return false;
+    }
     if (message.type === "HIGHLIGHT") {
       if (!formRoot()) return false;
       sendResponse(highlightField(document, message.label, message.key));

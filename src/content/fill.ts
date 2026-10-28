@@ -11,7 +11,7 @@ export interface FillOutcome {
   detail?: string;
 }
 
-function fire(el: Element, type: string): void {
+export function fire(el: Element, type: string): void {
   // composed: the event leaves a shadow root, so frameworks listening above a web component hear it too.
   el.dispatchEvent(new Event(type, { bubbles: true, composed: true }));
 }

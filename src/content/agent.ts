@@ -8,11 +8,12 @@ import { codeOptionFor, dialCodePickerFor, isDialCodePicker, JUST_A_DIAL_CODE, p
 import { decideWithMeaning, type Meaning } from "./meaning";
 import { detectConfirmation, hasCaptcha, visibleErrors } from "./detect";
 import { DROPDOWN, extractFields, inWorkSection, sectionHeadings, type ExtractedField } from "./extract";
-import { currentValue, fillCombobox, fillDropdown, fillField, type FillOutcome } from "./fill";
+import { currentValue, fillCombobox, fillDropdown, fillField, fire, type FillOutcome } from "./fill";
 import { deepQueryAll } from "./dom";
 import type { PageFacts } from "./facts";
 import { jobCountries } from "./joblocation";
 import { normalize } from "../shared/text";
+import { isPrivacyConsentCheckbox } from "../shared/consent";
 
 /** Scroll a field into view and outline it briefly, so the user can answer it on the page. */
 export function highlightField(doc: Document, label: string, key?: string): boolean {
@@ -401,4 +402,27 @@ export async function runOnce(doc: Document, ctx: AgentContext, beforeSubmit?: B
     }
     earlier.push(...settled(filled.fields, step));
   }
+}
+
+/** Ticks only eligible privacy/data-processing consent checkboxes on user command. Never ticks marketing or certifications. */
+export function tickConsentCheckboxes(doc: Document): number {
+  const { root } = locate(doc);
+  if (!root) return 0;
+  const fields = extractFields(root).filter((f) => f.descriptor.control === "checkbox");
+  let count = 0;
+  for (const f of fields) {
+    if (isPrivacyConsentCheckbox(f.descriptor.label)) {
+      const el = f.elements[0] as HTMLInputElement;
+      if (el && !el.checked) {
+        el.click();
+        if (!el.checked) {
+          el.checked = true;
+          fire(el, "input");
+          fire(el, "change");
+        }
+        count++;
+      }
+    }
+  }
+  return count;
 }
