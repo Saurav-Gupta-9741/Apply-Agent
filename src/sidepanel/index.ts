@@ -2,11 +2,12 @@
 
 import type {
   AnswerEntry, ApplicationRecord, Detection, FeedJob, FieldResult, FitResult, Message, Mode, Profile, ProfileKey, QueueItem,
-  QueueStatus, QuickFacts, RunReport, Settings, WorkEntry,
+  QueueStatus, QuickFacts, RunReport, Settings, WorkEntry, UserCorrection,
 } from "../shared/types";
 import {
   EMPTY_PROFILE, isQueueRunning, loadAnswers, loadApplications, loadProfile, loadQueue, loadSettings, saveAnswers,
   saveProfile, saveSettings, updateAnswers, updateApplications, upsertAnswer,
+  loadCorrections, updateCorrections,
 } from "../shared/storage";
 import { pendingSubmission, sendToApplication } from "../shared/frames";
 import { isValidJobUrl, parseJobList } from "../background/queue";
@@ -21,6 +22,7 @@ import { HANDS_OFF_MESSAGE, isHandsOff, platformFor } from "../shared/platforms"
 import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shared/backup";
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
 import { isPrivacyConsentCheckbox } from "../shared/consent";
+import { applyCorrection, findSuggestedCorrection } from "../shared/corrections";
 import { buildDiagnostic } from "../shared/diagnostic";
 
 // --- DOM helpers ----------------------------------------------------------------------------------
@@ -501,6 +503,7 @@ function answerInput(r: FieldResult): HTMLInputElement | HTMLSelectElement | HTM
 
 interface CardContext {
   job: { title: string; company: string };
+  corrections?: UserCorrection[];
   /** After an answer is saved (re-run the form, or retry waiting queue jobs). */
   onSaved: () => Promise<void>;
   /** Scroll to the field on the page, when the page is open. */
@@ -543,6 +546,22 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   const input = answerInput(r);
   if (r.field.maxLength && !(input instanceof HTMLSelectElement)) input.maxLength = r.field.maxLength;
   card.append(input);
+  const suggested = findSuggestedCorrection(ctx.corrections ?? [], r.field.label);
+  if (suggested && suggested.count === 1 && !youOnly && !upload) {
+    const chipBtn = button(`Use previous correction: "${suggested.answer}"`, {
+      variant: "ghost",
+      size: "sm",
+      icon: "wand",
+    });
+    chipBtn.style.marginTop = "4px";
+    chipBtn.style.marginBottom = "4px";
+    chipBtn.addEventListener("click", () => {
+      input.value = suggested.answer;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    card.append(chipBtn);
+  }
   // AI drafts only for new free-text questions, never for sensitive ones, and always for review.
   const textual = !r.field.options.length && ["text", "textarea"].includes(r.field.control);
   if (textual && r.decision.kind === "ask" && r.decision.reason === "unknown") {
@@ -587,6 +606,10 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     const entry: AnswerEntry = { question: questionKey(r.field), answer: value, topic, updatedAt: new Date().toISOString() };
     busy(save, true);
     await updateAnswers((answers) => upsertAnswer(answers, entry));
+    await updateCorrections((corrections) => {
+      const res = applyCorrection(corrections, questionKey(r.field), value);
+      return res.updatedCorrections;
+    });
     await ctx.onSaved();
     busy(save, false);
   });
@@ -595,12 +618,13 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   return card;
 }
 
-function renderQuestions(report: RunReport): void {
+async function renderQuestions(report: RunReport): Promise<void> {
   const box = $("questions");
   box.replaceChildren();
   const pending = report.fields.filter((f) => f.status === "needs_user" || (f.status === "failed" && f.field.required));
   if (!pending.length) return;
   box.append(h("p", { class: "section-label" }, `Needs your answer · ${pending.length}`));
+  const corrections = await loadCorrections();
 
   const hasConsent = pending.some((f) => f.field.control === "checkbox" && isPrivacyConsentCheckbox(f.field.label));
   if (hasConsent) {
@@ -625,6 +649,7 @@ function renderQuestions(report: RunReport): void {
   for (const r of pending) {
     box.append(questionCard(r, {
       job,
+      corrections,
       onSaved: async () => {
         toast("Answer saved");
         await run(); // re-run: the new answer is filled, nothing else is overwritten

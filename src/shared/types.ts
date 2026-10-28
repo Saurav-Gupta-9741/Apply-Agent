@@ -127,6 +127,13 @@ export interface AnswerEntry {
   updatedAt: string;
 }
 
+export interface UserCorrection {
+  question: string;
+  answer: string;
+  count: number;
+  lastUpdated: string;
+}
+
 export type ControlType =
   | "text"
   | "email"
@@ -311,6 +318,7 @@ export type Message =
   | { type: "HIGHLIGHT"; label: string; key?: string }
   | { type: "SUBMIT" }
   | { type: "TICK_CONSENT" }
+  | { type: "RECORD_CORRECTION"; question: string; answer: string }
   | { type: "RUN_RESULT"; report: RunReport }
   /** Sent by the content script right before it clicks Submit, so the tracker can expect a confirmation. */
   | { type: "MARK_SUBMITTING"; url: string; jobTitle: string; platform: string }

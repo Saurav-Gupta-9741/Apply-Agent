@@ -1,6 +1,6 @@
 /** Everything is stored locally in the browser (chrome.storage.local). Nothing is sent to a server. */
 
-import type { AnswerEntry, ApplicationRecord, Profile, QueueItem, Settings } from "./types";
+import type { AnswerEntry, ApplicationRecord, Profile, QueueItem, Settings, UserCorrection } from "./types";
 import { clampSettings } from "../background/queue";
 
 export const EMPTY_PROFILE: Profile = {
@@ -26,7 +26,7 @@ export const EMPTY_PROFILE: Profile = {
 };
 
 const KEYS = {
-  profile: "profile", answers: "answers", applications: "applications", queue: "queue", settings: "settings", running: "queueRunning",
+  profile: "profile", answers: "answers", applications: "applications", queue: "queue", settings: "settings", running: "queueRunning", corrections: "corrections",
 } as const;
 
 export async function loadQueue(): Promise<QueueItem[]> {
@@ -104,4 +104,17 @@ export async function loadApplications(): Promise<ApplicationRecord[]> {
 
 export async function saveApplications(records: ApplicationRecord[]): Promise<void> {
   await chrome.storage.local.set({ [KEYS.applications]: records });
+}
+
+export async function loadCorrections(): Promise<UserCorrection[]> {
+  const data = await chrome.storage.local.get(KEYS.corrections);
+  return (data[KEYS.corrections] as UserCorrection[] | undefined) ?? [];
+}
+
+export async function saveCorrections(corrections: UserCorrection[]): Promise<void> {
+  await chrome.storage.local.set({ [KEYS.corrections]: corrections });
+}
+
+export function updateCorrections(change: (corrections: UserCorrection[]) => UserCorrection[]): Promise<void> {
+  return exclusive("corrections", async () => saveCorrections(change(await loadCorrections())));
 }

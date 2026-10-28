@@ -14,6 +14,7 @@ import type { PageFacts } from "./facts";
 import { jobCountries } from "./joblocation";
 import { normalize } from "../shared/text";
 import { isPrivacyConsentCheckbox } from "../shared/consent";
+import { trackCorrection } from "./corrections";
 
 /** Scroll a field into view and outline it briefly, so the user can answer it on the page. */
 export function highlightField(doc: Document, label: string, key?: string): boolean {
@@ -244,7 +245,13 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
   const rest: FieldResult[] = [];
   const remaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file"); // files: step 1
   const meanings = await readMeanings(remaining, ctx);
-  for (const field of remaining) rest.push(await fillOne(field, ctx, meanings.get(field.descriptor.label)));
+  for (const field of remaining) {
+    const res = await fillOne(field, ctx, meanings.get(field.descriptor.label));
+    if (res.status === "filled" && (res.decision.kind === "profile" || res.decision.kind === "answer" || res.decision.kind === "work")) {
+      trackCorrection(doc, field, res.decision.value);
+    }
+    rest.push(res);
+  }
   const results = [...uploads, ...rest];
 
   report.fields = results;

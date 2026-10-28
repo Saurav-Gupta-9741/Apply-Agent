@@ -2,7 +2,8 @@
  * State lives in chrome.storage, never in memory, because the worker is stopped when idle. */
 
 import type { ApplicationRecord, ApplicationStatus, Message, RunReport } from "../shared/types";
-import { loadApplications, loadQueue, loadSettings, setQueueRunning, updateApplications as updateStoredApplications } from "../shared/storage";
+import { loadApplications, loadQueue, loadSettings, setQueueRunning, updateApplications as updateStoredApplications, updateCorrections, updateAnswers, upsertAnswer } from "../shared/storage";
+import { applyCorrection, isLearnableCorrection } from "../shared/corrections";
 import { isHandsOff } from "../shared/platforms";
 import { clearDetection, recordDetection, syncDetector } from "./detector";
 import { setWorking } from "./icon";
@@ -215,6 +216,25 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 
 chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse: (result: unknown) => void) => {
   switch (message.type) {
+    case "RECORD_CORRECTION": {
+      (async () => {
+        if (!isLearnableCorrection(message.question)) {
+          sendResponse({ recorded: false, reason: "not_learnable" });
+          return;
+        }
+        let promoted = false;
+        await updateCorrections((corrections) => {
+          const res = applyCorrection(corrections, message.question, message.answer);
+          if (res.promotedToAnswerBank && res.promotedEntry) {
+            promoted = true;
+            void updateAnswers((answers) => upsertAnswer(answers, res.promotedEntry!));
+          }
+          return res.updatedCorrections;
+        });
+        sendResponse({ recorded: true, promoted });
+      })();
+      return true;
+    }
     case "MARK_SUBMITTING": {
       const tabId = sender.tab?.id;
       if (tabId === undefined) return false;
