@@ -1,6 +1,6 @@
 Real questions: 226
-Rules only:      fills 56, wrong 6
-Rules + model:   fills 57, wrong 6
+Rules only:      fills 54, wrong 0
+Rules + model:   fills 55, wrong 0
 
 Newly filled by the model:
   + currentCompany: Current/Most Recent Company Name
@@ -8,17 +8,5 @@ Newly filled by the model:
 No longer filled (doubted):
 
 Wrong with rules only:
-  ✗ work_authorization ≠ sponsorship: Since obtaining your most recent citizenship, did you afterwards become a permanent reside
-  ✗ github ≠ portfolio: Share links that showcase your craft (GitHub, portfolio, writing samples, projects, etc.)
-  ✗ lastName ≠ fullName: Preferred First & Last Name
-  ✗ salary_current ≠ location: Please provide the city and state of your current permanent residence. This information is
-  ✗ country ≠ location: Where are you currently based (City, Country)?
-  ✗ country ≠ location: In which country and city are you currently located?
 
 Wrong with rules + model:
-  ✗ work_authorization ≠ sponsorship: Since obtaining your most recent citizenship, did you afterwards become a permanent reside
-  ✗ github ≠ portfolio: Share links that showcase your craft (GitHub, portfolio, writing samples, projects, etc.)
-  ✗ lastName ≠ fullName: Preferred First & Last Name
-  ✗ salary_current ≠ location: Please provide the city and state of your current permanent residence. This information is
-  ✗ country ≠ location: Where are you currently based (City, Country)?
-  ✗ country ≠ location: In which country and city are you currently located?

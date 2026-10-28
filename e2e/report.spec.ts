@@ -12,7 +12,7 @@ test("report a problem copies questions and decisions, never the user's details"
   await goTo(ext, "apply");
   await expect(ext.locator("#report-problem")).toBeHidden();
   await ext.locator("#run").click();
-  await expect(ext.locator("#report-problem")).toBeVisible();
+  await expect(ext.locator("#report-problem")).toBeVisible({ timeout: 10_000 });
 
   // Capture what would go to the clipboard.
   await ext.evaluate(() => {

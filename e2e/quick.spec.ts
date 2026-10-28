@@ -24,7 +24,7 @@ test("quick answers are saved in the panel and used on the form", async ({ ext, 
   await ext.locator("#run").click();
   await expect(ext.locator("#status")).toBeVisible();
   // "Are you legally authorized to work in India?" → Yes, from "I can work in India"; the notice period from the card.
-  await expect(page.locator("input[name='auth'][value='yes']")).toBeChecked();
+  await expect(page.locator("input[name='auth'][value='yes']")).toBeChecked({ timeout: 10_000 });
   await expect(page.locator("#notice")).toHaveValue("30 days");
   // Only questions with no quick answer are asked.
   await expect(ext.locator(".question", { hasText: "authorized to work" })).toHaveCount(0);

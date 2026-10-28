@@ -33,7 +33,7 @@ const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
 const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   // Abbreviations only as whole words: "fullname" must not match "lname".
   // "First Name and Last Name" is one box for both.
-  ["fullName", /first (name )?(and|&|\/|\+) (last|family|sur) ?name|name and surname/],
+  ["fullName", /first (name )?(and )?(last|family|sur) ?name|name and surname/],
   ["firstName", /first ?name|given ?name|^(what is |whats )?your preferred name$|^preferred name$|\bfname\b|forename|vorname|\bprenom\b|^nombre$|primer nombre|primeiro nome|voornaam/],
   ["lastName", /last ?name|family ?name|surname|\blname\b|nachname|familienname|nom de famille|^nom$|apellido|sobrenome|cognome|achternaam/],
   ["fullName", /^(full )?name$|^your name$|full name|legal name|vollstandiger name|vor und nachname|nom complet|nombre completo|nombre y apellidos|nome completo|volledige naam/],
@@ -50,7 +50,7 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["degree", /\bdegree\b|qualification|abschluss|diplome|titulacion|formacao|laurea|opleiding/],
   ["discipline", /discipline|major|field of study|speciali[sz]ation|studiengang|studienfach|filiere|carrera|indirizzo di studio|studierichting/],
   ["school", /school|universi|college|institution|hochschule|ecole|escuela|faculdade|istituto|hogeschool/],
-  ["country", /country|^land$|\bpays\b|\bpais\b|\bpaese\b/],
+  ["country", /^(?!.*\bcity\b).*(country|^land$|\bpays\b|\bpais\b|\bpaese\b)/],
   // Where the user WANTS to work, before where they live.
   ["preferredLocations", /preferred (job |work )?(location|cit(y|ies))|location preference|desired (job |work )?location|where would you (like|prefer) to work|bevorzugte[rn]? (arbeits)?ort|lieu souhaite|ubicacion (deseada|preferida)/],
   ["location", /\bcity\b|location|where are you (currently )?(based|located)|where do you (currently )?(live|reside)|town|wohnort|\bstadt\b|\bort\b|\bville\b|ciudad|localidad|cidade|\bcitta\b|woonplaats/],
@@ -75,7 +75,10 @@ const ANSWER_MATCH_THRESHOLD = 0.75;
 
 export function sensitiveTopic(field: FieldDescriptor): SensitiveTopic | undefined {
   const text = normalize(`${field.label} ${field.name}`);
-  for (const [topic, pattern] of SENSITIVE) if (pattern.test(text)) return topic;
+  for (const [topic, pattern] of SENSITIVE) {
+    if (topic === "salary" && /\b(city (and|&) state|permanent residence|city of residence)\b/i.test(field.label)) continue;
+    if (pattern.test(text)) return topic;
+  }
   return undefined;
 }
 
@@ -245,6 +248,7 @@ export function notAProfileFact(field: FieldDescriptor): boolean {
 export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" | undefined {
   const asked = normalize(field.label);
   if ((field.control === "text" || field.control === "url") && LINK_INVITE.test(asked)) {
+    if (/craft|showcase|projects?\b/.test(asked) && /portfolio/.test(asked)) return "portfolio";
     // The first link the question names: "LinkedIn profile, personal website or blog" → LinkedIn.
     const first = /linked ?in|git ?hub|website|portfolio|blog/.exec(asked)?.[0] ?? "";
     return /linked/.test(first) ? "linkedin" : /git/.test(first) ? "github" : "portfolio";

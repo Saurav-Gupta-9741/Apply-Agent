@@ -81,7 +81,7 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   // What follows "without" is what the user would not need ("…without the need for a visa", "…without restriction"):
   // it neither makes the question another one nor turns it round.
   const asked = q?.replace(/\bwithout\b.*$/, "") ?? "";
-  if (!q || !ABOUT_WORKING.test(normalize(field.label)) || NOT_A_PLAIN_ASK.test(asked)) return undefined;
+  if (!q || !ABOUT_WORKING.test(q) || NOT_A_PLAIN_ASK.test(asked)) return undefined;
   let places = countriesIn(field.label);
   if (!places.length && /country (of residence|where you (currently )?(live|reside))|where you (currently )?(live|reside)|your (current )?country/.test(q)) {
     places = countriesIn(profile.country);
