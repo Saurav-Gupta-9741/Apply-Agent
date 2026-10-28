@@ -1,10 +1,11 @@
 Real questions: 226
 Rules only:      fills 56, wrong 6
-Rules + model:   fills 58, wrong 6
+Rules + model:   fills 59, wrong 6
 
 Newly filled by the model:
   + experienceYears: How many total years of professional work experience do you have?
   + currentCompany: Current/Most Recent Company Name
+  + github: Where can we find samples of your code?
 
 No longer filled (doubted):
 

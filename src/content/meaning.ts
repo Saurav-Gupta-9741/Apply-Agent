@@ -20,6 +20,17 @@ export interface Meaning {
 
 /** Act on the model's reading from this confidence (98.6% right on real questions it had never seen). */
 export const ACT_CONFIDENCE = 0.85;
+/** Safe profile facts where wrong is impossible or harmless: names, email, phone, links, location. */
+export const SAFE_ACT_CONFIDENCE = 0.80;
+export const SAFE_PROFILE_INTENTS = new Set<string>([
+  "firstName", "lastName", "fullName", "email", "phone", "location", "country", "linkedin", "github", "portfolio",
+]);
+
+/** Required confidence to act on a model reading. */
+export function actThreshold(intent: string): number {
+  return SAFE_PROFILE_INTENTS.has(intent) ? SAFE_ACT_CONFIDENCE : ACT_CONFIDENCE;
+}
+
 /** Doubt the rules from this confidence. */
 export const DOUBT_CONFIDENCE = 0.95;
 
@@ -142,7 +153,7 @@ export function decideWithMeaning(field: FieldDescriptor, profile: Profile, answ
   const ruleGaveUp = rule.kind === "ask" && rule.reason !== "sensitive" || rule.kind === "skip" && /not in profile|optional choice/.test(rule.reason)
     || rule.kind === "ask" && rule.reason === "sensitive" && !rule.topic;
   const sensitiveGap = rule.kind === "ask" && rule.reason === "sensitive" && rule.topic && TOPIC_OF[meaning.intent] === rule.topic;
-  if ((ruleGaveUp || sensitiveGap) && meaning.confidence >= ACT_CONFIDENCE && !NEVER_FROM_PROFILE.has(meaning.intent)) {
+  if ((ruleGaveUp || sensitiveGap) && meaning.confidence >= actThreshold(meaning.intent) && !NEVER_FROM_PROFILE.has(meaning.intent)) {
     const decision = fromMeaning(field, profile, meaning, page);
     if (decision) return decision;
   }
