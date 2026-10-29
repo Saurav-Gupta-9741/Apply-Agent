@@ -67,6 +67,7 @@ export function buildDiagnostic(report: RunReport | undefined, meta: DiagnosticM
           : f.decision.kind === "ask" ? `asked you (${f.decision.topic ?? f.decision.reason})`
           : f.decision.kind === "skip" ? `left blank (${clean(f.decision.reason)})`
           : f.decision.kind === "answer" ? "saved answer"
+          : f.decision.kind === "draft" ? "draft (review)"
           : "resume",
         problem: f.status === "failed" && f.detail ? clean(f.detail) : undefined,
         flagged: f.review || undefined,

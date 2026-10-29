@@ -13,6 +13,11 @@ const FULL: Profile = {
   ...PROFILE,
   location: "Pune",
   country: "India",
+  address: "123 Main St, Apt 4B",
+  postalCode: "411001",
+  state: "Maharashtra",
+  educationLevel: "Master's Degree",
+  timezone: "IST",
   github: "https://github.com/asha",
   portfolio: "https://asha.dev",
   currentCompany: "Initech",
@@ -22,7 +27,26 @@ const FULL: Profile = {
   discipline: "Computer Science",
   graduationYear: "2026",
   experienceYears: "2",
-  preferredLocations: "Bangalore, Remote",
+  preferredLocations: "Bangalore, Remote, Pune",
+  skills: "Python, SQL, Machine Learning, Power BI, Excel, Product Design, CRM, B2B SaaS",
+  skillsInventory: [
+    { name: "Python", years: 2, level: "Advanced" },
+    { name: "SQL", years: 2, level: "Advanced" },
+    { name: "Excel", years: 2, level: "Advanced" },
+    { name: "Power BI", years: 2, level: "Intermediate" },
+    { name: "CRM", years: 2, level: "Intermediate" },
+    { name: "Product Design", years: 2, level: "Intermediate" },
+    { name: "B2B SaaS", years: 2, level: "Intermediate" },
+    { name: "Salesforce", years: 2, level: "Intermediate" },
+    { name: "Jira", years: 2, level: "Intermediate" },
+    { name: "AI", years: 2, level: "Advanced" },
+    { name: "Customer Success", years: 2, level: "Intermediate" },
+    { name: "Open Source", years: 2, level: "Intermediate" },
+  ],
+  languages: [
+    { language: "English", proficiency: "Fluent" },
+    { language: "Hindi", proficiency: "Native" },
+  ],
   facts: {
     workCountries: "India",
     noticePeriod: "30 days",
@@ -35,6 +59,14 @@ const FULL: Profile = {
     race: "Asian",
     veteran: "No",
     disability: "No",
+    workMode: "any",
+    travel: "Yes",
+    needsAccommodation: "No",
+    pronouns: "she/her",
+    sexualOrientation: "Decline",
+    transgender: "No",
+    over18: "Yes",
+    age: "24",
   },
 };
 
@@ -51,6 +83,16 @@ const QUICK: Record<string, string> = {
   "race/ethnicity": "race",
   "veteran status": "veteran",
   disability: "disability",
+  "previous employer": "previous_employee",
+  onsite: "onsite",
+  pronouns: "pronouns",
+  "sexual orientation": "sexual_orientation",
+  transgender: "transgender",
+  age: "age",
+  accommodation: "accommodation",
+  travel: "travel",
+  language: "language_proficiency",
+  skills: "skills_experience",
 };
 const WORK: Record<string, string> = {
   title: "currentTitle",
@@ -61,7 +103,12 @@ const WORK: Record<string, string> = {
 };
 
 function filledAs(d: Decision): string | undefined {
-  if (d.kind === "profile") return d.key === "preferredLocations" ? "location" : d.key;
+  if (d.kind === "profile") {
+    if (d.key === "preferredLocations") return "location";
+    if (d.key === "postalCode") return "postal_code";
+    if (d.key === "educationLevel") return "education_level";
+    return d.key;
+  }
   if (d.kind === "resume") return "resume";
   if (d.kind === "work") return WORK[d.part] ?? d.part;
   if (d.kind === "answer") return d.question.startsWith("Quick answers › ") ? QUICK[d.question.slice(16)] ?? "?" : "saved answer";
@@ -122,7 +169,7 @@ describe("automation evaluation across all 1,539 real questions", () => {
         };
 
         const t0 = performance.now();
-        const d = decideWithMeaning(field, FULL, [], { jobCountries: ["United States"] }, oof.get(l.label));
+        const d = decideWithMeaning(field, FULL, [], { jobCountries: ["United States"], url: "https://boards.greenhouse.io/acme/jobs/123" }, oof.get(l.label));
         latencies.push(performance.now() - t0);
 
         const filled = filledAs(d);
@@ -178,7 +225,7 @@ describe("automation evaluation across all 1,539 real questions", () => {
 
     // Baseline gates:
     expect(tally.wrong).toBe(0);
-    expect(tally.auto).toBeGreaterThanOrEqual(457);
+    expect(tally.auto).toBeGreaterThanOrEqual(580);
     expect(scorecard.modelOof.accuracy).toBe("77.6%");
     expect(scorecard.modelOof.precisionAtActThreshold).toBe("95.7%");
   });

@@ -7,16 +7,16 @@
     "actThreshold": 0.85
   },
   "automation": {
-    "autoFilled": 457,
-    "autoShare": "29.7%",
+    "autoFilled": 584,
+    "autoShare": "37.9%",
     "draft": 0,
-    "askOnce": 934,
+    "askOnce": 807,
     "humanOnly": 148,
     "wrong": 0,
     "wrongList": []
   },
   "latency": {
-    "p50Ms": 0.09,
-    "p99Ms": 1.468
+    "p50Ms": 0.153,
+    "p99Ms": 2.341
   }
 }

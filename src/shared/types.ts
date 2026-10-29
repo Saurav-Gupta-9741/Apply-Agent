@@ -19,6 +19,17 @@ export interface WorkEntry {
 
 /** One answer for each question that most forms ask in their own words. Every value is optional: empty means
  * "ask me on the form". Diversity answers are only used where a form offers a list of choices. */
+export interface SkillEntry {
+  name: string;
+  years: number;
+  level?: string;
+}
+
+export interface LanguageEntry {
+  language: string;
+  proficiency: "Native" | "Fluent" | "Professional" | "Conversational" | "Basic";
+}
+
 export interface QuickFacts {
   /** Countries where the user may work without sponsorship ("India, EU"). */
   workCountries: string;
@@ -35,6 +46,15 @@ export interface QuickFacts {
   race: string;
   veteran: "" | "Yes" | "No" | "Decline";
   disability: "" | "Yes" | "No" | "Decline";
+  workMode?: "" | "onsite" | "hybrid" | "remote" | "any";
+  travel?: "" | "Yes" | "No" | "Decline";
+  travelPercent?: string;
+  needsAccommodation?: "" | "Yes" | "No" | "Decline";
+  pronouns?: string;
+  sexualOrientation?: string;
+  transgender?: "" | "Yes" | "No" | "Decline";
+  over18?: "" | "Yes" | "No";
+  age?: string;
 }
 
 /** Facts about the user. The agent may only ever submit facts that come from here or the answer bank. */
@@ -60,6 +80,13 @@ export interface Profile {
   targetRoles: string;
   preferredLocations: string;
   skills: string;
+  address?: string;
+  postalCode?: string;
+  state?: string;
+  educationLevel?: string;
+  timezone?: string;
+  skillsInventory?: SkillEntry[];
+  languages?: LanguageEntry[];
   /** Jobs for "My Experience"-style repeating sections, newest first (optional). */
   workHistory?: WorkEntry[];
   /** Answers to the questions most forms ask, in any wording (Answers → Quick answers). Empty = ask me. */
@@ -98,7 +125,7 @@ export interface FitResult {
   excluded?: string;
 }
 
-export type ProfileKey = Exclude<keyof Profile, "resume" | "workHistory" | "facts">;
+export type ProfileKey = Exclude<keyof Profile, "resume" | "workHistory" | "facts" | "languages" | "skillsInventory">;
 
 /** Questions only the user may answer: the agent never guesses these. */
 export type SensitiveTopic =
@@ -118,7 +145,7 @@ export type SensitiveTopic =
   | "sexual_orientation"
   | "age"
   | "criminal"
-  | "consent";
+  | "consent" | "pronouns" | "transgender" | "accommodation";
 
 export interface AnswerEntry {
   question: string;
@@ -179,6 +206,7 @@ export type Decision =
   /** A value from the user's work history, for a field in the n-th job block. */
   | { kind: "work"; index: number; part: keyof WorkEntry; value: string }
   | { kind: "resume" }
+  | { kind: "draft"; value: string; question: string }
   | { kind: "ask"; reason: "sensitive" | "unknown" | "missing_profile_value"; topic?: SensitiveTopic }
   | { kind: "skip"; reason: string };
 

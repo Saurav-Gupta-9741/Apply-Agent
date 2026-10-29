@@ -6,7 +6,7 @@ import {
 } from "../shared/types";
 import { bestOption, normalize, sameQuestionScore, yesNoOption } from "../shared/text";
 import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion } from "../shared/screening";
-import { factDecision, hasConfirmedApplication, HEARD_ABOUT, isAppliedBeforeQuestion, isStartImmediatelyQuestion, type PageFacts } from "./facts";
+import { factDecision, hasConfirmedApplication, HEARD_ABOUT, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, draftDecision, type PageFacts } from "./facts";
 
 const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   // Checked first: identity numbers and signatures are never filled or remembered by the agent.
@@ -17,14 +17,17 @@ const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   ["sponsorship", /sponsor|visa|visum/],
   ["work_authorization", /\bwork permit\b|arbeitserlaubnis|aufenthaltstitel|arbeitsgenehmigung|permis de travail|autorisation de travail|autorizacion de trabajo|permiso de trabajo|autorizacao de trabalho|permesso di (lavoro|soggiorno)|werkvergunning|authori[sz]ed to work|work authori[sz]ation|right to work|eligible to work|legally (able|permitted|entitled)/],
   ["salary", /gehalt|salaire|salari|retribuzione|stipendio|pretension|salary|compensation|\bctc\b|pay expectation|expected pay|desired pay|remuneration/],
-  ["notice_period", /when (are|would|will|could) you (be )?available|available to start|available for employment|^date available$|earliest (date )?(you|to) (could |would |can )?start|kundigungsfrist|eintrittstermin|fruhester eintritt|preavis|disponibilite|preaviso|disponibilidad|fecha de incorporacion|aviso previo|preavviso|opzegtermijn|notice period|start date|when can you (start|join)|earliest (start|joining)|availability to start|can you start (immediately|right away)|are you (able|available) to start (immediately|right away)|start (immediately|right away)/],
+  ["notice_period", /when (are|would|will|could) you (be )?available|available to start|available for employment|^date available$|earliest (date )?(you|to) (could |would |can )?start|kundigungsfrist|eintrittstermin|fruhester eintritt|preavis|disponibilite|preaviso|disponibilidad|fecha de incorporacion|aviso previo|preavviso|opzegtermijn|notice period|start date|when can you (start|join)|earliest (start|joining)|availability to start|when would be your earliest availability|earliest availability|can you start (immediately|right away)|are you (able|available) to start (immediately|right away)|start (immediately|right away)/],
   ["relocation", /relocat|umzug|umziehen|demenag|reubic|mudanza|trasferi|verhuiz/],
-  ["gender", /gender|pronoun|geschlecht|\bgenre\b|\bsexe\b|genero|\bsexo\b|\bsesso\b|geslacht/],
+  ["pronouns", /\bpronouns?\b/],
+  ["sexual_orientation", /\bsexual orientation\b|\blgbt|\bmember of the (lesbian|lgbt)/],
+  ["transgender", /\btransgender\b|sex.*assigned at birth/],
+  ["gender", /gender|geschlecht|\bgenre\b|\bsexe\b|genero|\bsexo\b|\bsesso\b|geslacht/],
   ["race", /\brace\b|ethnic|hispanic|latin[oax]|\betnia\b|etnicidad|origine ethnique/],
   ["veteran", /veteran|military|armed forces/],
+  ["accommodation", /\baccommodat|ajustements?|adjustments? (to|during|for)|recursos ou adaptacoes|necessidade de acessibilidade/],
   ["disability", /disabilit|behinderung|schwerbehindert|handicap|discapacidad|deficiencia|disabile/],
-  ["sexual_orientation", /sexual orientation|lgbt/],
-  ["age", /geburtsdatum|\balter\b|date de naissance|fecha de nacimiento|\bedad\b|data de nascimento|\bidade\b|data di nascita|geboortedatum|date of birth|\bdob\b|\bage\b|birth ?date/],
+  ["age", /geburtsdatum|\balter\b|date de naissance|fecha de nacim(i)?ento|\bedad\b|data de nascimento|\bidade\b|data di nascita|geboortedatum|date of birth|\bdob\b|\bage\b|birth ?date|18 years of age|18 years old|over the age of 18|current age|how old are you|what is your age/],
   ["criminal", /vorstrafe|fuhrungszeugnis|casier judiciaire|antecedentes penales|antecedentes criminais|casellario|convict|criminal|felony|background check/],
   ["consent", /datenschutz|einwilligung|ich (stimme|akzeptiere|bestatige|willige)|\bj accepte\b|je (certifie|consens|confirme)|confidentialite|\bacepto\b|consiento|privacidad|\baceito\b|\bconcordo\b|privacidade|\bacconsento\b|ik ga akkoord|\brgpd\b|\bdsgvo\b|\bi (certify|agree|acknowledge|consent|confirm|understand)\b|privacy (policy|notice)|terms (of|and)|data processing|gdpr/],
 ];
@@ -50,6 +53,14 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["degree", /\bdegree\b|qualification|abschluss|diplome|titulacion|formacao|laurea|opleiding/],
   ["discipline", /discipline|major|field of study|speciali[sz]ation|studiengang|studienfach|filiere|carrera|indirizzo di studio|studierichting/],
   ["school", /school|universi|college|institution|hochschule|ecole|escuela|faculdade|istituto|hogeschool/],
+  ["educationLevel", /\b(highest level of education|highest education|level of education completed|possui curso superior|completed bachelor s degree)\b/],
+  ["timezone", /\b(time ?zone|est \/ mst)\b/],
+  // Full address before postal code:
+  ["address", /\b(street address|address line \d|full.*address|current address|permanent address|mailing address|^address$)\b/],
+  ["postalCode", /^(?!.*\b(street address|full.*address)\b).*\b(zip( code)?|postal code|pin ?code)\b/],
+  // Where both city and state are requested, it is a location question:
+  ["location", /\b(?:city\s*(?:and|,|\/|or)?\s*state|state\s*(?:and|,|\/|or)?\s*city)\b/],
+  ["state", /^(?!.*\bcity\b).*\b(state\s*\/\s*province|state or province|u\.s\.\s*state|canadian province|^state$|^province$|canton|departement)\b/],
   // Where both city and country are requested in one field ("City, Country" or "country and city"), it is a location question:
   ["location", /\b(?:city\s*country|country\s*city|city\s*(?:and|,|\/)\s*country|country\s*(?:and|,|\/)\s*city)\b/],
   ["country", /country|^land$|\bpays\b|\bpais\b|\bpaese\b/],
@@ -70,6 +81,11 @@ const AUTOCOMPLETE: Record<string, ProfileKey | "fullName"> = {
   country: "country",
   organization: "currentCompany",
   "organization-title": "currentTitle",
+  "address-line1": "address",
+  "address-line2": "address",
+  "street-address": "address",
+  "postal-code": "postalCode",
+  "address-level1": "state",
 };
 
 /** Answers reused for a new question only when it is clearly the same question. */
@@ -231,7 +247,7 @@ const OTHER_PERSON_SECTION = /emergency|next of kin|\breferences?\b|\breferee|\b
  * location(s)?"), details of a past job at this company ("…please list your work email address"), part of a value
  * ("Email address without domain"), "What is your experience with GitHub Copilot?", requests to describe something
  * ("Describe any training or qualifications…") and full street addresses (a city is not one). */
-const NOT_A_FACT = /^(are|is|do|does|did|have|has|had|will|would|can|could|should|were|was|may|might|shall|sind|haben|hast|bist|konnen|wurden|etes|avez|pouvez|seriez|esta|estas|tiene|tienes|puede|eres|voce|tem)\b|\b(applying|apply) (for|to)\b|^(?!(which|what)\b).*\bdid you attend\b|\binterested in\b|\bif (different|yes|so)\b|^se sim\b|^si oui\b|^wenn ja\b|^if (you )?(selected|chose|choose|answered|picked|ticked|checked)\b|\bif you (have )?(previously|ever|formerly) (worked|been employed)\b|\b(work|company|corporate) email\b|without (the )?domain|before the @|\bexperience (with|in|using|of)\b|^(please )?(briefly )?(describe|tell us|explain|elaborate)\b|\bexamples of (your )?work\b|\bvisual merchandising\b|\bstreet\b|\bzip\b|postal code|\bpin ?code\b|\b(want|wish|plan|hope|like) to (attend|study|join|work)\b|\b(target|preferred|desired|dream|future)\b (school|universit\w*|college|institut\w*|compan\w*|employer|job|role|position|title)|\bhigh school\b|\bsecondary\b|\b(10th|12th|tenth|twelfth|ssc|hsc|matric\w*|intermediate)\b|\bbirth\b|\bcitizenship\b|\bcountry code\b|\bdial\w*\b|\bpass ?(word|code)\b|\bpin\b|\b(event|fair|conference|meetup|webinar|info session)\b/;
+const NOT_A_FACT = /^(are|is|do|does|did|have|has|had|will|would|can|could|should|were|was|may|might|shall|sind|haben|hast|bist|konnen|wurden|etes|avez|pouvez|seriez|esta|estas|tiene|tienes|puede|eres|voce|tem)\b|\b(applying|apply) (for|to)\b|^(?!(which|what)\b).*\bdid you attend\b|\binterested in\b|\bif (different|yes|so)\b|^se sim\b|^si oui\b|^wenn ja\b|^if (you )?(selected|chose|choose|answered|picked|ticked|checked)\b|\bif you (have )?(previously|ever|formerly) (worked|been employed)\b|\b(work|company|corporate) email\b|without (the )?domain|before the @|\bexperience (with|in|using|of)\b|^(please )?(briefly )?(describe|tell us|explain|elaborate)\b|\bexamples of (your )?work\b|\bvisual merchandising\b|\b(want|wish|plan|hope|like) to (attend|study|join|work)\b|\b(target|preferred|desired|dream|future)\b (school|universit\w*|college|institut\w*|compan\w*|employer|job|role|position|title)|\bhigh school\b|\bsecondary\b|\b(10th|12th|tenth|twelfth|ssc|hsc|matric\w*|intermediate)\b|\bbirth\b|\bcitizenship\b|\bcountry code\b|\bdial\w*\b|\bpass ?(word|code)\b|\bpin\b|\b(event|fair|conference|meetup|webinar|info session)\b/;
 /** "…3 days a week in the office, are you able to commute to the location?" asks yes or no, wherever the "are you" is.
  * Questions that open with a question word ("Where are you located?") still ask for a fact. */
 const YES_NO_INSIDE = /\b(are|do|would|will|can|could|should|have) you\b/;
@@ -349,6 +365,24 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
     }
     return field.required ? { kind: "ask", reason: "unknown" } : { kind: "skip", reason: "optional attachment" };
   }
+
+  if (page?.url && isPreviousEmployeeQuestion(field)) {
+    const prev = previousEmployerAnswer(field, profile, page);
+    if (prev) return prev;
+  }
+  if (isWorkModeQuestion(field)) {
+    const wm = workModeAnswer(field, profile.facts);
+    if (wm) return wm;
+  }
+  if (isTravelQuestion(field)) {
+    const tr = travelAnswer(field, profile.facts);
+    if (tr) return tr;
+  }
+  const la = languageAnswer(field, profile);
+  if (la) return la;
+
+  const sk = skillsExperienceAnswer(field, profile);
+  if (sk) return sk;
 
   // Work-experience blocks come from the work history, never from an answer given for another job.
   const work = workDecision(field, profile);

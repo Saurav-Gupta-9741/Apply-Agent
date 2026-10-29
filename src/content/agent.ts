@@ -92,8 +92,8 @@ export async function scanForm(doc: Document, ctx: Omit<AgentContext, "mode">): 
       : decideWithMeaning(field.descriptor, ctx.profile, ctx.answers, page, meanings.get(field.descriptor.label));
     const existing = code ? "" : currentValue(field); // a picker's default code is not the user's choice
     const status: FieldResult["status"] = existing ? "already_filled"
-      : decision.kind === "ask" ? "needs_user" : decision.kind === "skip" ? "skipped" : "filled";
-    return { field: field.descriptor, decision, status, detail: status === "filled" ? "would fill" : undefined };
+      : decision.kind === "ask" ? "needs_user" : decision.kind === "draft" ? "needs_user" : decision.kind === "skip" ? "skipped" : "filled";
+    return { field: field.descriptor, decision, status, review: decision.kind === "draft" || undefined, detail: decision.kind === "draft" ? "draft ready for review" : status === "filled" ? "would fill" : undefined };
   });
   report.captcha = hasCaptcha(doc);
   report.status = report.fields.some((r) => r.field.required && r.status === "needs_user") || report.captcha

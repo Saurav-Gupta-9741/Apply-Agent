@@ -318,3 +318,154 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
   if (!topic && facts.heardFrom?.trim() && HEARD_ABOUT.test(q) && field.control !== "textarea") return answer(facts.heardFrom.trim(), "how you heard");
   return undefined;
 }
+
+export function isPreviousEmployeeQuestion(field: FieldDescriptor): boolean {
+  if (!answerableLength(field.label)) return false;
+  const q = normalize(field.label);
+  if (/\b(relative|family|referred|referral|friend|spouse|partner|anyone who|alguem)\b/.test(q)) return false;
+  if (/^(i |why |tell us |please |describe )/.test(q)) return false;
+  if (/\b(non-?compete|non-?solicitation|restrict|government|armed forces|remotely|relocate|notice period|last working day|hours per week|days a week|timeline|b2b)\b/.test(q)) return false;
+  if (/\b(appl(ied|y|ying))\b/.test(q) && !/\b(employ(ed|ee|er)?|work(ed|ing)?|contractor|intern)\b/.test(q)) return false;
+  if (/\b(visa|sponsorship|right to work|authori[sz]|permit)\b/.test(q)) return false;
+  if (/\b(subsidiaries, affiliates, or acquired companies)\b/i.test(field.label)) return false;
+  if (/\bworked (on|with)\b/.test(q)) return false;
+  
+  return /^(have you (ever |previously )?been employed|have you (ever |previously )?worked (for|at)|are you currently a\b|are you a (current or )?former|do you now or have you in the past worked|history with|voce trabalha atualmente|are you (currently|now) or have you (ever|previously) (worked|been employed)|have you ever or are you currently working at|are you a current employee (with|of)|are you currently or have you previously worked for)/.test(q)
+    || (/\b(employed|worked (for|at))\b/.test(q) && /\b(before|in the past|previously)\b/.test(q) && /^(have you|were you|did you)\b/.test(q))
+    || /\brejected for this role\b/.test(q);
+}
+
+export function previousEmployerAnswer(field: FieldDescriptor, profile: Profile, page?: PageFacts): Decision | undefined {
+  if (!yesNoField(field)) return undefined;
+  const companies = [profile.currentCompany, ...(profile.workHistory?.map((w) => w.company) ?? [])]
+    .map(normalize)
+    .filter(Boolean);
+  const currentHost = page?.url ? companyDomain(page.url) : "";
+  const label = normalize(field.label);
+  const workedHere = companies.some((c) => (currentHost && c.includes(currentHost)) || (c.length > 2 && label.includes(c)));
+  const val = workedHere ? "Yes" : "No";
+  const match = field.options.length ? (yesNoOption(field.options, val) ?? bestOption(field.options, val)) : val;
+  return match ? answer(match, "previous employer") : undefined;
+}
+
+export function isWorkModeQuestion(field: FieldDescriptor): boolean {
+  if (!answerableLength(field.label)) return false;
+  const q = normalize(field.label).replace(/[-‑–—]/g, "");
+  if (/^(i |please |describe )/.test(q)) return false;
+  if (/\b(interview|facial id|third party contractor)\b/.test(q)) return false;
+  if (/are you currently based in this location/.test(q)) return false;
+  return /\b(onsite|hybrid|hybride|inoffice|inperson|commute|commuting distance|office attendance|\bwork from (the|our)?\s*office\b|\bjoin us in the office\b|\bdays (in|from) the office\b|\bdays (a|per) week\b|come to office|office based|work arrangement|sur place)\b/i.test(q);
+}
+
+export function workModeAnswer(field: FieldDescriptor, facts?: QuickFacts): Decision | undefined {
+  if (!facts?.workMode || !yesNoField(field)) return undefined;
+  const accepts = facts.workMode === "any" || facts.workMode === "onsite" || facts.workMode === "hybrid";
+  const val = accepts ? "Yes" : "No";
+  const match = field.options.length ? (yesNoOption(field.options, val) ?? bestOption(field.options, val)) : val;
+  return match ? answer(match, "onsite") : undefined;
+}
+
+export function isTravelQuestion(field: FieldDescriptor): boolean {
+  if (!answerableLength(field.label)) return false;
+  const q = normalize(field.label);
+  if (/^(i |why |tell us |please |describe )/.test(q)) return false;
+  return /\b(travel up to|travel as necessary|willing to travel|comfortable with traveling|often are you willing to travel)\b/i.test(q);
+}
+
+export function travelAnswer(field: FieldDescriptor, facts?: QuickFacts): Decision | undefined {
+  if (!facts?.travel || !yesNoField(field)) return undefined;
+  const match = field.options.length ? (yesNoOption(field.options, facts.travel) ?? bestOption(field.options, facts.travel)) : facts.travel;
+  return match ? answer(match, "travel") : undefined;
+}
+
+export function isLanguageQuestion(field: FieldDescriptor): string | undefined {
+  if (!answerableLength(field.label)) return undefined;
+  const q = normalize(field.label);
+  if (!/\b(language|proficiency|proficient|fluency|fluent|speak|idioma|lingua|langue|sprache|bilingual)\b/i.test(q)) return undefined;
+  const langs = ["english", "french", "german", "spanish", "portuguese", "italian", "mandarin", "japanese", "hindi"];
+  return langs.find((lang) => q.includes(lang));
+}
+
+export function languageAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
+  if (!profile.languages?.length) return undefined;
+  const lang = isLanguageQuestion(field);
+  if (!lang) return undefined;
+  const entry = profile.languages.find((l) => l.language.toLowerCase() === lang);
+  if (entry) {
+    if (yesNoField(field)) {
+      const match = field.options.length ? (yesNoOption(field.options, "Yes") ?? "Yes") : "Yes";
+      return answer(match, "language");
+    }
+    if (field.options.length) {
+      const match = bestOption(field.options, entry.proficiency, 0.6) ?? field.options.find((o) => /fluent|proficient|native|c1|c2|advanced/i.test(o));
+      if (match) return answer(match, "language");
+    }
+    return answer(entry.proficiency, "language");
+  }
+  if (yesNoField(field)) {
+    const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
+    return answer(match, "language");
+  }
+  return undefined;
+}
+
+export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
+  if (!profile.skillsInventory?.length || !answerableLength(field.label)) return undefined;
+  const q = normalize(field.label);
+  if (/^(i |why |tell us |describe |none\b)/.test(q)) return undefined;
+  if (!/\b(years of experience|experience (with|in|using|managing|designing|overseeing|partnering)|proficien(t|cy)|knowledge of|familiar with|rate your proficiency|tools or software have you used|have you (used|designed|built|configured|actively used|been the maintainer))\b/i.test(q)) return undefined;
+  // Exclude general overall experience and language questions:
+  if (/\btotal (years? of )?(work|professional )?experience\b/.test(q)) return undefined;
+  if (/^how many years of experience do you have\??$/i.test(q)) return undefined;
+  if (/\b(english|french|german|spanish|twitch)\b/i.test(q)) return undefined;
+  
+  const inv = profile.skillsInventory ?? [];
+  const profileSkills = profile.skills ? profile.skills.split(/[,;]/).map((s) => s.trim().toLowerCase()).filter(Boolean) : [];
+  
+  const matchEntry = inv.find((s) => q.includes(s.name.toLowerCase()));
+  const matchedProfileSkill = profileSkills.find((s) => q.includes(s));
+  
+  if (yesNoField(field)) {
+    const hasSkill = !!matchEntry || !!matchedProfileSkill;
+    const val = hasSkill ? "Yes" : "No";
+    const match = field.options.length ? (yesNoOption(field.options, val) ?? bestOption(field.options, val)) : val;
+    return match ? answer(match, "skills") : undefined;
+  }
+  
+  if (!matchEntry && !matchedProfileSkill) return undefined;
+  
+  if (/\b(how many years|years of experience)\b/i.test(q)) {
+    const years = matchEntry ? String(matchEntry.years) : (profile.experienceYears || "2");
+    if (field.control === "number" || field.control === "text") return answer(years, "skills");
+    if (field.options.length) {
+      const match = bestOption(field.options, years, 0.7) ?? field.options.find((o) => o.includes(years));
+      if (match) return answer(match, "skills");
+    }
+  }
+  if (/\brate your proficiency\b/i.test(q) && field.options.length) {
+    const level = matchEntry?.level ?? "Advanced";
+    const match = bestOption(field.options, level, 0.7);
+    if (match) return answer(match, "skills");
+  }
+  return undefined;
+}
+
+export function draftCoverLetter(profile: Profile): string {
+  return `Dear Hiring Team,\n\nI am writing to express my strong interest in this position. With my background as a ${profile.currentTitle || "Software Engineer"} at ${profile.currentCompany || "Initech"} and ${profile.experienceYears || "several"} years of experience in ${profile.skills || "technology"}, I am confident in my ability to contribute effectively to your team.\n\nThank you for your consideration.\n\nSincerely,\n${profile.firstName} ${profile.lastName}`.trim();
+}
+
+export function draftOpenQuestion(field: FieldDescriptor, profile: Profile): string {
+  return `Based on my experience as a ${profile.currentTitle || "Professional"} at ${profile.currentCompany || "Initech"}, I have worked extensively with ${profile.skills || "core technologies"} to deliver impactful results. I am excited to bring this expertise to your team.`;
+}
+
+export function draftDecision(field: FieldDescriptor, profile: Profile): Decision | undefined {
+  if (!field.required) return undefined;
+  const q = normalize(field.label);
+  if (field.control === "textarea") {
+    if (/cover ?letter|lettre de motivation|anschreiben/i.test(q)) {
+      return { kind: "draft", value: draftCoverLetter(profile), question: "Draft › cover letter" };
+    }
+    return { kind: "draft", value: draftOpenQuestion(field, profile), question: "Draft › open question" };
+  }
+  return undefined;
+}

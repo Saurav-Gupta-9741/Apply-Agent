@@ -23,7 +23,7 @@ export interface Backup {
 
 const TOPICS = new Set<SensitiveTopic>([
   "identity", "signature", "work_authorization", "sponsorship", "salary", "notice_period", "relocation", "gender", "race",
-  "veteran", "disability", "sexual_orientation", "age", "criminal", "consent",
+  "veteran", "disability", "sexual_orientation", "age", "criminal", "consent", "pronouns", "transgender", "accommodation",
 ]);
 const STATUSES = new Set<ApplicationRecord["status"]>(["applied_confirmed", "needs_check", "in_progress"]);
 const MAX_TEXT = 5000;
@@ -60,6 +60,31 @@ function readResume(v: unknown): ResumeFile | undefined {
   const data = str(v.dataBase64, MAX_RESUME_BASE64 + 1);
   if (!data || data.length > MAX_RESUME_BASE64 || !/^[A-Za-z0-9+/]+=*$/.test(data)) return undefined;
   return { name: str(v.name, 200) || "resume.pdf", type: str(v.type, 100) || "application/pdf", dataBase64: data };
+}
+
+
+function readSkillsInventory(v: unknown) {
+  if (!Array.isArray(v)) return undefined;
+  const list = v.slice(0, 50).flatMap((s) => {
+    if (!isObject(s)) return [];
+    const name = str(s.name, 100);
+    const years = typeof s.years === "number" ? Math.max(0, Math.min(50, s.years)) : Number(str(s.years, 10)) || 0;
+    const level = s.level ? str(s.level, 50) : undefined;
+    return name ? [{ name, years, level }] : [];
+  });
+  return list.length ? list : undefined;
+}
+
+function readLanguages(v: unknown) {
+  if (!Array.isArray(v)) return undefined;
+  const allowed = ["Native", "Fluent", "Professional", "Conversational", "Basic"] as const;
+  const list = v.slice(0, 20).flatMap((l) => {
+    if (!isObject(l)) return [];
+    const language = str(l.language, 60);
+    const proficiency = oneOf(l.proficiency, allowed) || "Fluent";
+    return language ? [{ language, proficiency }] : [];
+  });
+  return list.length ? list : undefined;
 }
 
 function readProfile(v: unknown): Profile {

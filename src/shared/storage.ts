@@ -23,6 +23,11 @@ export const EMPTY_PROFILE: Profile = {
   targetRoles: "",
   preferredLocations: "",
   skills: "",
+  address: "",
+  postalCode: "",
+  state: "",
+  educationLevel: "",
+  timezone: "",
 };
 
 const KEYS = {

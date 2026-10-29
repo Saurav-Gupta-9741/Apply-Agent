@@ -464,7 +464,7 @@ const FIELD_CHIP: Record<FieldResult["status"], [string, string]> = {
 /** The line under a field in "Field details": the value it gets (so the user can check it), what the site already
  * put there, or why it was not filled. */
 function fieldNote(r: FieldResult): string {
-  const value = r.decision.kind === "profile" || r.decision.kind === "answer" || r.decision.kind === "work" ? r.decision.value
+  const value = r.decision.kind === "profile" || r.decision.kind === "answer" || r.decision.kind === "work" || r.decision.kind === "draft" ? r.decision.value
     : r.decision.kind === "resume" ? "your resume file" : "";
   const short = (text: string) => (text.length > 80 ? `${text.slice(0, 79)}…` : text);
   if (r.review) return r.detail ?? "";
@@ -910,7 +910,7 @@ async function renderProfile(): Promise<void> {
     const grid = h("div", { class: "form-grid" });
     for (const [key, label, type, full] of group.fields) {
       const input = h("input", { class: "input", type, name: key, autocomplete: "off" });
-      input.value = profile[key];
+      input.value = profile[key] ?? "";
       grid.append(h("label", { class: `field-label${full ? " span-2" : ""}` }, label, input));
     }
     form.append(h("div", { class: "card" }, h("div", { class: "card-head" }, h("h2", {}, group.title)), grid));
@@ -1051,7 +1051,7 @@ function quickInput(field: QuickField, facts: QuickFacts): HTMLElement {
   } else {
     control = h("input", { class: "input", type: "text", "data-fact": field.key, placeholder: field.placeholder ?? "", autocomplete: "off" }) as HTMLInputElement;
   }
-  control.value = facts[field.key];
+  control.value = facts[field.key] ?? "";
   const label = h("label", { class: "field-label span-2" }, field.label, control);
   if (field.hint) label.append(h("span", { class: "muted" }, field.hint));
   return label;
