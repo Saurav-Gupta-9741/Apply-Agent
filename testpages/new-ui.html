@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>New UI Practice Form · Acme (local test page)</title>
+<style>
+  body { font: 15px system-ui; max-width: 640px; margin: 32px auto; padding: 0 16px; }
+  .field { display: flex; flex-direction: column; gap: 4px; margin: 12px 0; }
+  fieldset { margin: 12px 0; }
+</style>
+</head>
+<body>
+<h1>Practice Form for New UI</h1>
+<form id="application-form">
+  <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" required></div>
+
+  <!-- Skills Questions -->
+  <fieldset>
+    <legend>Do you have experience with Python? *</legend>
+    <label><input type="radio" name="has_python" value="Yes" required> Yes</label>
+    <label><input type="radio" name="has_python" value="No"> No</label>
+  </fieldset>
+  <fieldset>
+    <legend>Do you have experience with Rust? *</legend>
+    <label><input type="radio" name="has_rust" value="Yes" required> Yes</label>
+    <label><input type="radio" name="has_rust" value="No"> No</label>
+  </fieldset>
+  <div class="field">
+    <label for="python_years">How many years of experience do you have with Python?</label>
+    <input id="python_years" name="python_years">
+  </div>
+
+  <!-- Languages Questions -->
+  <fieldset>
+    <legend>Do you have professional-level proficiency in English? *</legend>
+    <label><input type="radio" name="lang_english" value="Yes" required> Yes</label>
+    <label><input type="radio" name="lang_english" value="No"> No</label>
+  </fieldset>
+  <fieldset>
+    <legend>Do you speak fluent German? *</legend>
+    <label><input type="radio" name="lang_german" value="Yes" required> Yes</label>
+    <label><input type="radio" name="lang_german" value="No"> No</label>
+  </fieldset>
+
+  <!-- Work Mode & Travel Questions -->
+  <fieldset>
+    <legend>Are you comfortable working in our Pune office 3 days a week? *</legend>
+    <label><input type="radio" name="work_office" value="Yes" required> Yes</label>
+    <label><input type="radio" name="work_office" value="No"> No</label>
+  </fieldset>
+  <fieldset>
+    <legend>Are you willing to travel up to 25% of the time? *</legend>
+    <label><input type="radio" name="travel_25" value="Yes" required> Yes</label>
+    <label><input type="radio" name="travel_25" value="No"> No</label>
+  </fieldset>
+
+  <button type="submit">Submit</button>
+</form>
+</body>
+</html>

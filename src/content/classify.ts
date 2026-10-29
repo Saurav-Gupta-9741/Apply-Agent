@@ -57,9 +57,9 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["timezone", /\b(time ?zone|est \/ mst)\b/],
   // Address Line 2 must be checked BEFORE address line 1 and full address:
   ["addressLine2", /\b(?:address\s*(?:line\s*)?2|address\s*2|apt(?:,?\s*suite|\s*#)?|suite\b|unit\b|apartment|bldg\b|floor\b)/i],
-  ["addressLine1", /\b(?:address\s*(?:line\s*)?1|address\s*1)\b/i],
+  ["addressLine1", /\b(?:address\s*(?:line\s*)?1|address\s*1|street\s*address)\b/i],
   // Full address before postal code:
-  ["address", /\b(street address|full.*address|current address|permanent address|mailing address|^address$)\b/i],
+  ["address", /\b(full.*address|complete\s*address|current address|permanent address|mailing address|^address$)\b/i],
   ["postalCode", /^(?!.*\b(street address|full.*address)\b).*\b(zip( code)?|postal code|pin ?code)\b/],
   // Where both city and state are requested, it is a location question:
   ["location", /\b(?:city\s*(?:and|,|\/|or)?\s*state|state\s*(?:and|,|\/|or)?\s*city)\b/],

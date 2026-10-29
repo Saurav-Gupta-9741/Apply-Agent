@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { decide } from "../src/content/classify";
 import { PROFILE } from "./fixtures";
 import type { FieldDescriptor, Profile } from "../src/shared/types";
+import { PERSONA_A, PERSONA_B, PERSONA_C } from "./personas";
 
 const FULL: Profile = {
   ...PROFILE,
@@ -150,9 +151,9 @@ describe("rule probes from audit", () => {
     const p5 = decide({ key: "k", label: "Rate your proficiency with Python", control: "select", required: true, options: ["Beginner", "Intermediate", "Advanced", "Expert"], name: "", autocomplete: "", placeholder: "" }, full, [], page());
     expect(p5.kind).toBe("ask");
 
-    // 6. previous employer: Motorola with 'Ola' -> No or ASK (never Yes)
+    // 6. previous employer: Motorola with 'Ola', history not complete -> ASK (never Yes)
     const p6 = decide({ key: "k", label: "Have you previously worked for Motorola?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, real, [], page("https://jobs.lever.co/motorola/1"));
-    expect(p6).toEqual({ kind: "answer", question: "Quick answers › previous employer", value: "No" });
+    expect(p6.kind).toBe("ask");
 
     // 7. work mode: hybrid != 5 days onsite Munich -> ASK
     const p7 = decide({ key: "k", label: "This role is fully onsite, 5 days a week in our Munich office. Are you able to commit?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, real, [], page());
@@ -189,5 +190,64 @@ describe("rule probes from audit", () => {
     // 15. age / over18 fact
     const p15 = decide({ key: "k", label: "Are you at least 18 years of age?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, { ...full, facts: { ...real.facts, over18: "Yes" } }, [], page());
     expect(p15).toEqual({ kind: "answer", question: "Quick answers › over 18", value: "Yes" });
+  });
+
+  describe("33 comprehensive probes from Claude review (round 4)", () => {
+    const YN = ["Yes", "No"];
+    const pg = (u = "https://boards.greenhouse.io/acme/jobs/1") => ({ jobCountries: ["India", "United States"], url: u });
+    type C_ = [any, string, string, string, string[], string[], string?, string?];
+    const partial: any = { ...PERSONA_A, currentCompany: "Initech", workHistory: [], workHistoryComplete: false };
+    const noPct: any = { ...PERSONA_A, facts: { ...PERSONA_A.facts, travelPercent: "" } };
+    const basicHindi: any = { ...PERSONA_A, languages: [{ language: "Hindi", proficiency: "Basic" }] };
+
+    const cases: C_[] = [
+      // skills thresholds in other wordings
+      [PERSONA_A, "A", "Do you have at least 3 years of experience with Python?", "radio", YN, ["No"]],
+      [PERSONA_A, "A", "Do you have a minimum of three years of Python experience?", "radio", YN, ["No", "ASK"]],
+      [PERSONA_A, "A", "Do you have 3 or more years of SQL experience?", "radio", YN, ["No", "ASK"]],
+      [PERSONA_A, "A", "Do you have 1+ years of experience with Python?", "radio", YN, ["Yes"]],
+      [PERSONA_A, "A", "Do you have experience with Python and Spark?", "radio", YN, ["ASK"]],
+      [PERSONA_A, "A", "Do you have experience with SQL in a financial services environment?", "radio", YN, ["ASK"]],
+      [PERSONA_A, "A", "How many years of experience do you have with Python?", "text", [], ["2"]],
+      [PERSONA_A, "A", "Do you have experience with Microsoft Excel?", "radio", YN, ["Yes", "ASK"]],
+      [PERSONA_B, "B", "Do you have 10+ years of experience with Java?", "radio", YN, ["No"]],
+      [PERSONA_B, "B", "Do you have experience with JavaScript?", "radio", YN, ["ASK"]],
+      [PERSONA_B, "B", "Do you have experience with Golang?", "radio", YN, ["Yes", "ASK"]],
+      [PERSONA_C, "C", "Do you have experience with Python?", "radio", YN, ["No"]],
+      // previous employer
+      [partial, "A+Initech, not complete", "Have you worked for Acme in the past?", "radio", YN, ["ASK"]],
+      [PERSONA_B, "B", "Have you previously worked for Flipkart?", "radio", YN, ["Yes"]],
+      [PERSONA_B, "B", "Are you currently employed by Infosys?", "radio", YN, ["No", "ASK"]],
+      [PERSONA_B, "B", "Have you previously worked for us?", "radio", YN, ["Yes", "ASK"], "https://jobs.lever.co/flipkart/1"],
+      [PERSONA_C, "C (Acme Media)", "Have you previously worked for Acme Corporation?", "radio", YN, ["No", "ASK"], "https://boards.greenhouse.io/acmecorp/jobs/1"],
+      // work mode
+      [PERSONA_A, "A hybrid≤3 Pune", "Are you able to work from our Pune office 3 days a week?", "radio", YN, ["Yes"]],
+      [PERSONA_A, "A hybrid≤3 Pune", "Can you work from our Hyderabad office 2 days a week?", "radio", YN, ["ASK"]],
+      [PERSONA_A, "A hybrid≤3 Pune", "Can you work from our Chennai office 3 days a week?", "radio", YN, ["ASK"]],
+      [PERSONA_A, "A hybrid≤3 Pune", "This role requires being in the office four days a week. Are you OK with that?", "radio", YN, ["No", "ASK"]],
+      [PERSONA_A, "A hybrid≤3 Pune", "Are you able to work onsite 5 days a week?", "radio", YN, ["No", "ASK"]],
+      [PERSONA_B, "B remote", "Are you comfortable working in a hybrid model from our Bangalore office?", "radio", YN, ["No", "ASK"]],
+      [PERSONA_B, "B remote", "Are you able to work onsite?", "radio", YN, ["No", "ASK"]],
+      // travel
+      [PERSONA_A, "A 10%", "Are you willing to travel up to 25% of the time?", "radio", YN, ["No"]],
+      [noPct, "A, travel=Yes, no %", "Are you willing to travel up to 50% of the time?", "radio", YN, ["ASK"]],
+      [PERSONA_A, "A 10%", "Are you willing to travel up to twenty-five percent?", "radio", YN, ["No", "ASK"]],
+      // languages
+      [PERSONA_A, "A Eng=Fluent", "Are you a native English speaker?", "radio", YN, ["No", "ASK"]],
+      [basicHindi, "Hindi=Basic", "Are you fluent in Hindi?", "radio", YN, ["No", "ASK"]],
+      [PERSONA_C, "C complete", "Do you speak German?", "radio", YN, ["No"]],
+      // address
+      [PERSONA_A, "A", "Street address", "text", [], ["12 MG Road"]],
+      [PERSONA_A, "A (line2 empty)", "Apartment, suite, etc.", "text", [], ["ASK", "SKIP"]],
+      [PERSONA_B, "B", "Address line 2", "text", [], ["Tower B, Apt 304"]],
+    ];
+
+    for (const [p, name, label, control, options, want, url, ac] of cases) {
+      it(`evaluates probe: ${name} -> ${label.slice(0, 50)}`, () => {
+        const d: any = decide({ key: "k", label, control, required: true, options, name: "", autocomplete: ac ?? "", placeholder: "" } as any, p, [], pg(url) as any);
+        const got = d.kind === "ask" ? "ASK" : d.kind === "skip" ? "SKIP" : String(d.value);
+        expect(want, `expected ${want.join("|")} but got ${got} for "${label}"`).toContain(got);
+      });
+    }
   });
 });

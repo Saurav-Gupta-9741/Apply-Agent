@@ -1020,6 +1020,7 @@ function skillsCard(entries: SkillEntry[] = [], isComplete = false): HTMLElement
   entries.forEach((s) => list.append(row(s.name, s.years, s.level || "Intermediate")));
 
   const add = button("Add skill", { variant: "ghost", icon: "plus", size: "sm" });
+  add.id = "add-skill";
   add.addEventListener("click", () => {
     const newRow = row();
     list.append(newRow);
@@ -1064,6 +1065,7 @@ function languagesCard(entries: LanguageEntry[] = [], isComplete = false): HTMLE
   entries.forEach((l) => list.append(row(l.language, l.proficiency)));
 
   const add = button("Add language", { variant: "ghost", icon: "plus", size: "sm" });
+  add.id = "add-language";
   add.addEventListener("click", () => {
     const newRow = row();
     list.append(newRow);

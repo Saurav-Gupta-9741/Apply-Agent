@@ -7,9 +7,11 @@
  *  - diversity questions: only where the form offers choices, and only a choice that clearly matches */
 
 import type { ApplicationRecord, Decision, FieldDescriptor, Profile, QuickFacts, SensitiveTopic } from "../shared/types";
-import { canonicalCountries, canWorkIn, countriesIn } from "../shared/countries";
+import { canonicalCountries, canWorkIn, countriesIn, extractPlacesInText } from "../shared/countries";
 import { bestOption, normalize, yesNoOption } from "../shared/text";
 import { hasExceptionClause, isCompanyOrPlaceSpecific } from "../shared/screening";
+import { parseRequirement } from "../shared/requirements";
+import { extractTechTerms } from "../shared/techterms";
 
 /** "How did you hear about this job?" in its many wordings. */
 export const HEARD_ABOUT = /how did you (hear|learn|find out|come across)|where did you (hear|learn|find)|how did you find (out about )?(us|this)|where have you (learned|heard) about|how you heard about|source of (your )?application|referral source/;
@@ -435,7 +437,8 @@ export function previousEmployerAnswer(field: FieldDescriptor, profile: Profile,
     return match ? answer(match, "previous employer") : undefined;
   }
 
-  if (profile.workHistoryComplete || companies.length > 0) {
+  // If not matched, only answer "No" if candidate explicitly confirmed history is complete:
+  if (profile.workHistoryComplete) {
     const val = "No";
     const match = field.options.length ? (yesNoOption(field.options, val) ?? bestOption(field.options, val)) : val;
     return match ? answer(match, "previous employer") : undefined;
@@ -459,30 +462,40 @@ export function workModeAnswer(field: FieldDescriptor, profile: Profile): Decisi
 
   const q = normalize(field.label);
 
-  // Check if a specific city is named in the question:
-  const cityMatch = /\b(munich|san francisco|london|new york|berlin|seattle|austin|chicago|dublin|paris|amsterdam|toronto|vancouver|sydney|singapore|tokyo)\b/i.exec(field.label);
-  if (cityMatch && cityMatch[1]) {
-    const city = cityMatch[1].toLowerCase();
+  // Check if a specific city/place is named in the question:
+  const places = extractPlacesInText(field.label);
+  if (places.length > 0) {
     const userLocs = `${profile.location} ${profile.preferredLocations || ""}`.toLowerCase();
-    if (!userLocs.includes(city)) {
-      return undefined; // Role requires a specific remote city the user is not in -> ASK
+    const matched = places.some((place) => new RegExp(`\\b${place}\\b`, "i").test(userLocs));
+    if (!matched) {
+      return undefined; // Role requires a specific place the candidate is not in / did not prefer -> ASK
     }
   }
 
-  // Check required office days per week:
-  const daysMatch = /\b(\d+)\s*days?(?:\s*(?:a|per)\s*week)?\b/i.exec(q);
-  const requiredDays = daysMatch && daysMatch[1] ? parseInt(daysMatch[1], 10) : undefined;
+  // Check required office days per week via shared requirements parser:
+  const req = parseRequirement(field.label);
+  const requiredDays = req?.unit === "days" ? req.min : undefined;
   const maxDays = facts.maxOfficeDays !== undefined && facts.maxOfficeDays !== ""
     ? Number(facts.maxOfficeDays)
     : (facts.workMode === "remote" ? 0 : facts.workMode === "onsite" ? 5 : 3);
 
   if (requiredDays !== undefined && requiredDays > maxDays) {
-    return undefined; // Requires more in-office days than user's max
+    const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
+    return answer(match, "onsite");
   }
 
   const isFullyOnsiteQuestion = /\b(?:fully onsite|100% onsite|5 days (?:a|per) week in (?:the|our)? office)\b/i.test(q);
   if (isFullyOnsiteQuestion && facts.workMode !== "onsite" && facts.workMode !== "any") {
-    return undefined;
+    const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
+    return answer(match, "onsite");
+  }
+
+  if (facts.workMode === "remote") {
+    // If candidate is remote only, but question asks for hybrid or onsite:
+    if (/\b(?:onsite|hybrid|in-?office|in person|commute|office attendance)\b/i.test(q)) {
+      const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
+      return answer(match, "onsite");
+    }
   }
 
   const isRemoteQuestion = /\b(?:remote|work from home|wfh)\b/i.test(q) && !/\b(?:onsite|hybrid|in-?office)\b/i.test(q);
@@ -512,21 +525,23 @@ export function isTravelQuestion(field: FieldDescriptor): boolean {
 export function travelAnswer(field: FieldDescriptor, facts?: QuickFacts): Decision | undefined {
   if (!facts?.travel || !yesNoField(field)) return undefined;
 
-  const raw = field.label;
   const q = normalize(field.label);
-  const percentMatch = /\b(\d+)\s*(?:%|percent\b)/i.exec(raw);
-  if (percentMatch && percentMatch[1]) {
-    const requiredPercent = parseInt(percentMatch[1], 10);
-    const userPercentStr = facts.travelPercent?.replace(/[^0-9]/g, "");
-    if (!userPercentStr) return undefined;
-    const userPercent = parseInt(userPercentStr, 10);
+  const req = parseRequirement(field.label);
 
-    if (requiredPercent <= userPercent) {
-      const match = field.options.length ? (yesNoOption(field.options, "Yes") ?? "Yes") : "Yes";
-      return answer(match, "travel");
-    } else {
-      const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
-      return answer(match, "travel");
+  if (req?.unit === "percent") {
+    const requiredPercent = req.max ?? req.min;
+    if (requiredPercent !== undefined) {
+      const userPercentStr = facts.travelPercent?.replace(/[^0-9]/g, "");
+      if (!userPercentStr) return undefined;
+      const userPercent = parseInt(userPercentStr, 10);
+
+      if (requiredPercent <= userPercent) {
+        const match = field.options.length ? (yesNoOption(field.options, "Yes") ?? "Yes") : "Yes";
+        return answer(match, "travel");
+      } else {
+        const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
+        return answer(match, "travel");
+      }
     }
   }
 
@@ -538,66 +553,69 @@ export function travelAnswer(field: FieldDescriptor, facts?: QuickFacts): Decisi
   return undefined;
 }
 
-export function isLanguageQuestion(field: FieldDescriptor): string | undefined {
-  if (!answerableLength(field.label)) return undefined;
+export function isLanguageQuestion(field: FieldDescriptor): string[] {
+  if (!answerableLength(field.label)) return [];
   const q = normalize(field.label);
-  if (!/\b(language|proficiency|proficient|fluency|fluent|speak|idioma|lingua|langue|sprache|bilingual)\b/i.test(q)) return undefined;
-  const langs = ["english", "french", "german", "spanish", "portuguese", "italian", "mandarin", "japanese", "hindi"];
-  return langs.find((lang) => mentions(q, lang));
+  if (!/\b(language|proficiency|proficient|fluency|fluent|speak|idioma|lingua|langue|sprache|bilingual)\b/i.test(q)) return [];
+  const langs = ["english", "french", "german", "spanish", "portuguese", "italian", "mandarin", "japanese", "hindi", "kannada", "marathi"];
+  return langs.filter((lang) => mentions(q, lang));
+}
+
+const LEVEL_RANK: Record<string, number> = {
+  native: 5,
+  fluent: 4,
+  professional: 3,
+  conversational: 2,
+  basic: 1,
+};
+
+function askedLanguageLevel(q: string): number {
+  if (/\b(?:native|mother\s+tongue|first\s+language|bilingual)\b/i.test(q)) return 5;
+  if (/\b(?:fluent|fluently|fließend|courant)\b/i.test(q)) return 4;
+  if (/\b(?:professional|business|working\s+proficiency|work\s+proficiency)\b/i.test(q)) return 3;
+  if (/\b(?:conversational)\b/i.test(q)) return 2;
+  if (/\b(?:basic|elementary)\b/i.test(q)) return 1;
+  return 1;
 }
 
 export function languageAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
   if (!answerableLength(field.label)) return undefined;
-  const lang = isLanguageQuestion(field);
-  if (!lang) return undefined;
+  const langs = isLanguageQuestion(field);
+  if (!langs.length) return undefined;
 
-  const languages = profile.languages ?? [];
-  const entry = languages.find((l) => l.language.toLowerCase() === lang);
+  const profileLangs = profile.languages ?? [];
 
-  if (entry) {
+  // Check if any mentioned language is missing from candidate's inventory:
+  const missing = langs.filter((l) => !profileLangs.some((p) => p.language.toLowerCase() === l));
+  if (missing.length > 0) {
     if (yesNoField(field)) {
-      const match = field.options.length ? (yesNoOption(field.options, "Yes") ?? "Yes") : "Yes";
-      return answer(match, "language");
+      if (profile.languagesComplete) {
+        const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
+        return answer(match, "language");
+      }
+      return undefined; // Language missing and list not marked complete -> ASK
     }
-    if (field.options.length) {
-      const match = bestOption(field.options, entry.proficiency, 0.6) ?? field.options.find((o) => /fluent|proficient|native|c1|c2|advanced/i.test(o));
-      if (match) return answer(match, "language");
-    }
-    return answer(entry.proficiency, "language");
-  }
-
-  // Not listed in profile.languages:
-  if (yesNoField(field)) {
-    if (profile.languagesComplete) {
-      const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
-      return answer(match, "language");
-    }
-    // Missing does NOT mean No -> return undefined (ask)
     return undefined;
   }
 
-  return undefined;
-}
+  // All mentioned languages are present in candidate's inventory:
+  const primaryLang = langs[0]!;
+  const entry = profileLangs.find((l) => l.language.toLowerCase() === primaryLang);
+  if (!entry) return undefined;
 
-function parseYearsThreshold(q: string): number | undefined {
-  const WORD_NUMS: Record<string, number> = {
-    one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
-  };
-  const m1 = /\b(\d+)\s*\+\s*years?\b/i.exec(q);
-  if (m1 && m1[1]) return parseInt(m1[1], 10);
-
-  const m2 = /\b(?:at least|minimum(?: of)?)\s*(\d+|one|two|three|four|five|six|seven|eight|nine|ten)(?:\s*\(\d+\))?\s*years?\b/i.exec(q);
-  if (m2 && m2[1]) {
-    const val = m2[1].toLowerCase();
-    return WORD_NUMS[val] ?? parseInt(val, 10);
+  if (yesNoField(field)) {
+    const userLevel = LEVEL_RANK[entry.proficiency.toLowerCase()] ?? 3;
+    const requiredLevel = askedLanguageLevel(field.label);
+    const val = userLevel >= requiredLevel ? "Yes" : "No";
+    const match = field.options.length ? (yesNoOption(field.options, val) ?? val) : val;
+    return answer(match, "language");
   }
 
-  const m3 = /\b(\d+)\s*years?(?:\s*(?:of\s*)?experience)?\b/i.exec(q);
-  if (m3 && m3[1] && /\b(?:do you have|have you|require|minimum)\b/i.test(q)) {
-    return parseInt(m3[1], 10);
+  if (field.options.length) {
+    const match = bestOption(field.options, entry.proficiency, 0.6) ?? field.options.find((o) => /fluent|proficient|native|c1|c2|advanced/i.test(o));
+    if (match) return answer(match, "language");
   }
-
-  return undefined;
+  return answer(entry.proficiency, "language");
 }
 
 export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
@@ -620,21 +638,60 @@ export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile)
   if (/\b(english|french|german|spanish|twitch)\b/i.test(q)) return undefined;
 
   const inv = profile.skillsInventory ?? [];
-  const matchedEntries = inv.filter((s) => mentions(field.label, s.name));
+  const req = parseRequirement(field.label);
+  const threshold = req?.unit === "years" ? req.min : undefined;
 
-  // If question mentions a known skill:
-  if (matchedEntries.length > 0) {
-    const threshold = parseYearsThreshold(field.label);
-    const primary = matchedEntries[0]!;
+  // Extract all technology terms mentioned in the question:
+  const termsInQuestion = extractTechTerms(field.label);
+  const hasOr = /\b(?:or|either)\b/i.test(field.label);
+
+  if (termsInQuestion.length > 0) {
+    // Map terms to inventory entries
+    const matchedEntries = termsInQuestion.map((term) => inv.find((s) => mentions(s.name, term) || mentions(term, s.name)));
+    const missingTerms = termsInQuestion.filter((term, idx) => !matchedEntries[idx]);
+
+    if (hasOr) {
+      // Any one term is sufficient
+      const anyMatch = matchedEntries.find((e) => !!e);
+      if (anyMatch) {
+        if (yesNoField(field)) {
+          if (threshold !== undefined) {
+            const val = anyMatch.years >= threshold ? "Yes" : "No";
+            const match = field.options.length ? (yesNoOption(field.options, val) ?? val) : val;
+            return match ? answer(match, "skills") : undefined;
+          }
+          const match = field.options.length ? (yesNoOption(field.options, "Yes") ?? "Yes") : "Yes";
+          return match ? answer(match, "skills") : undefined;
+        }
+      } else if (profile.skillsComplete && yesNoField(field)) {
+        const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
+        return match ? answer(match, "skills") : undefined;
+      }
+      return undefined;
+    }
+
+    // All terms required ("and", or listed together without "or")
+    if (missingTerms.length > 0) {
+      if (profile.skillsComplete && yesNoField(field)) {
+        const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
+        return match ? answer(match, "skills") : undefined;
+      }
+      return undefined; // At least one skill missing and list not marked complete -> ASK
+    }
+
+    // All terms are present in inventory!
+    const validEntries = matchedEntries.filter((e): e is NonNullable<typeof e> => !!e);
+    const primary = validEntries[0]!;
 
     if (yesNoField(field)) {
       if (threshold !== undefined) {
-        // True statement: Yes if years >= threshold, No if years < threshold
-        const val = primary.years >= threshold ? "Yes" : "No";
-        const match = field.options.length ? (yesNoOption(field.options, val) ?? bestOption(field.options, val)) : val;
+        // True statement: Yes if min years across matched skills >= threshold, else No
+        const minCandidateYears = Math.min(...validEntries.map((e) => e.years));
+        const val = minCandidateYears >= threshold ? "Yes" : "No";
+        const match = field.options.length ? (yesNoOption(field.options, val) ?? val) : val;
         return match ? answer(match, "skills") : undefined;
       }
-      const match = field.options.length ? (yesNoOption(field.options, "Yes") ?? bestOption(field.options, "Yes")) : "Yes";
+      const match = field.options.length ? (yesNoOption(field.options, "Yes") ?? "Yes") : "Yes";
       return match ? answer(match, "skills") : undefined;
     }
 
@@ -659,10 +716,28 @@ export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile)
     }
   }
 
+  // Fallback for non-catalog skills that directly match profile.skillsInventory
+  const directMatches = inv.filter((s) => mentions(field.label, s.name));
+  if (directMatches.length > 0) {
+    const primary = directMatches[0]!;
+    if (yesNoField(field)) {
+      if (threshold !== undefined) {
+        const val = primary.years >= threshold ? "Yes" : "No";
+        const match = field.options.length ? (yesNoOption(field.options, val) ?? val) : val;
+        return match ? answer(match, "skills") : undefined;
+      }
+      const match = field.options.length ? (yesNoOption(field.options, "Yes") ?? "Yes") : "Yes";
+      return match ? answer(match, "skills") : undefined;
+    }
+    if (/\b(how many years|years of experience)\b/i.test(q) && typeof primary.years === "number") {
+      const yearsStr = String(primary.years);
+      if (field.control === "number" || field.control === "text") return answer(yearsStr, "skills");
+    }
+  }
+
   // Question did not match any inventory skills:
-  // Only answer "No" if user explicitly confirmed their skills list is complete!
   if (profile.skillsComplete && yesNoField(field)) {
-    const match = field.options.length ? (yesNoOption(field.options, "No") ?? bestOption(field.options, "No")) : "No";
+    const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
     return match ? answer(match, "skills") : undefined;
   }
 

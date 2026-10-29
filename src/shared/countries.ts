@@ -91,6 +91,20 @@ export function countriesInLocation(raw: string): string[] {
   return found;
 }
 
+/** All recognized cities and countries in a text. */
+export function extractPlacesInText(raw: string): string[] {
+  const found: string[] = [];
+  const text = normalize(raw);
+  for (const [, pattern] of CITIES) {
+    const match = pattern.exec(text);
+    if (match && match[1]) found.push(match[1]);
+  }
+  for (const [country, pattern] of COUNTRIES) {
+    if (pattern.test(text) && !found.includes(country.toLowerCase())) found.push(country.toLowerCase());
+  }
+  return found;
+}
+
 /** A country given as an ISO code or a name ("IN", "USA", "India"). */
 export function countryFromCode(value: string): string | undefined {
   const v = value.trim();

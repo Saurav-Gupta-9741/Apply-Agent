@@ -1,0 +1,2852 @@
+[
+  {
+    "id": 1,
+    "label": "Are you at least 18 years of age/?",
+    "control": "combobox",
+    "options": [],
+    "intent": "age",
+    "personaA": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Yes",
+      "reachable": true
+    }
+  },
+  {
+    "id": 2,
+    "label": "Are you 18 years of age or older?",
+    "control": "combobox",
+    "options": [],
+    "intent": "age",
+    "personaA": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Yes",
+      "reachable": true
+    }
+  },
+  {
+    "id": 3,
+    "label": "Are you at least 18 years of age?",
+    "control": "combobox",
+    "options": [],
+    "intent": "age",
+    "personaA": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Yes",
+      "reachable": true
+    }
+  },
+  {
+    "id": 4,
+    "label": "I confirm that I am proficient in German, both written and spoken, at a C1+ level.",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 5,
+    "label": "Do you have a disability or chronic condition (physical, visual, auditory, cognitive, mental, emotional, or other) that substantially limits one or more of your major life activities, including mobility, communication (seeing, hearing, speaking), and learning?",
+    "control": "combobox",
+    "options": [],
+    "intent": "disability",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 6,
+    "label": "Hispanic, Latinx or of Spanish Origin",
+    "control": "checkbox",
+    "options": [],
+    "intent": "hispanic",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 7,
+    "label": "Are you able to work onsite in the Esri location of this job posting, or relocate to do so?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Yes",
+      "reachable": true
+    }
+  },
+  {
+    "id": 8,
+    "label": "What is the address from which you plan on working? If you would need to relocate, please type \"relocating\".",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 9,
+    "label": "What experience do you have partnering with Store Planning, Store Design, or Store Development on new stores, remodels, or changes to store layouts and fixtures?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 10,
+    "label": "What visual merchandising, space-planning, design, or planogram software are you proficient in? And what tools or software have you used to create planograms, floor plans, fixture layouts, visual directives, or in-store execution guides?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 11,
+    "label": "How many years of experience do you have in B2B SaaS Product Design?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 12,
+    "label": "Do you have experience designing content platforms or content management experiences?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 13,
+    "label": "Have you designed AI-powered content creation or generative AI experiences?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 14,
+    "label": "Have you designed complex workflows for enterprise users?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 15,
+    "label": "Will you require sponsorship or other assistance or support to be authorized to, or otherwise, work from your country of residence?",
+    "control": "select",
+    "options": [],
+    "intent": "sponsorship",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 16,
+    "label": "Have you worked for Speechmatics in the past?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 17,
+    "label": "Are you currently a Speechmatics employee?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 18,
+    "label": "Are you willing to work in a hybrid capacity from the office location(s) associated with this role?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Yes",
+      "reachable": true
+    }
+  },
+  {
+    "id": 19,
+    "label": "Collaboration within our tech hubs is important to us, can you work 4 days from the office and 1 day per week from home?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Yes",
+      "reachable": true
+    }
+  },
+  {
+    "id": 20,
+    "label": "Você trabalha atualmente no Inter?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 21,
+    "label": "Have you used developer tools related to AI, LLMs, or infrastructure (e.g. inference, orchestration, agentic workflows)?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 22,
+    "label": "Are you open to working in-person in one of our offices 25% of the time?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 23,
+    "label": "Have you been employed, or otherwise engaged, by an Asana entity in the past? (Previous independent contractors, select \"Yes.\")",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 24,
+    "label": "Are you able to work in our San Francisco office on Tuesdays and Thursdays?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 25,
+    "label": "HISTORY WITH ANDURIL",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 26,
+    "label": "Have you ever been employed by Anduril or any company that Anduril has acquired?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 27,
+    "label": "Are you willing to travel up to 25% of the time?",
+    "control": "combobox",
+    "options": [],
+    "intent": "travel",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Yes",
+      "reachable": true
+    }
+  },
+  {
+    "id": 28,
+    "label": "Which U.S. State or Canadian Province do you reside in?",
+    "control": "combobox",
+    "options": [],
+    "intent": "state",
+    "personaA": {
+      "answer": "Maharashtra",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Karnataka",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Maharashtra",
+      "reachable": true
+    }
+  },
+  {
+    "id": 29,
+    "label": "Have you previously been employed at Affirm for any length of time?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 30,
+    "label": "Have you previously worked for Veeam (including as a contractor or intern)? Current Veeam employees are required to apply through the Internal Job Board.",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 31,
+    "label": "Street Address",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "personaA": {
+      "answer": "12 MG Road",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "456 Tech Park Road",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "78 Marine Drive",
+      "reachable": true
+    }
+  },
+  {
+    "id": 32,
+    "label": "Address Line 1",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "personaA": {
+      "answer": "12 MG Road",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "456 Tech Park Road",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "78 Marine Drive",
+      "reachable": true
+    }
+  },
+  {
+    "id": 33,
+    "label": "State/Province",
+    "control": "text",
+    "options": [],
+    "intent": "state",
+    "personaA": {
+      "answer": "Maharashtra",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Karnataka",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Maharashtra",
+      "reachable": true
+    }
+  },
+  {
+    "id": 34,
+    "label": "Have you previously been employed by Magnet Forensics (or acquired/merged company) in any capacity? (i.e. employee, contractor, co-op, vendor)?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 35,
+    "label": "Do you have at least 6 years of experience in Customer Success, Strategic Account Management, Technical Account Management, or a related customer-facing role?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 36,
+    "label": "Do you have at least 2 years of experience leading technical, customer-facing teams?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 37,
+    "label": "Which of the following experience do you have? Select all that apply.",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 38,
+    "label": "Which of the following qualifications do you have? Select all that apply.",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 39,
+    "label": "Address",
+    "control": "textarea",
+    "options": [],
+    "intent": "address",
+    "personaA": {
+      "answer": "12 MG Road, Pune 411001",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "456 Tech Park Road, Whitefield",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "78 Marine Drive, Churchgate",
+      "reachable": true
+    }
+  },
+  {
+    "id": 40,
+    "label": "Are you currently located within commuting distance to the assigned office location for this role?",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Yes",
+      "reachable": true
+    }
+  },
+  {
+    "id": 41,
+    "label": "Great Gray's Hybrid Work Policy, which currently requires in-office attendance four (4) days per week, applies to this position. Please indicate your understanding of and ability to comply with this requirement below.",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 42,
+    "label": "Are you bilingual (French and English)?",
+    "control": "select",
+    "options": [],
+    "intent": "language_proficiency",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 43,
+    "label": "Do you have experience managing Service Desk operations using an ITSM/ticketing platform such as Jira Service Management, ServiceNow, or a similar platform, including ticket queues, SLAs, and escalations?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 44,
+    "label": "Do you have experience overseeing employee technology lifecycle processes, including new hire equipment provisioning, asset inventory/CMDB management, and equipment recovery for separated employees?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 45,
+    "label": "Are you willing and able to work on-site in Davie, Florida five days per week and travel periodically to other company locations, including Syracuse, New York?",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 46,
+    "label": "Have you previously configured, integrated, or troubleshooting CRM systems (e.g., ActiveCampaign, HubSpot, Salesforce, or custom CRMs) with field tracking, tags, and automated triggers? If yes, share an example (briefly).",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 47,
+    "label": "Which AI tools do you actively use in your daily workflow to assist with code drafting, debugging, or task automation?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 48,
+    "label": "Have you built or configured AI agents, custom connectors, or automated workflows (e.g., using Claude, OpenAI APIs, or custom harnesses) to deliver automated reports or assets to other departments?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 49,
+    "label": "What state or province do you live in?",
+    "control": "text",
+    "options": [],
+    "intent": "state",
+    "personaA": {
+      "answer": "Maharashtra",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Karnataka",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Maharashtra",
+      "reachable": true
+    }
+  },
+  {
+    "id": 50,
+    "label": "Have you ever worked for Figma before, as an employee or a contractor/consultant?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 51,
+    "label": "Have you been rejected for this role at Samsara within the past 6 months?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 52,
+    "label": "How many years of experience do you have in a closing sales role?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 53,
+    "label": "Do you have experience independently closing new deals larger than $10,000?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 54,
+    "label": "Have you previously worked at Samsara?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 55,
+    "label": "Have you ever been employed by Stripe or a Stripe affiliate?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 56,
+    "label": "Have you ever worked at MongoDB before?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 57,
+    "label": "Are you able to communicate fluently in English?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 58,
+    "label": "Are you able to communicate fluently in Spanish?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 59,
+    "label": "Are you currently or have you ever worked for Airbnb in any capacity? This could include, but is not limited to, a full-time employee, intern, apprentice, or contingent worker.",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 60,
+    "label": "This role requires working on-site at the Airbnb office five days a week. Please confirm you are able to meet this requirement.",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Yes",
+      "reachable": true
+    }
+  },
+  {
+    "id": 61,
+    "label": "Have you been the maintainer or contributor for an open-source project? (Maintaining includes tasks such as triaging issues, reviewing pull requests, managing releases, or overseeing community contributions.)",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Tower B, Apt 304",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": true
+    }
+  },
+  {
+    "id": 62,
+    "label": "Do you speak fluent German?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 63,
+    "label": "Have you actively used Salesforce as your primary CRM in a professional role?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 64,
+    "label": "Which of the following best describes your experience in a sales development, business development, or outbound sales role within the technology industry?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 65,
+    "label": "Have you previously worked at or consulted for GitLab?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 66,
+    "label": "Are you willing to work for 5 days a week, from our Bangalore office?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Yes",
+      "reachable": true
+    }
+  },
+  {
+    "id": 67,
+    "label": "Have you previously been employed by Coinbase in any capacity?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 68,
+    "label": "Which of the following best describes how you use AI tools today?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 69,
+    "label": "Do you have professional-level proficiency in English, including reading, writing, and speaking?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "personaA": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Yes",
+      "reachable": true
+    }
+  },
+  {
+    "id": 70,
+    "label": "Do you have professional-level proficiency in French, including reading, writing, and speaking?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 71,
+    "label": "Do you have at least 3 years of experience in financial services, crypto, investigations, legal or tech industry?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 72,
+    "label": "How many years of experience do you have in Infrastructure Security?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 73,
+    "label": "How many years of relevant work experience do you have in Banking Operations, Financial Operations, or Transaction Reconciliation?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 74,
+    "label": "Which of the following industries have you worked in?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 75,
+    "label": "Which type of transactions have you worked with?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 76,
+    "label": "What is your experience with transaction reconciliation and debit/credit posting?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 77,
+    "label": "What is your experience with banking/payment disputes, chargebacks, and regulatory reporting (including RBI submissions)?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 78,
+    "label": "How would you rate your proficiency in Excel?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 79,
+    "label": "How would you rate your proficiency in Power BI?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 80,
+    "label": "Are you comfortable working onsite five days a week at either our Mumbai or Bangalore office?",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Yes",
+      "reachable": true
+    }
+  },
+  {
+    "id": 81,
+    "label": "Relevant Experience in Product",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 82,
+    "label": "Do you have experience Managing Team?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 83,
+    "label": "Are you comfortable working from our Pune or Bengaluru office at least 3 days a week?",
+    "control": "text",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 84,
+    "label": "Have you independently managed full outbound prospecting sequences (calls, email, and social) in a tech sales role?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "asha@example.com",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "rohan@example.com",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "priya@example.com",
+      "reachable": true
+    }
+  },
+  {
+    "id": 85,
+    "label": "This role requires at least 3 days a week in the office, are you able to easily commute to the location the role is based in?",
+    "control": "select",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Yes",
+      "reachable": true
+    }
+  },
+  {
+    "id": 86,
+    "label": "Are you comfortable commuting to and working onsite at our New York City office location?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 87,
+    "label": "Remote, US",
+    "control": "checkbox",
+    "options": [],
+    "intent": "other",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 88,
+    "label": "Native Hawaiian or Pacific Islander",
+    "control": "checkbox",
+    "options": [],
+    "intent": "other",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 89,
+    "label": "Indigenous, American Indian or Alaska Native",
+    "control": "checkbox",
+    "options": [],
+    "intent": "other",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 90,
+    "label": "Indigenous or Native American",
+    "control": "checkbox",
+    "options": [],
+    "intent": "other",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 91,
+    "label": "Native Hawaiian or Other Pacific Islander",
+    "control": "checkbox",
+    "options": [],
+    "intent": "other",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 92,
+    "label": "Address Line 2",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Tower B, Apt 304",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": true
+    }
+  },
+  {
+    "id": 93,
+    "label": "Please provide 2 professional references that we may contact. These ideally would be individuals that were in a supervisory role or worked closely with you that can speak in detail of your history.",
+    "control": "textarea",
+    "options": [],
+    "intent": "other_person",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 94,
+    "label": "Are you able to work from our Manchester office 3 days a week?",
+    "control": "textarea",
+    "options": [],
+    "intent": "onsite",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 95,
+    "label": "Have you worked on Web applications previously? If so, what technologies did you use?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 96,
+    "label": "How many years of experience do you have in technical customer-facing roles?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 97,
+    "label": "How many years of experience do you have in a consulting or professional services role?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 98,
+    "label": "Do you have hands-on experience implementing, configuring, or troubleshooting enterprise backup and recovery solutions?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 99,
+    "label": "Have you worked on backup and restore across enterprise workloads such as VMware, NAS, SQL databases, AWS/Azure VMs, Microsoft 365, or Google Workspace?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "Yes",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 100,
+    "label": "Have you led or supported end-to-end customer implementations, including requirement discovery, solution design, deployment, and post-deployment optimization?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 101,
+    "label": "What is your current age?",
+    "control": "radio",
+    "options": [],
+    "intent": "age",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 102,
+    "label": "By selecting yes to this question you confirm that you have read Esri’s Applicant Privacy Notice.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 103,
+    "label": "I confirm that my application details, including work history, education, and former Ebury employment status, are accurate and truthful. I understand that providing false, misleading, or omitted information may result in the rejection of my application or the withdrawal of any employment offer.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 104,
+    "label": "By checking this box, I agree to allow Ebury to retain my data for future opportunities for employment for up to 365 days after the conclusion of consideration of my current application for employment.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Tower B, Apt 304",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": true
+    }
+  },
+  {
+    "id": 105,
+    "label": "By checking this box, I consent to Smartsheet collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 106,
+    "label": "Concordo que os dados pessoais serão coletados, tratados e compartilhados pelo Grupo Inter nos termos da Politica de Privacidade do Grupo Inter disponível para consulta, a qualquer tempo, por meio do site https://www.bancointer.com.br/politica-de-privacidade/. Ainda, o Inter esclarecerá suas dúvidas relacionadas à privacidade pelo e-mail privacidade@inter.co",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "asha@example.com",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "rohan@example.com",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "priya@example.com",
+      "reachable": true
+    }
+  },
+  {
+    "id": 107,
+    "label": "We use Metaview to help our interviewers focus on the conversation instead of taking notes. Do you consent to Metaview transcribing our interviews? Metaview privacy policy: https://www.metaview.ai/privacy-policy",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 108,
+    "label": "Applicant Privacy Policy",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 109,
+    "label": "I acknowledge that I have reviewed and understood the Applicant Privacy Policy (link below).",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 110,
+    "label": "By checking this box, I consent to Asana collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 111,
+    "label": "Candidate Notice: Please read and accept the Global Personal Data Privacy Notice for Candidates.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 112,
+    "label": "By checking this box, I agree to allow Veeam Software to store and process my data for the purpose of considering my eligibility regarding my current application for employment.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 113,
+    "label": "By checking this box, I agree to allow Jensen Hughes to store and process my data for the purpose of considering my eligibility regarding my current application for employment.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 114,
+    "label": "If selected, I understand that completing a CLEAR verification check is required prior to receiving an offer of employment.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 115,
+    "label": "Yes, Magnet Forensics can contact me about future job opportunities for up to 1 year Privacy policy",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Tower B, Apt 304",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": true
+    }
+  },
+  {
+    "id": 116,
+    "label": "Yes, Sophos can contact me about future job opportunities for up to 1 year Privacy policy",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Tower B, Apt 304",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": true
+    }
+  },
+  {
+    "id": 117,
+    "label": "I understand",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 118,
+    "label": "Do you consent to Socure processing your data to verify your identity under Socure's Recruiting Privacy Policy?",
+    "control": "radio",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 119,
+    "label": "I confirm that I reside within one of the following states: North Dakota, South Dakota, Nebraska, Minnesota, Wisconsin, Michigan, Ohio, Indiana, Illinois, Iowa.",
+    "control": "combobox",
+    "options": [],
+    "intent": "other",
+    "personaA": {
+      "answer": "Maharashtra",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Karnataka",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Maharashtra",
+      "reachable": true
+    }
+  },
+  {
+    "id": 120,
+    "label": "By checking this box, I consent to MongoDB collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 121,
+    "label": "By selecting \"I agree\", I understand that the information I have provided as part of this job application will be processed in accordance with Toast's Applicant Privacy Statement.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "Maharashtra",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Karnataka",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Maharashtra",
+      "reachable": true
+    }
+  },
+  {
+    "id": 122,
+    "label": "Reconozco recepción y acepto el Aviso de Privacidad de Airbnb. (I acknowledge receipt and accept the Airbnb Privacy Notice.)",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 123,
+    "label": "By selecting 'I acknowledge' and submitting this application, you confirm that you have read Elastic's Candidate Privacy Statement and understand how your data will be processed to evaluate your candidacy. In jurisdictions where consent is legally required, your submission constitutes express consent to the processing of your personal data for recruitment purposes.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "Maharashtra",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Karnataka",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Maharashtra",
+      "reachable": true
+    }
+  },
+  {
+    "id": 124,
+    "label": "By checking this box, I consent to Twilio collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 125,
+    "label": "I confirm that I will be based in Munich throughout the duration of this internship.",
+    "control": "combobox",
+    "options": [],
+    "intent": "other",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 126,
+    "label": "I confirm that I am currently enrolled in a university degree.",
+    "control": "combobox",
+    "options": [],
+    "intent": "other",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 127,
+    "label": "I confirm that I am proficient in English, both written and spoken, at a C1+ level.",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 128,
+    "label": "I confirm, that I have read the Celonis Privacy Notice for the handling of my personal data in the application process.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 129,
+    "label": "I confirm the information provided in this application, including but not limited to my resume and the above information, is true and correct. I understand that false statements or material omissions of any kind during the hiring process may result in the rescinding of any offer of employment or dismissal once employed.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "Maharashtra",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Karnataka",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Maharashtra",
+      "reachable": true
+    }
+  },
+  {
+    "id": 130,
+    "label": "By checking this box, I consent to Celonis collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 131,
+    "label": "I understand that Coinbase may use AI tools to assist in the application and interview process.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 132,
+    "label": "By submitting my application, I acknowledge that I have read and understand Vercel’s Job Applicant Privacy Notice - https://vercel.com/legal/job-applicant-privacy-notice",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 133,
+    "label": "If you agree with our Privacy Policy, please check the box below. Our Privacy Policy is available at www.zeta.tech/in/careers/privacy_policy",
+    "control": "select",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 134,
+    "label": "Yes, Mindtickle can contact me about future job opportunities for up to 2 years Privacy policy",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Tower B, Apt 304",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": true
+    }
+  },
+  {
+    "id": 135,
+    "label": "Você se autodeclara pessoa com deficiência (PCD), nos termos da legislação brasileira?",
+    "control": "combobox",
+    "options": [],
+    "intent": "disability",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 136,
+    "label": "Se respondido \"Sim\" na pergunta anterior, indique a categoria que melhor descreve sua deficiência",
+    "control": "combobox",
+    "options": [],
+    "intent": "disability",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 137,
+    "label": "Disability status",
+    "control": "select",
+    "options": [],
+    "intent": "disability",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 138,
+    "label": "Person with disability",
+    "control": "checkbox",
+    "options": [],
+    "intent": "disability",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 139,
+    "label": "Do you have a physical or mental disability, impairment, or condition that substantially limits major life activity?",
+    "control": "combobox",
+    "options": [],
+    "intent": "disability",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 140,
+    "label": "¿Cuenta usted con una discapacidad/enfermedad? (Do you have a disability/illness?) - Mexico",
+    "control": "combobox",
+    "options": [],
+    "intent": "disability",
+    "personaA": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "No",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "No",
+      "reachable": true
+    }
+  },
+  {
+    "id": 141,
+    "label": "Gender",
+    "control": "combobox",
+    "options": [],
+    "intent": "gender",
+    "personaA": {
+      "answer": "Female",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Male",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Female",
+      "reachable": true
+    }
+  },
+  {
+    "id": 142,
+    "label": "How would you describe your gender identity? (mark all that apply)",
+    "control": "combobox",
+    "options": [],
+    "intent": "gender",
+    "personaA": {
+      "answer": "Female",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Male",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Female",
+      "reachable": true
+    }
+  },
+  {
+    "id": 143,
+    "label": "Do you identify as transgender?",
+    "control": "combobox",
+    "options": [],
+    "intent": "transgender",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 144,
+    "label": "I identify my gender as:",
+    "control": "combobox",
+    "options": [],
+    "intent": "gender",
+    "personaA": {
+      "answer": "Female",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Male",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Female",
+      "reachable": true
+    }
+  },
+  {
+    "id": 145,
+    "label": "I identify as transgender:",
+    "control": "combobox",
+    "options": [],
+    "intent": "transgender",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 146,
+    "label": "[Optional] Pronouns - how should we refer to you in the third person?",
+    "control": "combobox",
+    "options": [],
+    "intent": "pronouns",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 147,
+    "label": "[Optional, if \"other\" is selected above] My pronouns are",
+    "control": "text",
+    "options": [],
+    "intent": "pronouns",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 148,
+    "label": "How would you describe your gender identity?",
+    "control": "combobox",
+    "options": [],
+    "intent": "gender",
+    "personaA": {
+      "answer": "Female",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Male",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Female",
+      "reachable": true
+    }
+  },
+  {
+    "id": 149,
+    "label": "Pronouns",
+    "control": "combobox",
+    "options": [],
+    "intent": "pronouns",
+    "personaA": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaB": {
+      "answer": "ASK",
+      "reachable": false
+    },
+    "personaC": {
+      "answer": "ASK",
+      "reachable": false
+    }
+  },
+  {
+    "id": 150,
+    "label": "How do you identify? (gender identity)",
+    "control": "combobox",
+    "options": [],
+    "intent": "gender",
+    "personaA": {
+      "answer": "Female",
+      "reachable": true
+    },
+    "personaB": {
+      "answer": "Male",
+      "reachable": true
+    },
+    "personaC": {
+      "answer": "Female",
+      "reachable": true
+    }
+  }
+]

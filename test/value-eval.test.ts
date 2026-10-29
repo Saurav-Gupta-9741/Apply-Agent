@@ -1,38 +1,37 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { decide } from "../src/content/classify";
+import { decideWithMeaning } from "../src/content/meaning";
+import { normalize } from "../src/shared/text";
 import { PERSONA_A } from "./personas/A";
 import { PERSONA_B } from "./personas/B";
 import { PERSONA_C } from "./personas/C";
 import type { FieldDescriptor } from "../src/shared/types";
 
-interface GoldRecord {
-  id: string;
+interface GoldHumanRecord {
+  id: number;
   label: string;
   control: string;
   options: string[];
   intent: string;
-  gold: {
-    A: string;
-    B: string;
-    C: string;
-  };
-  reachable: boolean;
+  personaA: { answer: string; reachable: boolean };
+  personaB: { answer: string; reachable: boolean };
+  personaC: { answer: string; reachable: boolean };
 }
 
-describe("Value evaluation across Persona A, B, and C (P0)", () => {
-  const goldQuestions: GoldRecord[] = JSON.parse(
-    readFileSync("reports/gold-values.json", "utf8")
+describe("Value evaluation across Persona A, B, and C against human gold labels", () => {
+  const goldQuestions: GoldHumanRecord[] = JSON.parse(
+    readFileSync("reports/gold-human.json", "utf8")
   );
 
   const personas = [
-    { name: "Persona A (Fresher DA, Pune)", profile: PERSONA_A, key: "A" as const },
-    { name: "Persona B (Senior SWE, Bangalore)", profile: PERSONA_B, key: "B" as const },
-    { name: "Persona C (Marketing Mgr, Mumbai)", profile: PERSONA_C, key: "C" as const },
+    { name: "Persona A (Fresher DA, Pune)", profile: PERSONA_A, key: "personaA" as const },
+    { name: "Persona B (Senior SWE, Bangalore)", profile: PERSONA_B, key: "personaB" as const },
+    { name: "Persona C (Marketing Mgr, Mumbai)", profile: PERSONA_C, key: "personaC" as const },
   ];
 
   for (const { name, profile, key } of personas) {
-    it(`evaluates ${name} with strictly 0 value errors`, () => {
+    it(`evaluates ${name} with strictly 0 value errors (exact match, no substring match)`, () => {
       let valueWrong = 0;
       let autoFilled = 0;
       let reachableAutoFilled = 0;
@@ -40,7 +39,7 @@ describe("Value evaluation across Persona A, B, and C (P0)", () => {
 
       for (const q of goldQuestions) {
         const field: FieldDescriptor = {
-          key: q.id,
+          key: String(q.id),
           label: q.label,
           control: q.control as any,
           required: true,
@@ -55,28 +54,38 @@ describe("Value evaluation across Persona A, B, and C (P0)", () => {
           url: "https://boards.greenhouse.io/acme/jobs/12345",
         };
 
-        const d = decide(field, profile, [], page as any);
-        const expected = q.gold[key];
+        // Test with decide and decideWithMeaning
+        const dDecide = decide(field, profile, [], page as any);
+        const dMeaning = decideWithMeaning(field, profile, [], undefined, page as any);
 
-        const gotValue =
-          d.kind === "profile" || d.kind === "answer"
-            ? String(d.value).trim()
-            : "ASK";
+        // Both decide engines must be safe:
+        for (const [engineName, d] of [["decide", dDecide], ["decideWithMeaning", dMeaning]] as const) {
+          const expected = q[key].answer;
+          const isReachable = q[key].reachable;
 
-        if (gotValue !== "ASK") {
-          autoFilled++;
-          if (q.reachable) reachableAutoFilled++;
+          const gotValue =
+            d.kind === "profile" || d.kind === "answer"
+              ? String(d.value).trim()
+              : "ASK";
 
-          if (expected === "ASK") {
-            // Filled when gold says ASK
-            valueWrong++;
-            wrongList.push({ label: q.label, got: gotValue, want: expected });
-          } else if (gotValue.toLowerCase() !== expected.toLowerCase()) {
-            // Filled a different value
-            // Allow substring match or format differences if equivalent (e.g. "Yes" vs options)
-            if (!gotValue.toLowerCase().includes(expected.toLowerCase()) && !expected.toLowerCase().includes(gotValue.toLowerCase())) {
+          if (gotValue !== "ASK") {
+            if (engineName === "decide") {
+              autoFilled++;
+              if (isReachable) reachableAutoFilled++;
+            }
+
+            // Strictly exact comparison after normalization: NO substring matches!
+            const normGot = normalize(gotValue);
+            const normExpected = normalize(expected);
+
+            if (expected === "ASK") {
+              // Filled when ground truth says ASK
               valueWrong++;
-              wrongList.push({ label: q.label, got: gotValue, want: expected });
+              wrongList.push({ label: `${q.label} (${engineName})`, got: gotValue, want: expected });
+            } else if (normGot !== normExpected) {
+              // Exact normalized mismatch
+              valueWrong++;
+              wrongList.push({ label: `${q.label} (${engineName})`, got: gotValue, want: expected });
             }
           }
         }
@@ -91,7 +100,7 @@ describe("Value evaluation across Persona A, B, and C (P0)", () => {
         console.error(`Wrong fills for ${name}:`, wrongList.slice(0, 10));
       }
 
-      expect(valueWrong).toBe(0);
+      expect(valueWrong, `Expected 0 value errors for ${name}`).toBe(0);
       expect(autoFilled).toBeGreaterThan(0);
     });
   }

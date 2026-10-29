@@ -27,6 +27,7 @@ const FULL: Profile = {
   discipline: "Computer Science",
   graduationYear: "2026",
   experienceYears: "2",
+  workHistoryComplete: true,
   preferredLocations: "Bangalore, Remote, Pune",
   skills: "Python, SQL, Machine Learning, Power BI, Excel, Product Design, CRM, B2B SaaS",
   skillsInventory: [
