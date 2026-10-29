@@ -1,0 +1,3115 @@
+[
+  {
+    "i": 0,
+    "label": "Are you at least 18 years of age/?",
+    "control": "combobox",
+    "rule": "ask:age",
+    "intent": "age"
+  },
+  {
+    "i": 1,
+    "label": "Are you 18 years of age or older?",
+    "control": "combobox",
+    "rule": "ask:age",
+    "intent": "age"
+  },
+  {
+    "i": 2,
+    "label": "What is your current age?",
+    "control": "radio",
+    "rule": "ask:age",
+    "intent": "age"
+  },
+  {
+    "i": 3,
+    "label": "Are you at least 18 years of age?",
+    "control": "combobox",
+    "rule": "ask:age",
+    "intent": "age"
+  },
+  {
+    "i": 29,
+    "label": "I confirm that I am proficient in English, both written and spoken, at a C1+ level.",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "language_proficiency",
+    "source": "review"
+  },
+  {
+    "i": 30,
+    "label": "I confirm that I am proficient in German, both written and spoken, at a C1+ level.",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "language_proficiency",
+    "source": "review"
+  },
+  {
+    "i": 47,
+    "label": "Do you identify as transgender?",
+    "control": "combobox",
+    "rule": "ask:gender",
+    "intent": "transgender",
+    "source": "review"
+  },
+  {
+    "i": 49,
+    "label": "I identify as transgender:",
+    "control": "combobox",
+    "rule": "ask:gender",
+    "intent": "transgender",
+    "source": "review"
+  },
+  {
+    "i": 50,
+    "label": "[Optional] Pronouns - how should we refer to you in the third person?",
+    "control": "combobox",
+    "rule": "ask:gender",
+    "intent": "pronouns",
+    "source": "review"
+  },
+  {
+    "i": 51,
+    "label": "[Optional, if \"other\" is selected above] My pronouns are",
+    "control": "text",
+    "rule": "ask:gender",
+    "intent": "pronouns",
+    "source": "review"
+  },
+  {
+    "i": 53,
+    "label": "Pronouns",
+    "control": "combobox",
+    "rule": "ask:gender",
+    "intent": "pronouns",
+    "source": "review"
+  },
+  {
+    "i": 55,
+    "label": "pronouns",
+    "control": "checkbox_group",
+    "rule": "ask:gender",
+    "intent": "pronouns",
+    "source": "review"
+  },
+  {
+    "i": 60,
+    "label": "At Samsara, we encourage employees to bring their whole selves to work (this includes applicants too!) Feel free to share your preferred name and pronouns (she/her, they/them, he/him, ze/zir etc.).",
+    "control": "text",
+    "rule": "ask:gender",
+    "intent": "pronouns",
+    "source": "review"
+  },
+  {
+    "i": 64,
+    "label": "Gender Pronouns (She/Her/Hers, He/Him/His, They/Them/Theirs, etc.)",
+    "control": "text",
+    "rule": "ask:gender",
+    "intent": "pronouns",
+    "source": "review"
+  },
+  {
+    "i": 68,
+    "label": "What pronouns would you like our team to use when addressing you?",
+    "control": "radio",
+    "rule": "ask:gender",
+    "intent": "pronouns",
+    "source": "review"
+  },
+  {
+    "i": 109,
+    "label": "Are you able to work onsite in the Esri location of this job posting, or relocate to do so?",
+    "control": "combobox",
+    "rule": "ask:relocation",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 112,
+    "label": "What is the address from which you plan on working? If you would need to relocate, please type \"relocating\".",
+    "control": "text",
+    "rule": "ask:relocation",
+    "intent": "address",
+    "source": "review"
+  },
+  {
+    "i": 157,
+    "label": "How would you describe your sexual orientation? (mark all that apply)",
+    "control": "combobox",
+    "rule": "ask:sexual_orientation",
+    "intent": "sexual_orientation"
+  },
+  {
+    "i": 158,
+    "label": "How would you describe your sexual orientation?",
+    "control": "combobox",
+    "rule": "ask:sexual_orientation",
+    "intent": "sexual_orientation"
+  },
+  {
+    "i": 159,
+    "label": "What experience do you have partnering with Store Planning, Store Design, or Store Development on new stores, remodels, or changes to store layouts and fixtures?",
+    "control": "textarea",
+    "rule": "ask:signature",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 160,
+    "label": "What visual merchandising, space-planning, design, or planogram software are you proficient in? And what tools or software have you used to create planograms, floor plans, fixture layouts, visual directives, or in-store execution guides?",
+    "control": "textarea",
+    "rule": "ask:signature",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 161,
+    "label": "How many years of experience do you have in B2B SaaS Product Design?",
+    "control": "text",
+    "rule": "ask:signature",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 162,
+    "label": "Do you have experience designing content platforms or content management experiences?",
+    "control": "textarea",
+    "rule": "ask:signature",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 163,
+    "label": "Have you designed AI-powered content creation or generative AI experiences?",
+    "control": "text",
+    "rule": "ask:signature",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 164,
+    "label": "Have you designed complex workflows for enterprise users?",
+    "control": "text",
+    "rule": "ask:signature",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 209,
+    "label": "Have you worked for Speechmatics in the past?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 210,
+    "label": "Are you currently a Speechmatics employee?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 216,
+    "label": "Are you willing to work in a hybrid capacity from the office location(s) associated with this role?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 218,
+    "label": "We're committed to ensuring an inclusive and accessible recruitment process. Do you require any adjustments or accommodations to support you during the interview?",
+    "control": "textarea",
+    "rule": "ask:unknown",
+    "intent": "accommodation",
+    "source": "review"
+  },
+  {
+    "i": 219,
+    "label": "Collaboration within our tech hubs is important to us, can you work 4 days from the office and 1 day per week from home?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 224,
+    "label": "Você trabalha atualmente no Inter?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 228,
+    "label": "Qual seu nível de fluência na língua inglesa?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "language_proficiency",
+    "source": "review"
+  },
+  {
+    "i": 229,
+    "label": "Qual o seu nível de fluência na língua espanhola?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "language_proficiency",
+    "source": "review"
+  },
+  {
+    "i": 230,
+    "label": "Você possui curso superior completo?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "education_level",
+    "source": "review"
+  },
+  {
+    "i": 231,
+    "label": "Caso você tenha respondido SIM para a pergunta anterior, em qual curso você se formou? Caso você tenha respondido NÃO, preencha o campo abaixo com NA",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "discipline",
+    "source": "review"
+  },
+  {
+    "i": 233,
+    "label": "Você deseja informar alguma necessidade de acessibilidade para participar das etapas do processo seletivo?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "accommodation",
+    "source": "review"
+  },
+  {
+    "i": 234,
+    "label": "Quais recursos ou adaptações podem contribuir para sua participação no processo seletivo?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "accommodation",
+    "source": "review"
+  },
+  {
+    "i": 238,
+    "label": "Have you used developer tools related to AI, LLMs, or infrastructure (e.g. inference, orchestration, agentic workflows)?",
+    "control": "textarea",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 239,
+    "label": "Are you open to working in-person in one of our offices 25% of the time?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 245,
+    "label": "Have you been employed, or otherwise engaged, by an Asana entity in the past? (Previous independent contractors, select \"Yes.\")",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 250,
+    "label": "Are you able to work in our San Francisco office on Tuesdays and Thursdays?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 254,
+    "label": "HISTORY WITH ANDURIL",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 255,
+    "label": "Have you ever been employed by Anduril or any company that Anduril has acquired?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 258,
+    "label": "Are you willing to travel up to 25% of the time?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "travel",
+    "source": "review"
+  },
+  {
+    "i": 260,
+    "label": "Which U.S. State or Canadian Province do you reside in?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "state",
+    "source": "review"
+  },
+  {
+    "i": 262,
+    "label": "Have you previously been employed at Affirm for any length of time?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 264,
+    "label": "Have you previously worked for Veeam (including as a contractor or intern)? Current Veeam employees are required to apply through the Internal Job Board.",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 267,
+    "label": "Street Address",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "address",
+    "source": "review"
+  },
+  {
+    "i": 269,
+    "label": "Address Line 1",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "address",
+    "source": "review"
+  },
+  {
+    "i": 270,
+    "label": "Zip/Postal Code",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "postal_code",
+    "source": "review"
+  },
+  {
+    "i": 271,
+    "label": "State/Province",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "state",
+    "source": "review"
+  },
+  {
+    "i": 272,
+    "label": "What is the highest level of education you’ve completed?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "education_level",
+    "source": "review"
+  },
+  {
+    "i": 276,
+    "label": "Have you previously been employed by Magnet Forensics (or acquired/merged company) in any capacity? (i.e. employee, contractor, co-op, vendor)?",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 278,
+    "label": "Do you have at least 6 years of experience in Customer Success, Strategic Account Management, Technical Account Management, or a related customer-facing role?",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 279,
+    "label": "Do you have at least 2 years of experience leading technical, customer-facing teams?",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 280,
+    "label": "Which of the following experience do you have? Select all that apply.",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 282,
+    "label": "Which of the following qualifications do you have? Select all that apply.",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 283,
+    "label": "Address",
+    "control": "textarea",
+    "rule": "ask:unknown",
+    "intent": "address",
+    "source": "review"
+  },
+  {
+    "i": 286,
+    "label": "Are you currently located within commuting distance to the assigned office location for this role?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 287,
+    "label": "Great Gray's Hybrid Work Policy, which currently requires in-office attendance four (4) days per week, applies to this position. Please indicate your understanding of and ability to comply with this requirement below.",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 289,
+    "label": "Are you bilingual (French and English)?",
+    "control": "select",
+    "rule": "ask:unknown",
+    "intent": "language_proficiency",
+    "source": "review"
+  },
+  {
+    "i": 290,
+    "label": "Do you have experience managing Service Desk operations using an ITSM/ticketing platform such as Jira Service Management, ServiceNow, or a similar platform, including ticket queues, SLAs, and escalations?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 291,
+    "label": "Do you have experience overseeing employee technology lifecycle processes, including new hire equipment provisioning, asset inventory/CMDB management, and equipment recovery for separated employees?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 292,
+    "label": "Are you willing and able to work on-site in Davie, Florida five days per week and travel periodically to other company locations, including Syracuse, New York?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 304,
+    "label": "Have you previously configured, integrated, or troubleshooting CRM systems (e.g., ActiveCampaign, HubSpot, Salesforce, or custom CRMs) with field tracking, tags, and automated triggers? If yes, share an example (briefly).",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 305,
+    "label": "Which AI tools do you actively use in your daily workflow to assist with code drafting, debugging, or task automation?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 306,
+    "label": "Have you built or configured AI agents, custom connectors, or automated workflows (e.g., using Claude, OpenAI APIs, or custom harnesses) to deliver automated reports or assets to other departments?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 309,
+    "label": "What state or province do you live in?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "state",
+    "source": "review"
+  },
+  {
+    "i": 321,
+    "label": "Have you ever worked for Figma before, as an employee or a contractor/consultant?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 323,
+    "label": "Have you been rejected for this role at Samsara within the past 6 months?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 324,
+    "label": "How many years of experience do you have in a closing sales role?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 325,
+    "label": "Do you have experience independently closing new deals larger than $10,000?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 326,
+    "label": "What is the zip code of your primary residence?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "postal_code",
+    "source": "review"
+  },
+  {
+    "i": 330,
+    "label": "Have you previously worked at Samsara?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 331,
+    "label": "Have you ever been employed by Stripe or a Stripe affiliate?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 335,
+    "label": "What time zone are you located in?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "timezone",
+    "source": "review"
+  },
+  {
+    "i": 337,
+    "label": "Have you ever worked at MongoDB before?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 338,
+    "label": "Are you able to communicate fluently in English?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "language_proficiency",
+    "source": "review"
+  },
+  {
+    "i": 339,
+    "label": "Are you able to communicate fluently in Spanish?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "language_proficiency",
+    "source": "review"
+  },
+  {
+    "i": 340,
+    "label": "What's your postal code?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "postal_code",
+    "source": "review"
+  },
+  {
+    "i": 343,
+    "label": "Are you currently or have you ever worked for Airbnb in any capacity? This could include, but is not limited to, a full-time employee, intern, apprentice, or contingent worker.",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 344,
+    "label": "This role requires working on-site at the Airbnb office five days a week. Please confirm you are able to meet this requirement.",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 347,
+    "label": "Have you been the maintainer or contributor for an open-source project? (Maintaining includes tasks such as triaging issues, reviewing pull requests, managing releases, or overseeing community contributions.)",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 348,
+    "label": "Are you currently based in EST / MST?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "timezone",
+    "source": "review"
+  },
+  {
+    "i": 354,
+    "label": "Do you speak fluent German?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "language_proficiency",
+    "source": "review"
+  },
+  {
+    "i": 355,
+    "label": "Have you actively used Salesforce as your primary CRM in a professional role?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 356,
+    "label": "Which of the following best describes your experience in a sales development, business development, or outbound sales role within the technology industry?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 357,
+    "label": "Have you previously worked at or consulted for GitLab?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 360,
+    "label": "Are you willing to work for 5 days a week, from our Bangalore office?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 363,
+    "label": "Have you previously been employed by Coinbase in any capacity?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "previous_employee",
+    "source": "review"
+  },
+  {
+    "i": 364,
+    "label": "Which of the following best describes how you use AI tools today?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 369,
+    "label": "Do you have professional-level proficiency in English, including reading, writing, and speaking?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "language_proficiency",
+    "source": "review"
+  },
+  {
+    "i": 370,
+    "label": "Do you have professional-level proficiency in French, including reading, writing, and speaking?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "language_proficiency",
+    "source": "review"
+  },
+  {
+    "i": 371,
+    "label": "Do you have at least 3 years of experience in financial services, crypto, investigations, legal or tech industry?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 376,
+    "label": "How many years of experience do you have in Infrastructure Security?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 377,
+    "label": "How many years of relevant work experience do you have in Banking Operations, Financial Operations, or Transaction Reconciliation?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 378,
+    "label": "Which of the following industries have you worked in?",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 379,
+    "label": "Which type of transactions have you worked with?",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 380,
+    "label": "What is your experience with transaction reconciliation and debit/credit posting?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 381,
+    "label": "What is your experience with banking/payment disputes, chargebacks, and regulatory reporting (including RBI submissions)?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 382,
+    "label": "How would you rate your proficiency in Excel?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 383,
+    "label": "How would you rate your proficiency in Power BI?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 384,
+    "label": "Are you comfortable working onsite five days a week at either our Mumbai or Bangalore office?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 385,
+    "label": "Relevant Experience in Product",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 387,
+    "label": "Do you have experience Managing Team?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 389,
+    "label": "Are you comfortable working from our Pune or Bengaluru office at least 3 days a week?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 442,
+    "label": "Degree",
+    "control": "combobox",
+    "rule": "profile:degree",
+    "intent": "degree"
+  },
+  {
+    "i": 444,
+    "label": "Discipline",
+    "control": "combobox",
+    "rule": "profile:discipline",
+    "intent": "discipline"
+  },
+  {
+    "i": 448,
+    "label": "Have you independently managed full outbound prospecting sequences (calls, email, and social) in a tech sales role?",
+    "control": "combobox",
+    "rule": "profile:email",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 490,
+    "label": "This role requires at least 3 days a week in the office, are you able to easily commute to the location the role is based in?",
+    "control": "select",
+    "rule": "profile:location",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 497,
+    "label": "Are you comfortable commuting to and working onsite at our New York City office location?",
+    "control": "combobox",
+    "rule": "profile:location",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 503,
+    "label": "School",
+    "control": "combobox",
+    "rule": "profile:school",
+    "intent": "school"
+  },
+  {
+    "i": 504,
+    "label": "Which institution do you attend?",
+    "control": "textarea",
+    "rule": "profile:school",
+    "intent": "school"
+  },
+  {
+    "i": 570,
+    "label": "What is your level of English proficiency?",
+    "control": "radio",
+    "rule": "skip:optional choice",
+    "intent": "language_proficiency",
+    "source": "review"
+  },
+  {
+    "i": 600,
+    "label": "Would you like to make us aware of any adjustments needed for your interview process?",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "intent": "accommodation",
+    "source": "review"
+  },
+  {
+    "i": 620,
+    "label": "Postal Code",
+    "control": "text",
+    "rule": "skip:optional, not in profile",
+    "intent": "postal_code",
+    "source": "review"
+  },
+  {
+    "i": 622,
+    "label": "Address Line 2",
+    "control": "text",
+    "rule": "skip:optional, not in profile",
+    "intent": "address",
+    "source": "review"
+  },
+  {
+    "i": 634,
+    "label": "Are you able to work from our Manchester office 3 days a week?",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "intent": "onsite",
+    "source": "review"
+  },
+  {
+    "i": 642,
+    "label": "Have you worked on Web applications previously? If so, what technologies did you use?",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 664,
+    "label": "It is important to us to create an accessible and inclusive interview experience. Please let us know if there are any adjustments we can make to assist you during the hiring and interview process.",
+    "control": "text",
+    "rule": "skip:optional, not in profile",
+    "intent": "accommodation",
+    "source": "review"
+  },
+  {
+    "i": 665,
+    "label": "How many years of experience do you have in technical customer-facing roles?",
+    "control": "text",
+    "rule": "skip:optional, not in profile",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 667,
+    "label": "How many years of experience do you have in a consulting or professional services role?",
+    "control": "text",
+    "rule": "skip:optional, not in profile",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 668,
+    "label": "Do you have hands-on experience implementing, configuring, or troubleshooting enterprise backup and recovery solutions?",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 669,
+    "label": "Have you worked on backup and restore across enterprise workloads such as VMware, NAS, SQL databases, AWS/Azure VMs, Microsoft 365, or Google Workspace?",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 674,
+    "label": "Have you led or supported end-to-end customer implementations, including requirement discovery, solution design, deployment, and post-deployment optimization?",
+    "control": "textarea",
+    "rule": "skip:signature: entered by you only",
+    "intent": "skills_experience",
+    "source": "review"
+  },
+  {
+    "i": 8,
+    "label": "This job will be physically based in the office location indicated on this job description. Which of the following describes your current or future situation?",
+    "control": "radio",
+    "rule": "skip:optional choice",
+    "platform": "ashby",
+    "intent": "onsite"
+  },
+  {
+    "i": 26,
+    "label": "Most positions require the intern to be onsite at one of our locations. Will you be available to work onsite for the duration of the internship?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "lever",
+    "intent": "onsite"
+  },
+  {
+    "i": 27,
+    "label": "Please list the school or university you will be enrolled in during the internship or co-op?",
+    "control": "textarea",
+    "rule": "ask:unknown",
+    "platform": "lever",
+    "intent": "school"
+  },
+  {
+    "i": 30,
+    "label": "What is the name of the school you are currently attending?",
+    "control": "textarea",
+    "rule": "profile:school",
+    "platform": "lever",
+    "intent": "school"
+  },
+  {
+    "i": 39,
+    "label": "What is the highest level of education completed? Do not include degrees that are in progress or with a future graduation date.",
+    "control": "select",
+    "rule": "ask:unknown",
+    "platform": "lever",
+    "intent": "education_level"
+  },
+  {
+    "i": 45,
+    "label": "Have you ever been employed by an Allegiant company, Sun Country, or through a Third Party Contractor Agency onsite?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "lever",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 53,
+    "label": "This position requires working at our Las Vegas, NV headquarters. Please select the option that best describes your current situation:",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "lever",
+    "intent": "onsite"
+  },
+  {
+    "i": 58,
+    "label": "Which AI tools do you use in your daily work and what do you use them for? (Please list the tool and describe its specific use case.)",
+    "control": "textarea",
+    "rule": "ask:unknown",
+    "platform": "workable",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 77,
+    "label": "Are you able to travel as necessary for work?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "travel"
+  },
+  {
+    "i": 81,
+    "label": "Are you at least 18 years old?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "age"
+  },
+  {
+    "i": 84,
+    "label": "Have you ever worked for LogicSource Inc. or one of its clients?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 85,
+    "label": "If you have ever worked for LogicSource or one of its clients, which one and when?",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 86,
+    "label": "What is your preferred work arrangement?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "onsite"
+  },
+  {
+    "i": 87,
+    "label": "How often are you willing to travel?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "travel"
+  },
+  {
+    "i": 93,
+    "label": "Are you comfortable with traveling to client site/local office?",
+    "control": "combobox",
+    "rule": "skip:optional, not in profile",
+    "platform": "greenhouse",
+    "intent": "travel"
+  },
+  {
+    "i": 94,
+    "label": "Have you ever been employed at Baringa before?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 95,
+    "label": "Do you require any reasonable adjustments during your recruitment process?",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "platform": "greenhouse",
+    "intent": "accommodation"
+  },
+  {
+    "i": 99,
+    "label": "Have you worked on the following aspect of Payroll?",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 100,
+    "label": "Street Address 1",
+    "control": "text",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "address"
+  },
+  {
+    "i": 101,
+    "label": "Street Address 2",
+    "control": "text",
+    "rule": "skip:optional, not in profile",
+    "platform": "greenhouse",
+    "intent": "address"
+  },
+  {
+    "i": 102,
+    "label": "State",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "state"
+  },
+  {
+    "i": 103,
+    "label": "Zip Code",
+    "control": "text",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "postal_code"
+  },
+  {
+    "i": 104,
+    "label": "If you selected \"Other\" as your school, please list the name here.",
+    "control": "text",
+    "rule": "profile:school",
+    "platform": "greenhouse",
+    "intent": "school"
+  },
+  {
+    "i": 111,
+    "label": "Have you previously worked for Success Academy Charter Schools?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 112,
+    "label": "If you have previously worked at Success Academy, please list your work email address.",
+    "control": "text",
+    "rule": "profile:email",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 121,
+    "label": "Are you able and willing to work a hybrid schedule that requires in-office attendance on Tuesday, Wednesday, and Thursday?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "onsite"
+  },
+  {
+    "i": 127,
+    "label": "Have you been previously employed at Sony Music Entertainment?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 129,
+    "label": "Do you have experience in Live Chat with Customers?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 132,
+    "label": "Do you have experience in coding on one of the systems programming language and scripting?",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 134,
+    "label": "Experience with Low-level Monitoring & Profiling",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 135,
+    "label": "Do you have experience with Distributed SQL Databases",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 137,
+    "label": "How many years of experience do you have debugging, optimizing, and maintaining complex software systems in a professional environment?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 138,
+    "label": "What is the highest level of education you have completed?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "education_level"
+  },
+  {
+    "i": 139,
+    "label": "Which programming languages have you used professionally?",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 144,
+    "label": "What is your experience with AI Tools like Claude?",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "platform": "lever",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 145,
+    "label": "Do you have minimum 3+ years of full time experience with .NET & C#? (excluding internships)",
+    "control": "textarea",
+    "rule": "ask:unknown",
+    "platform": "lever",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 147,
+    "label": "What is your experience with AI-assisted development tools (e.g., GitHub Copilot, Cursor, Claude Code)?",
+    "control": "textarea",
+    "rule": "ask:missing_profile_value",
+    "platform": "lever",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 150,
+    "label": "This role is based in Alameda, CA, and requires on-site work five days per week. Are you able to reliably commute to Alameda for this schedule?",
+    "control": "select",
+    "rule": "ask:unknown",
+    "platform": "lever",
+    "intent": "onsite"
+  },
+  {
+    "i": 170,
+    "label": "Province",
+    "control": "text",
+    "rule": "skip:optional, not in profile",
+    "platform": "bamboohr",
+    "intent": "state"
+  },
+  {
+    "i": 174,
+    "label": "Tiene experiencia previa en el cargo a postular? Coméntanos",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "platform": "bamboohr",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 177,
+    "label": "Parles-tu couramment le français ?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "bamboohr",
+    "intent": "language_proficiency"
+  },
+  {
+    "i": 178,
+    "label": "Ton niveau d'anglais te permet-il de travailler avec de la documentation et des interlocuteurs anglophones ?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "bamboohr",
+    "intent": "language_proficiency"
+  },
+  {
+    "i": 180,
+    "label": "Le mandat est hybride, avec 2 jours par semaine obligatoires sur place à Montréal. Est-ce que cela te convient ?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "bamboohr",
+    "intent": "onsite"
+  },
+  {
+    "i": 181,
+    "label": "Décris un traitement AS/400 (IBM i) ou Mainframe que tu as développé ou supporté en production : quelles technologies (COBOL, CL, SQL/400, DB2, Control-M…), quel était ton rôle exact, et quelle criticité ou volumétrie ?",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "platform": "bamboohr",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 182,
+    "label": "Combien d'années d'expérience professionnelle as-tu sur AS/400 (IBM i) ou Mainframe ?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "bamboohr",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 183,
+    "label": "As-tu au moins 5 ans d'expérience professionnelle sur AS/400 (IBM i) ou Mainframe ?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "bamboohr",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 194,
+    "label": "Do you have at least ten (10+) years of experience in construction, architecture, engineering, or a related field, with a focus on leadership and project delivery?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "bamboohr",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 202,
+    "label": "ZIP",
+    "control": "text",
+    "rule": "skip:optional, not in profile",
+    "platform": "bamboohr",
+    "intent": "postal_code"
+  },
+  {
+    "i": 204,
+    "label": "How many years of experience do you have in engineering leadership or management roles?",
+    "control": "text",
+    "rule": "skip:optional, not in profile",
+    "platform": "bamboohr",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 205,
+    "label": "Have you used AI-powered coding tools (such as GitHub Copilot, Cursor, or similar) in your development work?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "bamboohr",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 231,
+    "label": "Mailing address",
+    "control": "text",
+    "rule": "skip:optional, not in profile",
+    "platform": "greenhouse",
+    "intent": "address"
+  },
+  {
+    "i": 245,
+    "label": "Pour des raisons de conformité en matière de droit du travail et de paie, indique la province canadienne dans laquelle tu es domicilié(e) :",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "state"
+  },
+  {
+    "i": 246,
+    "label": "Laquelle des affirmations suivantes décrit le mieux ta façon de travailler avec les outils d'IA aujourd'hui ?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 6,
+    "label": "How many years of experience do you have as a Product Manager?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 8,
+    "label": "Proficiency in German",
+    "control": "radio",
+    "rule": "skip:optional choice",
+    "platform": "ashby",
+    "intent": "language_proficiency"
+  },
+  {
+    "i": 17,
+    "label": "Do you have experience defining and delivering technical features specifically for developers (such as APIs, CI/CD pipelines, containerization, or cloud platform infrastructure)?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 21,
+    "label": "Have you ever worked for a Sony company previously?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 23,
+    "label": "This position will be on-site. Are you currently able to commute regularly to the Waterloo Office?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "onsite"
+  },
+  {
+    "i": 30,
+    "label": "What are your personal pronouns?",
+    "control": "combobox",
+    "rule": "ask:gender",
+    "platform": "greenhouse",
+    "intent": "pronouns"
+  },
+  {
+    "i": 31,
+    "label": "Sexual Orientation",
+    "control": "combobox",
+    "rule": "ask:sexual_orientation",
+    "platform": "greenhouse",
+    "intent": "sexual_orientation"
+  },
+  {
+    "i": 38,
+    "label": "Do you require any reasonable adjustments?",
+    "control": "combobox",
+    "rule": "skip:optional, not in profile",
+    "platform": "greenhouse",
+    "intent": "accommodation"
+  },
+  {
+    "i": 40,
+    "label": "What pronouns would you like us to use for you?",
+    "control": "text",
+    "rule": "ask:gender",
+    "platform": "greenhouse",
+    "intent": "pronouns"
+  },
+  {
+    "i": 41,
+    "label": "Have you ever been employed at Virgin Active before?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 44,
+    "label": "Given that this role requires you to be present at our Buffalo Grove, IL location 2 days each week, do you have reliable means of transportation, and are you willing to commit to this onsite schedule?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "onsite"
+  },
+  {
+    "i": 50,
+    "label": "Hybrid work policy",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "onsite"
+  },
+  {
+    "i": 51,
+    "label": "Will you be able to come to office 5 times a month?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "onsite"
+  },
+  {
+    "i": 53,
+    "label": "Is your gender identity the same as the sex you were assigned at birth?",
+    "control": "combobox",
+    "rule": "ask:gender",
+    "platform": "greenhouse",
+    "intent": "transgender"
+  },
+  {
+    "i": 55,
+    "label": "Which of the following best describes your sexual orientation?",
+    "control": "combobox",
+    "rule": "ask:sexual_orientation",
+    "platform": "greenhouse",
+    "intent": "sexual_orientation"
+  },
+  {
+    "i": 56,
+    "label": "How old are you?",
+    "control": "combobox",
+    "rule": "skip:optional, not in profile",
+    "platform": "greenhouse",
+    "intent": "age"
+  },
+  {
+    "i": 57,
+    "label": "What is your highest level of education?",
+    "control": "combobox",
+    "rule": "skip:optional, not in profile",
+    "platform": "greenhouse",
+    "intent": "education_level"
+  },
+  {
+    "i": 77,
+    "label": "Have you ever been employed by Vonage or any other company within the Ericsson Group, including Ericsson, RedBee Media, FYI Television (US), Cradlepoint, Iconectiv (Telcordia), or Emodo?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 82,
+    "label": "Do you now or have you in the past worked for Bottomline Technologies?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 93,
+    "label": "Are you at least 18 years of age (or will be within the next 2 weeks)?",
+    "control": "combobox",
+    "rule": "ask:age",
+    "platform": "greenhouse",
+    "intent": "age"
+  },
+  {
+    "i": 94,
+    "label": "Have you previously worked at Scion?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 99,
+    "label": "What is your age?",
+    "control": "combobox",
+    "rule": "ask:age",
+    "platform": "greenhouse",
+    "intent": "age"
+  },
+  {
+    "i": 100,
+    "label": "Which option(s) best describes your sexual orientation (check all that apply)?",
+    "control": "combobox",
+    "rule": "ask:sexual_orientation",
+    "platform": "greenhouse",
+    "intent": "sexual_orientation"
+  },
+  {
+    "i": 102,
+    "label": "Which option best describes your highest degree or level of education you have completed?",
+    "control": "combobox",
+    "rule": "profile:degree",
+    "platform": "greenhouse",
+    "intent": "degree"
+  },
+  {
+    "i": 109,
+    "label": "We are a hybrid team, where in office attendance is required. Are you comfortable commuting to our designated offer 3 times a week?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "onsite"
+  },
+  {
+    "i": 116,
+    "label": "Do you identify as transgender? (select one)",
+    "control": "combobox",
+    "rule": "ask:gender",
+    "platform": "greenhouse",
+    "intent": "transgender"
+  },
+  {
+    "i": 150,
+    "label": "Do you have experience in Capital or Investment Banking?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 153,
+    "label": "Have you worked with OTC derivatives, including Fixed Income or Equity underlyings?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 154,
+    "label": "Are you experienced in writing BRDs (Business Requirement Documents) and FSDs (Functional Specification Documents)?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 155,
+    "label": "Do you have practical knowledge of Front-to-Back trade lifecycle, clearing, and settlement processes?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 175,
+    "label": "Birthday",
+    "control": "date",
+    "rule": "skip:optional, not in profile",
+    "platform": "personio",
+    "intent": "age"
+  },
+  {
+    "i": 176,
+    "label": "Office based role - are you willing to be office based 5 days per week (WFH available up to 30 days per year)",
+    "control": "select",
+    "rule": "ask:unknown",
+    "platform": "personio",
+    "intent": "onsite"
+  },
+  {
+    "i": 184,
+    "label": "College/University",
+    "control": "text",
+    "rule": "profile:school",
+    "platform": "bamboohr",
+    "intent": "school"
+  },
+  {
+    "i": 187,
+    "label": "Do you have experience working with individuals with disabilities? If so, please describe.",
+    "control": "textarea",
+    "rule": "ask:disability",
+    "platform": "bamboohr",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 189,
+    "label": "Do you have experience working in Medicaid-funded and/or human services organizations? If so, please describe.",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "platform": "bamboohr",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 190,
+    "label": "What accounting software systems have you used professionally?",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "platform": "bamboohr",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 191,
+    "label": "What is your level of proficiency in Microsoft Excel?",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "platform": "bamboohr",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 192,
+    "label": "Do you have 2+ years of full-cycle, accrual-based accounting experience managing multiple clients or entities?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "breezy",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 193,
+    "label": "Have you used QuickBooks Online regularly in a prior role?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "breezy",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 194,
+    "label": "Have you processed AP with Bill.com in a prior role?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "breezy",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 201,
+    "label": "Do you have at least 1 year of recruiting experience?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "breezy",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 202,
+    "label": "What type of ATS and sourcing platforms have you used?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "platform": "breezy",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 204,
+    "label": "Are you willing to work in-office 5 days a week?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "breezy",
+    "intent": "onsite"
+  },
+  {
+    "i": 205,
+    "label": "How proficient are you with Microsoft excel?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "breezy",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 206,
+    "label": "Do you have any certifications? If none type N/A",
+    "control": "text",
+    "rule": "ask:unknown",
+    "platform": "breezy",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 213,
+    "label": "This is an office based position. Are you able to commute daily to PO15 5TT?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "breezy",
+    "intent": "onsite"
+  },
+  {
+    "i": 214,
+    "label": "What applicable qualifications do you hold?",
+    "control": "textarea",
+    "rule": "profile:degree",
+    "platform": "breezy",
+    "intent": "degree"
+  },
+  {
+    "i": 217,
+    "label": "This role requires working on‑site at least three days a week in Wayzata, Minnesota. Are you able to meet this requirement?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "bamboohr",
+    "intent": "onsite"
+  },
+  {
+    "i": 223,
+    "label": "What industries have you done recruiting in?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "platform": "breezy",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 224,
+    "label": "What ATS(s) do you have experience working in?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "platform": "breezy",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 234,
+    "label": "What is your full street address? (Street, City, State, Zip)",
+    "control": "text",
+    "rule": "profile:location",
+    "platform": "lever",
+    "intent": "address"
+  },
+  {
+    "i": 237,
+    "label": "Have you ever been employed by Agile Defense or any of its subsidiaries, affiliates, or acquired companies?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "lever",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 241,
+    "label": "What active industry related certifications do you have?",
+    "control": "textarea",
+    "rule": "ask:unknown",
+    "platform": "lever",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 2,
+    "label": "What is your current address?",
+    "control": "text",
+    "rule": "profile:location",
+    "platform": "greenhouse",
+    "intent": "address"
+  },
+  {
+    "i": 9,
+    "label": "Do you have at least 3+ years of experience managing major retail accounts in CPG, FMCG or supplements in the UK, Ireland or Europe?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 10,
+    "label": "Have you personally managed a retailer’s supplier or vendor portal (item setup, content updates and performance data) and run promotional planning for that account?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 11,
+    "label": "We operate under a hybrid work schedule, which incudes three days in-person at our office located in the Merchandise Mart, downtown Chicago. Are you able to commit to the commute and be in the office with our team three days a week?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "onsite"
+  },
+  {
+    "i": 12,
+    "label": "Are you a current or former employee of Berlin Packaging?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 15,
+    "label": "Do you require an accommodation for the interview process? If yes, please explain.",
+    "control": "textarea",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "accommodation"
+  },
+  {
+    "i": 17,
+    "label": "Are you over the age of 18 ?",
+    "control": "combobox",
+    "rule": "ask:age",
+    "platform": "greenhouse",
+    "intent": "age"
+  },
+  {
+    "i": 22,
+    "label": "Are you now, or have you ever been employed by Fanatics, Inc. or any of its affiliates or subsidiaries?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 25,
+    "label": "Have you worked for Loenbro or any of its affiliates in the past?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 27,
+    "label": "Are you local and within commuting distance to this job?",
+    "control": "combobox",
+    "rule": "skip:optional, not in profile",
+    "platform": "greenhouse",
+    "intent": "onsite"
+  },
+  {
+    "i": 29,
+    "label": "Please list any additional education, training or certifications relevant to the job (ie. OSHA, TWIC, etc.).",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 37,
+    "label": "Will you be able to regularly commute and work in an office in job posting location?",
+    "control": "combobox",
+    "rule": "skip:optional, not in profile",
+    "platform": "greenhouse",
+    "intent": "onsite"
+  },
+  {
+    "i": 43,
+    "label": "Do you hold a completed bachelor’s degree?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "education_level"
+  },
+  {
+    "i": 44,
+    "label": "In which environments have you professionally worked on marketing analytics or advertising campaign measurement? Select all that apply. Select “None of the above” only if no other option applies.",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 45,
+    "label": "Which advertising platforms have you personally used to execute campaigns or extract and analyze campaign performance data? Select all that apply. Select “None of the above” only if no other option applies.",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 46,
+    "label": "Which types of campaigns have you professionally analyzed or supported with performance measurement?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 47,
+    "label": "Which activities have you personally performed in a professional marketing analytics role? Select all that apply. Select “None of the above” only if no other option applies.",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 48,
+    "label": "How many years of professional experience do you have analyzing marketing or advertising campaign performance? Exclude academic projects.",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 49,
+    "label": "Which option best describes your experience communicating analytical findings and managing requests from clients or vendors? Select the highest level you have performed.",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 50,
+    "label": "Which option best describes your professional use of Excel and PowerPoint?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 51,
+    "label": "What is your current English proficiency level?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "language_proficiency"
+  },
+  {
+    "i": 61,
+    "label": "Are you a former LINQ Employee, intern, or contractor?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 75,
+    "label": "How many years of professional experience do you have designing for life sciences, healthcare or hard science companies? Please list 2-3 relevant companies/clients and describe what drew you to work in these sectors.",
+    "control": "text",
+    "rule": "ask:unknown",
+    "platform": "ashby",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 80,
+    "label": "Highest level of education",
+    "control": "radio",
+    "rule": "skip:optional choice",
+    "platform": "ashby",
+    "intent": "education_level"
+  },
+  {
+    "i": 81,
+    "label": "How would you best describe your experience owning a product or major product area?",
+    "control": "radio",
+    "rule": "skip:optional choice",
+    "platform": "ashby",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 85,
+    "label": "Full Permanent Address",
+    "control": "textarea",
+    "rule": "ask:unknown",
+    "platform": "ashby",
+    "intent": "address"
+  },
+  {
+    "i": 90,
+    "label": "Current address",
+    "control": "text",
+    "rule": "profile:location",
+    "platform": "ashby",
+    "intent": "address"
+  },
+  {
+    "i": 94,
+    "label": "Are you willing to work onsite?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "platform": "ashby",
+    "intent": "onsite"
+  },
+  {
+    "i": 97,
+    "label": "Do you require any adjustments to be made to the recruitment process?",
+    "control": "textarea",
+    "rule": "skip:optional, not in profile",
+    "platform": "ashby",
+    "intent": "accommodation"
+  },
+  {
+    "i": 109,
+    "label": "Are you able to work on-site at least 3 days per week in either Thousand Oaks or San Francisco?",
+    "control": "radio",
+    "rule": "ask:unknown",
+    "platform": "bamboohr",
+    "intent": "onsite"
+  },
+  {
+    "i": 141,
+    "label": "Do you have any technical certifications? Please detail",
+    "control": "textarea",
+    "rule": "ask:unknown",
+    "platform": "workable",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 1,
+    "label": "How many years have you been active on the platform?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 2,
+    "label": "Do you have experience in the Creator Economy beyond Twitch?",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 3,
+    "label": "Are you currently a Twitch employee?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 4,
+    "label": "Are you a current employee with Amazon or any Amazon subsidiary (outside of Twitch)?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 6,
+    "label": "Have you previously been employed by Amazon or any Amazon subsidiary?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 16,
+    "label": "Zip Code / Postal Code (Non-U.S. based candidates, please enter \"00000\")",
+    "control": "text",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "postal_code"
+  },
+  {
+    "i": 20,
+    "label": "Do you have experience building with AI tools? For example: designing and deploying AI agents, automations, or workflows that execute multi-step work.",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 21,
+    "label": "What AI tools have you used to build?",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 22,
+    "label": "Do you have direct experience in program management?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 24,
+    "label": "Have you ever, or are you currently working at Gusto or Symmetry in any capacity (ie: employee or contingent worker)?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 26,
+    "label": "I identify as transgender (please select one):",
+    "control": "combobox",
+    "rule": "ask:gender",
+    "platform": "greenhouse",
+    "intent": "transgender"
+  },
+  {
+    "i": 27,
+    "label": "I identify my sexual orientation as (please select one):",
+    "control": "combobox",
+    "rule": "ask:sexual_orientation",
+    "platform": "greenhouse",
+    "intent": "sexual_orientation"
+  },
+  {
+    "i": 33,
+    "label": "The person in this role is required to live within 50 miles (80 km) commuting distance of the office where the role is listed. Are you currently based within 50 miles of the job location, or able to relocate there before your start date?",
+    "control": "combobox",
+    "rule": "ask:notice_period",
+    "platform": "greenhouse",
+    "intent": "onsite"
+  },
+  {
+    "i": 40,
+    "label": "Do you acknowledge that this is a hybrid role based in San Francisco, New York and/or Chicago and you will be required to come into the office four days a week?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "onsite"
+  },
+  {
+    "i": 43,
+    "label": "I identify my sexual orientation as:",
+    "control": "combobox",
+    "rule": "ask:sexual_orientation",
+    "platform": "greenhouse",
+    "intent": "sexual_orientation"
+  },
+  {
+    "i": 53,
+    "label": "I consider myself a member of the LGBTQ+ community.",
+    "control": "combobox",
+    "rule": "ask:sexual_orientation",
+    "platform": "greenhouse",
+    "intent": "sexual_orientation"
+  },
+  {
+    "i": 54,
+    "label": "Do you have experience in B2B sales, business development, or sales development, including at least 1 year of hands-on outbound prospecting?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 56,
+    "label": "This role is based in Singapore and focuses primarily on Australia and New Zealand. Have you sold or prospected into these markets before",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 61,
+    "label": "Pronouns (the pronouns you use)",
+    "control": "text",
+    "rule": "ask:gender",
+    "platform": "greenhouse",
+    "intent": "pronouns"
+  },
+  {
+    "i": 63,
+    "label": "Do you consider yourself a member of the Lesbian, Gay, Bisexual, Transgender, Queer/Questioning Community?",
+    "control": "combobox",
+    "rule": "ask:gender",
+    "platform": "greenhouse",
+    "intent": "sexual_orientation"
+  },
+  {
+    "i": 66,
+    "label": "Do you have a minimum of one to three years of experience closing sales in a SaaS (Software as a Service) environment?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 69,
+    "label": "Are you able and willing to join us in the office 3 days/week?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "onsite"
+  },
+  {
+    "i": 73,
+    "label": "What are your pronouns?",
+    "control": "text",
+    "rule": "ask:gender",
+    "platform": "greenhouse",
+    "intent": "pronouns"
+  },
+  {
+    "i": 74,
+    "label": "What college/university do you attend?",
+    "control": "text",
+    "rule": "profile:school",
+    "platform": "greenhouse",
+    "intent": "school"
+  },
+  {
+    "i": 81,
+    "label": "Please describe any need for a reasonable accommodation for this hiring process (no documentation required).",
+    "control": "text",
+    "rule": "skip:optional, not in profile",
+    "platform": "greenhouse",
+    "intent": "accommodation"
+  },
+  {
+    "i": 83,
+    "label": "Please share your gender pronouns.",
+    "control": "combobox",
+    "rule": "ask:gender",
+    "platform": "greenhouse",
+    "intent": "pronouns"
+  },
+  {
+    "i": 84,
+    "label": "Do you have an advanced english level (writing, listening, speaking)?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "language_proficiency"
+  },
+  {
+    "i": 85,
+    "label": "Have you been employed by Lyft, or any subsidiary, affiliate, or business unit of Lyft, in the past (whether on a full-time or part-time basis)?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 86,
+    "label": "Zip / postal code",
+    "control": "text",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "postal_code"
+  },
+  {
+    "i": 89,
+    "label": "Are you currently, or have you previously, worked for Instacart?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 90,
+    "label": "Which state or province do you currently live in?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "state"
+  },
+  {
+    "i": 92,
+    "label": "Do you have 4+ years of experience in account management, digital advertising, paid media, ad operations, ecommerce, client services, or a related field?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "platform": "greenhouse",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 94,
+    "label": "Do you identify as a member of the LGBT2QIA+ community?",
+    "control": "combobox",
+    "rule": "ask:sexual_orientation",
+    "platform": "greenhouse",
+    "intent": "sexual_orientation"
+  },
+  {
+    "i": 125,
+    "label": "Please elaborate on your experience building software in AWS (with Terraform)",
+    "control": "textarea",
+    "rule": "ask:unknown",
+    "platform": "ashby",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 163,
+    "label": "What B2B SaaS companies have you been part of?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "platform": "ashby",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 172,
+    "label": "Preferred Pronouns",
+    "control": "text",
+    "rule": "ask:gender",
+    "platform": "ashby",
+    "intent": "pronouns"
+  },
+  {
+    "i": 179,
+    "label": "Language Skill(s) (Check all that apply)",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "platform": "lever",
+    "intent": "language_proficiency"
+  },
+  {
+    "i": 184,
+    "label": "Which university are you currently attending or did you last attend? Please select \"Other (School Not Listed)\" if your school is not listed.",
+    "control": "select",
+    "rule": "ask:unknown",
+    "platform": "lever",
+    "intent": "school"
+  },
+  {
+    "i": 191,
+    "label": "Have you ever been previously employed by Spotify?",
+    "control": "checkbox_group",
+    "rule": "ask:unknown",
+    "platform": "lever",
+    "intent": "previous_employee"
+  },
+  {
+    "i": 195,
+    "label": "Please share your time zone.",
+    "control": "text",
+    "rule": "ask:unknown",
+    "platform": "lever",
+    "intent": "timezone"
+  },
+  {
+    "i": 202,
+    "label": "Do you currently hold an active CPA license?",
+    "control": "radio",
+    "rule": "skip:optional choice",
+    "platform": "lever",
+    "intent": "skills_experience"
+  },
+  {
+    "i": 220,
+    "label": "1. What is your level of spoken English? Do you have experience working or communicating in international teams?",
+    "control": "text",
+    "rule": "skip:optional, not in profile",
+    "platform": "breezy",
+    "intent": "language_proficiency"
+  },
+  {
+    "i": 4,
+    "label": "By selecting yes to this question you confirm that you have read Esri’s Applicant Privacy Notice.",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 5,
+    "label": "I confirm that my application details, including work history, education, and former Ebury employment status, are accurate and truthful. I understand that providing false, misleading, or omitted information may result in the rejection of my application or the withdrawal of any employment offer.",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 6,
+    "label": "By checking this box, I agree to allow Ebury to retain my data for future opportunities for employment for up to 365 days after the conclusion of consideration of my current application for employment.",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 7,
+    "label": "By checking this box, I consent to Smartsheet collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 8,
+    "label": "Concordo que os dados pessoais serão coletados, tratados e compartilhados pelo Grupo Inter nos termos da Politica de Privacidade do Grupo Inter disponível para consulta, a qualquer tempo, por meio do site https://www.bancointer.com.br/politica-de-privacidade/. Ainda, o Inter esclarecerá suas dúvidas relacionadas à privacidade pelo e-mail privacidade@inter.co",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 9,
+    "label": "We use Metaview to help our interviewers focus on the conversation instead of taking notes. Do you consent to Metaview transcribing our interviews? Metaview privacy policy: https://www.metaview.ai/privacy-policy",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 10,
+    "label": "Applicant Privacy Policy",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 11,
+    "label": "I acknowledge that I have reviewed and understood the Applicant Privacy Policy (link below).",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 12,
+    "label": "By checking this box, I consent to Asana collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 13,
+    "label": "Candidate Notice: Please read and accept the Global Personal Data Privacy Notice for Candidates.",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 14,
+    "label": "By checking this box, I agree to allow Veeam Software to store and process my data for the purpose of considering my eligibility regarding my current application for employment.",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 15,
+    "label": "By checking this box, I agree to allow Jensen Hughes to store and process my data for the purpose of considering my eligibility regarding my current application for employment.",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 16,
+    "label": "If selected, I understand that completing a CLEAR verification check is required prior to receiving an offer of employment.",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 17,
+    "label": "Yes, Magnet Forensics can contact me about future job opportunities for up to 1 year Privacy policy",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 18,
+    "label": "Yes, Sophos can contact me about future job opportunities for up to 1 year Privacy policy",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 19,
+    "label": "I understand",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 20,
+    "label": "Do you consent to Socure processing your data to verify your identity under Socure's Recruiting Privacy Policy?",
+    "control": "radio",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 22,
+    "label": "By checking this box, I consent to MongoDB collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 23,
+    "label": "By selecting \"I agree\", I understand that the information I have provided as part of this job application will be processed in accordance with Toast's Applicant Privacy Statement.",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 24,
+    "label": "Reconozco recepción y acepto el Aviso de Privacidad de Airbnb. (I acknowledge receipt and accept the Airbnb Privacy Notice.)",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 25,
+    "label": "By selecting 'I acknowledge' and submitting this application, you confirm that you have read Elastic's Candidate Privacy Statement and understand how your data will be processed to evaluate your candidacy. In jurisdictions where consent is legally required, your submission constitutes express consent to the processing of your personal data for recruitment purposes.",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 26,
+    "label": "By checking this box, I consent to Twilio collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 31,
+    "label": "I confirm, that I have read the Celonis Privacy Notice for the handling of my personal data in the application process.",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 32,
+    "label": "I confirm the information provided in this application, including but not limited to my resume and the above information, is true and correct. I understand that false statements or material omissions of any kind during the hiring process may result in the rescinding of any offer of employment or dismissal once employed.",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 33,
+    "label": "By checking this box, I consent to Celonis collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 34,
+    "label": "I understand that Coinbase may use AI tools to assist in the application and interview process.",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 35,
+    "label": "By submitting my application, I acknowledge that I have read and understand Vercel’s Job Applicant Privacy Notice - https://vercel.com/legal/job-applicant-privacy-notice",
+    "control": "combobox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 36,
+    "label": "If you agree with our Privacy Policy, please check the box below. Our Privacy Policy is available at www.zeta.tech/in/careers/privacy_policy",
+    "control": "select",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 37,
+    "label": "Yes, Mindtickle can contact me about future job opportunities for up to 2 years Privacy policy",
+    "control": "checkbox",
+    "rule": "ask:consent",
+    "intent": "consent"
+  },
+  {
+    "i": 74,
+    "label": "What is your Notice Period?",
+    "control": "text",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 78,
+    "label": "If the answer to the question above is yes, what is the length of the notice period?",
+    "control": "text",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 79,
+    "label": "What's your notice period? (In days)",
+    "control": "text",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 81,
+    "label": "What is your notice period?",
+    "control": "textarea",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 82,
+    "label": "What is your available start date?",
+    "control": "text",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 83,
+    "label": "What is your notice period to begin working with Magnet Forensics?",
+    "control": "select",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 84,
+    "label": "What is your notice period (in days)? (mention 0 if immediately available)",
+    "control": "select",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 85,
+    "label": "What is your notice period and when would you be available to start?",
+    "control": "text",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 86,
+    "label": "If offered a position, what is your ideal start-date?",
+    "control": "text",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 87,
+    "label": "What is your required notice period?",
+    "control": "radio",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 88,
+    "label": "How many days is your notice period?",
+    "control": "text",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 89,
+    "label": "What is your notice period/ availability?",
+    "control": "text",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 90,
+    "label": "How long is your Notice Period?",
+    "control": "text",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 92,
+    "label": "Notice period Current notice period duration: Earliest possible joining date:",
+    "control": "text",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 93,
+    "label": "Notice Period",
+    "control": "text",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 94,
+    "label": "What is your current notice period?",
+    "control": "radio",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 95,
+    "label": "Notice Period (In days)",
+    "control": "text",
+    "rule": "ask:notice_period",
+    "intent": "notice_period"
+  },
+  {
+    "i": 173,
+    "label": "Para tornar nosso processo seletivo ainda mais eficiente, o Inter utiliza um sistema de inteligência artificial (IA), que nos auxilia a analisar a transcrição das entrevistas realizadas com candidatos que participam dos processos seletivos. Dessa forma, conseguimos registrar com mais precisão as informações fornecidas pelos candidatos, facilitando a análise das competências que buscamos. Destacamos que o sistema de inteligência artificial utilizado pelo Inter serve apenas como uma ferramenta de apoio nos processos seletivos. As tomadas de decisão sempre são realizadas por pessoas. Ao selecionar o campo abaixo, você autoriza que o Inter utilize sistema de inteligência artificial para transcrição da(s) entrevista(s) e utilize os dados fornecidos na entrevista transcrita, no currículo e no processo de inscrição para analisar se suas competências estão alinhadas com o que buscamos neste processo seletivo. Informamos, ainda, que o sistema de inteligência artificial não utilizará dados sensíveis para análise de suas competências. Além disso, reforçamos que você poderá, a qualquer tempo, exercer seus direitos previstos na Lei Geral de Proteção de Dados Pessoais (LGPD), inclusive o direito de revogar o consentimento e solicitar revisão das análises realizadas por inteligência artificial. Para exercer direitos relacionados à privacidade e/ou determinar suas preferências no tratamento dos seus dados pessoais pelo Inter, você pode acessar gratuitamente a Central de Privacidade no Super App, e/ou entrar em contato conosco através do e-mail \"privacidade@inter.co\". Por fim, reforçamos que você pode optar por não fornecer o consentimento, sem que isso gere qualquer tipo de prejuízo na sua candidatura a este processo seletivo. Caso tenha alguma dúvida sobre como o Inter trata os seus dados pessoais, consulte a nossa Política de Privacidade.",
+    "control": "combobox",
+    "rule": "ask:sponsorship",
+    "intent": "consent",
+    "source": "review"
+  },
+  {
+    "i": 215,
+    "label": "Acknowledge/Confirm",
+    "control": "checkbox",
+    "rule": "ask:unknown",
+    "intent": "consent",
+    "source": "review"
+  },
+  {
+    "i": 217,
+    "label": "What is your preferred name?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "firstName",
+    "source": "review"
+  },
+  {
+    "i": 220,
+    "label": "Nome da empresa",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "currentCompany",
+    "source": "review"
+  },
+  {
+    "i": 240,
+    "label": "AI Policy for Application",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "consent",
+    "source": "review"
+  },
+  {
+    "i": 243,
+    "label": "Please read the arbitration agreement below",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "consent",
+    "source": "review"
+  },
+  {
+    "i": 244,
+    "label": "Agreement to Arbitrate",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "consent",
+    "source": "review"
+  },
+  {
+    "i": 259,
+    "label": "Preferred Name",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "firstName",
+    "source": "review"
+  },
+  {
+    "i": 273,
+    "label": "Do you consent to receiving follow up communication via text message (or SMS message) regarding your application to the phone number you provided?",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "consent",
+    "source": "review"
+  },
+  {
+    "i": 274,
+    "label": "Acknowledge/Accept",
+    "control": "checkbox",
+    "rule": "ask:unknown",
+    "intent": "consent",
+    "source": "review"
+  },
+  {
+    "i": 285,
+    "label": "When are you available to start a new position?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "notice_period",
+    "source": "review"
+  },
+  {
+    "i": 315,
+    "label": "Date Available",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "notice_period",
+    "source": "review"
+  },
+  {
+    "i": 320,
+    "label": "From where do you intend to work?",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "location",
+    "source": "review"
+  },
+  {
+    "i": 322,
+    "label": "Processing of Personal Data",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "consent",
+    "source": "review"
+  },
+  {
+    "i": 329,
+    "label": "AI Policy for Interviewers",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "consent",
+    "source": "review"
+  },
+  {
+    "i": 334,
+    "label": "To ensure we can focus fully on our conversation, we use BrightHire to record and transcribe interviews. This helps us get to know you better without the distraction of note-taking. We also use BrightHire to help us analyze interview notes and for internal Stripe interview quality training and assurance purposes. After the recruitment process ends, recordings may be shared internally for recruiter and interviewer training to help us improve our interview processes. Please confirm if you consent to BrightHire being enabled for this interview and for your personal data to be collected and processed for the purposes mentioned above, by responding below",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "consent",
+    "source": "review"
+  },
+  {
+    "i": 351,
+    "label": "Acknowledge",
+    "control": "checkbox",
+    "rule": "ask:unknown",
+    "intent": "consent",
+    "source": "review"
+  },
+  {
+    "i": 361,
+    "label": "Company name",
+    "control": "text",
+    "rule": "ask:unknown",
+    "intent": "currentCompany",
+    "source": "review"
+  },
+  {
+    "i": 375,
+    "label": "Please double-check all the information provided above. Ensuring accuracy is crucial, as any errors or omissions may impact the review of your application.",
+    "control": "combobox",
+    "rule": "ask:unknown",
+    "intent": "consent",
+    "source": "review"
+  },
+  {
+    "i": 425,
+    "label": "Country",
+    "control": "combobox",
+    "rule": "profile:country",
+    "intent": "country"
+  },
+  {
+    "i": 426,
+    "label": "País",
+    "control": "combobox",
+    "rule": "profile:country",
+    "intent": "country"
+  },
+  {
+    "i": 427,
+    "label": "Country of Residence",
+    "control": "combobox",
+    "rule": "profile:country",
+    "intent": "country"
+  },
+  {
+    "i": 428,
+    "label": "Please enter the country you are legally registered to work in.",
+    "control": "text",
+    "rule": "profile:country",
+    "intent": "country"
+  },
+  {
+    "i": 429,
+    "label": "Please select the country where you currently reside.",
+    "control": "combobox",
+    "rule": "profile:country",
+    "intent": "country"
+  },
+  {
+    "i": 431,
+    "label": "Please choose the country in which you are located.",
+    "control": "combobox",
+    "rule": "profile:country",
+    "intent": "country"
+  },
+  {
+    "i": 432,
+    "label": "What is your current country of residence?",
+    "control": "combobox",
+    "rule": "profile:country",
+    "intent": "country"
+  },
+  {
+    "i": 433,
+    "label": "What is your current or most recent employer?",
+    "control": "text",
+    "rule": "profile:currentCompany",
+    "intent": "currentCompany"
+  },
+  {
+    "i": 434,
+    "label": "Current Company",
+    "control": "text",
+    "rule": "profile:currentCompany",
+    "intent": "currentCompany"
+  },
+  {
+    "i": 435,
+    "label": "Current company",
+    "control": "text",
+    "rule": "profile:currentCompany",
+    "intent": "currentCompany"
+  },
+  {
+    "i": 436,
+    "label": "Most Recent Employer",
+    "control": "text",
+    "rule": "profile:currentCompany",
+    "intent": "currentCompany"
+  },
+  {
+    "i": 438,
+    "label": "Current company name",
+    "control": "text",
+    "rule": "profile:currentCompany",
+    "intent": "currentCompany"
+  },
+  {
+    "i": 439,
+    "label": "Please list your most recent Employer here.",
+    "control": "text",
+    "rule": "profile:currentCompany",
+    "intent": "currentCompany"
+  },
+  {
+    "i": 445,
+    "label": "Email",
+    "control": "text",
+    "rule": "profile:email",
+    "intent": "email"
+  },
+  {
+    "i": 446,
+    "label": "E-mail",
+    "control": "text",
+    "rule": "profile:email",
+    "intent": "email"
+  },
+  {
+    "i": 447,
+    "label": "Please enter your personal email ID (If you havent already)",
+    "control": "text",
+    "rule": "profile:email",
+    "intent": "email"
+  },
+  {
+    "i": 449,
+    "label": "What is your total work experience?",
+    "control": "combobox",
+    "rule": "profile:experienceYears",
+    "intent": "experienceYears"
+  },
+  {
+    "i": 450,
+    "label": "Total Years of Experience",
+    "control": "text",
+    "rule": "profile:experienceYears",
+    "intent": "experienceYears"
+  },
+  {
+    "i": 451,
+    "label": "First Name",
+    "control": "text",
+    "rule": "profile:firstName",
+    "intent": "firstName"
+  },
+  {
+    "i": 452,
+    "label": "Preferred First Name",
+    "control": "text",
+    "rule": "profile:firstName",
+    "intent": "firstName"
+  },
+  {
+    "i": 453,
+    "label": "Legal First Name",
+    "control": "textarea",
+    "rule": "profile:firstName",
+    "intent": "firstName"
+  },
+  {
+    "i": 454,
+    "label": "Nome",
+    "control": "text",
+    "rule": "profile:firstName",
+    "intent": "firstName"
+  },
+  {
+    "i": 455,
+    "label": "First name",
+    "control": "text",
+    "rule": "profile:firstName",
+    "intent": "firstName"
+  },
+  {
+    "i": 464,
+    "label": "Last Name",
+    "control": "text",
+    "rule": "profile:lastName",
+    "intent": "lastName"
+  },
+  {
+    "i": 465,
+    "label": "Legal Last Name",
+    "control": "textarea",
+    "rule": "profile:lastName",
+    "intent": "lastName"
+  },
+  {
+    "i": 466,
+    "label": "Sobrenome",
+    "control": "text",
+    "rule": "profile:lastName",
+    "intent": "lastName"
+  },
+  {
+    "i": 467,
+    "label": "Preferred Last Name",
+    "control": "text",
+    "rule": "profile:lastName",
+    "intent": "lastName"
+  },
+  {
+    "i": 468,
+    "label": "Last Name / Surname",
+    "control": "text",
+    "rule": "profile:lastName",
+    "intent": "lastName"
+  },
+  {
+    "i": 469,
+    "label": "Last name",
+    "control": "text",
+    "rule": "profile:lastName",
+    "intent": "lastName"
+  },
+  {
+    "i": 483,
+    "label": "Location (City)",
+    "control": "combobox",
+    "rule": "profile:location",
+    "intent": "location"
+  },
+  {
+    "i": 484,
+    "label": "Where are you located?",
+    "control": "text",
+    "rule": "profile:location",
+    "intent": "location"
+  }
+]

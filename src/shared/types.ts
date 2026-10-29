@@ -49,6 +49,7 @@ export interface QuickFacts {
   workMode?: "" | "onsite" | "hybrid" | "remote" | "any";
   travel?: "" | "Yes" | "No" | "Decline";
   travelPercent?: string;
+  maxOfficeDays?: number | string;
   needsAccommodation?: "" | "Yes" | "No" | "Decline";
   pronouns?: string;
   sexualOrientation?: string;
@@ -81,14 +82,19 @@ export interface Profile {
   preferredLocations: string;
   skills: string;
   address?: string;
+  addressLine1?: string;
+  addressLine2?: string;
   postalCode?: string;
   state?: string;
   educationLevel?: string;
   timezone?: string;
   skillsInventory?: SkillEntry[];
+  skillsComplete?: boolean;
   languages?: LanguageEntry[];
+  languagesComplete?: boolean;
   /** Jobs for "My Experience"-style repeating sections, newest first (optional). */
   workHistory?: WorkEntry[];
+  workHistoryComplete?: boolean;
   /** Answers to the questions most forms ask, in any wording (Answers → Quick answers). Empty = ask me. */
   facts?: QuickFacts;
   resume?: ResumeFile;
@@ -125,7 +131,7 @@ export interface FitResult {
   excluded?: string;
 }
 
-export type ProfileKey = Exclude<keyof Profile, "resume" | "workHistory" | "facts" | "languages" | "skillsInventory">;
+export type ProfileKey = Exclude<keyof Profile, "resume" | "workHistory" | "facts" | "languages" | "skillsInventory" | "skillsComplete" | "languagesComplete" | "workHistoryComplete">;
 
 /** Questions only the user may answer: the agent never guesses these. */
 export type SensitiveTopic =

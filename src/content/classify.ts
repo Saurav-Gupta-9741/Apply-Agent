@@ -6,7 +6,7 @@ import {
 } from "../shared/types";
 import { bestOption, normalize, sameQuestionScore, yesNoOption } from "../shared/text";
 import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion } from "../shared/screening";
-import { factDecision, hasConfirmedApplication, HEARD_ABOUT, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, draftDecision, type PageFacts } from "./facts";
+import { factDecision, hasConfirmedApplication, HEARD_ABOUT, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, type PageFacts } from "./facts";
 
 const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   // Checked first: identity numbers and signatures are never filled or remembered by the agent.
@@ -55,8 +55,11 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["school", /school|universi|college|institution|hochschule|ecole|escuela|faculdade|istituto|hogeschool/],
   ["educationLevel", /\b(highest level of education|highest education|level of education completed|possui curso superior|completed bachelor s degree)\b/],
   ["timezone", /\b(time ?zone|est \/ mst)\b/],
+  // Address Line 2 must be checked BEFORE address line 1 and full address:
+  ["addressLine2", /\b(?:address\s*(?:line\s*)?2|address\s*2|apt(?:,?\s*suite|\s*#)?|suite\b|unit\b|apartment|bldg\b|floor\b)/i],
+  ["addressLine1", /\b(?:address\s*(?:line\s*)?1|address\s*1)\b/i],
   // Full address before postal code:
-  ["address", /\b(street address|address line \d|full.*address|current address|permanent address|mailing address|^address$)\b/],
+  ["address", /\b(street address|full.*address|current address|permanent address|mailing address|^address$)\b/i],
   ["postalCode", /^(?!.*\b(street address|full.*address)\b).*\b(zip( code)?|postal code|pin ?code)\b/],
   // Where both city and state are requested, it is a location question:
   ["location", /\b(?:city\s*(?:and|,|\/|or)?\s*state|state\s*(?:and|,|\/|or)?\s*city)\b/],
@@ -81,9 +84,9 @@ const AUTOCOMPLETE: Record<string, ProfileKey | "fullName"> = {
   country: "country",
   organization: "currentCompany",
   "organization-title": "currentTitle",
-  "address-line1": "address",
-  "address-line2": "address",
-  "street-address": "address",
+  "address-line1": "addressLine1",
+  "address-line2": "addressLine2",
+  "street-address": "addressLine1",
   "postal-code": "postalCode",
   "address-level1": "state",
 };
@@ -184,6 +187,9 @@ function sameFactAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic: S
 
 export function profileValue(profile: Profile, key: ProfileKey | "fullName"): string {
   if (key === "fullName") return `${profile.firstName} ${profile.lastName}`.trim();
+  if (key === "addressLine1") return (profile.addressLine1 || profile.address || "").trim();
+  if (key === "addressLine2") return (profile.addressLine2 ?? "").trim();
+  if (key === "address") return (profile.address || profile.addressLine1 || "").trim();
   return (profile[key] ?? "").trim();
 }
 
@@ -371,7 +377,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
     if (prev) return prev;
   }
   if (isWorkModeQuestion(field)) {
-    const wm = workModeAnswer(field, profile.facts);
+    const wm = workModeAnswer(field, profile);
     if (wm) return wm;
   }
   if (isTravelQuestion(field)) {
@@ -409,6 +415,9 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   if (key) {
     const value = profileValue(profile, key);
     if (value) return { kind: "profile", key, value };
+    if (key === "addressLine2" && !field.required) {
+      return { kind: "skip", reason: "optional address line 2 empty" };
+    }
     return field.required ? { kind: "ask", reason: "missing_profile_value" } : { kind: "skip", reason: `no ${key} in profile` };
   }
 

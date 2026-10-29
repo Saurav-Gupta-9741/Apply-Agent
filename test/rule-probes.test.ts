@@ -106,4 +106,88 @@ describe("rule probes from audit", () => {
     const prefFull = testField("Preferred First & Last Name");
     expect(prefFull).toEqual({ kind: "profile", key: "fullName", value: "Asha Verma" });
   });
+
+  it("passes all deep audit probes for safe fact automation", () => {
+    const real: any = {
+      ...PROFILE,
+      location: "Pune",
+      country: "India",
+      currentCompany: "Ola",
+      skills: "Java, SQL, Go, R",
+      experienceYears: "",
+      facts: { workCountries: "India", workMode: "hybrid", travel: "Yes", travelPercent: "25%", maxOfficeDays: 3 },
+    };
+    const full: any = {
+      ...real,
+      skillsInventory: [{ name: "Python", years: 3 }],
+      address: "12 MG Road, Pune 411038",
+      addressLine1: "12 MG Road",
+      addressLine2: "",
+      postalCode: "411038",
+      state: "Maharashtra",
+      educationLevel: "Master's Degree",
+    };
+    const YN = ["Yes", "No"];
+    const page = (u = "https://boards.greenhouse.io/acme/jobs/1") => ({ jobCountries: ["United States"], url: u } as any);
+
+    // 1. skills (+inventory): years unknown -> ASK
+    const p1 = decide({ key: "k", label: "How many years of experience do you have with Java?", control: "text", required: true, options: [], name: "", autocomplete: "", placeholder: "" }, full, [], page());
+    expect(p1.kind).toBe("ask");
+
+    // 2. skills: Java != JavaScript -> ASK
+    const p2 = decide({ key: "k", label: "Do you have experience with JavaScript?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, full, [], page());
+    expect(p2.kind).toBe("ask");
+
+    // 3. skills: Go != Google Cloud -> ASK
+    const p3 = decide({ key: "k", label: "Do you have experience with Google Cloud?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, full, [], page());
+    expect(p3.kind).toBe("ask");
+
+    // 4. skills: React not listed -> ASK
+    const p4 = decide({ key: "k", label: "Have you used React in production?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, full, [], page());
+    expect(p4.kind).toBe("ask");
+
+    // 5. skills: level not given -> ASK
+    const p5 = decide({ key: "k", label: "Rate your proficiency with Python", control: "select", required: true, options: ["Beginner", "Intermediate", "Advanced", "Expert"], name: "", autocomplete: "", placeholder: "" }, full, [], page());
+    expect(p5.kind).toBe("ask");
+
+    // 6. previous employer: Motorola with 'Ola' -> No or ASK (never Yes)
+    const p6 = decide({ key: "k", label: "Have you previously worked for Motorola?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, real, [], page("https://jobs.lever.co/motorola/1"));
+    expect(p6).toEqual({ kind: "answer", question: "Quick answers › previous employer", value: "No" });
+
+    // 7. work mode: hybrid != 5 days onsite Munich -> ASK
+    const p7 = decide({ key: "k", label: "This role is fully onsite, 5 days a week in our Munich office. Are you able to commit?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, real, [], page());
+    expect(p7.kind).toBe("ask");
+
+    // 8. work mode: named city San Francisco -> ASK
+    const p8 = decide({ key: "k", label: "Are you able to commute to our office in San Francisco 3 days a week?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, real, [], page());
+    expect(p8.kind).toBe("ask");
+
+    // 9. travel: 25% user vs 75% question -> No
+    const p9 = decide({ key: "k", label: "Are you willing to travel up to 75% of the time?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, real, [], page());
+    expect(p9).toEqual({ kind: "answer", question: "Quick answers › travel", value: "No" });
+
+    // 10. address line 2 -> ASK or skip, never full address
+    const p10 = decide({ key: "k", label: "Address line 2", control: "text", required: true, options: [], name: "", autocomplete: "address-line2", placeholder: "" }, full, [], page());
+    expect(p10.kind).toBe("ask");
+
+    // 11. languages: unlisted language with languagesComplete false -> ASK
+    const p11 = decide({ key: "k", label: "Do you speak German fluently?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, { ...full, languages: [{ language: "English", proficiency: "Fluent" }], languagesComplete: false }, [], page());
+    expect(p11.kind).toBe("ask");
+
+    // 12. previous employer: empty work history with workHistoryComplete false -> ASK
+    const p12 = decide({ key: "k", label: "Have you worked for Acme in the past?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, { ...full, currentCompany: "", workHistory: [], workHistoryComplete: false }, [], page());
+    expect(p12.kind).toBe("ask");
+
+    // 13. skills threshold: Python 2y vs 5+ years -> No
+    const p13 = decide({ key: "k", label: "Do you have 5+ years of experience with Python?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, { ...full, skillsInventory: [{ name: "Python", years: 2 }] }, [], page());
+    expect(p13).toEqual({ kind: "answer", question: "Quick answers › skills", value: "No" });
+
+    // 14. skills threshold: Python 2y vs at least 10 years -> No
+    const p14 = decide({ key: "k", label: "Do you have at least 10 years of Python experience?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, { ...full, skillsInventory: [{ name: "Python", years: 2 }] }, [], page());
+    expect(p14).toEqual({ kind: "answer", question: "Quick answers › skills", value: "No" });
+
+    // 15. age / over18 fact
+    const p15 = decide({ key: "k", label: "Are you at least 18 years of age?", control: "radio", required: true, options: YN, name: "", autocomplete: "", placeholder: "" }, { ...full, facts: { ...real.facts, over18: "Yes" } }, [], page());
+    expect(p15).toEqual({ kind: "answer", question: "Quick answers › over 18", value: "Yes" });
+  });
 });

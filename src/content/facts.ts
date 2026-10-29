@@ -30,6 +30,7 @@ export const YES_NO_QUESTION = /^(are|is|do|does|did|have|has|had|will|would|can
 const MAX_ANSWERABLE_WORDS = 35;
 
 export function answerableLength(label: string): boolean {
+  if (label.length > 500) return false;
   return normalize(label).split(" ").length <= MAX_ANSWERABLE_WORDS;
 }
 
@@ -315,8 +316,75 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     return yesNoField(field) ? answer(facts.relocate, "relocation") : undefined;
   }
   if (topic && ["gender", "race", "veteran", "disability"].includes(topic)) return diversityAnswer(field, facts, topic);
+  if ((topic === "age" || /\b(?:18 years (?:of age )?or older|at least 18|over 18|18 or older)\b/i.test(q)) && facts.over18 && yesNoField(field)) {
+    if (/^(are you |do you confirm you are |confirm you are )?(at least 18|18 years (?:of age )?or older|18 or older|over the age of 18)/i.test(q)) {
+      const match = field.options.length ? (yesNoOption(field.options, facts.over18) ?? facts.over18) : facts.over18;
+      return answer(match, "over 18");
+    }
+  }
   if (!topic && facts.heardFrom?.trim() && HEARD_ABOUT.test(q) && field.control !== "textarea") return answer(facts.heardFrom.trim(), "how you heard");
   return undefined;
+}
+
+export function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+export function mentions(text: string, term: string): boolean {
+  if (!text || !term) return false;
+  const raw = text;
+  const cleanTerm = term.trim();
+  const lowerTerm = cleanTerm.toLowerCase();
+
+  // Alias table & special term handling:
+  if (lowerTerm === "go" || lowerTerm === "golang") {
+    // Matches standalone 'go' or 'golang', never 'google', 'algorithm', 'good', etc.
+    return /\b(?:go|golang)\b/i.test(raw) && !/\bgoogle\b/i.test(raw);
+  }
+  if (lowerTerm === "java") {
+    // Standalone java, but NOT javascript
+    return /\bjava\b/i.test(raw) && !/\bjavascript\b/i.test(raw);
+  }
+  if (lowerTerm === "javascript" || lowerTerm === "js") {
+    return /\b(?:javascript|js)\b/i.test(raw);
+  }
+  if (lowerTerm === "typescript" || lowerTerm === "ts") {
+    return /\b(?:typescript|ts)\b/i.test(raw);
+  }
+  if (lowerTerm === "react" || lowerTerm === "reactjs" || lowerTerm === "react.js") {
+    return /\breact(?:\.js|js)?\b/i.test(raw);
+  }
+  if (cleanTerm === "R" || lowerTerm === "r") {
+    // Standalone 'R' programming language: e.g. " R ", " R,", "R/Python", "Python and R", "R programming"
+    return /\b(?:the\s+)?R(?:\s+programming|\s+language)?\b/.test(raw) && !/\b(?:react|ruby|rust)\b/i.test(raw);
+  }
+  if (cleanTerm === "C" || lowerTerm === "c") {
+    return /\bC(?:\s+programming|\s+language)?\b/.test(raw) && !/\b(?:c\+\+|c#)\b/i.test(raw);
+  }
+  if (lowerTerm === "c++" || lowerTerm === "cpp") {
+    return /\b(?:c\+\+|cpp)\b/i.test(raw);
+  }
+  if (lowerTerm === "c#" || lowerTerm === "csharp") {
+    return /\b(?:c\#|csharp)\b/i.test(raw);
+  }
+  if (lowerTerm === "ai") {
+    // Must be uppercase AI or "artificial intelligence", never inside retail, paid, email, etc.
+    return /\bAI\b/.test(raw) || /\bartificial intelligence\b/i.test(raw);
+  }
+  if (lowerTerm === "ml") {
+    return /\bML\b/.test(raw) || /\bmachine learning\b/i.test(raw);
+  }
+  if (lowerTerm === "power bi" || lowerTerm === "powerbi") {
+    return /\bpower\s*bi\b/i.test(raw);
+  }
+  if (lowerTerm === "google cloud" || lowerTerm === "gcp") {
+    return /\b(?:google cloud|gcp)\b/i.test(raw);
+  }
+
+  // General term whole-word matching:
+  const escaped = escapeRegex(cleanTerm);
+  const regex = new RegExp(`\\b${escaped}\\b`, "i");
+  return regex.test(raw);
 }
 
 export function isPreviousEmployeeQuestion(field: FieldDescriptor): boolean {
@@ -337,15 +405,43 @@ export function isPreviousEmployeeQuestion(field: FieldDescriptor): boolean {
 
 export function previousEmployerAnswer(field: FieldDescriptor, profile: Profile, page?: PageFacts): Decision | undefined {
   if (!yesNoField(field)) return undefined;
-  const companies = [profile.currentCompany, ...(profile.workHistory?.map((w) => w.company) ?? [])]
-    .map(normalize)
-    .filter(Boolean);
+
   const currentHost = page?.url ? companyDomain(page.url) : "";
-  const label = normalize(field.label);
-  const workedHere = companies.some((c) => (currentHost && c.includes(currentHost)) || (c.length > 2 && label.includes(c)));
-  const val = workedHere ? "Yes" : "No";
-  const match = field.options.length ? (yesNoOption(field.options, val) ?? bestOption(field.options, val)) : val;
-  return match ? answer(match, "previous employer") : undefined;
+  const label = field.label;
+
+  const companies: string[] = [];
+  if (profile.currentCompany?.trim()) {
+    companies.push(profile.currentCompany.trim());
+  }
+  if (profile.workHistory?.length) {
+    for (const w of profile.workHistory) {
+      if (w.company?.trim()) companies.push(w.company.trim());
+    }
+  }
+
+  // An empty work history without workHistoryComplete must never answer "No" from missing data!
+  if (!companies.length && !profile.workHistoryComplete) {
+    return undefined;
+  }
+
+  const workedHere = companies.some((c) => {
+    if (currentHost && currentHost.toLowerCase() === c.toLowerCase()) return true;
+    return mentions(label, c);
+  });
+
+  if (workedHere) {
+    const val = "Yes";
+    const match = field.options.length ? (yesNoOption(field.options, val) ?? bestOption(field.options, val)) : val;
+    return match ? answer(match, "previous employer") : undefined;
+  }
+
+  if (profile.workHistoryComplete || companies.length > 0) {
+    const val = "No";
+    const match = field.options.length ? (yesNoOption(field.options, val) ?? bestOption(field.options, val)) : val;
+    return match ? answer(match, "previous employer") : undefined;
+  }
+
+  return undefined;
 }
 
 export function isWorkModeQuestion(field: FieldDescriptor): boolean {
@@ -357,12 +453,53 @@ export function isWorkModeQuestion(field: FieldDescriptor): boolean {
   return /\b(onsite|hybrid|hybride|inoffice|inperson|commute|commuting distance|office attendance|\bwork from (the|our)?\s*office\b|\bjoin us in the office\b|\bdays (in|from) the office\b|\bdays (a|per) week\b|come to office|office based|work arrangement|sur place)\b/i.test(q);
 }
 
-export function workModeAnswer(field: FieldDescriptor, facts?: QuickFacts): Decision | undefined {
+export function workModeAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
+  const facts = profile.facts;
   if (!facts?.workMode || !yesNoField(field)) return undefined;
-  const accepts = facts.workMode === "any" || facts.workMode === "onsite" || facts.workMode === "hybrid";
-  const val = accepts ? "Yes" : "No";
-  const match = field.options.length ? (yesNoOption(field.options, val) ?? bestOption(field.options, val)) : val;
-  return match ? answer(match, "onsite") : undefined;
+
+  const q = normalize(field.label);
+
+  // Check if a specific city is named in the question:
+  const cityMatch = /\b(munich|san francisco|london|new york|berlin|seattle|austin|chicago|dublin|paris|amsterdam|toronto|vancouver|sydney|singapore|tokyo)\b/i.exec(field.label);
+  if (cityMatch && cityMatch[1]) {
+    const city = cityMatch[1].toLowerCase();
+    const userLocs = `${profile.location} ${profile.preferredLocations || ""}`.toLowerCase();
+    if (!userLocs.includes(city)) {
+      return undefined; // Role requires a specific remote city the user is not in -> ASK
+    }
+  }
+
+  // Check required office days per week:
+  const daysMatch = /\b(\d+)\s*days?(?:\s*(?:a|per)\s*week)?\b/i.exec(q);
+  const requiredDays = daysMatch && daysMatch[1] ? parseInt(daysMatch[1], 10) : undefined;
+  const maxDays = facts.maxOfficeDays !== undefined && facts.maxOfficeDays !== ""
+    ? Number(facts.maxOfficeDays)
+    : (facts.workMode === "remote" ? 0 : facts.workMode === "onsite" ? 5 : 3);
+
+  if (requiredDays !== undefined && requiredDays > maxDays) {
+    return undefined; // Requires more in-office days than user's max
+  }
+
+  const isFullyOnsiteQuestion = /\b(?:fully onsite|100% onsite|5 days (?:a|per) week in (?:the|our)? office)\b/i.test(q);
+  if (isFullyOnsiteQuestion && facts.workMode !== "onsite" && facts.workMode !== "any") {
+    return undefined;
+  }
+
+  const isRemoteQuestion = /\b(?:remote|work from home|wfh)\b/i.test(q) && !/\b(?:onsite|hybrid|in-?office)\b/i.test(q);
+  if (isRemoteQuestion) {
+    if (facts.workMode === "remote" || facts.workMode === "any" || profile.preferredLocations?.toLowerCase().includes("remote")) {
+      const match = field.options.length ? (yesNoOption(field.options, "Yes") ?? "Yes") : "Yes";
+      return answer(match, "onsite");
+    }
+    return undefined;
+  }
+
+  if (facts.workMode === "any" || facts.workMode === "onsite" || facts.workMode === "hybrid") {
+    const match = field.options.length ? (yesNoOption(field.options, "Yes") ?? "Yes") : "Yes";
+    return answer(match, "onsite");
+  }
+
+  return undefined;
 }
 
 export function isTravelQuestion(field: FieldDescriptor): boolean {
@@ -374,8 +511,31 @@ export function isTravelQuestion(field: FieldDescriptor): boolean {
 
 export function travelAnswer(field: FieldDescriptor, facts?: QuickFacts): Decision | undefined {
   if (!facts?.travel || !yesNoField(field)) return undefined;
-  const match = field.options.length ? (yesNoOption(field.options, facts.travel) ?? bestOption(field.options, facts.travel)) : facts.travel;
-  return match ? answer(match, "travel") : undefined;
+
+  const raw = field.label;
+  const q = normalize(field.label);
+  const percentMatch = /\b(\d+)\s*(?:%|percent\b)/i.exec(raw);
+  if (percentMatch && percentMatch[1]) {
+    const requiredPercent = parseInt(percentMatch[1], 10);
+    const userPercentStr = facts.travelPercent?.replace(/[^0-9]/g, "");
+    if (!userPercentStr) return undefined;
+    const userPercent = parseInt(userPercentStr, 10);
+
+    if (requiredPercent <= userPercent) {
+      const match = field.options.length ? (yesNoOption(field.options, "Yes") ?? "Yes") : "Yes";
+      return answer(match, "travel");
+    } else {
+      const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
+      return answer(match, "travel");
+    }
+  }
+
+  if (/willing to travel|travel as necessary|comfortable with traveling/i.test(q)) {
+    const match = field.options.length ? (yesNoOption(field.options, facts.travel) ?? facts.travel) : facts.travel;
+    return answer(match, "travel");
+  }
+
+  return undefined;
 }
 
 export function isLanguageQuestion(field: FieldDescriptor): string | undefined {
@@ -383,14 +543,17 @@ export function isLanguageQuestion(field: FieldDescriptor): string | undefined {
   const q = normalize(field.label);
   if (!/\b(language|proficiency|proficient|fluency|fluent|speak|idioma|lingua|langue|sprache|bilingual)\b/i.test(q)) return undefined;
   const langs = ["english", "french", "german", "spanish", "portuguese", "italian", "mandarin", "japanese", "hindi"];
-  return langs.find((lang) => q.includes(lang));
+  return langs.find((lang) => mentions(q, lang));
 }
 
 export function languageAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
-  if (!profile.languages?.length) return undefined;
+  if (!answerableLength(field.label)) return undefined;
   const lang = isLanguageQuestion(field);
   if (!lang) return undefined;
-  const entry = profile.languages.find((l) => l.language.toLowerCase() === lang);
+
+  const languages = profile.languages ?? [];
+  const entry = languages.find((l) => l.language.toLowerCase() === lang);
+
   if (entry) {
     if (yesNoField(field)) {
       const match = field.options.length ? (yesNoOption(field.options, "Yes") ?? "Yes") : "Yes";
@@ -402,70 +565,107 @@ export function languageAnswer(field: FieldDescriptor, profile: Profile): Decisi
     }
     return answer(entry.proficiency, "language");
   }
+
+  // Not listed in profile.languages:
   if (yesNoField(field)) {
-    const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
-    return answer(match, "language");
+    if (profile.languagesComplete) {
+      const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
+      return answer(match, "language");
+    }
+    // Missing does NOT mean No -> return undefined (ask)
+    return undefined;
   }
+
+  return undefined;
+}
+
+function parseYearsThreshold(q: string): number | undefined {
+  const WORD_NUMS: Record<string, number> = {
+    one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
+  };
+  const m1 = /\b(\d+)\s*\+\s*years?\b/i.exec(q);
+  if (m1 && m1[1]) return parseInt(m1[1], 10);
+
+  const m2 = /\b(?:at least|minimum(?: of)?)\s*(\d+|one|two|three|four|five|six|seven|eight|nine|ten)(?:\s*\(\d+\))?\s*years?\b/i.exec(q);
+  if (m2 && m2[1]) {
+    const val = m2[1].toLowerCase();
+    return WORD_NUMS[val] ?? parseInt(val, 10);
+  }
+
+  const m3 = /\b(\d+)\s*years?(?:\s*(?:of\s*)?experience)?\b/i.exec(q);
+  if (m3 && m3[1] && /\b(?:do you have|have you|require|minimum)\b/i.test(q)) {
+    return parseInt(m3[1], 10);
+  }
+
   return undefined;
 }
 
 export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
-  if (!profile.skillsInventory?.length || !answerableLength(field.label)) return undefined;
+  if (!answerableLength(field.label)) return undefined;
   const q = normalize(field.label);
   if (/^(i |why |tell us |describe |none\b)/.test(q)) return undefined;
-  if (!/\b(years of experience|experience (with|in|using|managing|designing|overseeing|partnering)|proficien(t|cy)|knowledge of|familiar with|rate your proficiency|tools or software have you used|have you (used|designed|built|configured|actively used|been the maintainer))\b/i.test(q)) return undefined;
+
+  // Domain qualifiers that require human judgement or context -> ASK
+  if (/\b(?:managing|leading|closing|selling|director|head of|b2b sales|retail accounts|fmcg|cpg|digital advertising|paid media|campaigns|financial services|healthcare accounts|quota)\b/i.test(q)) {
+    return undefined;
+  }
+
+  if (!/\b(years? of (?:[a-z0-9+#.\s]+ )?experience|experience (with|in|using|managing|designing|overseeing|partnering)|proficien(t|cy)|knowledge of|familiar with|rate your proficiency|tools or software have you used|have you (used|designed|built|configured|actively used|been the maintainer))\b/i.test(q)) {
+    return undefined;
+  }
+
   // Exclude general overall experience and language questions:
   if (/\btotal (years? of )?(work|professional )?experience\b/.test(q)) return undefined;
   if (/^how many years of experience do you have\??$/i.test(q)) return undefined;
   if (/\b(english|french|german|spanish|twitch)\b/i.test(q)) return undefined;
-  
+
   const inv = profile.skillsInventory ?? [];
-  const profileSkills = profile.skills ? profile.skills.split(/[,;]/).map((s) => s.trim().toLowerCase()).filter(Boolean) : [];
-  
-  const matchEntry = inv.find((s) => q.includes(s.name.toLowerCase()));
-  const matchedProfileSkill = profileSkills.find((s) => q.includes(s));
-  
-  if (yesNoField(field)) {
-    const hasSkill = !!matchEntry || !!matchedProfileSkill;
-    const val = hasSkill ? "Yes" : "No";
-    const match = field.options.length ? (yesNoOption(field.options, val) ?? bestOption(field.options, val)) : val;
+  const matchedEntries = inv.filter((s) => mentions(field.label, s.name));
+
+  // If question mentions a known skill:
+  if (matchedEntries.length > 0) {
+    const threshold = parseYearsThreshold(field.label);
+    const primary = matchedEntries[0]!;
+
+    if (yesNoField(field)) {
+      if (threshold !== undefined) {
+        // True statement: Yes if years >= threshold, No if years < threshold
+        const val = primary.years >= threshold ? "Yes" : "No";
+        const match = field.options.length ? (yesNoOption(field.options, val) ?? bestOption(field.options, val)) : val;
+        return match ? answer(match, "skills") : undefined;
+      }
+      const match = field.options.length ? (yesNoOption(field.options, "Yes") ?? bestOption(field.options, "Yes")) : "Yes";
+      return match ? answer(match, "skills") : undefined;
+    }
+
+    if (/\b(how many years|years of experience)\b/i.test(q)) {
+      if (typeof primary.years === "number") {
+        const yearsStr = String(primary.years);
+        if (field.control === "number" || field.control === "text") return answer(yearsStr, "skills");
+        if (field.options.length) {
+          const match = bestOption(field.options, yearsStr, 0.7) ?? field.options.find((o) => o.includes(yearsStr));
+          if (match) return answer(match, "skills");
+        }
+      }
+      return undefined; // Never invent years!
+    }
+
+    if (/\brate your proficiency\b/i.test(q) && field.options.length) {
+      if (primary.level) {
+        const match = bestOption(field.options, primary.level, 0.7);
+        if (match) return answer(match, "skills");
+      }
+      return undefined; // Never invent level!
+    }
+  }
+
+  // Question did not match any inventory skills:
+  // Only answer "No" if user explicitly confirmed their skills list is complete!
+  if (profile.skillsComplete && yesNoField(field)) {
+    const match = field.options.length ? (yesNoOption(field.options, "No") ?? bestOption(field.options, "No")) : "No";
     return match ? answer(match, "skills") : undefined;
   }
-  
-  if (!matchEntry && !matchedProfileSkill) return undefined;
-  
-  if (/\b(how many years|years of experience)\b/i.test(q)) {
-    const years = matchEntry ? String(matchEntry.years) : (profile.experienceYears || "2");
-    if (field.control === "number" || field.control === "text") return answer(years, "skills");
-    if (field.options.length) {
-      const match = bestOption(field.options, years, 0.7) ?? field.options.find((o) => o.includes(years));
-      if (match) return answer(match, "skills");
-    }
-  }
-  if (/\brate your proficiency\b/i.test(q) && field.options.length) {
-    const level = matchEntry?.level ?? "Advanced";
-    const match = bestOption(field.options, level, 0.7);
-    if (match) return answer(match, "skills");
-  }
+
   return undefined;
 }
 
-export function draftCoverLetter(profile: Profile): string {
-  return `Dear Hiring Team,\n\nI am writing to express my strong interest in this position. With my background as a ${profile.currentTitle || "Software Engineer"} at ${profile.currentCompany || "Initech"} and ${profile.experienceYears || "several"} years of experience in ${profile.skills || "technology"}, I am confident in my ability to contribute effectively to your team.\n\nThank you for your consideration.\n\nSincerely,\n${profile.firstName} ${profile.lastName}`.trim();
-}
-
-export function draftOpenQuestion(field: FieldDescriptor, profile: Profile): string {
-  return `Based on my experience as a ${profile.currentTitle || "Professional"} at ${profile.currentCompany || "Initech"}, I have worked extensively with ${profile.skills || "core technologies"} to deliver impactful results. I am excited to bring this expertise to your team.`;
-}
-
-export function draftDecision(field: FieldDescriptor, profile: Profile): Decision | undefined {
-  if (!field.required) return undefined;
-  const q = normalize(field.label);
-  if (field.control === "textarea") {
-    if (/cover ?letter|lettre de motivation|anschreiben/i.test(q)) {
-      return { kind: "draft", value: draftCoverLetter(profile), question: "Draft › cover letter" };
-    }
-    return { kind: "draft", value: draftOpenQuestion(field, profile), question: "Draft › open question" };
-  }
-  return undefined;
-}

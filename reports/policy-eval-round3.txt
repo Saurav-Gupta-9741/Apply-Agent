@@ -1,11 +1,10 @@
 Real questions: 249
 Rules only:      fills 69, wrong 0
-Rules + model:   fills 72, wrong 0
+Rules + model:   fills 71, wrong 0
 
 Newly filled by the model:
   + salary_expected: Please share your total annual compensation expectations and the currency you are referrin
   + disability: Do you consider yourself disabled?
-  + notice_period: How soon can you join us if selected (in days) ?
 
 No longer filled (doubted):
 

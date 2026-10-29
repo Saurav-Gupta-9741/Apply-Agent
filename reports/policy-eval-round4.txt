@@ -1,8 +1,9 @@
 Real questions: 142
 Rules only:      fills 37, wrong 0
-Rules + model:   fills 39, wrong 0
+Rules + model:   fills 40, wrong 0
 
 Newly filled by the model:
+  + currentCompany: What is the name of your current (or previous) Company?
   + heard_about: How did you initially hear about this job?
   + heard_about: How you learned about the job
 

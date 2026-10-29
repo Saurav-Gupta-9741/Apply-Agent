@@ -24,10 +24,15 @@ export const EMPTY_PROFILE: Profile = {
   preferredLocations: "",
   skills: "",
   address: "",
+  addressLine1: "",
+  addressLine2: "",
   postalCode: "",
   state: "",
   educationLevel: "",
   timezone: "",
+  skillsComplete: false,
+  languagesComplete: false,
+  workHistoryComplete: false,
 };
 
 const KEYS = {
