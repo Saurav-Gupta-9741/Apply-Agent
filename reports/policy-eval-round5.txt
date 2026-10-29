@@ -1,6 +1,6 @@
 Real questions: 226
-Rules only:      fills 54, wrong 0
-Rules + model:   fills 55, wrong 0
+Rules only:      fills 53, wrong 0
+Rules + model:   fills 54, wrong 0
 
 Newly filled by the model:
   + currentCompany: Current/Most Recent Company Name

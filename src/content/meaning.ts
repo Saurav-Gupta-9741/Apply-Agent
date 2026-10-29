@@ -23,7 +23,7 @@ export const ACT_CONFIDENCE = 0.85;
 /** Safe profile facts where wrong is impossible or harmless: names, email, phone, links, location. */
 export const SAFE_ACT_CONFIDENCE = 0.80;
 export const SAFE_PROFILE_INTENTS = new Set<string>([
-  "firstName", "lastName", "fullName", "email", "phone", "location", "country", "linkedin", "github", "portfolio",
+  "firstName", "lastName", "fullName", "email", "phone", "linkedin", "github", "portfolio",
 ]);
 
 /** Required confidence to act on a model reading. */

@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [agent-work, main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch offline model
+        run: node scripts/fetch-model.mjs
+
+      - name: Build extension and test bundles
+        run: |
+          node build.mjs
+          node build.mjs --test
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit and regression tests
+        run: npx vitest run
+
+      - name: Automation scorecard gate
+        run: npm run eval
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: End-to-end tests
+        run: npx playwright test --grep-invert "live read-only" --workers=1

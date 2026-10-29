@@ -50,7 +50,9 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["degree", /\bdegree\b|qualification|abschluss|diplome|titulacion|formacao|laurea|opleiding/],
   ["discipline", /discipline|major|field of study|speciali[sz]ation|studiengang|studienfach|filiere|carrera|indirizzo di studio|studierichting/],
   ["school", /school|universi|college|institution|hochschule|ecole|escuela|faculdade|istituto|hogeschool/],
-  ["country", /^(?!.*\bcity\b).*(country|^land$|\bpays\b|\bpais\b|\bpaese\b)/],
+  // Where both city and country are requested in one field ("City, Country" or "country and city"), it is a location question:
+  ["location", /\b(?:city\s*country|country\s*city|city\s*(?:and|,|\/)\s*country|country\s*(?:and|,|\/)\s*city)\b/],
+  ["country", /country|^land$|\bpays\b|\bpais\b|\bpaese\b/],
   // Where the user WANTS to work, before where they live.
   ["preferredLocations", /preferred (job |work )?(location|cit(y|ies))|location preference|desired (job |work )?location|where would you (like|prefer) to work|bevorzugte[rn]? (arbeits)?ort|lieu souhaite|ubicacion (deseada|preferida)/],
   ["location", /\bcity\b|location|where are you (currently )?(based|located)|where do you (currently )?(live|reside)|town|wohnort|\bstadt\b|\bort\b|\bville\b|ciudad|localidad|cidade|\bcitta\b|woonplaats/],
@@ -73,10 +75,16 @@ const AUTOCOMPLETE: Record<string, ProfileKey | "fullName"> = {
 /** Answers reused for a new question only when it is clearly the same question. */
 const ANSWER_MATCH_THRESHOLD = 0.75;
 
+/** Statements announcing purpose of data collection must not turn a question into a sensitive topic. */
+const PURPOSE_DISCLOSURE = /\b(?:used (?:solely )?for|for (?:compensation|employment|compliance|tax|reporting|record|administrative) purposes)\b/i;
+
 export function sensitiveTopic(field: FieldDescriptor): SensitiveTopic | undefined {
-  const text = normalize(`${field.label} ${field.name}`);
+  const labelWithoutPurpose = field.label
+    .split(/(?<=[.?!])\s+/)
+    .filter((s) => !PURPOSE_DISCLOSURE.test(s))
+    .join(" ");
+  const text = normalize(`${labelWithoutPurpose} ${field.name}`);
   for (const [topic, pattern] of SENSITIVE) {
-    if (topic === "salary" && /\b(city (and|&) state|permanent residence|city of residence)\b/i.test(field.label)) continue;
     if (pattern.test(text)) return topic;
   }
   return undefined;
@@ -223,7 +231,7 @@ const OTHER_PERSON_SECTION = /emergency|next of kin|\breferences?\b|\breferee|\b
  * location(s)?"), details of a past job at this company ("…please list your work email address"), part of a value
  * ("Email address without domain"), "What is your experience with GitHub Copilot?", requests to describe something
  * ("Describe any training or qualifications…") and full street addresses (a city is not one). */
-const NOT_A_FACT = /^(are|is|do|does|did|have|has|had|will|would|can|could|should|were|was|may|might|shall|sind|haben|hast|bist|konnen|wurden|etes|avez|pouvez|seriez|esta|estas|tiene|tienes|puede|eres|voce|tem)\b|\b(applying|apply) (for|to)\b|^(?!(which|what)\b).*\bdid you attend\b|\binterested in\b|\bif (different|yes|so)\b|^se sim\b|^si oui\b|^wenn ja\b|^if (you )?(selected|chose|choose|answered|picked|ticked|checked)\b|\bif you (have )?(previously|ever|formerly) (worked|been employed)\b|\b(work|company|corporate) email\b|without (the )?domain|before the @|\bexperience (with|in|using|of)\b|^(please )?(briefly )?(describe|tell us|explain|elaborate)\b|\bstreet\b|\bzip\b|postal code|\bpin ?code\b|\b(want|wish|plan|hope|like) to (attend|study|join|work)\b|\b(target|preferred|desired|dream|future)\b (school|universit\w*|college|institut\w*|compan\w*|employer|job|role|position|title)|\bhigh school\b|\bsecondary\b|\b(10th|12th|tenth|twelfth|ssc|hsc|matric\w*|intermediate)\b|\bbirth\b|\bcitizenship\b|\bcountry code\b|\bdial\w*\b|\bpass ?(word|code)\b|\bpin\b|\b(event|fair|conference|meetup|webinar|info session)\b/;
+const NOT_A_FACT = /^(are|is|do|does|did|have|has|had|will|would|can|could|should|were|was|may|might|shall|sind|haben|hast|bist|konnen|wurden|etes|avez|pouvez|seriez|esta|estas|tiene|tienes|puede|eres|voce|tem)\b|\b(applying|apply) (for|to)\b|^(?!(which|what)\b).*\bdid you attend\b|\binterested in\b|\bif (different|yes|so)\b|^se sim\b|^si oui\b|^wenn ja\b|^if (you )?(selected|chose|choose|answered|picked|ticked|checked)\b|\bif you (have )?(previously|ever|formerly) (worked|been employed)\b|\b(work|company|corporate) email\b|without (the )?domain|before the @|\bexperience (with|in|using|of)\b|^(please )?(briefly )?(describe|tell us|explain|elaborate)\b|\bexamples of (your )?work\b|\bvisual merchandising\b|\bstreet\b|\bzip\b|postal code|\bpin ?code\b|\b(want|wish|plan|hope|like) to (attend|study|join|work)\b|\b(target|preferred|desired|dream|future)\b (school|universit\w*|college|institut\w*|compan\w*|employer|job|role|position|title)|\bhigh school\b|\bsecondary\b|\b(10th|12th|tenth|twelfth|ssc|hsc|matric\w*|intermediate)\b|\bbirth\b|\bcitizenship\b|\bcountry code\b|\bdial\w*\b|\bpass ?(word|code)\b|\bpin\b|\b(event|fair|conference|meetup|webinar|info session)\b/;
 /** "…3 days a week in the office, are you able to commute to the location?" asks yes or no, wherever the "are you" is.
  * Questions that open with a question word ("Where are you located?") still ask for a fact. */
 const YES_NO_INSIDE = /\b(are|do|would|will|can|could|should|have) you\b/;
@@ -237,20 +245,33 @@ const LINK_INVITE = /^(would you like to |do you want to |feel free to |please |
 /** Questions that never take one of the user's profile facts, whatever they seem to ask: yes/no questions, choices
  * about the job, long questions, and questions about someone else (by their words or by their section). */
 export function notAProfileFact(field: FieldDescriptor): boolean {
-  const asked = normalize(field.label);
+  const labelWithoutPurpose = field.label
+    .split(/(?<=[.?!])\s+/)
+    .filter((s) => !PURPOSE_DISCLOSURE.test(s))
+    .join(" ");
+  const asked = normalize(labelWithoutPurpose);
   if (NOT_A_FACT.test(asked)) return true;
   if (YES_NO_INSIDE.test(asked) && !OPENS_WITH_QUESTION_WORD.test(asked)) return true;
   if (asked.split(" ").length > MAX_FACT_WORDS) return true;
+  // Open-ended lists of alternative links ("etc.", "other..") must not be guessed as a single profile fact:
+  if (/\b(?:etc|other\w*)\b/i.test(field.label) && /(?:linked ?in|git ?hub|website|portfolio|twitter|\bx\b|reddit|youtube)/i.test(field.label)) return true;
   if (OTHER_PERSON.test(normalize(`${field.label} ${field.name.replace(/([a-z])([A-Z])/g, "$1 $2")}`)) || SOMEONE_ELSES.test(field.label)) return true;
   return !!field.section && OTHER_PERSON_SECTION.test(normalize(field.section));
 }
 
 export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" | undefined {
-  const asked = normalize(field.label);
+  const labelWithoutPurpose = field.label
+    .split(/(?<=[.?!])\s+/)
+    .filter((s) => !PURPOSE_DISCLOSURE.test(s))
+    .join(" ");
+  const asked = normalize(labelWithoutPurpose);
   if ((field.control === "text" || field.control === "url") && LINK_INVITE.test(asked)) {
-    if (/craft|showcase|projects?\b/.test(asked) && /portfolio/.test(asked)) return "portfolio";
-    // The first link the question names: "LinkedIn profile, personal website or blog" → LinkedIn.
-    const first = /linked ?in|git ?hub|website|portfolio|blog/.exec(asked)?.[0] ?? "";
+    // Open-ended lists of alternative links ("etc.", "other..") must not be guessed; ask the user:
+    if (/\b(?:etc|other\w*)\b/.test(asked) && /(?:linked ?in|git ?hub|website|portfolio)/.test(asked)) return undefined;
+    // Strip optional side mentions (e.g. "(portfolio optional)" or "; a portfolio is optional"):
+    const primary = asked.replace(/\([^)]*optional[^)]*\)/g, "").replace(/;\s*a portfolio is optional/g, "");
+    const first = /linked ?in|git ?hub|website|portfolio|blog/.exec(primary)?.[0] ?? "";
+    if (!first) return undefined;
     return /linked/.test(first) ? "linkedin" : /git/.test(first) ? "github" : "portfolio";
   }
   if (notAProfileFact(field)) return undefined;
