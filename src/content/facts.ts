@@ -85,6 +85,11 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   // it neither makes the question another one nor turns it round.
   const asked = q?.replace(/\bwithout\b.*$/, "") ?? "";
   if (!q || !ABOUT_WORKING.test(q) || NOT_A_PLAIN_ASK.test(asked)) return undefined;
+  const asksAuth = /authori[sz]|right to work|eligib|entitled|legally|permit|permis/.test(asked);
+  const asksSponsor = (/sponsor|visa|immigration/.test(asked)) && (NEEDS.test(asked) || /require|need/.test(asked));
+  if (asksAuth && asksSponsor && /\b(?:and|\&)\b\s*(?:(?:do|will|would|can)\s+you\s+)?(?:require|need)\b/i.test(asked)) {
+    return undefined;
+  }
   let places = countriesIn(field.label);
   if (!places.length && /country (of residence|where you (currently )?(live|reside))|where you (currently )?(live|reside)|your (current )?country/.test(q)) {
     places = countriesIn(profile.country);
@@ -125,11 +130,11 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts): Decision | und
   // "Is your current salary negotiable?" asks yes or no. "Could you please share your expectations?" asks for the amount.
   const politeAsk = /^(could|can|would) you (please )?(let us know|tell|share|specify|provide|give|indicate|state)\b/.test(q);
   if (YES_NO_QUESTION.test(q) && !politeAsk && field.control !== "number") return undefined;
-  let asksExpected = /expect|desired|requirement|range|asking|looking for|anticipated|expectativa|pretens|esperad|souhait|gewunscht|erwart|vorstellung/.test(q);
+  let asksExpected = /expect|desired|requirement|range|asking|looking for|anticipated|expectativa|pretens|esperad|souhait|gewunscht|erwart|vorstellung|\b(?:hourly|daily|contract(?:or)?|consulting|billing|pay)\s+rate\b/.test(q);
   let asksCurrent = /\b(current|present|existing|last drawn|now|today|atual|actual|aktuell\w*|actuel\w*|attuale|huidig\w*)\b/.test(q);
-  if (asksExpected && asksCurrent) {
+  if ((asksExpected && asksCurrent) || (!asksExpected && !asksCurrent)) {
     const hint = normalize(`${field.placeholder} ${field.name}`);
-    const hintExpected = /expect|desired|requirement|range|asking|looking for/.test(hint);
+    const hintExpected = /expect|desired|requirement|range|asking|looking for|\b(?:hourly|daily|contract(?:or)?|consulting|billing|pay)\s+rate\b/.test(hint);
     const hintCurrent = /\b(current|present|existing|last drawn)\b/.test(hint);
     if (hintCurrent && !hintExpected) {
       asksCurrent = true;
@@ -138,7 +143,7 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts): Decision | und
       asksExpected = true;
       asksCurrent = false;
     } else {
-      return undefined; // two values in one box
+      return undefined; // two values in one box, or neither specified
     }
   }
   const value = (asksExpected ? facts.expectedCtc?.trim() : asksCurrent ? facts.currentCtc?.trim() : "") ?? "";
@@ -264,12 +269,77 @@ export function isStartImmediatelyQuestion(label: string): boolean {
 export function startImmediatelyValue(notice: string): "Yes" | "No" | undefined {
   const norm = normalize(notice);
   if (!norm) return undefined;
-  if (/^(immediate(ly)?|0(\s*(days?|weeks?|months?))?|none|no notice)$/.test(norm)) {
+  if (/^(immediate(ly)?|0(\s*(days?|weeks?|months?))?|none|no notice|available immediately)$/.test(norm)) {
     return "Yes";
   }
   if (/^([1-9]\d*)\s*(days?|weeks?|months?)$/.test(norm)) {
     return "No";
   }
+  return undefined;
+}
+
+export function parseNoticeDays(notice: string): number | undefined {
+  const norm = normalize(notice);
+  if (!norm) return undefined;
+  if (/^(immediate(ly)?|0(\s*(days?|weeks?|months?))?|none|no notice|available immediately)$/.test(norm)) {
+    return 0;
+  }
+  const m = norm.match(/\b(\d+)\s*(days?|weeks?|months?)\b/);
+  if (!m || !m[1]) return undefined;
+  const num = parseInt(m[1], 10);
+  const unit = (m[2] ?? "").toLowerCase();
+  if (unit.startsWith("month")) return num * 30;
+  if (unit.startsWith("week")) return num * 7;
+  return num;
+}
+
+export function matchNoticeOption(notice: string, options: string[]): string | undefined {
+  if (!notice || !options.length) return undefined;
+  const direct = bestOption(options, notice);
+  if (direct) {
+    const normDirect = normalize(direct);
+    const normNotice = normalize(notice);
+    if (normDirect === normNotice || normDirect.startsWith(normNotice + " ")) {
+      return direct;
+    }
+  }
+
+  const candidateDays = parseNoticeDays(notice);
+  if (candidateDays === undefined) return direct;
+
+  if (candidateDays === 0) {
+    return options.find((o) =>
+      /^(immediate(ly)?|0\s*days?|no notice|none|available immediately)\b/i.test(normalize(o)) ||
+      /immediate|right away/i.test(o)
+    );
+  }
+
+  for (const o of options) {
+    const optDays = parseNoticeDays(o);
+    if (optDays !== undefined && optDays === candidateDays) return o;
+  }
+
+  if (candidateDays === 90) {
+    const m = options.find((o) => /\b(?:3\s*months?|90\s*days?)\b/i.test(o));
+    if (m) return m;
+  }
+  if (candidateDays === 60) {
+    const m = options.find((o) => /\b(?:2\s*months?|60\s*days?)\b/i.test(o));
+    if (m) return m;
+  }
+  if (candidateDays === 30) {
+    const m = options.find((o) => /\b(?:1\s*month|30\s*days?|4\s*weeks?)\b/i.test(o));
+    if (m) return m;
+  }
+  if (candidateDays === 14) {
+    const m = options.find((o) => /\b(?:2\s*weeks?|14\s*days?)\b/i.test(o));
+    if (m) return m;
+  }
+  if (candidateDays === 7) {
+    const m = options.find((o) => /\b(?:1\s*week|7\s*days?)\b/i.test(o));
+    if (m) return m;
+  }
+
   return undefined;
 }
 
@@ -299,16 +369,9 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
       if (!yesNoField(field)) return undefined;
       const notice = facts.noticePeriod?.trim() ?? "";
       if (notice && field.options.length) {
-        const numMatch = notice.match(/\b(\d+)\s*(days?|weeks?|months?)\b/i);
-        if (numMatch && numMatch[1]) {
-          const rawNum = parseInt(numMatch[1]!, 10);
-          const unit = (numMatch[2] ?? "").toLowerCase();
-          const days = unit.startsWith("month") ? rawNum * 30 : unit.startsWith("week") ? rawNum * 7 : rawNum;
-          const tiered = field.options.find((o) => {
-            const m = o.match(/\b(\d+)\s*days?\b/i);
-            if (m && m[1] && parseInt(m[1]!, 10) === days) return true;
-            return new RegExp(`\\b${rawNum}\\s*${unit}`, "i").test(o);
-          });
+        const candidateDays = parseNoticeDays(notice);
+        if (candidateDays !== undefined && candidateDays > 0) {
+          const tiered = matchNoticeOption(notice, field.options);
           if (tiered) return answer(tiered, "notice period");
         }
       }
@@ -316,9 +379,29 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
       if (!val) return undefined;
       let ans: string = val;
       if (field.options.length) {
-        const match = yesNoOption(field.options, ans) ?? bestOption(field.options, ans);
-        if (!match) return undefined;
-        ans = match;
+        if (ans === "Yes") {
+          const immediateOpt = field.options.find((o) =>
+            /immediate|right away/i.test(o) && !/^(no\b|not)/i.test(normalize(o))
+          );
+          if (immediateOpt) {
+            ans = immediateOpt;
+          } else {
+            const match = yesNoOption(field.options, ans) ?? bestOption(field.options, ans);
+            if (!match) return undefined;
+            ans = match;
+          }
+        } else {
+          const notImmediateOpt = field.options.find((o) =>
+            /^(no\b|not available|cannot|can t)/i.test(normalize(o)) && !/available immediately/i.test(o)
+          );
+          if (notImmediateOpt) {
+            ans = notImmediateOpt;
+          } else {
+            const match = yesNoOption(field.options, ans) ?? bestOption(field.options, ans);
+            if (!match) return undefined;
+            ans = match;
+          }
+        }
       }
       return answer(ans, "start immediately");
     }
@@ -329,15 +412,41 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     // A date ("Start date", a DD/MM/YYYY mask in the label or placeholder) needs a date, not "30 days".
     const shape = normalize(`${field.label} ${field.placeholder}`);
     if (/\b(dd|mm|yyyy|jjjj|aaaa)\b/.test(shape) || /\b(month|year)\b$/.test(q) || /last (working )?day/.test(q)) return undefined;
-    // A box in a unit ("Notice period (months)", "in days") or a number box takes a number in the saved unit, or nothing.
+    const candidateDays = parseNoticeDays(notice);
     const unit = /\b(days?|weeks?|months?)\b/.exec(shape)?.[1]?.replace(/s$/, "");
     const saved = /^(\d+)\s*(day|week|month)s?$/i.exec(notice);
     if (unit || field.control === "number") {
+      if (unit === "month" && candidateDays !== undefined) {
+        if (candidateDays % 30 === 0) {
+          const months = String(candidateDays / 30);
+          return answer(field.control === "number" ? months : (saved && saved[2] === "month" ? notice : months), "notice period");
+        }
+        return undefined;
+      }
+      if (unit === "week" && candidateDays !== undefined) {
+        if (candidateDays % 7 === 0) {
+          const weeks = String(candidateDays / 7);
+          return answer(field.control === "number" ? weeks : (saved && saved[2] === "week" ? notice : weeks), "notice period");
+        }
+        return undefined;
+      }
+      if (unit === "day" && candidateDays !== undefined) {
+        const days = String(candidateDays);
+        return answer(field.control === "number" ? days : (saved && saved[2] === "day" ? notice : days), "notice period");
+      }
+      if (field.control === "number") {
+        if (saved) return answer(saved[1]!, "notice period");
+        if (candidateDays !== undefined) return answer(String(candidateDays), "notice period");
+      }
       if (!saved || (unit && saved[2]!.toLowerCase() !== unit)) return undefined;
       return answer(field.control === "number" ? saved[1]! : notice, "notice period");
     }
     // "Please list specific dates of availability, start and end date", "Additional information about a start date".
     if (/additional information|\bend date\b|\blist (the |your |specific )?dates\b|^optional\b/.test(q)) return undefined;
+    if (field.options.length) {
+      const opt = matchNoticeOption(notice, field.options);
+      return opt ? answer(opt, "notice period") : undefined;
+    }
     return answer(notice, "notice period");
   }
   if (topic === "relocation") {

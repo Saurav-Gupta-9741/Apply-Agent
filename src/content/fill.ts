@@ -2,7 +2,7 @@
  * the value back to verify it stuck. */
 
 import { deepQueryAll, scopeOf } from "./dom";
-import { visibleText, type ExtractedField, type FieldElement } from "./extract";
+import { isDropzone, visibleText, type ExtractedField, type FieldElement } from "./extract";
 import type { ResumeFile } from "../shared/types";
 import { bestOption, cleanLabel, cssAttr, normalize } from "../shared/text";
 
@@ -145,14 +145,42 @@ function base64ToBytes(data: string): Uint8Array<ArrayBuffer> {
   return bytes;
 }
 
-function fillFile(el: HTMLInputElement, resume: ResumeFile): FillOutcome {
+function fillFile(el: HTMLElement, resume: ResumeFile): FillOutcome {
   if (typeof DataTransfer === "undefined") return { ok: false, detail: "file upload not supported here" };
   const transfer = new DataTransfer();
   transfer.items.add(new File([base64ToBytes(resume.dataBase64)], resume.name, { type: resume.type }));
-  el.files = transfer.files;
-  fire(el, "input");
-  fire(el, "change");
-  return el.files?.length === 1 && el.files[0]?.name === resume.name ? { ok: true } : { ok: false, detail: "upload did not stick" };
+  if (el instanceof HTMLInputElement && el.type === "file") {
+    el.files = transfer.files;
+    fire(el, "input");
+    fire(el, "change");
+    return el.files?.length === 1 && el.files[0]?.name === resume.name ? { ok: true } : { ok: false, detail: "upload did not stick" };
+  }
+  const dragOverEvent = typeof DragEvent !== "undefined"
+    ? new DragEvent("dragover", { bubbles: true, cancelable: true, composed: true })
+    : new Event("dragover", { bubbles: true, cancelable: true, composed: true });
+  try { Object.defineProperty(dragOverEvent, "dataTransfer", { value: transfer }); } catch {}
+  el.dispatchEvent(dragOverEvent);
+  const dropEvent = typeof DragEvent !== "undefined"
+    ? new DragEvent("drop", { bubbles: true, cancelable: true, composed: true })
+    : new Event("drop", { bubbles: true, cancelable: true, composed: true });
+  try { Object.defineProperty(dropEvent, "dataTransfer", { value: transfer }); } catch {}
+  el.dispatchEvent(dropEvent);
+  el.click();
+  const dynamicInput = el.querySelector<HTMLInputElement>("input[type='file']") ?? scopeOf(el).querySelector<HTMLInputElement>("input[type='file']");
+  if (dynamicInput && dynamicInput.files !== transfer.files) {
+    try {
+      dynamicInput.files = transfer.files;
+    } catch {
+      try {
+        Object.defineProperty(dynamicInput, "files", { value: transfer.files, configurable: true });
+      } catch {}
+    }
+    fire(dynamicInput, "input");
+    fire(dynamicInput, "change");
+  }
+  const val = currentValue({ descriptor: { control: "file" } as any, elements: [el as any] });
+  const hasStuck = !!val || (dynamicInput?.files?.length === 1) || el.getAttribute("data-filename") === resume.name || el.classList.contains("has-file") || (el.textContent?.includes(resume.name) ?? false);
+  return hasStuck ? { ok: true } : { ok: false, detail: "upload did not stick" };
 }
 
 /** Whether the field already holds a value (so a re-run never overwrites what the user typed). */
@@ -178,6 +206,14 @@ export function currentValue(field: ExtractedField): string {
   }
   if (el instanceof HTMLInputElement && el.type === "checkbox") return el.checked ? "yes" : "";
   if (el instanceof HTMLInputElement && el.type === "file") return el.files?.length ? el.files[0]!.name : "";
+  if (isDropzone(el)) {
+    const dynamicInput = el.querySelector<HTMLInputElement>("input[type='file']");
+    if (dynamicInput?.files?.length) return dynamicInput.files[0]!.name;
+    const dataFile = el.getAttribute("data-filename");
+    if (dataFile) return dataFile;
+    const nameEl = el.querySelector("[class*='filename' i], [class*='file-name' i], .file-name, .uploaded-file");
+    if (nameEl && cleanLabel(nameEl.textContent ?? "")) return cleanLabel(nameEl.textContent ?? "");
+  }
   if (field.descriptor.control === "dropdown") return dropdownValue(el);
   if (el instanceof HTMLSelectElement) {
     const selected = el.selectedOptions[0];
@@ -283,11 +319,11 @@ export async function fillCombobox(input: HTMLInputElement, value: string, timeo
   return pickFromList(input, value, timeoutMs);
 }
 
-const DROPDOWN_PLACEHOLDER = /^(select( one| an option)?|choose( one)?|please select|--+|—|bitte w[äa]hlen|s[ée]lectionner|seleccion(e|a|ar)|selecione)\W*$/i;
+const DROPDOWN_PLACEHOLDER = /^(select|choose|please select)\b|^(select( one| an option)?|choose( one)?|please select|--+|—|bitte w[äa]hlen|s[ée]lectionner|seleccion(e|a|ar)|selecione)\W*$/i;
 
 /** What a custom dropdown currently shows, without its placeholder ("Select One"). */
 export function dropdownValue(el: Element): string {
-  const text = cleanLabel(el.textContent ?? "") || cleanLabel(el.getAttribute("value") ?? "");
+  const text = cleanLabel(el.textContent ?? "") || cleanLabel(el.getAttribute("value") ?? "") || cleanLabel(el.getAttribute("data-value") ?? "");
   return DROPDOWN_PLACEHOLDER.test(text) ? "" : text;
 }
 

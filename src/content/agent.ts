@@ -295,8 +295,8 @@ function invalidFields(root: HTMLElement): string[] {
   const form = root instanceof HTMLFormElement ? root : root.closest("form");
   if (!form || form.noValidate || form.checkValidity()) return [];
   return extractFields(form)
-    .filter((f) => f.elements.some((e) => !e.checkValidity()))
-    .map((f) => `${f.descriptor.label || f.descriptor.name}: ${f.elements[0]?.validationMessage || "invalid"}`);
+    .filter((f) => f.elements.some((e) => "checkValidity" in e && typeof (e as HTMLInputElement).checkValidity === "function" && !(e as HTMLInputElement).checkValidity()))
+    .map((f) => { const first = f.elements[0]; const msg = first && "validationMessage" in first && typeof (first as HTMLInputElement).validationMessage === "string" ? (first as HTMLInputElement).validationMessage : "invalid"; return `${f.descriptor.label || f.descriptor.name}: ${msg || "invalid"}`; });
 }
 
 export async function submitForm(doc: Document, timeoutMs = 20000, beforeSubmit?: BeforeSubmit): Promise<RunReport> {

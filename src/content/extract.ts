@@ -10,7 +10,7 @@ import { cleanLabel, cssAttr } from "../shared/text";
 import { deepQueryAll, scopeOf } from "./dom";
 
 /** Native controls, plus buttons that open a list of choices (custom dropdowns). */
-export type FieldElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLButtonElement;
+export type FieldElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLButtonElement | HTMLElement;
 
 export interface ExtractedField {
   descriptor: FieldDescriptor;
@@ -20,7 +20,16 @@ export interface ExtractedField {
 
 const SKIP_INPUT_TYPES = new Set(["hidden", "submit", "button", "reset", "image", "search", "password"]);
 export const DROPDOWN = "button[aria-haspopup='listbox'], [role='combobox']:not(input):not(select), [role='listbox'][tabindex='0']:not(select)";
-const CONTROLS = `input, textarea, select, ${DROPDOWN}`;
+export const DROPZONE = "[data-dropzone], [data-testid*='dropzone' i], [data-ui*='dropzone' i], [class*='dropzone' i], [class*='drop-zone' i], [class*='file-drop' i], [class*='fileDrop' i]";
+
+export function isDropzone(el: Element): boolean {
+  if (!(el instanceof HTMLElement) || el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement || el instanceof HTMLButtonElement) return false;
+  if (!el.matches(DROPZONE)) return false;
+  if (el.parentElement?.closest(DROPZONE)) return false;
+  if (el.querySelector("input[type='file']") || el.parentElement?.querySelector(":scope > input[type='file']")) return false;
+  return true;
+}
+const CONTROLS = `input, textarea, select, ${DROPDOWN}, ${DROPZONE}`;
 const LABELISH = "legend, label, .label, [class*='label'], [class*='Label'], [class*='question-title'], [class*='questionTitle'], [role='heading'], h3, h4";
 const GENERIC_LABEL = /^(attach|attach file|upload|upload file|browse|choose( a)? file|select( a)? file|drop (your )?files?( here)?|enter manually|type your response|your answer|answer|select|choose|select an option|please select|optional)\W*$/i;
 
@@ -39,7 +48,7 @@ function isHoneypot(el: FieldElement): boolean {
     || el instanceof HTMLInputElement && !["radio", "checkbox", "file"].includes(el.type) && el.getAttribute("role") !== "combobox" && !el.hasAttribute("aria-autocomplete");
   if (!textLike) return false;
   const describedAs = [el.getAttribute("name"), el.id, el.getAttribute("placeholder"), el.getAttribute("aria-label"),
-    ...Array.from(el.labels ?? [], (l) => l.textContent)].join(" ");
+    labelledBy(el), ...Array.from(el.labels ?? [], (l) => l.textContent)].join(" ");
   if (HONEYPOT_WORDS.test(describedAs)) return true;
   // Where the browser has laid the page out: a box of a pixel or less, or placed far outside the page, is not for people.
   const rect = el.getBoundingClientRect();
@@ -53,7 +62,7 @@ function isHoneypot(el: FieldElement): boolean {
   for (let node: Element | null = el; node; node = node.parentElement) {
     const style = node.ownerDocument.defaultView?.getComputedStyle(node);
     if (!style) continue;
-    if (style.opacity === "0") return true;
+    if (style.opacity !== "" && parseFloat(style.opacity) === 0) return true;
     if ((style.position === "absolute" || style.position === "fixed") && (far(style.left) || far(style.top))) return true;
     if (/translate[xy3d]*\(\s*-\d{3,}/i.test(style.transform)) return true;
     if (/rect\(\s*0(px)?[ ,]+0(px)?[ ,]+0(px)?[ ,]+0(px)?\s*\)/.test(style.clip) || /inset\(\s*50%|circle\(\s*0/.test(style.clipPath)) return true;
@@ -100,7 +109,7 @@ function humanName(name: string): string {
 
 function controlsIn(container: Element): FieldElement[] {
   return deepQueryAll<FieldElement>(container, CONTROLS).filter(
-    (c) => !(c instanceof HTMLInputElement && SKIP_INPUT_TYPES.has(c.type)) && (c.type === "file" || !isHidden(c)),
+    (c) => !(c instanceof HTMLInputElement && SKIP_INPUT_TYPES.has(c.type)) && !(c.matches(DROPZONE) && !isDropzone(c)) && ((c instanceof HTMLInputElement && c.type === "file") || isDropzone(c) || !isHidden(c)),
   );
 }
 
@@ -205,6 +214,7 @@ function controlType(el: FieldElement): ControlType {
   if (el instanceof HTMLTextAreaElement) return "textarea";
   if (el instanceof HTMLSelectElement) return "select";
   if (el.getAttribute("role") === "combobox") return "combobox";
+  if (isDropzone(el)) return "file";
   const type = (el.getAttribute("type") ?? "text").toLowerCase();
   const known: ControlType[] = ["email", "tel", "url", "number", "date", "radio", "checkbox", "file"];
   return (known as string[]).includes(type) ? (type as ControlType) : "text";
@@ -252,10 +262,11 @@ export function extractFields(root: ParentNode): ExtractedField[] {
 
   for (const el of all) {
     if (el instanceof HTMLInputElement && SKIP_INPUT_TYPES.has(el.type)) continue;
+    if (el.matches(DROPZONE) && !isDropzone(el)) continue;
     // Disabled and read-only fields (often pre-filled by the site) are not the user's to change.
-    if (el.disabled || ((el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && el.readOnly)) continue;
+    if (("disabled" in el && (el as HTMLInputElement).disabled) || ((el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && el.readOnly)) continue;
     // File inputs are usually hidden behind a styled "Upload" button but still accept files.
-    const isFile = el instanceof HTMLInputElement && el.type === "file";
+    const isFile = (el instanceof HTMLInputElement && el.type === "file") || isDropzone(el);
     if (!isFile && isHidden(el)) continue;
     if (isHoneypot(el)) continue;
     // Radios, and checkboxes sharing a name, are one question with several options.
@@ -266,6 +277,7 @@ export function extractFields(root: ParentNode): ExtractedField[] {
       continue;
     }
     const raw = rawLabel(el, root);
+    if (HONEYPOT_WORDS.test(raw) && !["radio", "checkbox", "file"].includes(el instanceof HTMLInputElement ? el.type : "")) continue;
     // Custom dropdowns often name themselves "Country Select One Required": the question is "Country".
     const label = el.matches(DROPDOWN) ? cleanLabel(raw).replace(/(\s+(select one|please select|select|required))+$/i, "") : cleanLabel(raw);
     out.push({

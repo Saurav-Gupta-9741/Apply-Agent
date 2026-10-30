@@ -16,7 +16,7 @@ const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   ["signature", /unterschrift|assinatura|handtekening|signature|\be ?sign(ature)?\b|sign here|\bsigned\b|type your (full )?(legal )?name|electronically sign|\bdeclaration\b|hereby declare|\backnowledg\w*\b.*\bname\b|\binitials\b/],
   ["sponsorship", /sponsor|visa|visum/],
   ["work_authorization", /\bwork permit\b|arbeitserlaubnis|aufenthaltstitel|arbeitsgenehmigung|permis de travail|autorisation de travail|autorizacion de trabajo|permiso de trabajo|autorizacao de trabalho|permesso di (lavoro|soggiorno)|werkvergunning|authori[sz]ed to work|work authori[sz]ation|right to work|eligible to work|legally (able|permitted|entitled)/],
-  ["salary", /gehalt|salaire|salari|retribuzione|stipendio|pretension|salary|compensation|\bctc\b|pay expectation|expected pay|desired pay|remuneration/],
+  ["salary", /gehalt|salaire|salari|retribuzione|stipendio|pretension|salary|compensation|\bctc\b|pay expectation|expected pay|desired pay|remuneration|\b(?:hourly|daily|contract(?:or)?|consulting|billing|pay)\s+rate\b|\brate of pay\b|\bhourly pay\b/],
   ["notice_period", /when (are|would|will|could) you (be )?available|available to start|available for employment|^date available$|earliest (date )?(you|to) (could |would |can )?start|kundigungsfrist|eintrittstermin|fruhester eintritt|preavis|disponibilite|preaviso|disponibilidad|fecha de incorporacion|aviso previo|preavviso|opzegtermijn|notice period|start date|when can you (start|join)|earliest (start|joining)|availability to start|when would be your earliest availability|earliest availability|can you start (immediately|right away)|are you (able|available) to start (immediately|right away)|start (immediately|right away)/],
   ["relocation", /relocat|umzug|umziehen|demenag|reubic|mudanza|trasferi|verhuiz/],
   ["pronouns", /\bpronouns?\b/],
@@ -331,7 +331,15 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
     // An answer the user saved for this kind of question (never a notice period such as "30 days"), else the quick answer.
     const entry = findAnswer(field, answers, "notice_period");
     if (entry && isStartImmediatelyQuestion(entry.question)) {
-      const val = field.options.length ? yesNoOption(field.options, entry.answer) ?? bestOption(field.options, entry.answer) : entry.answer;
+      let val: string | undefined = entry.answer;
+      if (field.options.length) {
+        if (/^(yes|y|true)\b/i.test(val)) {
+          const imm = field.options.find((o) => /immediate|right away/i.test(o) && !/^(no\b|not)/i.test(normalize(o)));
+          val = imm ?? yesNoOption(field.options, entry.answer) ?? bestOption(field.options, entry.answer);
+        } else {
+          val = yesNoOption(field.options, entry.answer) ?? bestOption(field.options, entry.answer);
+        }
+      }
       if (val) return { kind: "answer", value: val, question: entry.question };
     }
     const quick = factDecision(field, profile, "notice_period", page);
