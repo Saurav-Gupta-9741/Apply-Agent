@@ -69,6 +69,7 @@ export interface Profile {
   linkedin: string;
   github: string;
   portfolio: string;
+  resumeUrl?: string;
   currentCompany: string;
   currentTitle: string;
   school: string;

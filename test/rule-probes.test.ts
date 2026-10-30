@@ -91,6 +91,20 @@ describe("rule probes from audit", () => {
     expect(open3.kind).toBe("ask");
   });
 
+  it("fills resume link for resume and cv URL questions", () => {
+    const r1 = testField("Resume link", "url");
+    expect(r1).toEqual({ kind: "profile", key: "resumeUrl", value: "https://drive.google.com/file/d/1_L5NAIAgNgMUZYuyqM25RNu02NELLGwp/view?usp=drive_link" });
+
+    const r2 = testField("Link to your resume", "text");
+    expect(r2).toEqual({ kind: "profile", key: "resumeUrl", value: "https://drive.google.com/file/d/1_L5NAIAgNgMUZYuyqM25RNu02NELLGwp/view?usp=drive_link" });
+
+    const r3 = testField("Google Drive link to resume", "text");
+    expect(r3).toEqual({ kind: "profile", key: "resumeUrl", value: "https://drive.google.com/file/d/1_L5NAIAgNgMUZYuyqM25RNu02NELLGwp/view?usp=drive_link" });
+
+    const r4 = testField("CV URL", "url");
+    expect(r4).toEqual({ kind: "profile", key: "resumeUrl", value: "https://drive.google.com/file/d/1_L5NAIAgNgMUZYuyqM25RNu02NELLGwp/view?usp=drive_link" });
+  });
+
   it("handles name rules correctly", () => {
     const ref = testField("First Last Name of your referrer");
     expect(ref.kind).toBe("ask");

@@ -45,6 +45,7 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["linkedin", /linked ?in/],
   ["github", /git ?hub/],
   ["portfolio", /portfolio|personal (web)?site|^website$|website url|blog/],
+  ["resumeUrl", /\b(?:resume|cv|curriculum\s*vitae)\s*[\(/]?\s*(?:url|link|drive|google\s*drive|doc|web\s*link|online)\b|\b(?:link|url)\s*(?:to|for)?\s*(?:your\s*)?(?:resume|cv|curriculum\s*vitae)\b|\b(?:google\s*drive|drive\s*link|cloud\s*link)\b.*\b(?:resume|cv)\b/i],
   ["currentCompany", /aktueller arbeitgeber|derzeitiger arbeitgeber|employeur actuel|entreprise actuelle|empresa actual|empresa atual|azienda attuale|huidige werkgever|current (company|employer)|present employer|(most )?recent employer|current or most recent (company|employer)|organi[sz]ation name/],
   ["currentTitle", /current (title|role|position|designation)|job title|aktuelle position|berufsbezeichnung|poste actuel|intitule du poste|cargo actual|puesto actual|cargo atual|ruolo attuale|huidige functie/],
   ["graduationYear", /graduat\w* (year|date)|year of graduation|class of|quelle annee|annee (de|d) (diplom|obtention)|abschlussjahr|jahr des abschlusses|ano de (formatura|conclusao|graduacao|graduacion|egreso)|anno di (laurea|diploma)/],
@@ -262,7 +263,7 @@ const OPENS_WITH_QUESTION_WORD = /^(what|where|which|how|when|who|whom|please|yo
 const MAX_FACT_WORDS = 16;
 
 /** "Would you like to include your LinkedIn profile, personal website or blog?" asks for a link, not a yes or no. */
-const LINK_INVITE = /^(would you like to |do you want to |feel free to |please |you can |optionally )?(include|share|add|provide|link|paste|enter)\b.*\b(linked ?in|git ?hub|website|portfolio|blog)\b/;
+const LINK_INVITE = /^(would you like to |do you want to |feel free to |please |you can |optionally )?(include|share|add|provide|link|paste|enter)\b.*\b(linked ?in|git ?hub|website|portfolio|blog|resume|cv)\b/;
 
 /** Questions that never take one of the user's profile facts, whatever they seem to ask: yes/no questions, choices
  * about the job, long questions, and questions about someone else (by their words or by their section). */
@@ -292,9 +293,12 @@ export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" |
     if (/\b(?:etc|other\w*)\b/.test(asked) && /(?:linked ?in|git ?hub|website|portfolio)/.test(asked)) return undefined;
     // Strip optional side mentions (e.g. "(portfolio optional)" or "; a portfolio is optional"):
     const primary = asked.replace(/\([^)]*optional[^)]*\)/g, "").replace(/;\s*a portfolio is optional/g, "");
-    const first = /linked ?in|git ?hub|website|portfolio|blog/.exec(primary)?.[0] ?? "";
+    const first = /linked ?in|git ?hub|website|portfolio|blog|resume|cv/.exec(primary)?.[0] ?? "";
     if (!first) return undefined;
-    return /linked/.test(first) ? "linkedin" : /git/.test(first) ? "github" : "portfolio";
+    return /linked/.test(first) ? "linkedin" : /git/.test(first) ? "github" : /resume|cv/.test(first) ? "resumeUrl" : "portfolio";
+  }
+  if (field.control === "url" && /\b(resume|cv|curriculum\s*vitae)\b/i.test(asked)) {
+    return "resumeUrl";
   }
   if (notAProfileFact(field)) return undefined;
   const hint = AUTOCOMPLETE[field.autocomplete.toLowerCase()];

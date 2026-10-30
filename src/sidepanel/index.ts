@@ -888,6 +888,7 @@ const PROFILE_GROUPS: Array<{ title: string; fields: Array<[ProfileKey, string, 
   ] },
   { title: "Links", fields: [
     ["linkedin", "LinkedIn URL", "url", true], ["github", "GitHub URL", "url"], ["portfolio", "Portfolio / website", "url"],
+    ["resumeUrl", "Resume Drive / Cloud link", "url", true],
   ] },
   { title: "Experience & education", fields: [
     ["currentTitle", "Current title", "text"], ["currentCompany", "Current company", "text"],

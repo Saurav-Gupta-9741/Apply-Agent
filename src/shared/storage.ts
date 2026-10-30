@@ -13,6 +13,7 @@ export const EMPTY_PROFILE: Profile = {
   linkedin: "",
   github: "",
   portfolio: "",
+  resumeUrl: "https://drive.google.com/file/d/1_L5NAIAgNgMUZYuyqM25RNu02NELLGwp/view?usp=drive_link",
   currentCompany: "",
   currentTitle: "",
   school: "",
