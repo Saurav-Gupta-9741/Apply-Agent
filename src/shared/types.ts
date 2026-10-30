@@ -247,6 +247,8 @@ export interface RunReport {
   fields: FieldResult[];
   captcha: boolean;
   confirmationText?: string;
+  submittedAt?: string;
+  screenshotKey?: string;
   errors: string[];
   /** Steps completed on a multi-step application (absent for one-page forms). */
   steps?: number;
@@ -263,10 +265,23 @@ export interface ApplicationRecord {
   jobTitle: string;
   status: ApplicationStatus;
   createdAt: string;
+  submittedAt?: string;
   confirmationText?: string;
   /** Storage key of a PNG screenshot taken on the confirmation page, when permitted. */
   screenshotKey?: string;
 }
+
+/** A candidate profile persona allowing users to maintain multiple profiles (e.g. Fullstack SWE, Data Scientist). */
+export interface CandidateProfile {
+  id: string;
+  name: string;
+  targetRole?: string;
+  profile: Profile;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ProfilePersona = CandidateProfile;
 
 export type QueueStatus =
   | "queued"

@@ -232,7 +232,7 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
   if (!root) {
     // A page without a form may be the confirmation page of an earlier submission.
     const confirmation = detectConfirmation(doc);
-    return confirmation.confirmed ? { ...report, status: "submitted_confirmed", confirmationText: confirmation.text } : report;
+    return confirmation.confirmed ? { ...report, status: "submitted_confirmed", confirmationText: confirmation.text, submittedAt: new Date().toISOString() } : report;
   }
 
   // 1. The resume first: many sites read it and fill the form themselves. Wait until that is finished, then fill
@@ -330,7 +330,7 @@ export async function submitForm(doc: Document, timeoutMs = 20000, beforeSubmit?
   while (Date.now() < deadline) {
     await sleep(500);
     const confirmation = detectConfirmation(doc);
-    if (confirmation.confirmed) return { ...report, status: "submitted_confirmed", confirmationText: confirmation.text };
+    if (confirmation.confirmed) return { ...report, status: "submitted_confirmed", confirmationText: confirmation.text, submittedAt: new Date().toISOString() };
     if (hasCaptcha(doc)) return { ...report, status: "needs_user", captcha: true };
     const errors = visibleErrors(doc).filter((e) => !before.has(e));
     if (errors.length) return { ...report, status: "needs_user", errors };
@@ -416,7 +416,7 @@ export async function runOnce(doc: Document, ctx: AgentContext, beforeSubmit?: B
     if (outcome.kind === "confirmed") {
       // That "Next" button sent the application: record it like a submission, honestly.
       await beforeSubmit?.(filled);
-      return done({ ...filled, status: "submitted_confirmed", confirmationText: outcome.text });
+      return done({ ...filled, status: "submitted_confirmed", confirmationText: outcome.text, submittedAt: new Date().toISOString() });
     }
     if (outcome.kind === "captcha") return done({ ...filled, status: "needs_user", captcha: true });
     if (outcome.kind === "errors") return done({ ...filled, status: "needs_user", errors: outcome.errors });

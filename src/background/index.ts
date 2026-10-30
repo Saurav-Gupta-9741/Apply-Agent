@@ -177,6 +177,7 @@ async function recordResult(report: RunReport, tab: chrome.tabs.Tab): Promise<vo
   if (!status) return;
 
   const screenshotKey = status === "applied_confirmed" ? await screenshot(tab, id) : undefined;
+  const now = new Date().toISOString();
   await updateApplications((records) => {
     const existing = records.find((r) => r.id === id);
     const record: ApplicationRecord = {
@@ -185,7 +186,8 @@ async function recordResult(report: RunReport, tab: chrome.tabs.Tab): Promise<vo
       platform: report.platform || existing?.platform || "",
       jobTitle: existing?.jobTitle || report.jobTitle,
       status,
-      createdAt: existing?.createdAt ?? new Date().toISOString(),
+      createdAt: existing?.createdAt ?? now,
+      submittedAt: status === "applied_confirmed" ? (report.submittedAt ?? existing?.submittedAt ?? now) : existing?.submittedAt,
       confirmationText: report.confirmationText ?? existing?.confirmationText,
       screenshotKey: screenshotKey ?? existing?.screenshotKey,
     };

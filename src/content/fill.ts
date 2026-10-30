@@ -11,13 +11,62 @@ export interface FillOutcome {
   detail?: string;
 }
 
+export function fireEvent(el: Element, type: string, init: Record<string, unknown> = {}): boolean {
+  let event: Event;
+  const eventInit = { bubbles: true, composed: true, cancelable: true, ...init };
+
+  try {
+    if (type.startsWith("pointer") && typeof PointerEvent !== "undefined") {
+      event = new PointerEvent(type, {
+        pointerId: 1,
+        pointerType: "mouse",
+        isPrimary: true,
+        ...eventInit,
+      });
+    } else if ((type.startsWith("mouse") || type === "click") && typeof MouseEvent !== "undefined") {
+      event = new MouseEvent(type, {
+        button: 0,
+        buttons: type === "pointerdown" || type === "mousedown" ? 1 : 0,
+        ...eventInit,
+      });
+    } else if (type.startsWith("key") && typeof KeyboardEvent !== "undefined") {
+      event = new KeyboardEvent(type, {
+        key: typeof init.key === "string" ? init.key : "Unidentified",
+        code: typeof init.code === "string" ? init.code : "",
+        ...eventInit,
+      });
+    } else if ((type === "focus" || type === "blur") && typeof FocusEvent !== "undefined") {
+      event = new FocusEvent(type, {
+        ...eventInit,
+      });
+    } else if (type === "input" && typeof InputEvent !== "undefined") {
+      event = new InputEvent(type, {
+        inputType: "insertText",
+        data: typeof init.data === "string" ? init.data : undefined,
+        ...eventInit,
+      });
+    } else {
+      event = new Event(type, eventInit);
+    }
+  } catch {
+    event = new Event(type, eventInit);
+  }
+
+  return el.dispatchEvent(event);
+}
+
 export function fire(el: Element, type: string): void {
   // composed: the event leaves a shadow root, so frameworks listening above a web component hear it too.
-  el.dispatchEvent(new Event(type, { bubbles: true, composed: true }));
+  fireEvent(el, type);
 }
 
 /** Frameworks track values through the native setter; assigning `.value` directly is invisible to them. */
-function setNativeValue(el: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement, value: string): void {
+export function setNativeValue(el: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement, value: string): void {
+  // React 16+ uses a custom _valueTracker on inputs to detect whether value changed
+  const tracker = (el as any)._valueTracker;
+  if (tracker && typeof tracker.setValue === "function") {
+    tracker.setValue("");
+  }
   const proto = Object.getPrototypeOf(el) as object;
   const setter = Object.getOwnPropertyDescriptor(proto, "value")?.set;
   if (setter) setter.call(el, value);
@@ -53,17 +102,82 @@ export function formatDateFor(el: HTMLInputElement | HTMLTextAreaElement, value:
   return [a, b, c].filter((t): t is string => !!t).map(part).join(sep);
 }
 
-function fillText(el: HTMLInputElement | HTMLTextAreaElement, rawValue: string, hint = ""): FillOutcome {
+export interface TypingOptions {
+  delayMs?: number;
+  keystrokeDelayMs?: number;
+}
+
+export function fillText(el: HTMLInputElement | HTMLTextAreaElement, rawValue: string, hint = ""): FillOutcome {
   const value = formatDateFor(el, rawValue, hint);
   // The browser would silently cut a long answer at maxlength: refuse instead, so the user can shorten it.
   if (el.maxLength > 0 && value.length > el.maxLength) {
     return { ok: false, detail: `answer is ${value.length} characters; this field allows ${el.maxLength}` };
   }
+  // Realistic anti-bot event sequence: pointerdown -> focus -> keydown -> input -> change -> blur
+  fireEvent(el, "pointerdown");
+  fireEvent(el, "mousedown");
   el.focus();
+  fireEvent(el, "focusin");
+  fireEvent(el, "focus");
+
+  const lastChar = value.slice(-1) || "a";
+  fireEvent(el, "keydown", { key: lastChar });
   setNativeValue(el, value);
-  fire(el, "input");
-  fire(el, "change");
+  fireEvent(el, "input", { data: value });
+  fireEvent(el, "keyup", { key: lastChar });
+
+  fireEvent(el, "change");
   el.blur();
+  fireEvent(el, "focusout");
+  fireEvent(el, "blur");
+
+  return el.value === value ? { ok: true } : { ok: false, detail: "value did not stick" };
+}
+
+export async function fillTextHumanized(
+  el: HTMLInputElement | HTMLTextAreaElement,
+  rawValue: string,
+  hint = "",
+  options: TypingOptions = {}
+): Promise<FillOutcome> {
+  const value = formatDateFor(el, rawValue, hint);
+  if (el.maxLength > 0 && value.length > el.maxLength) {
+    return { ok: false, detail: `answer is ${value.length} characters; this field allows ${el.maxLength}` };
+  }
+
+  // 1. Pointer targeting & focus
+  fireEvent(el, "pointerdown");
+  fireEvent(el, "mousedown");
+  el.focus();
+  fireEvent(el, "focusin");
+  fireEvent(el, "focus");
+  fireEvent(el, "pointerup");
+  fireEvent(el, "mouseup");
+  fireEvent(el, "click");
+
+  const delay = options.keystrokeDelayMs ?? (options.delayMs ?? 10);
+  if (delay > 0) await sleep(delay);
+
+  // 2. Character-by-character typing with synthetic delays
+  setNativeValue(el, "");
+  for (let i = 0; i < value.length; i++) {
+    const char = value[i]!;
+    fireEvent(el, "keydown", { key: char, code: `Key${char.toUpperCase()}` });
+    const current = value.slice(0, i + 1);
+    setNativeValue(el, current);
+    fireEvent(el, "input", { data: char, inputType: "insertText" });
+    fireEvent(el, "keyup", { key: char, code: `Key${char.toUpperCase()}` });
+    if (delay > 0 && i < value.length - 1) {
+      await sleep(delay);
+    }
+  }
+
+  // 3. Commit and blur
+  fireEvent(el, "change");
+  el.blur();
+  fireEvent(el, "focusout");
+  fireEvent(el, "blur");
+
   return el.value === value ? { ok: true } : { ok: false, detail: "value did not stick" };
 }
 
@@ -72,9 +186,14 @@ function fillSelect(el: HTMLSelectElement, value: string): FillOutcome {
   const match = bestOption(options.map(optionLabel), value);
   const option = options.find((o) => optionLabel(o) === match) ?? options.find((o) => normalize(o.value) === normalize(value));
   if (!option) return { ok: false, detail: `no option matches "${value}"` };
+  fireEvent(el, "pointerdown");
+  fireEvent(el, "mousedown");
+  el.focus();
   setNativeValue(el, option.value);
   fire(el, "input");
   fire(el, "change");
+  el.blur();
+  fireEvent(el, "blur");
   return el.value === option.value ? { ok: true } : { ok: false, detail: "selection did not stick" };
 }
 
@@ -94,8 +213,13 @@ function fillRadio(radios: HTMLInputElement[], value: string): FillOutcome {
   if (!radio) return { ok: false, detail: `no choice matches "${value}"` };
   const target = (radio.closest("[role='radio']") as HTMLElement | null) ?? radio;
   if (!radio.checked) {
+    fireEvent(target, "pointerdown");
+    fireEvent(target, "mousedown");
     target.click();
-    if (!radio.checked) radio.click();
+    if (!radio.checked) {
+      fireEvent(radio, "pointerdown");
+      radio.click();
+    }
   }
   const isChecked = radio.checked || target.getAttribute("aria-checked") === "true";
   return isChecked ? { ok: true } : { ok: false, detail: "choice did not stick" };
@@ -110,8 +234,11 @@ function fillCheckbox(el: HTMLInputElement, value: string): FillOutcome {
   const target = (el.closest("[role='checkbox']") as HTMLElement | null) ?? el;
   const current = el.checked || target.getAttribute("aria-checked") === "true";
   if (current !== want) {
+    fireEvent(target, "pointerdown");
+    fireEvent(target, "mousedown");
     target.click();
     if (el.checked !== want && target.getAttribute("aria-checked") !== (want ? "true" : "false")) {
+      fireEvent(el, "pointerdown");
       el.click();
     }
   }
@@ -246,6 +373,36 @@ export function fillField(field: ExtractedField, value: string, resume?: ResumeF
   }
 }
 
+export async function fillFieldHumanized(
+  field: ExtractedField,
+  value: string,
+  resume?: ResumeFile,
+  options?: TypingOptions
+): Promise<FillOutcome> {
+  const els: FieldElement[] = field.elements;
+  const el = els[0];
+  if (!el) return { ok: false, detail: "element missing" };
+  switch (field.descriptor.control) {
+    case "combobox":
+      return fillCombobox(el as HTMLInputElement, value, 6000, options?.keystrokeDelayMs ?? options?.delayMs);
+    case "dropdown":
+      return fillDropdown(el as HTMLElement, value);
+    case "radio":
+    case "checkbox":
+    case "checkbox_group":
+    case "select":
+    case "file":
+      return fillField(field, value, resume);
+    default:
+      return fillTextHumanized(
+        el as HTMLInputElement | HTMLTextAreaElement,
+        value,
+        `${field.descriptor.label} ${field.descriptor.placeholder}`,
+        options
+      );
+  }
+}
+
 /** Placeholder rows shown while results load, or when there are none: never picked, never a reason to give up. */
 const NOT_AN_OPTION = /^(loading|searching|please wait|no (results|options|matches)|type to search|start typing|keine ergebnisse|aucun r[ée]sultat|sin resultados|nenhum resultado)\b|…$|\.\.\.$/i;
 
@@ -311,11 +468,12 @@ async function pickFromList(owner: HTMLElement, value: string, timeoutMs: number
 }
 
 /** Type into a searchable dropdown (e.g. a location typeahead backed by a server) and pick the best match. */
-export async function fillCombobox(input: HTMLInputElement, value: string, timeoutMs = 6000): Promise<FillOutcome> {
-  input.focus();
-  setNativeValue(input, value);
-  fire(input, "input");
-  input.dispatchEvent(new KeyboardEvent("keyup", { key: value.slice(-1), bubbles: true, composed: true }));
+export async function fillCombobox(input: HTMLInputElement, value: string, timeoutMs = 6000, delayMs = 0): Promise<FillOutcome> {
+  if (delayMs > 0) {
+    await fillTextHumanized(input, value, "", { keystrokeDelayMs: delayMs });
+  } else {
+    fillText(input, value);
+  }
   return pickFromList(input, value, timeoutMs);
 }
 

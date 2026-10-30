@@ -261,6 +261,7 @@ if (!window.__applyAgentLoaded) {
       fields: [],
       captcha: false,
       confirmationText: confirmation.text,
+      submittedAt: new Date().toISOString(),
       errors: [],
     };
     chrome.runtime.sendMessage({ type: "RUN_RESULT", report } satisfies Message).catch(() => undefined);

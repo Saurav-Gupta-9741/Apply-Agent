@@ -1,6 +1,6 @@
 /** Everything is stored locally in the browser (chrome.storage.local). Nothing is sent to a server. */
 
-import type { AnswerEntry, ApplicationRecord, Profile, QueueItem, Settings, UserCorrection } from "./types";
+import type { AnswerEntry, ApplicationRecord, CandidateProfile, Profile, ProfilePersona, QueueItem, Settings, UserCorrection } from "./types";
 import { clampSettings } from "../background/queue";
 
 export const EMPTY_PROFILE: Profile = {
@@ -44,7 +44,15 @@ export const MAX_QUEUE = 1000;
 export const STORAGE_QUOTA_BYTES = 10 * 1024 * 1024; // 10MB default in Chrome extensions
 
 const KEYS = {
-  profile: "profile", answers: "answers", applications: "applications", queue: "queue", settings: "settings", running: "queueRunning", corrections: "corrections",
+  profile: "profile",
+  profiles: "candidateProfiles",
+  activeProfileId: "activeProfileId",
+  answers: "answers",
+  applications: "applications",
+  queue: "queue",
+  settings: "settings",
+  running: "queueRunning",
+  corrections: "corrections",
 } as const;
 
 export function pruneQueue(queue: QueueItem[]): QueueItem[] {
@@ -87,6 +95,14 @@ export async function setQueueRunning(running: boolean): Promise<void> {
   await chrome.storage.local.set({ [KEYS.running]: running });
 }
 
+
+/** Read, change and write one stored list as one step. Two saves close together (two clicks, two panel windows, the
+ * panel and the background) each see the other's result instead of overwriting it. */
+async function exclusive<T>(name: string, fn: () => Promise<T>): Promise<T> {
+  const locks = (globalThis.navigator as Navigator | undefined)?.locks;
+  return locks ? locks.request(`applyagent:${name}`, fn) : fn();
+}
+
 export async function loadProfile(): Promise<Profile> {
   const data = await chrome.storage.local.get(KEYS.profile);
   return { ...EMPTY_PROFILE, ...(data[KEYS.profile] as Partial<Profile> | undefined) };
@@ -94,6 +110,105 @@ export async function loadProfile(): Promise<Profile> {
 
 export async function saveProfile(profile: Profile): Promise<void> {
   await chrome.storage.local.set({ [KEYS.profile]: profile });
+}
+
+export async function loadCandidateProfiles(): Promise<CandidateProfile[]> {
+  const data = await chrome.storage.local.get([KEYS.profiles, KEYS.profile]);
+  const list = data[KEYS.profiles] as CandidateProfile[] | undefined;
+  if (Array.isArray(list) && list.length > 0) {
+    return list;
+  }
+  const current = data[KEYS.profile] as Profile | undefined;
+  if (current && (current.firstName || current.targetRoles || current.skills)) {
+    const defaultProfile: CandidateProfile = {
+      id: "default",
+      name: current.targetRoles ? current.targetRoles.split(",")[0]!.trim() : "Default Profile",
+      targetRole: current.targetRoles || undefined,
+      profile: { ...EMPTY_PROFILE, ...current },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    return [defaultProfile];
+  }
+  return [];
+}
+
+export const loadProfiles = loadCandidateProfiles;
+
+export async function saveCandidateProfiles(profiles: CandidateProfile[]): Promise<void> {
+  await chrome.storage.local.set({ [KEYS.profiles]: profiles });
+}
+
+export const saveProfiles = saveCandidateProfiles;
+
+export async function loadActiveProfileId(): Promise<string | undefined> {
+  const data = await chrome.storage.local.get(KEYS.activeProfileId);
+  return data[KEYS.activeProfileId] as string | undefined;
+}
+
+export async function setActiveProfileId(id: string): Promise<void> {
+  await chrome.storage.local.set({ [KEYS.activeProfileId]: id });
+}
+
+export async function getCandidateProfile(id: string): Promise<CandidateProfile | undefined> {
+  const profiles = await loadCandidateProfiles();
+  return profiles.find((p) => p.id === id);
+}
+
+export async function saveCandidateProfile(candidate: CandidateProfile): Promise<void> {
+  await exclusive("profiles", async () => {
+    const profiles = await loadCandidateProfiles();
+    const existingIndex = profiles.findIndex((p) => p.id === candidate.id);
+    let updated: CandidateProfile[];
+    const entry: CandidateProfile = {
+      ...candidate,
+      updatedAt: new Date().toISOString(),
+    };
+    if (existingIndex >= 0) {
+      updated = [...profiles];
+      updated[existingIndex] = entry;
+    } else {
+      updated = [...profiles, entry];
+    }
+    await saveCandidateProfiles(updated);
+
+    const activeId = await loadActiveProfileId();
+    if (!activeId || activeId === candidate.id || profiles.length === 0) {
+      await setActiveProfileId(candidate.id);
+      await saveProfile(candidate.profile);
+    }
+  });
+}
+
+export async function switchProfile(id: string): Promise<Profile> {
+  return exclusive("profiles", async () => {
+    const profiles = await loadCandidateProfiles();
+    const target = profiles.find((p) => p.id === id);
+    if (!target) {
+      throw new Error(`Profile with id "${id}" not found`);
+    }
+    await setActiveProfileId(id);
+    await saveProfile(target.profile);
+    return target.profile;
+  });
+}
+
+export async function deleteCandidateProfile(id: string): Promise<void> {
+  await exclusive("profiles", async () => {
+    const profiles = await loadCandidateProfiles();
+    const remaining = profiles.filter((p) => p.id !== id);
+    await saveCandidateProfiles(remaining);
+    const activeId = await loadActiveProfileId();
+    if (activeId === id) {
+      if (remaining.length > 0) {
+        await setActiveProfileId(remaining[0]!.id);
+        await saveProfile(remaining[0]!.profile);
+      } else {
+        await chrome.storage.local.remove(KEYS.activeProfileId);
+        await saveProfile(EMPTY_PROFILE);
+      }
+    }
+  });
 }
 
 export function pruneAnswers(answers: AnswerEntry[]): AnswerEntry[] {
@@ -117,12 +232,6 @@ export async function saveAnswers(answers: AnswerEntry[]): Promise<void> {
   await chrome.storage.local.set({ [KEYS.answers]: pruned });
 }
 
-/** Read, change and write one stored list as one step. Two saves close together (two clicks, two panel windows, the
- * panel and the background) each see the other's result instead of overwriting it. */
-async function exclusive<T>(name: string, fn: () => Promise<T>): Promise<T> {
-  const locks = (globalThis.navigator as Navigator | undefined)?.locks;
-  return locks ? locks.request(`applyagent:${name}`, fn) : fn();
-}
 
 export function updateAnswers(change: (answers: AnswerEntry[]) => AnswerEntry[]): Promise<void> {
   return exclusive("answers", async () => saveAnswers(change(await loadAnswers())));
