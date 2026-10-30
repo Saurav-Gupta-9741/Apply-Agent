@@ -1,0 +1,69 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Avionics Software Systems Engineer</h1>
+<div class="boeing-taleo-wrapper">
+  <form id="boeingForm">
+    <div class="taleo-block">
+      <h2>Applicant Information</h2>
+      <div class="form-row">
+        <label for="bg-fn">First Name *</label>
+        <input type="text" id="bg-fn" name="firstName" required />
+      </div>
+      <div class="form-row">
+        <label for="bg-ln">Last Name *</label>
+        <input type="text" id="bg-ln" name="lastName" required />
+      </div>
+      <div class="form-row">
+        <label for="bg-email">Email Address *</label>
+        <input type="email" id="bg-email" name="email" required />
+      </div>
+      <div class="form-row">
+        <label for="bg-phone">Phone Number *</label>
+        <input type="tel" id="bg-phone" name="phone" required />
+      </div>
+      <div class="form-row">
+        <label for="bg-degree">Highest Degree Completed</label>
+        <select id="bg-degree" name="degree">
+          <option value="">Select...</option>
+          <option value="BS">Bachelor of Science</option>
+          <option value="MS">Master of Science</option>
+          <option value="PhD">Doctorate</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="bg-school">College / University</label>
+        <input type="text" id="bg-school" name="school" />
+      </div>
+      <div class="form-row">
+        <label for="bg-resume">Resume / CV *</label>
+        <input type="file" id="bg-resume" name="resume" required />
+      </div>
+    </div>
+
+    <div class="taleo-block">
+      <h2>Regulatory Screening</h2>
+      <fieldset>
+        <legend>Are you a US Person under ITAR regulations (US Citizen or Permanent Resident)? *</legend>
+        <label><input type="radio" name="itar_us_person" value="yes" required /> Yes</label>
+        <label><input type="radio" name="itar_us_person" value="no" /> No</label>
+      </fieldset>
+      <div class="form-row">
+        <label for="bg-vet">Protected Veteran Status</label>
+        <select id="bg-vet" name="veteranStatus">
+          <option value="">Select...</option>
+          <option value="not_veteran">I am not a protected veteran</option>
+          <option value="protected_veteran">I identify as a protected veteran</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>
+          <input type="checkbox" id="bg-drug" name="drug_consent" required />
+          I acknowledge and agree to mandatory pre-employment drug screening *
+        </label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="boeing-btn">Submit Application</button>
+    </div>
+  </form>
+</div>

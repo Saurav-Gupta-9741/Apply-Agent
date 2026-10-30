@@ -1,0 +1,62 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Senior Strategy & Operations Consultant</h1>
+<div class="deloitte-taleo-shell">
+  <form id="deloitte-apply">
+    <div class="deloitte-card">
+      <h3>Candidate Profile</h3>
+      <div class="deloitte-field">
+        <label for="dt-fn">First Name *</label>
+        <input type="text" id="dt-fn" name="firstName" required />
+      </div>
+      <div class="deloitte-field">
+        <label for="dt-ln">Last Name *</label>
+        <input type="text" id="dt-ln" name="lastName" required />
+      </div>
+      <div class="deloitte-field">
+        <label for="dt-email">Email *</label>
+        <input type="email" id="dt-email" name="email" required />
+      </div>
+      <div class="deloitte-field">
+        <label for="dt-phone">Phone *</label>
+        <input type="tel" id="dt-phone" name="phone" required />
+      </div>
+      <div class="deloitte-field">
+        <label for="dt-school">College / University *</label>
+        <input type="text" id="dt-school" name="school" required />
+      </div>
+      <div class="deloitte-field">
+        <label for="dt-degree">Degree / Major *</label>
+        <input type="text" id="dt-degree" name="discipline" required />
+      </div>
+      <div class="deloitte-field">
+        <label for="dt-grad-year">Graduation Year</label>
+        <input type="number" id="dt-grad-year" name="graduationYear" min="1970" max="2035" />
+      </div>
+      <div class="deloitte-field">
+        <label for="dt-resume">Resume / CV *</label>
+        <input type="file" id="dt-resume" name="resume" required />
+      </div>
+    </div>
+
+    <div class="deloitte-card">
+      <h3>Disclosures & Questions</h3>
+      <fieldset>
+        <legend>Have you worked for Deloitte or any member firm previously? *</legend>
+        <label><input type="radio" name="prior_deloitte" value="yes" required /> Yes</label>
+        <label><input type="radio" name="prior_deloitte" value="no" /> No</label>
+      </fieldset>
+      <div class="deloitte-field">
+        <label for="dt-salary">Expected salary / compensation ($ USD) *</label>
+        <input type="text" id="dt-salary" name="expectedSalary" required />
+      </div>
+      <div class="deloitte-field">
+        <label for="dt-conflict">Conflict of interest disclosure (or enter 'None') *</label>
+        <textarea id="dt-conflict" name="conflictOfInterest" required></textarea>
+      </div>
+    </div>
+
+    <div class="deloitte-submit">
+      <button type="submit" class="btn-deloitte">Submit Application</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,59 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Senior Backend Engineer - Delivery Platform</h1>
+<div class="workable-spain-box">
+  <form id="glovo-form">
+    <div class="wk-row">
+      <label for="glv-fn">Nombre (First Name) *</label>
+      <input type="text" id="glv-fn" name="firstname" required />
+    </div>
+    <div class="wk-row">
+      <label for="glv-ln">Apellidos (Last Name) *</label>
+      <input type="text" id="glv-ln" name="lastname" required />
+    </div>
+    <div class="wk-row">
+      <label for="glv-email">Correo electrónico (Email) *</label>
+      <input type="email" id="glv-email" name="email" required />
+    </div>
+    <div class="wk-row">
+      <label for="glv-phone">Teléfono *</label>
+      <input type="tel" id="glv-phone" name="phone" required />
+    </div>
+    <div class="wk-row">
+      <label for="glv-cv">Currículum Vitae (CV) *</label>
+      <input type="file" id="glv-cv" name="resume" required accept=".pdf" />
+    </div>
+    <div class="wk-row">
+      <label for="glv-dni">DNI o NIE (Documento de Identidad) *</label>
+      <input type="text" id="glv-dni" name="dni_nie" required placeholder="12345678A" />
+    </div>
+    <div class="wk-row">
+      <label for="glv-notice">Plazo de preaviso / Fecha de incorporación *</label>
+      <input type="text" id="glv-notice" name="preaviso" required placeholder="Ej: 1 mes" />
+    </div>
+    <div class="wk-row">
+      <label for="glv-salary">Pretensión salarial bruta anual (€) *</label>
+      <input type="text" id="glv-salary" name="sueldo_esperado" required placeholder="Ej: 75.000 €" />
+    </div>
+    <div class="wk-row">
+      <label for="glv-auth">¿Tienes autorización legal para trabajar en España? *</label>
+      <select id="glv-auth" name="permiso_trabajo" required>
+        <option value="">Selecciona...</option>
+        <option value="yes">Sí, soy ciudadano de la UE o dispongo de permiso de trabajo</option>
+        <option value="no">No, necesito patrocinio de visado</option>
+      </select>
+    </div>
+    <div class="wk-row">
+      <label for="glv-linkedin">Perfil de LinkedIn</label>
+      <input type="url" id="glv-linkedin" name="linkedin" />
+    </div>
+    <div class="wk-row">
+      <label>
+        <input type="checkbox" id="glv-consent" name="privacidad_consent" required />
+        Acepto los términos de privacidad y procesamiento de datos conforme al RGPD *
+      </label>
+    </div>
+    <div class="wk-submit">
+      <button type="submit" class="wk-button">Enviar solicitud</button>
+    </div>
+  </form>
+</div>

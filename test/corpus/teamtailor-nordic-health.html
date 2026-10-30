@@ -1,0 +1,55 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Lead Data Platform Engineer</h1>
+<div class="teamtailor-container">
+  <form id="teamtailor-apply">
+    <div class="tt-field">
+      <label for="tt-fn">First Name *</label>
+      <input type="text" id="tt-fn" name="candidate[first_name]" required />
+    </div>
+    <div class="tt-field">
+      <label for="tt-ln">Last Name *</label>
+      <input type="text" id="tt-ln" name="candidate[last_name]" required />
+    </div>
+    <div class="tt-field">
+      <label for="tt-email">Email *</label>
+      <input type="email" id="tt-email" name="candidate[email]" required />
+    </div>
+    <div class="tt-field">
+      <label for="tt-phone">Phone *</label>
+      <input type="tel" id="tt-phone" name="candidate[phone]" required />
+    </div>
+    <div class="tt-field">
+      <label for="tt-cv">CV / Resume upload *</label>
+      <input type="file" id="tt-cv" name="candidate[resume]" required />
+    </div>
+    <div class="tt-field">
+      <label for="tt-pnr">Swedish Personal Identity Number (Personnummer / Identity)</label>
+      <input type="text" id="tt-pnr" name="candidate[personnummer]" placeholder="YYYYMMDD-XXXX" />
+    </div>
+    <div class="tt-field">
+      <label for="tt-notice">Notice period (uppsägningstid) *</label>
+      <input type="text" id="tt-notice" name="candidate[notice_period]" required placeholder="e.g. 3 månader" />
+    </div>
+    <div class="tt-field">
+      <label for="tt-salary">Desired monthly salary (SEK) *</label>
+      <input type="text" id="tt-salary" name="candidate[salary]" required />
+    </div>
+    <div class="tt-field">
+      <label for="tt-auth">Are you eligible to work in Sweden? *</label>
+      <select id="tt-auth" name="candidate[work_eligibility]" required>
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+    </div>
+    <div class="tt-field">
+      <label>
+        <input type="checkbox" id="tt-terms" name="candidate[agree_privacy]" required />
+        I agree to the processing of personal data according to GDPR *
+      </label>
+    </div>
+    <div class="tt-submit">
+      <button type="submit" class="tt-btn">Submit Application</button>
+    </div>
+  </form>
+</div>

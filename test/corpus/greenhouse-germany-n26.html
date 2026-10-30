@@ -1,0 +1,56 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Senior Security Operations Engineer - Banking Infrastructure</h1>
+<div class="greenhouse-germany-wrapper">
+  <form id="n26-apply-form">
+    <div class="field-block">
+      <label for="n26-fn">Vorname (First Name) *</label>
+      <input type="text" id="n26-fn" name="first_name" required autocomplete="given-name" />
+    </div>
+    <div class="field-block">
+      <label for="n26-ln">Nachname (Last Name) *</label>
+      <input type="text" id="n26-ln" name="last_name" required autocomplete="family-name" />
+    </div>
+    <div class="field-block">
+      <label for="n26-email">E-Mail *</label>
+      <input type="email" id="n26-email" name="email" required autocomplete="email" />
+    </div>
+    <div class="field-block">
+      <label for="n26-phone">Telefon *</label>
+      <input type="tel" id="n26-phone" name="phone" required autocomplete="tel" />
+    </div>
+    <div class="field-block">
+      <label for="n26-resume">Lebenslauf (CV / Resume) *</label>
+      <input type="file" id="n26-resume" name="resume" required accept=".pdf,.doc,.docx" />
+    </div>
+    <div class="field-block">
+      <label for="n26-cover">Anschreiben (Cover Letter)</label>
+      <textarea id="n26-cover" name="cover_letter" rows="3"></textarea>
+    </div>
+    <div class="field-block">
+      <label for="n26-salary">Gehaltsvorstellung (Bruttojahresgehalt in Euro) *</label>
+      <input type="text" id="n26-salary" name="salary_expectation" required placeholder="z.B. 90.000 €" />
+    </div>
+    <div class="field-block">
+      <label for="n26-notice">Kündigungsfrist / Verfügbarkeit *</label>
+      <input type="text" id="n26-notice" name="notice_period" required placeholder="z.B. 3 Monate zum Monatsende" />
+    </div>
+    <div class="field-block">
+      <label for="n26-auth">Haben Sie eine gültige Arbeitserlaubnis für Deutschland / EU Blue Card? *</label>
+      <select id="n26-auth" name="work_permit_germany" required>
+        <option value="">Bitte auswählen</option>
+        <option value="yes">Ja, ich bin EU-Bürger oder besitze einen gültigen Aufenthaltstitel</option>
+        <option value="blue_card">Ja, Berechtigung für EU Blue Card</option>
+        <option value="sponsorship">Nein, Visumsunterstützung erforderlich</option>
+      </select>
+    </div>
+    <div class="field-block">
+      <label>
+        <input type="checkbox" id="n26-dsgvo" name="dsgvo_consent" required />
+        Ich willige in die Verarbeitung meiner personenbezogenen Daten gemäß der Datenschutzerklärung (DSGVO) ein *
+      </label>
+    </div>
+    <div class="button-row">
+      <button type="submit" class="submit-button">Bewerbung absenden</button>
+    </div>
+  </form>
+</div>

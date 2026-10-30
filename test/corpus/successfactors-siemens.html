@@ -1,0 +1,67 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Industrial Automation & Edge Software Engineer</h1>
+<div class="siemens-sf-portal">
+  <form id="siemensForm">
+    <div class="sf-group">
+      <h3>Persönliche Angaben / Personal Details</h3>
+      <div class="sf-field">
+        <label for="sie-fn">Vorname / First Name *</label>
+        <input type="text" id="sie-fn" name="firstName" required />
+      </div>
+      <div class="sf-field">
+        <label for="sie-ln">Nachname / Last Name *</label>
+        <input type="text" id="sie-ln" name="lastName" required />
+      </div>
+      <div class="sf-field">
+        <label for="sie-email">E-Mail-Adresse / Email *</label>
+        <input type="email" id="sie-email" name="email" required />
+      </div>
+      <div class="sf-field">
+        <label for="sie-phone">Telefonnummer / Phone *</label>
+        <input type="tel" id="sie-phone" name="phone" required />
+      </div>
+      <div class="sf-field">
+        <label for="sie-cv">Lebenslauf / CV *</label>
+        <input type="file" id="sie-cv" name="resume" required />
+      </div>
+    </div>
+
+    <div class="sf-group">
+      <h3>Rahmenbedingungen / Key Conditions</h3>
+      <div class="sf-field">
+        <label for="sie-salary">Gehaltsvorstellung (brutto pro Jahr) / Desired annual salary *</label>
+        <input type="text" id="sie-salary" name="salaryExpectation" required placeholder="€ brutto/Jahr" />
+      </div>
+      <div class="sf-field">
+        <label for="sie-notice">Kündigungsfrist / Notice period *</label>
+        <input type="text" id="sie-notice" name="noticePeriod" required placeholder="z.B. 3 Monate zum Quartalsende" />
+      </div>
+      <div class="sf-field">
+        <label for="sie-travel">Reisebereitschaft / Willingness to travel</label>
+        <select id="sie-travel" name="travelReadiness">
+          <option value="0">0% (Keine Reisen)</option>
+          <option value="25">Bis zu 25%</option>
+          <option value="50">Bis zu 50%</option>
+        </select>
+      </div>
+      <div class="sf-field">
+        <label for="sie-permit">Gültige Arbeitserlaubnis für Deutschland *</label>
+        <select id="sie-permit" name="workPermitGermany" required>
+          <option value="">Bitte wählen</option>
+          <option value="yes">Ja</option>
+          <option value="no">Nein</option>
+        </select>
+      </div>
+      <div class="sf-field">
+        <label>
+          <input type="checkbox" id="sie-dsgvo" name="dsgvo_consent" required />
+          Ich habe die Datenschutzerklärung zur Kenntnis genommen und willige in die Verarbeitung meiner Daten ein *
+        </label>
+      </div>
+    </div>
+
+    <div class="sf-footer">
+      <button type="submit" class="siemens-submit-btn">Bewerbung absenden / Submit</button>
+    </div>
+  </form>
+</div>

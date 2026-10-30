@@ -1,0 +1,53 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Senior Android Engineer - Core Banking App</h1>
+<div class="recruitee-form-container">
+  <form id="bunq-apply">
+    <div class="field-wrapper">
+      <label for="bq-name">Full Name *</label>
+      <input type="text" id="bq-name" name="candidate[name]" required />
+    </div>
+    <div class="field-wrapper">
+      <label for="bq-email">Email *</label>
+      <input type="email" id="bq-email" name="candidate[email]" required />
+    </div>
+    <div class="field-wrapper">
+      <label for="bq-phone">Phone *</label>
+      <input type="tel" id="bq-phone" name="candidate[phone]" required />
+    </div>
+    <div class="field-wrapper">
+      <label for="bq-city">Current City *</label>
+      <input type="text" id="bq-city" name="candidate[city]" required />
+    </div>
+    <div class="field-wrapper">
+      <label for="bq-cv">Resume / CV *</label>
+      <input type="file" id="bq-cv" name="candidate[resume]" required />
+    </div>
+    <div class="field-wrapper">
+      <label for="bq-bsn">Burgerservicenummer (BSN) or Tax ID (Identity) *</label>
+      <input type="text" id="bq-bsn" name="candidate[bsn]" required placeholder="Optional if applying from abroad" />
+    </div>
+    <div class="field-wrapper">
+      <label for="bq-auth">Do you hold a valid EU passport or Dutch work permit? *</label>
+      <select id="bq-auth" name="candidate[work_permit]" required>
+        <option value="">Select option</option>
+        <option value="yes">Yes, EU citizen or have valid Dutch permit</option>
+        <option value="sponsorship">No, I need visa sponsorship</option>
+      </select>
+    </div>
+    <div class="field-wrapper">
+      <label for="bq-notice">What is your notice period? *</label>
+      <input type="text" id="bq-notice" name="candidate[notice_period]" required placeholder="e.g. 1 month" />
+    </div>
+    <div class="field-wrapper">
+      <label for="bq-salary">What is your gross annual salary expectation in EUR? *</label>
+      <input type="text" id="bq-salary" name="candidate[salary_expectation]" required placeholder="e.g. €85,000" />
+    </div>
+    <div class="field-wrapper">
+      <label for="bq-pitch">Motivation: Why bunq? *</label>
+      <textarea id="bq-pitch" name="candidate[cover_letter]" required rows="3"></textarea>
+    </div>
+    <div class="submit-wrapper">
+      <button type="submit" class="btn-recruitee">Send Application</button>
+    </div>
+  </form>
+</div>

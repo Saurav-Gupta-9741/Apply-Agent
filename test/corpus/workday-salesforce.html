@@ -1,0 +1,109 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Lead Software Engineer - Core Cloud Infrastructure</h1>
+<div class="workday-application-container" data-automation-id="applicationPage">
+  <form id="wd-apply-form" data-automation-id="applyForm">
+    <div class="css-header-block" data-automation-id="legalNameSection">
+      <h2 data-automation-id="sectionHeader">My Information</h2>
+      <div class="css-row" data-automation-id="formRow-name">
+        <div class="css-field" data-automation-id="formField-legalNameSection_firstName">
+          <label class="css-label" for="input-1" data-automation-id="formLabel">First Name<span class="css-req">*</span></label>
+          <input id="input-1" data-automation-id="legalNameSection_firstName" name="legalNameSection.firstName" class="css-text-input" type="text" required value="" />
+        </div>
+        <div class="css-field" data-automation-id="formField-legalNameSection_lastName">
+          <label class="css-label" for="input-2" data-automation-id="formLabel">Last Name<span class="css-req">*</span></label>
+          <input id="input-2" data-automation-id="legalNameSection_lastName" name="legalNameSection.lastName" class="css-text-input" type="text" required value="" />
+        </div>
+      </div>
+      <div class="css-row" data-automation-id="formRow-contact">
+        <div class="css-field" data-automation-id="formField-email">
+          <label class="css-label" for="input-3" data-automation-id="formLabel">Email Address<span class="css-req">*</span></label>
+          <input id="input-3" data-automation-id="email" name="email" class="css-text-input" type="email" required value="" />
+        </div>
+        <div class="css-field" data-automation-id="formField-phone">
+          <label class="css-label" for="input-4" data-automation-id="formLabel">Phone Number<span class="css-req">*</span></label>
+          <input id="input-4" data-automation-id="phone-number" name="phoneNumber" class="css-text-input" type="tel" required value="" />
+        </div>
+      </div>
+      <div class="css-row" data-automation-id="formRow-address">
+        <div class="css-field" data-automation-id="formField-addressLine1">
+          <label class="css-label" for="input-5" data-automation-id="formLabel">Address Line 1<span class="css-req">*</span></label>
+          <input id="input-5" data-automation-id="addressSection_addressLine1" name="addressSection.addressLine1" class="css-text-input" type="text" required value="" />
+        </div>
+        <div class="css-field" data-automation-id="formField-city">
+          <label class="css-label" for="input-6" data-automation-id="formLabel">City<span class="css-req">*</span></label>
+          <input id="input-6" data-automation-id="addressSection_city" name="addressSection.city" class="css-text-input" type="text" required value="" />
+        </div>
+        <div class="css-field" data-automation-id="formField-postalCode">
+          <label class="css-label" for="input-7" data-automation-id="formLabel">Postal Code<span class="css-req">*</span></label>
+          <input id="input-7" data-automation-id="addressSection_postalCode" name="addressSection.postalCode" class="css-text-input" type="text" required value="" />
+        </div>
+      </div>
+    </div>
+
+    <div class="css-resume-section" data-automation-id="resumeSection">
+      <h2 data-automation-id="sectionHeader">Resume / CV</h2>
+      <div class="css-dropzone" data-automation-id="file-upload-dropzone">
+        <label class="css-label" for="input-resume" data-automation-id="formLabel">Attach Resume or CV<span class="css-req">*</span></label>
+        <input id="input-resume" data-automation-id="file-upload-input" type="file" name="resume" accept=".pdf,.doc,.docx" required />
+      </div>
+      <div class="css-field" data-automation-id="formField-linkedin">
+        <label class="css-label" for="input-linkedin" data-automation-id="formLabel">LinkedIn Profile</label>
+        <input id="input-linkedin" data-automation-id="linkedinQuestion" name="linkedinUrl" class="css-text-input" type="url" placeholder="https://www.linkedin.com/in/..." />
+      </div>
+    </div>
+
+    <div class="css-work-auth-section" data-automation-id="workAuthSection">
+      <h2 data-automation-id="sectionHeader">Work Authorization</h2>
+      <fieldset class="css-fieldset" data-automation-id="formField-authorized">
+        <legend class="css-legend">Are you legally authorized to work in the United States?<span class="css-req">*</span></legend>
+        <label class="css-radio-label"><input type="radio" name="work_auth_us" value="yes" required /> Yes</label>
+        <label class="css-radio-label"><input type="radio" name="work_auth_us" value="no" /> No</label>
+      </fieldset>
+      <fieldset class="css-fieldset" data-automation-id="formField-sponsorship">
+        <legend class="css-legend">Will you now or in the future require sponsorship for employment visa status?<span class="css-req">*</span></legend>
+        <label class="css-radio-label"><input type="radio" name="visa_sponsorship" value="yes" required /> Yes</label>
+        <label class="css-radio-label"><input type="radio" name="visa_sponsorship" value="no" /> No</label>
+      </fieldset>
+      <div class="css-field" data-automation-id="formField-noticePeriod">
+        <label class="css-label" for="input-notice" data-automation-id="formLabel">Earliest date available to start / Notice Period</label>
+        <input id="input-notice" data-automation-id="noticePeriodInput" name="noticePeriod" class="css-text-input" type="text" placeholder="e.g. 2 weeks" />
+      </div>
+    </div>
+
+    <div class="css-eeo-section" data-automation-id="eeoSection">
+      <h2 data-automation-id="sectionHeader">Voluntary Self-Identification</h2>
+      <div class="css-field" data-automation-id="formField-gender">
+        <label class="css-label" for="select-gender" data-automation-id="formLabel">Gender</label>
+        <select id="select-gender" name="gender" class="css-select">
+          <option value="">Select Gender</option>
+          <option value="female">Female</option>
+          <option value="male">Male</option>
+          <option value="non_binary">Non-Binary</option>
+          <option value="decline">Decline to self-identify</option>
+        </select>
+      </div>
+      <div class="css-field" data-automation-id="formField-veteran">
+        <label class="css-label" for="select-veteran" data-automation-id="formLabel">Veteran Status</label>
+        <select id="select-veteran" name="veteranStatus" class="css-select">
+          <option value="">Select Veteran Status</option>
+          <option value="not_veteran">I am not a protected veteran</option>
+          <option value="veteran">I identify as one or more of the classifications of protected veteran</option>
+          <option value="decline">I decline to self-identify</option>
+        </select>
+      </div>
+      <div class="css-field" data-automation-id="formField-disability">
+        <label class="css-label" for="select-disability" data-automation-id="formLabel">Disability Status (Form CC-305)</label>
+        <select id="select-disability" name="disabilityStatus" class="css-select">
+          <option value="">Select Disability Status</option>
+          <option value="yes">Yes, I have a disability, or have had one in the past</option>
+          <option value="no">No, I do not have a disability and have not had one in the past</option>
+          <option value="decline">I do not wish to answer</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="css-button-group" data-automation-id="bottomNavigation">
+      <button type="submit" class="css-btn-primary" data-automation-id="bottom-navigation-next-button">Submit Application</button>
+    </div>
+  </form>
+</div>

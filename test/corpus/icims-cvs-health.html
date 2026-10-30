@@ -1,0 +1,62 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Clinical Informatics Specialist - Health IT</h1>
+<div class="cvs-icims-portal">
+  <form id="cvs-apply-form">
+    <div class="cvs-header">
+      <h2>General Information</h2>
+    </div>
+    <div class="cvs-row">
+      <label for="cvs-first">First Name *</label>
+      <input type="text" id="cvs-first" name="firstName" required />
+    </div>
+    <div class="cvs-row">
+      <label for="cvs-last">Last Name *</label>
+      <input type="text" id="cvs-last" name="lastName" required />
+    </div>
+    <div class="cvs-row">
+      <label for="cvs-email">Email Address *</label>
+      <input type="email" id="cvs-email" name="emailAddress" required />
+    </div>
+    <div class="cvs-row">
+      <label for="cvs-phone">Phone Number *</label>
+      <input type="tel" id="cvs-phone" name="phoneNumber" required />
+    </div>
+    <div class="cvs-row">
+      <label for="cvs-resume">Resume / CV *</label>
+      <input type="file" id="cvs-resume" name="resumeDoc" required />
+    </div>
+    <div class="cvs-row">
+      <label for="cvs-cert">Professional Certification / License Details</label>
+      <textarea id="cvs-cert" name="professional_certifications" placeholder="e.g. Registered Nurse, RHIA, etc."></textarea>
+    </div>
+    <div class="cvs-row">
+      <label for="cvs-years">Total years of professional experience *</label>
+      <input type="number" id="cvs-years" name="total_years_experience" required min="0" />
+    </div>
+    <div class="cvs-row">
+      <label for="cvs-drug-screen">Are you willing to submit to a pre-employment background check and drug screen? *</label>
+      <select id="cvs-drug-screen" name="drug_screen_consent" required>
+        <option value="">Select...</option>
+        <option value="yes">Yes, I consent</option>
+        <option value="no">No</option>
+      </select>
+    </div>
+    <div class="cvs-row">
+      <label for="cvs-work-auth">Are you legally authorized to work in the United States? *</label>
+      <select id="cvs-work-auth" name="us_work_authorization" required>
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+    </div>
+    <div class="cvs-row">
+      <label>
+        <input type="checkbox" id="cvs-policy-agree" name="cvs_privacy_consent" required />
+        I agree to the candidate privacy policy and acknowledge data processing terms *
+      </label>
+    </div>
+    <div class="cvs-actions">
+      <button type="submit" id="cvs-submit">Submit Application</button>
+    </div>
+  </form>
+</div>

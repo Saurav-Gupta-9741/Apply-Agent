@@ -1,0 +1,68 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Staff Platform Engineer - Real-Time Ledger</h1>
+<div class="trao-fintech-container">
+  <form id="fintech-apply">
+    <div class="trao-card">
+      <h2>Candidate Information</h2>
+      <div class="trao-row">
+        <label for="ft-fn">First Name *</label>
+        <input type="text" id="ft-fn" name="firstName" required />
+      </div>
+      <div class="trao-row">
+        <label for="ft-ln">Last Name *</label>
+        <input type="text" id="ft-ln" name="lastName" required />
+      </div>
+      <div class="trao-row">
+        <label for="ft-email">Email *</label>
+        <input type="email" id="ft-email" name="email" required />
+      </div>
+      <div class="trao-row">
+        <label for="ft-phone">Phone Number *</label>
+        <input type="tel" id="ft-phone" name="phone" required />
+      </div>
+      <div class="trao-row">
+        <label for="ft-city">Current City / Location *</label>
+        <input type="text" id="ft-city" name="location" required />
+      </div>
+      <div class="trao-row">
+        <label for="ft-resume">Resume / CV *</label>
+        <input type="file" id="ft-resume" name="resume" required />
+      </div>
+    </div>
+
+    <div class="trao-card">
+      <h2>Compensation & Identity</h2>
+      <div class="trao-row">
+        <label for="ft-pan">Permanent Account Number (PAN Card) *</label>
+        <input type="text" id="ft-pan" name="panNumber" required placeholder="ABCDE1234F" />
+      </div>
+      <div class="trao-row">
+        <label for="ft-c-ctc">Current CTC (in INR / LPA) *</label>
+        <input type="text" id="ft-c-ctc" name="currentCtc" required placeholder="e.g. 40 LPA" />
+      </div>
+      <div class="trao-row">
+        <label for="ft-e-ctc">Expected CTC (in INR / LPA) *</label>
+        <input type="text" id="ft-e-ctc" name="expectedCtc" required placeholder="e.g. 55 LPA" />
+      </div>
+      <div class="trao-row">
+        <label for="ft-np">Notice Period *</label>
+        <select id="ft-np" name="noticePeriod" required>
+          <option value="">Select notice period</option>
+          <option value="immediate">Immediate / Serving Notice</option>
+          <option value="15_days">15 Days</option>
+          <option value="30_days">30 Days</option>
+          <option value="60_days">60 Days</option>
+          <option value="90_days">90 Days</option>
+        </select>
+      </div>
+      <div class="trao-row">
+        <label for="ft-linkedin">LinkedIn Profile URL</label>
+        <input type="url" id="ft-linkedin" name="linkedinUrl" />
+      </div>
+    </div>
+
+    <div class="trao-submit">
+      <button type="submit" class="trao-btn">Submit Application</button>
+    </div>
+  </form>
+</div>

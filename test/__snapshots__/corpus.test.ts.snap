@@ -95,6 +95,21 @@ exports[`real forms, offline > ashby-fireworks-ai.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > ashby-france-datadog.html 1`] = `
+[
+  "* text      profile:firstName            Prénom (First Name)",
+  "* text      profile:lastName             Nom (Last Name)",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Téléphone",
+  "* file      resume                       CV (Curriculum Vitae)",
+  "  url       profile:linkedin             Profil LinkedIn",
+  "* url       ask:missing_profile_value    Profil GitHub",
+  "* text      ask:salary                   Salaire brut annuel souhaité (€)",
+  "* text      ask:notice_period            Délai de préavis (Notice period)",
+  "* select    ask:work_authorization       Avez-vous une autorisation légale de travail en France ?",
+]
+`;
+
 exports[`real forms, offline > ashby-headway.html 1`] = `
 [
   "  file      skip                         ",
@@ -306,6 +321,21 @@ exports[`real forms, offline > bamboohr-couples-resorts.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > bamboohr-gitlab.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* text      ask:missing_profile_value    Location (Country and City)",
+  "* url       ask:missing_profile_value    GitHub Profile URL",
+  "* file      resume                       Resume upload",
+  "* text      ask:salary                   Compensation Expectations (Annual USD or Local Currency)",
+  "* textarea  ask:unknown                  Tell us about your experience with asynchronous remote communication",
+  "* text      ask:notice_period            Notice period",
+]
+`;
+
 exports[`real forms, offline > bamboohr-hinterlandgroup.html 1`] = `
 [
   "  text      profile:firstName            First Name",
@@ -385,6 +415,22 @@ exports[`real forms, offline > bamboohr-otstaffing.html 1`] = `
   "  text      ask:salary                   Desired Pay",
   "* radio     ask:unknown                  Do you have a valid Driver License?",
   "  textarea  skip                         g recaptcha response",
+]
+`;
+
+exports[`real forms, offline > bamboohr-stripe.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "  text      skip                         Street Address",
+  "* text      ask:missing_profile_value    City",
+  "* file      resume                       Resume / CV",
+  "* text      ask:notice_period            Earliest start date / Notice period",
+  "* select    ask:work_authorization       Are you legally authorized to work in Ireland / EU?",
+  "  select    skip                         Preferred work mode",
+  "* textarea  ask:unknown                  Why Stripe? Tell us about your motivation",
 ]
 `;
 
@@ -515,6 +561,32 @@ exports[`real forms, offline > breezy-zero-hash.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > google-forms-deepmind.html 1`] = `
+[
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email Address",
+  "* tel       profile:phone                Phone Number",
+  "* url       profile:resumeUrl            Link to Google Drive / Web Resume",
+  "* url       ask:missing_profile_value    GitHub Profile",
+  "* select    ask:missing_profile_value    Highest level of education completed",
+  "* text      ask:notice_period            Earliest date available to start",
+  "* textarea  ask:unknown                  Brief summary of key research contributions",
+]
+`;
+
+exports[`real forms, offline > google-forms-open-source.html 1`] = `
+[
+  "* text      profile:fullName             Your Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* url       profile:resumeUrl            Resume (Google Drive link)",
+  "* url       ask:missing_profile_value    GitHub Profile",
+  "  url       skip                         Personal Website URL",
+  "* text      ask:notice_period            Notice period",
+  "* text      ask:unknown                  Expected monthly stipend",
+]
+`;
+
 exports[`real forms, offline > greenhouse-ag1.html 1`] = `
 [
   "* text      profile:firstName            First Name",
@@ -635,6 +707,21 @@ exports[`real forms, offline > greenhouse-figma.html 1`] = `
   "  combobox  ask:gender                   Gender",
   "  combobox  ask:race                     Are you Hispanic/Latino?",
   "  combobox  ask:veteran                  Veteran Status",
+]
+`;
+
+exports[`real forms, offline > greenhouse-germany-n26.html 1`] = `
+[
+  "* text      profile:firstName            Vorname (First Name)",
+  "* text      profile:lastName             Nachname (Last Name)",
+  "* email     profile:email                E-Mail",
+  "* tel       profile:phone                Telefon",
+  "* file      resume                       Lebenslauf (CV / Resume)",
+  "  textarea  skip                         Anschreiben (Cover Letter)",
+  "* text      ask:salary                   Gehaltsvorstellung (Bruttojahresgehalt in Euro)",
+  "* text      ask:notice_period            Kündigungsfrist / Verfügbarkeit",
+  "* select    ask:work_authorization       Haben Sie eine gültige Arbeitserlaubnis für Deutschland / EU Blue Card?",
+  "* checkbox  ask:consent                  Ich willige in die Verarbeitung meiner personenbezogenen Daten gemäß der Datenschutzerklärung (DSGVO) ein",
 ]
 `;
 
@@ -856,6 +943,85 @@ exports[`real forms, offline > greenhouse-twitch.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > greenhouse-uk-monzo.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email Address",
+  "* tel       profile:phone                Phone Number",
+  "* file      resume                       Resume / CV",
+  "  url       profile:linkedin             LinkedIn Profile",
+  "  text      skip                         National Insurance Number (NI Number)",
+  "* select    ask:work_authorization       Do you have the legal right to work in the United Kingdom?",
+  "* text      ask:notice_period            What is your notice period with your current employer?",
+  "* text      ask:salary                   Expected gross annual salary (£ GBP)",
+  "  select    ask:disability               Equal Opportunities: Disability status",
+]
+`;
+
+exports[`real forms, offline > icims-cvs-health.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email Address",
+  "* tel       profile:phone                Phone Number",
+  "* file      resume                       Resume / CV",
+  "  textarea  skip                         Professional Certification / License Details",
+  "* number    ask:missing_profile_value    Total years of professional experience",
+  "* select    ask:criminal                 Are you willing to submit to a pre-employment background check and drug screen?",
+  "* select    ask:work_authorization       Are you legally authorized to work in the United States?",
+  "* checkbox  ask:consent                  I agree to the candidate privacy policy and acknowledge data processing terms",
+]
+`;
+
+exports[`real forms, offline > icims-fedex.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* text      ask:missing_profile_value    Address Line 1",
+  "  text      skip                         Address Line 2",
+  "* text      ask:missing_profile_value    City",
+  "* text      ask:missing_profile_value    Postal Code",
+  "* file      resume                       Resume / CV",
+  "* select    ask:unknown                  Do you possess a valid Driver's License?",
+  "* select    ask:age                      Are you 18 years of age or older?",
+  "  select    ask:veteran                  Military Veteran Status",
+]
+`;
+
+exports[`real forms, offline > icims-general-dynamics.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* file      resume                       Resume / CV",
+  "* radio     ask:unknown                  Are you a United States Citizen? (Mandatory for ITAR clearance roles)",
+  "* select    ask:unknown                  Do you currently hold an active DoD Secret or Top Secret clearance?",
+  "  text      skip                         Current Employer / Organization Name",
+  "* text      ask:notice_period            Earliest date available to start (Notice Period)",
+]
+`;
+
+exports[`real forms, offline > icims-microsoft.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email Address",
+  "* tel       profile:phone                Phone Number",
+  "* text      ask:missing_profile_value    Street Address",
+  "* text      ask:missing_profile_value    City",
+  "* text      ask:unknown                  State",
+  "* text      ask:missing_profile_value    Postal Code",
+  "* file      resume                       Resume / CV Attachment",
+  "* select    ask:unknown                  Do you possess an active US Government Security Clearance?",
+  "* select    ask:work_authorization       Are you legally authorized to work in the United States?",
+  "* select    ask:sponsorship              Will you now or in the future require visa sponsorship?",
+]
+`;
+
 exports[`real forms, offline > lever-360learning.html 1`] = `
 [
   "  file      resume                       Resume/CV ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
@@ -877,6 +1043,22 @@ exports[`real forms, offline > lever-360learning.html 1`] = `
   "* textarea  ask:salary                   Please specify your precise salary expectations. Base, then bonus",
   "  radio     ask:gender                   What gender do you identify as?",
   "  checkbox  skip                         Yes, 360Learning can contact me about future job opportunities for up to 2 years",
+]
+`;
+
+exports[`real forms, offline > lever-brazil-nubank.html 1`] = `
+[
+  "* text      profile:fullName             Nome completo",
+  "* email     profile:email                E-mail",
+  "* tel       profile:phone                Telefone / Celular",
+  "* text      ask:missing_profile_value    Cidade / Estado",
+  "* file      resume                       Currículo (PDF ou DOCX)",
+  "* text      ask:identity                 CPF (Cadastro de Pessoas Físicas)",
+  "* text      ask:salary                   Pretensão salarial (BRL / mês ou ano)",
+  "* text      ask:notice_period            Prazo de aviso prévio (Notice period)",
+  "* select    ask:work_authorization       Autorização para trabalhar no Brasil",
+  "  url       profile:linkedin             Perfil do LinkedIn",
+  "* checkbox  ask:consent                  Concordo com os termos de privacidade e autorizo o processamento dos meus dados conforme a LGPD",
 ]
 `;
 
@@ -925,6 +1107,22 @@ exports[`real forms, offline > lever-distro.html 1`] = `
   "  text      profile:linkedin             LinkedIn URL",
   "  text      skip                         GitHub URL",
   "  text      skip                         Portfolio URL",
+]
+`;
+
+exports[`real forms, offline > lever-india-swiggy.html 1`] = `
+[
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email Address",
+  "* tel       profile:phone                Phone Number",
+  "* text      ask:missing_profile_value    Current City / Location",
+  "* file      resume                       Resume / CV",
+  "* text      ask:salary                   Current CTC (in LPA)",
+  "* text      ask:salary                   Expected CTC (in LPA)",
+  "* number    ask:notice_period            Notice Period (in days)",
+  "  text      skip                         Permanent Account Number (PAN) / Identity Verification",
+  "* url       ask:missing_profile_value    GitHub Profile URL",
+  "* select    ask:relocation               Are you comfortable working from Bengaluru office (Hybrid)?",
 ]
 `;
 
@@ -1082,6 +1280,34 @@ exports[`real forms, offline > lever-zeta.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > personio-celonis.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "  url       profile:linkedin             LinkedIn Profile",
+  "* text      ask:salary                   Expected salary (€ EUR)",
+  "* text      ask:notice_period            Earliest joining date / Kündigungsfrist",
+  "  text      profile:degree               University degree",
+  "* file      resume                       CV upload",
+]
+`;
+
+exports[`real forms, offline > personio-flixbus.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* text      ask:salary                   Desired Salary (Annual gross EUR)",
+  "* text      ask:notice_period            Available from / Notice period",
+  "* select    ask:work_authorization       Work authorization in Germany",
+  "  select    skip                         English language proficiency",
+  "* file      resume                       CV / Resume",
+]
+`;
+
 exports[`real forms, offline > personio-magazino.html 1`] = `
 [
   "  text      profile:firstName            First",
@@ -1123,6 +1349,36 @@ exports[`real forms, offline > personio-oceonix.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > personio-zalando.html 1`] = `
+[
+  "* text      profile:firstName            First",
+  "* text      profile:lastName             Last",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* text      ask:missing_profile_value    Location",
+  "* text      ask:salary                   Expected salary (EUR gross/year)",
+  "* text      ask:notice_period            Available from / Kündigungsfrist",
+  "* select    ask:sponsorship              Visa situation / Work authorization in Germany",
+  "* file      resume                       CV / Resume",
+  "  file      skip                         Cover letter",
+]
+`;
+
+exports[`real forms, offline > recruitee-bunq.html 1`] = `
+[
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* text      ask:missing_profile_value    Current City",
+  "* file      resume                       Resume / CV",
+  "* text      ask:identity                 Burgerservicenummer (BSN) or Tax ID (Identity)",
+  "* select    ask:work_authorization       Do you hold a valid EU passport or Dutch work permit?",
+  "* text      ask:notice_period            What is your notice period?",
+  "* text      ask:salary                   What is your gross annual salary expectation in EUR?",
+  "* textarea  ask:unknown                  Motivation: Why bunq?",
+]
+`;
+
 exports[`real forms, offline > recruitee-hostpoint.html 1`] = `
 [
   "* text      profile:fullName             Vor- und Nachname",
@@ -1139,6 +1395,160 @@ exports[`real forms, offline > recruitee-hostpoint.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > recruitee-sendcloud.html 1`] = `
+[
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email Address",
+  "* tel       profile:phone                Phone",
+  "* file      resume                       Resume upload",
+  "  url       profile:linkedin             LinkedIn Profile",
+  "* url       ask:missing_profile_value    GitHub Profile",
+  "* text      ask:salary                   Gross annual salary expectation (€ EUR)",
+  "* text      ask:notice_period            Notice period (opzegtermijn)",
+  "* select    ask:work_authorization       Right to work in the Netherlands",
+  "* checkbox  ask:consent                  I consent to the collection and processing of my personal data",
+]
+`;
+
+exports[`real forms, offline > smartrecruiters-ikea.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* text      ask:missing_profile_value    Location / City",
+  "* file      resume                       Resume / CV",
+  "* text      ask:notice_period            Notice period",
+  "* text      ask:salary                   Expected salary / compensation",
+  "* select    ask:unknown                  English language proficiency",
+  "* checkbox  ask:consent                  I consent to the processing of my candidate data in accordance with SmartRecruiters privacy policy",
+]
+`;
+
+exports[`real forms, offline > smartrecruiters-ubisoft.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* url       ask:missing_profile_value    Portfolio Website / Demo Reel Link",
+  "  url       skip                         GitHub Profile URL",
+  "* file      resume                       Resume upload",
+  "* number    ask:unknown                  Years of C++ experience",
+  "* select    ask:work_authorization       Are you legally authorized to work in Canada or France?",
+  "* text      ask:salary                   Expected annual compensation",
+]
+`;
+
+exports[`real forms, offline > smartrecruiters-visa.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* file      resume                       Resume / CV",
+  "  url       profile:linkedin             LinkedIn URL",
+  "* radio     ask:work_authorization       Are you legally authorized to work in the United States?",
+  "* radio     ask:sponsorship              Will you require visa sponsorship for employment authorization?",
+  "* select    ask:sponsorship              How did you hear about Visa?",
+]
+`;
+
+exports[`real forms, offline > successfactors-allianz.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* text      ask:missing_profile_value    City / Location",
+  "  text      skip                         University / Hochschule",
+  "  select    profile:degree               Highest Degree",
+  "* file      resume                       CV upload",
+  "* text      ask:salary                   Salary Expectations (Annual gross in EUR)",
+  "* text      ask:notice_period            Earliest possible joining date / Notice period",
+  "* select    ask:work_authorization       Are you legally authorized to work in the EU?",
+  "* checkbox  ask:consent                  I agree to the Allianz candidate privacy policy and data processing",
+]
+`;
+
+exports[`real forms, offline > successfactors-sap.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone Number",
+  "* text      ask:missing_profile_value    City",
+  "* text      ask:missing_profile_value    Country",
+  "* file      resume                       CV / Resume upload",
+  "* text      ask:salary                   Desired Gross Annual Salary (EUR / Gehaltsvorstellung)",
+  "* text      ask:notice_period            Notice Period / Kündigungsfrist",
+  "* select    ask:work_authorization       EU Work Permit / Arbeitserlaubnis",
+  "* checkbox  ask:consent                  I acknowledge and agree to SAP's Data Privacy Statement (DSGVO)",
+]
+`;
+
+exports[`real forms, offline > successfactors-siemens.html 1`] = `
+[
+  "* text      profile:firstName            Vorname / First Name",
+  "* text      profile:lastName             Nachname / Last Name",
+  "* email     profile:email                E-Mail-Adresse / Email",
+  "* tel       profile:phone                Telefonnummer / Phone",
+  "* file      resume                       Lebenslauf / CV",
+  "* text      ask:salary                   Gehaltsvorstellung (brutto pro Jahr) / Desired annual salary",
+  "* text      ask:notice_period            Kündigungsfrist / Notice period",
+  "  select    skip                         Reisebereitschaft / Willingness to travel",
+  "* select    ask:work_authorization       Gültige Arbeitserlaubnis für Deutschland",
+  "* checkbox  ask:consent                  Ich habe die Datenschutzerklärung zur Kenntnis genommen und willige in die Verarbeitung meiner Daten ein",
+]
+`;
+
+exports[`real forms, offline > taleo-boeing.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email Address",
+  "* tel       profile:phone                Phone Number",
+  "  select    profile:degree               Highest Degree Completed",
+  "  text      skip                         College / University",
+  "* file      resume                       Resume / CV",
+  "* radio     ask:unknown                  Are you a US Person under ITAR regulations (US Citizen or Permanent Resident)?",
+  "  select    ask:veteran                  Protected Veteran Status",
+  "* checkbox  ask:consent                  I acknowledge and agree to mandatory pre-employment drug screening",
+]
+`;
+
+exports[`real forms, offline > taleo-deloitte.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* text      ask:missing_profile_value    College / University",
+  "* text      profile:degree               Degree / Major",
+  "  number    skip                         Graduation Year",
+  "* file      resume                       Resume / CV",
+  "* radio     ask:unknown                  Have you worked for Deloitte or any member firm previously?",
+  "* text      ask:salary                   Expected salary / compensation ($ USD)",
+  "* textarea  ask:unknown                  Conflict of interest disclosure (or enter 'None')",
+]
+`;
+
+exports[`real forms, offline > taleo-oracle.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email Address",
+  "* tel       profile:phone                Phone",
+  "  text      skip                         Current Employer",
+  "  text      skip                         Current Job Title",
+  "* file      resume                       Resume / CV Attachment",
+  "* text      ask:notice_period            When are you available to start? (Notice Period)",
+  "* text      ask:salary                   Desired Annual Salary ($ USD)",
+  "* select    ask:work_authorization       Are you legally authorized to work in the United States?",
+  "* checkbox  ask:consent                  I certify that all statements made are true and agree to Oracle employment terms",
+]
+`;
+
 exports[`real forms, offline > teamtailor-iprally.html 1`] = `
 [
   "  text      profile:firstName            First name Required",
@@ -1149,6 +1559,21 @@ exports[`real forms, offline > teamtailor-iprally.html 1`] = `
   "  file      skip                         Additional files",
   "  textarea  skip                         Cover letter",
   "  checkbox  ask:consent                  Required. By submitting this application, I agree that I have read the Privacy Policy and confirm that IPRally store my personal details to be able to process my job application.",
+]
+`;
+
+exports[`real forms, offline > teamtailor-nordic-health.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* file      resume                       CV / Resume upload",
+  "  text      skip                         Swedish Personal Identity Number (Personnummer / Identity)",
+  "* text      ask:notice_period            Notice period (uppsägningstid)",
+  "* text      ask:salary                   Desired monthly salary (SEK)",
+  "* select    ask:work_authorization       Are you eligible to work in Sweden?",
+  "* checkbox  ask:consent                  I agree to the processing of personal data according to GDPR",
 ]
 `;
 
@@ -1163,6 +1588,67 @@ exports[`real forms, offline > teamtailor-yousign.html 1`] = `
   "  textarea  skip                         Cover letter",
   "  checkbox  ask:consent                  Required. I have read the Privacy Policy and confirm that I allow Yousign to store my personal details to be able to process my job application.",
   "  checkbox  skip                         Yes, Yousign can also contact me about future job opportunities.",
+]
+`;
+
+exports[`real forms, offline > trao-ai-fintech.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone Number",
+  "* text      ask:missing_profile_value    Current City / Location",
+  "* file      resume                       Resume / CV",
+  "* text      ask:identity                 Permanent Account Number (PAN Card)",
+  "* text      ask:salary                   Current CTC (in INR / LPA)",
+  "* text      ask:salary                   Expected CTC (in INR / LPA)",
+  "* select    ask:notice_period            Notice Period",
+  "  url       profile:linkedin             LinkedIn Profile URL",
+]
+`;
+
+exports[`real forms, offline > trao-ai-robotics.html 1`] = `
+[
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* file      resume                       Resume / CV",
+  "* url       ask:missing_profile_value    Live Demo / Project Link",
+  "* url       ask:missing_profile_value    Intro video recording link (Loom / YouTube)",
+  "* number    ask:missing_profile_value    Total years of work experience",
+  "* text      ask:salary                   Expected compensation (Annual CTC)",
+  "* text      ask:notice_period            Notice period",
+]
+`;
+
+exports[`real forms, offline > trao-ai-startup.html 1`] = `
+[
+  "* text      profile:fullName             Full Name",
+  "* email     profile:email                Email Address",
+  "* tel       profile:phone                Phone Number",
+  "* text      ask:missing_profile_value    Current Location",
+  "* file      resume                       Resume / CV (PDF)",
+  "* url       ask:missing_profile_value    GitHub Profile",
+  "* url       ask:missing_profile_value    Live Demo / Project Link",
+  "* url       ask:missing_profile_value    Introduction Video Link (Loom / YouTube)",
+  "* text      ask:salary                   Current CTC (in LPA)",
+  "* text      ask:salary                   Expected CTC (in LPA)",
+  "* number    ask:notice_period            Notice Period (in days)",
+]
+`;
+
+exports[`real forms, offline > workable-apac-tokyo.html 1`] = `
+[
+  "* text      profile:fullName             氏名 (Full Name)",
+  "* email     profile:email                メールアドレス (Email)",
+  "* tel       profile:phone                電話番号 (Phone)",
+  "* text      ask:missing_profile_value    現住所 (Current Location)",
+  "* file      resume                       履歴書 (Resume / CV)",
+  "  file      skip                         職務経歴書 (Detailed Work History)",
+  "* text      ask:salary                   希望年収 (万円) / Expected Annual Salary (10,000 JPY)",
+  "* text      ask:notice_period            入社可能時期 (Earliest Start Date / Notice Period)",
+  "* select    ask:unknown                  日本語能力 (Japanese Language Proficiency)",
+  "* select    ask:work_authorization       日本での就労資格 (Valid Work Permit in Japan)",
 ]
 `;
 
@@ -1239,6 +1725,22 @@ exports[`real forms, offline > workable-revisionz.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > workable-spain-glovo.html 1`] = `
+[
+  "* text      profile:firstName            Nombre (First Name)",
+  "* text      profile:lastName             Apellidos (Last Name)",
+  "* email     profile:email                Correo electrónico (Email)",
+  "* tel       profile:phone                Teléfono",
+  "* file      resume                       Currículum Vitae (CV)",
+  "* text      ask:identity                 DNI o NIE (Documento de Identidad)",
+  "* text      ask:notice_period            Plazo de preaviso / Fecha de incorporación",
+  "* text      ask:salary                   Pretensión salarial bruta anual (€)",
+  "* select    ask:unknown                  ¿Tienes autorización legal para trabajar en España?",
+  "  url       profile:linkedin             Perfil de LinkedIn",
+  "* checkbox  ask:consent                  Acepto los términos de privacidad y procesamiento de datos conforme al RGPD",
+]
+`;
+
 exports[`real forms, offline > workable-weekday.html 1`] = `
 [
   "* text      profile:firstName            First name",
@@ -1273,5 +1775,96 @@ exports[`real forms, offline > workable-xtremax-pte-ltd-.html 1`] = `
   "* file      resume                       Resume Choose file",
   "  textarea  skip                         Cover letter",
   "* textarea  ask:salary                   What is your current salary? (IDR)",
+]
+`;
+
+exports[`real forms, offline > workday-adobe.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* url       ask:missing_profile_value    GitHub Profile URL",
+  "  url       profile:linkedin             LinkedIn Profile",
+  "  text      skip                         Current Company / Employer",
+  "  select    skip                         Highest level of education completed",
+  "* file      resume                       Resume / CV",
+  "* radio     ask:work_authorization       Are you legally authorized to work in the United States?",
+  "* radio     ask:sponsorship              Will you now or in the future require visa sponsorship?",
+  "* checkbox  ask:consent                  I acknowledge and agree to Adobe's Candidate Privacy Policy and California CCPA notice",
+]
+`;
+
+exports[`real forms, offline > workday-nike.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "* text      ask:missing_profile_value    Current Location (City, State / Country)",
+  "* url       ask:missing_profile_value    Portfolio Website URL",
+  "  url       profile:linkedin             LinkedIn Profile URL",
+  "* file      resume                       Resume / CV File",
+  "  number    skip                         Total years of work experience",
+  "* radio     ask:work_authorization       Are you legally authorized to work in the United States?",
+  "* radio     ask:sponsorship              Will you now or in the future require visa sponsorship?",
+  "* text      ask:notice_period            What is your notice period / availability to start?",
+]
+`;
+
+exports[`real forms, offline > workday-salesforce.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email Address",
+  "* tel       profile:phone                Phone Number",
+  "* text      ask:missing_profile_value    Address Line 1",
+  "* text      ask:missing_profile_value    City",
+  "* text      ask:missing_profile_value    Postal Code",
+  "* file      resume                       Attach Resume or CV",
+  "  url       profile:linkedin             LinkedIn Profile",
+  "* radio     ask:work_authorization       Are you legally authorized to work in the United States?",
+  "* radio     ask:sponsorship              Will you now or in the future require sponsorship for employment visa status?",
+  "  text      ask:notice_period            Earliest date available to start / Notice Period",
+  "  select    ask:gender                   Gender",
+  "  select    ask:veteran                  Veteran Status",
+  "  select    ask:disability               Disability Status (Form CC-305)",
+]
+`;
+
+exports[`real forms, offline > workday-target.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email",
+  "  select    skip                         Phone Device Type",
+  "* tel       profile:phone                Phone Number",
+  "* text      ask:missing_profile_value    Address Line 1",
+  "  text      skip                         Address Line 2",
+  "* text      ask:missing_profile_value    City",
+  "* text      ask:unknown                  State / Province",
+  "* text      ask:missing_profile_value    Postal Code",
+  "* file      resume                       Resume / CV",
+  "* text      ask:notice_period            When can you start? (Notice Period)",
+  "* radio     ask:work_authorization       Are you legally authorized to work in the United States?",
+  "* checkbox  ask:consent                  I certify that all information submitted is true and agree to Target's privacy policy",
+]
+`;
+
+exports[`real forms, offline > workday-walmart.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email Address",
+  "* tel       profile:phone                Phone Number",
+  "* text      ask:missing_profile_value    Street Address",
+  "* text      ask:missing_profile_value    City",
+  "* text      ask:missing_profile_value    Zip Code",
+  "* file      resume                       Resume / CV",
+  "* text      ask:salary                   Desired Salary / Compensation Expectations",
+  "* radio     ask:unknown                  Have you previously worked for Walmart or any of its subsidiaries?",
+  "* radio     ask:work_authorization       Are you legally authorized to work in the United States without restriction?",
+  "* radio     ask:sponsorship              Will you now or in the future require visa sponsorship for employment authorization?",
+  "* select    ask:unknown                  How did you hear about this opportunity?",
 ]
 `;

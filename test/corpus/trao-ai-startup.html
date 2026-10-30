@@ -1,0 +1,67 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Founding Full Stack AI Engineer</h1>
+<div class="trao-application-flow">
+  <form id="trao-apply-form">
+    <div class="trao-section">
+      <h3 class="trao-section-title">Candidate Profile</h3>
+      <div class="trao-field-group">
+        <label for="trao-name" class="trao-label">Full Name *</label>
+        <input type="text" id="trao-name" name="fullName" required class="trao-input" />
+      </div>
+      <div class="trao-field-group">
+        <label for="trao-email" class="trao-label">Email Address *</label>
+        <input type="email" id="trao-email" name="email" required class="trao-input" />
+      </div>
+      <div class="trao-field-group">
+        <label for="trao-phone" class="trao-label">Phone Number *</label>
+        <input type="tel" id="trao-phone" name="phone" required class="trao-input" />
+      </div>
+      <div class="trao-field-group">
+        <label for="trao-city" class="trao-label">Current Location *</label>
+        <input type="text" id="trao-city" name="location" required class="trao-input" />
+      </div>
+      <div class="trao-field-group">
+        <label for="trao-cv" class="trao-label">Resume / CV (PDF) *</label>
+        <input type="file" id="trao-cv" name="resume" required accept=".pdf" />
+      </div>
+    </div>
+
+    <div class="trao-section">
+      <h3 class="trao-section-title">Code, Proof & Demos</h3>
+      <div class="trao-field-group">
+        <label for="trao-github" class="trao-label">GitHub Profile *</label>
+        <input type="url" id="trao-github" name="githubUrl" required placeholder="https://github.com/..." class="trao-input" />
+      </div>
+      <div class="trao-field-group">
+        <label for="trao-demo" class="trao-label">Live Demo / Project Link *</label>
+        <input type="url" id="trao-demo" name="projectUrl" required placeholder="https://mycoolapp.com" class="trao-input" />
+      </div>
+      <div class="trao-field-group">
+        <label for="trao-loom" class="trao-label">Introduction Video Link (Loom / YouTube) *</label>
+        <input type="url" id="trao-loom" name="introVideoUrl" required placeholder="https://www.loom.com/share/..." class="trao-input" />
+      </div>
+    </div>
+
+    <div class="trao-section">
+      <h3 class="trao-section-title">Compensation & Notice</h3>
+      <div class="trao-ctc-wrapper">
+        <div class="trao-field-group">
+          <label for="trao-curr-ctc" class="trao-label">Current CTC (in LPA) *</label>
+          <input type="text" id="trao-curr-ctc" name="currentCtc" required placeholder="e.g. 25 LPA" class="trao-input" />
+        </div>
+        <div class="trao-field-group">
+          <label for="trao-exp-ctc" class="trao-label">Expected CTC (in LPA) *</label>
+          <input type="text" id="trao-exp-ctc" name="expectedCtc" required placeholder="e.g. 35 LPA" class="trao-input" />
+        </div>
+      </div>
+      <div class="trao-field-group">
+        <label for="trao-notice" class="trao-label">Notice Period (in days) *</label>
+        <input type="number" id="trao-notice" name="noticePeriodDays" required placeholder="30" class="trao-input" />
+      </div>
+    </div>
+
+    <div class="trao-actions">
+      <button type="submit" class="trao-btn-submit">Submit Application</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,76 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Quantitative Risk Modeler & Financial Analyst</h1>
+<div class="allianz-sf-container">
+  <form id="allianzApply">
+    <div class="allianz-section">
+      <h2>Candidate Information</h2>
+      <div class="form-item">
+        <label for="alz-first">First Name *</label>
+        <input type="text" id="alz-first" name="firstName" required />
+      </div>
+      <div class="form-item">
+        <label for="alz-last">Last Name *</label>
+        <input type="text" id="alz-last" name="lastName" required />
+      </div>
+      <div class="form-item">
+        <label for="alz-email">Email *</label>
+        <input type="email" id="alz-email" name="email" required />
+      </div>
+      <div class="form-item">
+        <label for="alz-phone">Phone *</label>
+        <input type="tel" id="alz-phone" name="phone" required />
+      </div>
+      <div class="form-item">
+        <label for="alz-city">City / Location *</label>
+        <input type="text" id="alz-city" name="location" required />
+      </div>
+      <div class="form-item">
+        <label for="alz-school">University / Hochschule</label>
+        <input type="text" id="alz-school" name="school" />
+      </div>
+      <div class="form-item">
+        <label for="alz-degree">Highest Degree</label>
+        <select id="alz-degree" name="degree">
+          <option value="">Select Degree</option>
+          <option value="Master">Master of Science</option>
+          <option value="PhD">Doctorate / PhD</option>
+          <option value="Bachelor">Bachelor</option>
+        </select>
+      </div>
+      <div class="form-item">
+        <label for="alz-cv">CV upload *</label>
+        <input type="file" id="alz-cv" name="resume" required />
+      </div>
+    </div>
+
+    <div class="allianz-section">
+      <h2>Expectations & Authorization</h2>
+      <div class="form-item">
+        <label for="alz-salary">Salary Expectations (Annual gross in EUR) *</label>
+        <input type="text" id="alz-salary" name="salary_expectation_eur" required />
+      </div>
+      <div class="form-item">
+        <label for="alz-start">Earliest possible joining date / Notice period *</label>
+        <input type="text" id="alz-start" name="earliest_start_date" required />
+      </div>
+      <div class="form-item">
+        <label for="alz-auth">Are you legally authorized to work in the EU? *</label>
+        <select id="alz-auth" name="eu_authorization" required>
+          <option value="">Select...</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+      <div class="form-item">
+        <label>
+          <input type="checkbox" id="alz-privacy" name="privacy_consent" required />
+          I agree to the Allianz candidate privacy policy and data processing *
+        </label>
+      </div>
+    </div>
+
+    <div class="allianz-actions">
+      <button type="submit" class="allianz-btn">Submit Application</button>
+    </div>
+  </form>
+</div>

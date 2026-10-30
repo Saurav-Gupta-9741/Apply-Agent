@@ -1,0 +1,53 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Robotics Foundation Model Engineer</h1>
+<div class="trao-robotics-wrapper">
+  <form id="robotics-form">
+    <div class="step-box">
+      <h3>Personal Details</h3>
+      <div class="field-item">
+        <label for="rb-name">Full Name *</label>
+        <input type="text" id="rb-name" name="fullName" required />
+      </div>
+      <div class="field-item">
+        <label for="rb-email">Email *</label>
+        <input type="email" id="rb-email" name="email" required />
+      </div>
+      <div class="field-item">
+        <label for="rb-phone">Phone *</label>
+        <input type="tel" id="rb-phone" name="phone" required />
+      </div>
+      <div class="field-item">
+        <label for="rb-cv">Resume / CV *</label>
+        <input type="file" id="rb-cv" name="resume" required />
+      </div>
+    </div>
+
+    <div class="step-box">
+      <h3>Demos & Portfolio</h3>
+      <div class="field-item">
+        <label for="rb-demo">Live Demo / Project Link *</label>
+        <input type="url" id="rb-demo" name="projectUrl" required placeholder="https://..." />
+      </div>
+      <div class="field-item">
+        <label for="rb-video">Intro video recording link (Loom / YouTube) *</label>
+        <input type="url" id="rb-video" name="introVideoUrl" required placeholder="https://loom.com/share/..." />
+      </div>
+      <div class="field-item">
+        <label for="rb-exp">Total years of work experience *</label>
+        <input type="number" id="rb-exp" name="experienceYears" required min="0" />
+      </div>
+      <div class="field-item">
+        <label for="rb-salary">Expected compensation (Annual CTC) *</label>
+        <input type="text" id="rb-salary" name="expectedSalary" required />
+      </div>
+      <div class="field-item">
+        <label for="rb-notice">Notice period *</label>
+        <input type="text" id="rb-notice" name="noticePeriod" required placeholder="e.g. 1 month" />
+      </div>
+    </div>
+
+    <div class="submit-box">
+      <button type="submit" class="submit-btn">Submit Application</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,90 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Lead AI/ML Infrastructure Engineer</h1>
+<div class="tgt-workday-container" data-automation-id="applicationLayout">
+  <form id="target-apply" data-automation-id="jobApplication">
+    <!-- Anti-bot honeypot field -->
+    <div style="display:none;" aria-hidden="true">
+      <label for="tgt-honeypot">Leave this field blank</label>
+      <input type="text" id="tgt-honeypot" name="hp_bot_check" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="tgt-panel" data-automation-id="candidateInfo">
+      <h2>Contact Information</h2>
+      <div class="tgt-field">
+        <label for="tgt-fn" class="tgt-label">First Name *</label>
+        <input type="text" id="tgt-fn" name="legalName.firstName" data-automation-id="firstName" required />
+      </div>
+      <div class="tgt-field">
+        <label for="tgt-ln" class="tgt-label">Last Name *</label>
+        <input type="text" id="tgt-ln" name="legalName.lastName" data-automation-id="lastName" required />
+      </div>
+      <div class="tgt-field">
+        <label for="tgt-email" class="tgt-label">Email *</label>
+        <input type="email" id="tgt-email" name="contact.email" data-automation-id="emailAddress" required />
+      </div>
+      <div class="tgt-field">
+        <label for="tgt-phone-type" class="tgt-label">Phone Device Type</label>
+        <select id="tgt-phone-type" name="contact.phoneType">
+          <option value="mobile">Mobile</option>
+          <option value="home">Home</option>
+          <option value="work">Work</option>
+        </select>
+      </div>
+      <div class="tgt-field">
+        <label for="tgt-phone" class="tgt-label">Phone Number *</label>
+        <input type="tel" id="tgt-phone" name="contact.phone" data-automation-id="primaryPhone" required />
+      </div>
+      <div class="tgt-field">
+        <label for="tgt-addr1" class="tgt-label">Address Line 1 *</label>
+        <input type="text" id="tgt-addr1" name="address.line1" data-automation-id="addressLine1" required />
+      </div>
+      <div class="tgt-field">
+        <label for="tgt-addr2" class="tgt-label">Address Line 2</label>
+        <input type="text" id="tgt-addr2" name="address.line2" data-automation-id="addressLine2" />
+      </div>
+      <div class="tgt-field">
+        <label for="tgt-city" class="tgt-label">City *</label>
+        <input type="text" id="tgt-city" name="address.city" data-automation-id="city" required />
+      </div>
+      <div class="tgt-field">
+        <label for="tgt-state" class="tgt-label">State / Province *</label>
+        <input type="text" id="tgt-state" name="address.state" data-automation-id="stateProvince" required />
+      </div>
+      <div class="tgt-field">
+        <label for="tgt-zip" class="tgt-label">Postal Code *</label>
+        <input type="text" id="tgt-zip" name="address.postal" data-automation-id="postalCode" required />
+      </div>
+    </div>
+
+    <div class="tgt-panel" data-automation-id="docsSection">
+      <h2>Resume</h2>
+      <div class="tgt-field">
+        <label for="tgt-resume" class="tgt-label">Resume / CV *</label>
+        <input type="file" id="tgt-resume" name="resume" data-automation-id="resumeUpload" required />
+      </div>
+    </div>
+
+    <div class="tgt-panel" data-automation-id="availabilitySection">
+      <h2>Availability & Work Status</h2>
+      <div class="tgt-field">
+        <label for="tgt-when-start" class="tgt-label">When can you start? (Notice Period) *</label>
+        <input type="text" id="tgt-when-start" name="availability" placeholder="e.g. Immediately or 2 weeks" required />
+      </div>
+      <fieldset class="tgt-fieldset">
+        <legend class="tgt-legend">Are you legally authorized to work in the United States? *</legend>
+        <label><input type="radio" name="us_auth" value="yes" required /> Yes</label>
+        <label><input type="radio" name="us_auth" value="no" /> No</label>
+      </fieldset>
+      <div class="tgt-field">
+        <label class="tgt-checkbox-label">
+          <input type="checkbox" id="tgt-privacy" name="agree_privacy_policy" required />
+          I certify that all information submitted is true and agree to Target's privacy policy *
+        </label>
+      </div>
+    </div>
+
+    <div class="tgt-submit-area">
+      <button type="submit" class="tgt-submit-button" data-automation-id="submit-button">Submit Application</button>
+    </div>
+  </form>
+</div>
