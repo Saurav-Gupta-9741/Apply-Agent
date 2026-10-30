@@ -134,10 +134,20 @@ export function currentValue(field: ExtractedField): string {
   const [el] = field.elements;
   if (!el) return "";
   if (field.descriptor.control === "radio") {
+    // ARIA radio groups (Google Forms): check aria-checked on div[role="radio"] children
+    if (el.getAttribute?.("role") === "radiogroup") {
+      const checked = el.querySelector("[role='radio'][aria-checked='true']");
+      return checked ? cleanLabel(checked.getAttribute("aria-label") || checked.textContent || "") : "";
+    }
     const checked = (field.elements as HTMLInputElement[]).find((r) => r.checked);
     return checked ? radioLabel(checked) : "";
   }
   if (field.descriptor.control === "checkbox_group") {
+    // ARIA checkbox groups (Google Forms)
+    if (el.getAttribute?.("role") === "group" && el.querySelector("[role='checkbox']")) {
+      return Array.from(el.querySelectorAll("[role='checkbox'][aria-checked='true']"))
+        .map((b) => cleanLabel(b.getAttribute("aria-label") || b.textContent || "")).join(", ");
+    }
     return (field.elements as HTMLInputElement[]).filter((c) => c.checked).map(radioLabel).join(", ");
   }
   if (el instanceof HTMLInputElement && el.type === "checkbox") return el.checked ? "yes" : "";
@@ -147,7 +157,21 @@ export function currentValue(field: ExtractedField): string {
     const selected = el.selectedOptions[0];
     return selected && selected.value ? optionLabel(selected) : "";
   }
-  return el.value.trim();
+  return ("value" in el) ? el.value.trim() : "";
+}
+
+/** Fill an ARIA-role based radio group (Google Forms: div[role="radio"] inside div[role="radiogroup"]). */
+function fillAriaRadio(container: HTMLElement, value: string): FillOutcome {
+  const radios = Array.from(container.querySelectorAll<HTMLElement>("[role='radio']"));
+  if (!radios.length) return { ok: false, detail: "no ARIA radio options found" };
+  const labels = radios.map((r) => cleanLabel(r.getAttribute("aria-label") || r.textContent || ""));
+  const match = bestOption(labels, value);
+  const target = radios[labels.indexOf(match ?? " ")];
+  if (!target) return { ok: false, detail: `no ARIA radio matches "${value}"` };
+  if (target.getAttribute("aria-checked") !== "true") {
+    target.click();
+  }
+  return target.getAttribute("aria-checked") === "true" ? { ok: true } : { ok: false, detail: "ARIA radio did not change" };
 }
 
 export function fillField(field: ExtractedField, value: string, resume?: ResumeFile): FillOutcome {
@@ -155,8 +179,11 @@ export function fillField(field: ExtractedField, value: string, resume?: ResumeF
   const el = els[0];
   if (!el) return { ok: false, detail: "element missing" };
   switch (field.descriptor.control) {
-    case "radio":
+    case "radio": {
+      // ARIA-role radio groups (Google Forms): the element is a container with [role="radio"] children
+      if (el.getAttribute?.("role") === "radiogroup") return fillAriaRadio(el as unknown as HTMLElement, value);
       return fillRadio(els as HTMLInputElement[], value);
+    }
     case "checkbox":
       return fillCheckbox(el as HTMLInputElement, value);
     case "checkbox_group":

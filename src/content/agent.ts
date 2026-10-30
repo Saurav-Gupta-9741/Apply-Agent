@@ -2,12 +2,12 @@
  * required is filled, no CAPTCHA is waiting, and (in review mode) the user has pressed Submit. */
 
 import type { AnswerEntry, ApplicationRecord, Decision, FieldResult, Mode, Profile, RunReport } from "../shared/types";
-import { generic, pickAdapter } from "./adapters";
+import { generic, isGoogleForms, pickAdapter } from "./adapters";
 import { workEntries } from "./classify";
 import { codeOptionFor, dialCodePickerFor, isDialCodePicker, JUST_A_DIAL_CODE, phoneBoxFor, selectedCode, splitPhone } from "./phone";
 import { decideWithMeaning, type Meaning } from "./meaning";
 import { detectConfirmation, hasCaptcha, visibleErrors } from "./detect";
-import { DROPDOWN, extractFields, inWorkSection, sectionHeadings, type ExtractedField } from "./extract";
+import { DROPDOWN, extractFields, extractGoogleFormsWidgets, inWorkSection, sectionHeadings, type ExtractedField } from "./extract";
 import { currentValue, fillCombobox, fillDropdown, fillField, fire, type FillOutcome } from "./fill";
 import { deepQueryAll } from "./dom";
 import type { PageFacts } from "./facts";
@@ -67,6 +67,16 @@ async function readMeanings(fields: ExtractedField[], ctx: Pick<AgentContext, "u
   return out;
 }
 
+/** Extract fields, and on Google Forms also extract ARIA widgets the standard extractor misses. */
+function extractAllFields(root: ParentNode, href: string): ExtractedField[] {
+  const fields = extractFields(root);
+  if (isGoogleForms(href)) {
+    const extra = extractGoogleFormsWidgets(root, fields);
+    if (extra.length) fields.push(...extra);
+  }
+  return fields;
+}
+
 function locate(doc: Document) {
   const adapter = pickAdapter(doc);
   const root = adapter.formRoot(doc) ?? generic.formRoot(doc);
@@ -83,7 +93,7 @@ export async function scanForm(doc: Document, ctx: Omit<AgentContext, "mode">): 
   const report = baseReport(doc, adapter.platform, adapter.jobTitle(doc));
   if (!root) return report;
   const page: PageFacts = ctx.page ?? { jobCountries: jobCountries(doc), url: doc.location?.href ?? "", applications: ctx.applications };
-  const fields = extractFields(root);
+  const fields = extractAllFields(root, doc.location?.href ?? "");
   const meanings = await readMeanings(fields, ctx);
   report.fields = fields.map((field) => {
     const first = field.elements[0];
@@ -232,21 +242,21 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
   //    only what is still empty (and flag what the site filled differently from the user's facts).
   const uploads: FieldResult[] = [];
   const uploaded = new Set<Element>();
-  for (const field of extractFields(root).filter((f) => f.descriptor.control === "file")) {
+  for (const field of extractAllFields(root, doc.location?.href ?? "").filter((f) => f.descriptor.control === "file")) {
     const result = await fillOne(field, ctx);
     if (result.status === "filled") uploaded.add(field.elements[0]!);
     uploads.push(result);
   }
   // Resume parsers start a moment after the upload and take a few seconds: give them time before typing.
   // Start pre-reading question meanings concurrently while the resume parser settles:
-  const preRemaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file");
+  const preRemaining = extractAllFields(locate(doc).root ?? root, doc.location?.href ?? "").filter((f) => f.descriptor.control !== "file");
   const meaningsPromise = readMeanings(preRemaining, ctx);
   if (uploaded.size) await settle(doc, 1000, 10_000, 2000);
   // 2. One block per job in the work history ("Add another" in a repeating experience section).
   await addWorkBlocks(doc, ctx);
   // 3. Everything else, read again: the page may have changed meanwhile.
   const rest: FieldResult[] = [];
-  const remaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file"); // files: step 1
+  const remaining = extractAllFields(locate(doc).root ?? root, doc.location?.href ?? "").filter((f) => f.descriptor.control !== "file"); // files: step 1
   const meanings = await meaningsPromise;
   const newFields = remaining.filter((f) => !meanings.has(f.descriptor.label));
   if (newFields.length) {

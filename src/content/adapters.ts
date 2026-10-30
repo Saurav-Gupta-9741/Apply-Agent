@@ -30,7 +30,8 @@ function buttonText(el: HTMLElement): string {
 export const SUBMIT_TEXT = /submit|send( my)? application|^apply( now)?$|^apply for (this )?(job|position|role)$|complete (my )?application|^finish|^done$|absenden|bewerbung (senden|abschicken)|^envoyer|soumettre|postuler|^enviar|candidatar|^inviare|^invia|^verzenden|solliciteren/i;
 export const STEP_TEXT = /^(next|continue|save (and|&) (continue|next)|next step|proceed|review( (my|your)? ?application)?|weiter|suivant|continuer|siguiente|continuar|pr[oó]ximo|avanti|volgende|doorgaan)\b/i;
 /** Buttons that must never be pressed: other sign-ins, re-parsing the resume, leaving or abandoning the form. */
-export const NEVER_PRESS = /linked ?in|indeed|google|facebook|apple|github|autofill|auto-fill|import|parse|upload|attach|draft|^back|previous|cancel|withdraw|delete|remove|sign ?in|log ?in|sign ?up|register|create account|zur[uü]ck|retour|pr[ée]c[ée]dent|atr[aá]s|anterior|indietro|terug|annuler|abbrechen|cancelar/i;
+/** "google" is excluded on non-Google-Forms pages; on Google Forms itself, the Submit button text is "Submit" (safe). */
+export const NEVER_PRESS = /linked ?in|indeed|sign in with google|google sign.?in|facebook|apple|github|autofill|auto-fill|import|parse|upload|attach|draft|^back|previous|cancel|withdraw|delete|remove|sign ?in|log ?in|sign ?up|register|create account|zur[uü]ck|retour|pr[ée]c[ée]dent|atr[aá]s|anterior|indietro|terug|annuler|abbrechen|cancelar/i;
 
 function visible(el: HTMLElement): boolean {
   if (el.closest("[hidden], [aria-hidden='true']")) return false;
@@ -117,6 +118,37 @@ const ashby: Adapter = {
   jobTitle: (doc) => text(doc.querySelector("h1")),
 };
 
+/** Google Forms: forms at docs.google.com/forms/… use a single <form action="…/formResponse">. */
+export function isGoogleForms(url: URL | string): boolean {
+  try {
+    const u = typeof url === "string" ? new URL(url) : url;
+    return u.hostname === "docs.google.com" && /\/forms\//.test(u.pathname);
+  } catch { return false; }
+}
+
+const googleForms: Adapter = {
+  platform: "google_forms",
+  matches: (url) => isGoogleForms(url),
+  formRoot: (doc) => {
+    const form = doc.querySelector<HTMLElement>("form[action*='formResponse']");
+    if (form) return form;
+    return doc.querySelector<HTMLElement>("[role='list']")?.closest<HTMLElement>("form") ?? bestRoot(doc, "form");
+  },
+  action: (root) => {
+    const buttons = deepQueryAll<HTMLElement>(root, "[role='button'], button, input[type='submit']")
+      .filter((b) => visible(b) && !(b as HTMLButtonElement).disabled);
+    const submit = buttons.find((b) => SUBMIT_TEXT.test(buttonText(b)));
+    if (submit) return { kind: "submit", button: submit };
+    const next = buttons.find((b) => STEP_TEXT.test(buttonText(b)));
+    if (next) return { kind: "next", button: next };
+    return null;
+  },
+  jobTitle: (doc) => {
+    const title = doc.querySelector("[role='heading'][aria-level='1']") ?? doc.querySelector("h1");
+    return text(title);
+  },
+};
+
 /** Any other site: the form with the most fields, if it looks like an application. */
 export const generic: Adapter = {
   platform: "generic",
@@ -126,7 +158,7 @@ export const generic: Adapter = {
   jobTitle: (doc) => text(doc.querySelector("h1")) || doc.title,
 };
 
-const ADAPTERS = [greenhouse, lever, ashby, generic];
+const ADAPTERS = [greenhouse, lever, ashby, googleForms, generic];
 
 export function pickAdapter(doc: Document, href: string = doc.location?.href ?? "about:blank"): Adapter {
   let url: URL;
