@@ -19,7 +19,7 @@ export interface ExtractedField {
 }
 
 const SKIP_INPUT_TYPES = new Set(["hidden", "submit", "button", "reset", "image", "search", "password"]);
-export const DROPDOWN = "button[aria-haspopup='listbox'], [role='combobox']:not(input):not(select)";
+export const DROPDOWN = "button[aria-haspopup='listbox'], [role='combobox']:not(input):not(select), [role='listbox'][tabindex='0']:not(select)";
 const CONTROLS = `input, textarea, select, ${DROPDOWN}`;
 const LABELISH = "legend, label, .label, [class*='label'], [class*='Label'], [class*='question-title'], [class*='questionTitle'], [role='heading'], h3, h4";
 const GENERIC_LABEL = /^(attach|attach file|upload|upload file|browse|choose( a)? file|select( a)? file|drop (your )?files?( here)?|enter manually|type your response|your answer|answer|select|choose|select an option|please select|optional)\W*$/i;
@@ -149,7 +149,8 @@ function rawLabel(el: FieldElement, root: ParentNode): string {
     () => labelledBy(el),
     () => visibleText(forLabel) || forLabel?.textContent || "", // visually-hidden labels still count
     () => (isChoice ? visibleText(el.closest("label")) : ""),
-    () => labelledBy(el.closest("[role='group'][aria-labelledby], [role='radiogroup'][aria-labelledby]")),
+    () => (isChoice ? (el.closest("[role='radio'], [role='checkbox']")?.getAttribute("aria-label") ?? visibleText(el.closest("[role='radio'], [role='checkbox']"))) : ""),
+    () => (isChoice ? "" : labelledBy(el.closest("[role='group'][aria-labelledby], [role='radiogroup'][aria-labelledby]"))),
     () => (isChoice ? "" : visibleText(el.closest("label"))),
     // A developer's name ("file-input", "text_field_3") is not a label: the question is in the text around it.
     () => (MACHINE_NAME.test(el.getAttribute("aria-label") ?? "") ? "" : el.getAttribute("aria-label") ?? ""),
@@ -169,6 +170,24 @@ function rawLabel(el: FieldElement, root: ParentNode): string {
 
 export function labelFor(el: FieldElement, root: ParentNode): string {
   return cleanLabel(rawLabel(el, root));
+}
+
+function optionsForCustomDropdown(el: HTMLElement, root: ParentNode): string[] {
+  const container = el.closest("[role='listitem'], [role='group'], fieldset, .field, form") ?? el.parentElement ?? root;
+  const opts = Array.from(container.querySelectorAll<HTMLElement>("[role='option']"))
+    .map((o) => cleanLabel(o.textContent ?? ""))
+    .filter((o) => o && !/^(select|choose|--|please select)/i.test(o));
+  if (opts.length > 0) return opts;
+  const listId = el.getAttribute("aria-controls") ?? el.getAttribute("aria-owns");
+  if (listId) {
+    const list = el.ownerDocument.getElementById(listId);
+    if (list) {
+      return Array.from(list.querySelectorAll<HTMLElement>("[role='option']"))
+        .map((o) => cleanLabel(o.textContent ?? ""))
+        .filter((o) => o && !/^(select|choose|--|please select)/i.test(o));
+    }
+  }
+  return [];
 }
 
 function controlType(el: FieldElement): ControlType {
@@ -248,7 +267,7 @@ export function extractFields(root: ParentNode): ExtractedField[] {
         required: isRequired([el], raw),
         options: el instanceof HTMLSelectElement
           ? Array.from(el.options).map((o) => cleanLabel(o.textContent ?? "")).filter((o) => o && !/^(select|choose|--|please select)/i.test(o))
-          : [],
+          : optionsForCustomDropdown(el, root),
         name: el.getAttribute("name") || el.id,
         autocomplete: el.getAttribute("autocomplete") ?? "",
         placeholder: el.getAttribute("placeholder") ?? "",
@@ -279,7 +298,13 @@ export function extractFields(root: ParentNode): ExtractedField[] {
         label: cleanLabel(raw),
         control: first.type === "radio" ? "radio" : "checkbox_group",
         required: isRequired(group, raw),
-        options: group.map((r) => cleanLabel(visibleText(r.closest("label")) || labelFor(r, root))),
+        options: group.map((r) => cleanLabel(
+        visibleText(r.closest("label"))
+        || r.closest("[role='radio'], [role='checkbox']")?.getAttribute("aria-label")
+        || visibleText(r.closest("[role='radio'], [role='checkbox'], .docssharedWizToggleLabeledControl"))
+        || labelFor(r, root)
+        || r.value
+      )),
         name: key.slice(key.indexOf(":") + 1),
         autocomplete: "",
         placeholder: "",
@@ -309,92 +334,6 @@ function assignSections(fields: ExtractedField[], root: ParentNode): void {
 
 // --- repeating work-experience sections ------------------------------------------------------------------------
 
-/** Google Forms ARIA widgets: extracts [role="radiogroup"] / [role="listbox"] containers that use
- * div[role="radio"], div[role="checkbox"] and div[role="option"] instead of native HTML controls.
- * Called by the Google Forms adapter AFTER the standard extractFields, to add widgets it missed. */
-export function extractGoogleFormsWidgets(root: ParentNode, existingFields: ExtractedField[]): ExtractedField[] {
-  const existingElements = new Set(existingFields.flatMap((f) => f.elements as Element[]));
-  const extra: ExtractedField[] = [];
-  let counter = existingFields.length + 1000; // avoid key collisions
-
-  // ARIA radio groups: [role="radiogroup"] with [role="radio"] children (no native <input type="radio">)
-  for (const rg of Array.from(root.querySelectorAll("[role='radiogroup']"))) {
-    if (existingElements.has(rg)) continue;
-    const nativeRadios = rg.querySelectorAll("input[type='radio']");
-    if (nativeRadios.length > 0) continue; // handled by standard extraction
-    const ariaRadios = Array.from(rg.querySelectorAll("[role='radio']"));
-    if (ariaRadios.length === 0) continue;
-    if (isHidden(rg)) continue;
-    const raw = labelledBy(rg) || rg.getAttribute("aria-label")
-      || questionText(rg as any, [rg as any], root instanceof Element ? root : undefined) || "";
-    const options = ariaRadios.map((r) => cleanLabel(r.getAttribute("aria-label") || r.textContent || ""));
-    extra.push({
-      elements: [rg as any],
-      descriptor: {
-        key: `gf${counter++}`,
-        label: cleanLabel(raw),
-        control: "radio",
-        required: rg.getAttribute("aria-required") === "true" || REQUIRED_MARK.test(raw),
-        options,
-        name: rg.getAttribute("aria-label") || rg.id || `gf_radio_${counter}`,
-        autocomplete: "",
-        placeholder: "",
-      },
-    });
-  }
-
-  // ARIA listbox dropdowns: [role="listbox"] with [role="option"] children (not native <select>)
-  for (const lb of Array.from(root.querySelectorAll("[role='listbox']:not(select)"))) {
-    if (existingElements.has(lb)) continue;
-    if (isHidden(lb)) continue;
-    const raw = labelledBy(lb) || lb.getAttribute("aria-label")
-      || questionText(lb as any, [lb as any], root instanceof Element ? root : undefined) || "";
-    if (!raw) continue;
-    const options = Array.from(lb.querySelectorAll("[role='option']")).map((o) => cleanLabel(o.textContent || ""));
-    if (options.length === 0) continue;
-    extra.push({
-      elements: [lb as any],
-      descriptor: {
-        key: `gf${counter++}`,
-        label: cleanLabel(raw),
-        control: "dropdown",
-        required: lb.getAttribute("aria-required") === "true" || REQUIRED_MARK.test(raw),
-        options,
-        name: lb.getAttribute("aria-label") || lb.id || `gf_list_${counter}`,
-        autocomplete: "",
-        placeholder: "",
-      },
-    });
-  }
-
-  // ARIA checkbox groups: containers with [role="checkbox"] children
-  for (const group of Array.from(root.querySelectorAll("[role='group']"))) {
-    if (existingElements.has(group)) continue;
-    const ariaBoxes = Array.from(group.querySelectorAll("[role='checkbox']"));
-    if (ariaBoxes.length === 0) continue;
-    const nativeBoxes = group.querySelectorAll("input[type='checkbox']");
-    if (nativeBoxes.length > 0) continue;
-    if (isHidden(group)) continue;
-    const raw = labelledBy(group) || group.getAttribute("aria-label")
-      || questionText(group as any, [group as any], root instanceof Element ? root : undefined) || "";
-    const options = ariaBoxes.map((b) => cleanLabel(b.getAttribute("aria-label") || b.textContent || ""));
-    extra.push({
-      elements: [group as any],
-      descriptor: {
-        key: `gf${counter++}`,
-        label: cleanLabel(raw),
-        control: "checkbox_group",
-        required: group.getAttribute("aria-required") === "true" || REQUIRED_MARK.test(raw),
-        options,
-        name: group.getAttribute("aria-label") || group.id || `gf_check_${counter}`,
-        autocomplete: "",
-        placeholder: "",
-      },
-    });
-  }
-
-  return extra;
-}
 
 export const WORK_SECTION = /work experience|employment history|professional experience|work history|my experience|berufserfahrung|exp[ée]rience professionnelle|experiencia (laboral|profesional)|experi[êe]ncia profissional|esperienza lavorativa|werkervaring/i;
 const HEADINGS = "h1, h2, h3, h4, h5, h6, legend, [role='heading'], [data-automation-id$='Header' i]";

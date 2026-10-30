@@ -31,7 +31,7 @@ export const SUBMIT_TEXT = /submit|send( my)? application|^apply( now)?$|^apply 
 export const STEP_TEXT = /^(next|continue|save (and|&) (continue|next)|next step|proceed|review( (my|your)? ?application)?|weiter|suivant|continuer|siguiente|continuar|pr[oó]ximo|avanti|volgende|doorgaan)\b/i;
 /** Buttons that must never be pressed: other sign-ins, re-parsing the resume, leaving or abandoning the form. */
 /** "google" is excluded on non-Google-Forms pages; on Google Forms itself, the Submit button text is "Submit" (safe). */
-export const NEVER_PRESS = /linked ?in|indeed|sign in with google|google sign.?in|facebook|apple|github|autofill|auto-fill|import|parse|upload|attach|draft|^back|previous|cancel|withdraw|delete|remove|sign ?in|log ?in|sign ?up|register|create account|zur[uü]ck|retour|pr[ée]c[ée]dent|atr[aá]s|anterior|indietro|terug|annuler|abbrechen|cancelar/i;
+export const NEVER_PRESS = /linked ?in|indeed|sign in with google|google sign.?in|clear form|clear selection|facebook|apple|github|autofill|auto-fill|import|parse|upload|attach|draft|^back|previous|cancel|withdraw|delete|remove|sign ?in|log ?in|sign ?up|register|create account|zur[uü]ck|retour|pr[ée]c[ée]dent|atr[aá]s|anterior|indietro|terug|annuler|abbrechen|cancelar/i;
 
 function visible(el: HTMLElement): boolean {
   if (el.closest("[hidden], [aria-hidden='true']")) return false;
@@ -134,18 +134,11 @@ const googleForms: Adapter = {
     if (form) return form;
     return doc.querySelector<HTMLElement>("[role='list']")?.closest<HTMLElement>("form") ?? bestRoot(doc, "form");
   },
-  action: (root) => {
-    const buttons = deepQueryAll<HTMLElement>(root, "[role='button'], button, input[type='submit']")
-      .filter((b) => visible(b) && !(b as HTMLButtonElement).disabled);
-    const submit = buttons.find((b) => SUBMIT_TEXT.test(buttonText(b)));
-    if (submit) return { kind: "submit", button: submit };
-    const next = buttons.find((b) => STEP_TEXT.test(buttonText(b)));
-    if (next) return { kind: "next", button: next };
-    return null;
-  },
+  action: (root) => primaryAction(root),
   jobTitle: (doc) => {
     const title = doc.querySelector("[role='heading'][aria-level='1']") ?? doc.querySelector("h1");
-    return text(title);
+    const raw = (title?.textContent ?? doc.title ?? "").replace(/\s+/g, " ").trim();
+    return raw.replace(/\s*-\s*Google Forms\s*$/i, "").trim();
   },
 };
 

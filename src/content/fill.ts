@@ -2,7 +2,7 @@
  * the value back to verify it stuck. */
 
 import { deepQueryAll, scopeOf } from "./dom";
-import type { ExtractedField, FieldElement } from "./extract";
+import { visibleText, type ExtractedField, type FieldElement } from "./extract";
 import type { ResumeFile } from "../shared/types";
 import { bestOption, cleanLabel, cssAttr, normalize } from "../shared/text";
 
@@ -80,7 +80,11 @@ function fillSelect(el: HTMLSelectElement, value: string): FillOutcome {
 
 function radioLabel(radio: HTMLInputElement): string {
   const byFor = radio.id ? scopeOf(radio).querySelector(`label[for="${cssAttr(radio.id)}"]`) : null;
-  return cleanLabel((byFor ?? radio.closest("label"))?.textContent ?? radio.value);
+  const roleChoice = radio.closest("[role='radio'], [role='checkbox'], .docssharedWizToggleLabeledControl");
+  const roleAria = roleChoice?.getAttribute("aria-label");
+  const roleText = roleChoice ? cleanLabel(visibleText(roleChoice)) : "";
+  const labelText = (byFor ?? radio.closest("label"))?.textContent ?? "";
+  return cleanLabel(roleAria || labelText || roleText || radio.value);
 }
 
 function fillRadio(radios: HTMLInputElement[], value: string): FillOutcome {
@@ -88,8 +92,13 @@ function fillRadio(radios: HTMLInputElement[], value: string): FillOutcome {
   const match = bestOption(labels, value);
   const radio = radios[labels.indexOf(match ?? "\u0000")];
   if (!radio) return { ok: false, detail: `no choice matches "${value}"` };
-  if (!radio.checked) radio.click();
-  return radio.checked ? { ok: true } : { ok: false, detail: "choice did not stick" };
+  const target = (radio.closest("[role='radio']") as HTMLElement | null) ?? radio;
+  if (!radio.checked) {
+    target.click();
+    if (!radio.checked) radio.click();
+  }
+  const isChecked = radio.checked || target.getAttribute("aria-checked") === "true";
+  return isChecked ? { ok: true } : { ok: false, detail: "choice did not stick" };
 }
 
 const YES = /^(yes|y|true|1|agree|i agree|checked)$/i;
@@ -98,8 +107,16 @@ const NO = /^(no|n|false|0|unchecked)$/i;
 function fillCheckbox(el: HTMLInputElement, value: string): FillOutcome {
   const want = YES.test(value.trim()) ? true : NO.test(value.trim()) ? false : undefined;
   if (want === undefined) return { ok: false, detail: `"${value}" is not a yes/no answer` };
-  if (el.checked !== want) el.click();
-  return el.checked === want ? { ok: true } : { ok: false, detail: "checkbox did not change" };
+  const target = (el.closest("[role='checkbox']") as HTMLElement | null) ?? el;
+  const current = el.checked || target.getAttribute("aria-checked") === "true";
+  if (current !== want) {
+    target.click();
+    if (el.checked !== want && target.getAttribute("aria-checked") !== (want ? "true" : "false")) {
+      el.click();
+    }
+  }
+  const isChecked = el.checked || target.getAttribute("aria-checked") === "true";
+  return isChecked === want ? { ok: true } : { ok: false, detail: "checkbox did not change" };
 }
 
 /** "Select all that apply": tick every listed choice; fail (and change nothing) if any choice is unknown. */
@@ -108,8 +125,17 @@ function fillCheckboxGroup(boxes: HTMLInputElement[], value: string): FillOutcom
   const wanted = value.split(/[,;|]/).map((v) => v.trim()).filter(Boolean);
   const picks = wanted.map((w) => labels.indexOf(bestOption(labels, w) ?? "\u0000"));
   if (!wanted.length || picks.some((i) => i < 0)) return { ok: false, detail: `no choices match "${value}"` };
-  for (const i of picks) if (!boxes[i]!.checked) boxes[i]!.click();
-  return picks.every((i) => boxes[i]!.checked) ? { ok: true } : { ok: false, detail: "choices did not stick" };
+  for (const i of picks) {
+    const box = boxes[i]!;
+    const target = (box.closest("[role='checkbox']") as HTMLElement | null) ?? box;
+    const isChecked = box.checked || target.getAttribute("aria-checked") === "true";
+    if (!isChecked) {
+      target.click();
+      if (!box.checked && target.getAttribute("aria-checked") !== "true") box.click();
+    }
+  }
+  return picks.every((i) => boxes[i]!.checked || boxes[i]!.closest("[role='checkbox']")?.getAttribute("aria-checked") === "true")
+    ? { ok: true } : { ok: false, detail: "choices did not stick" };
 }
 
 function base64ToBytes(data: string): Uint8Array<ArrayBuffer> {
@@ -160,30 +186,13 @@ export function currentValue(field: ExtractedField): string {
   return ("value" in el) ? el.value.trim() : "";
 }
 
-/** Fill an ARIA-role based radio group (Google Forms: div[role="radio"] inside div[role="radiogroup"]). */
-function fillAriaRadio(container: HTMLElement, value: string): FillOutcome {
-  const radios = Array.from(container.querySelectorAll<HTMLElement>("[role='radio']"));
-  if (!radios.length) return { ok: false, detail: "no ARIA radio options found" };
-  const labels = radios.map((r) => cleanLabel(r.getAttribute("aria-label") || r.textContent || ""));
-  const match = bestOption(labels, value);
-  const target = radios[labels.indexOf(match ?? " ")];
-  if (!target) return { ok: false, detail: `no ARIA radio matches "${value}"` };
-  if (target.getAttribute("aria-checked") !== "true") {
-    target.click();
-  }
-  return target.getAttribute("aria-checked") === "true" ? { ok: true } : { ok: false, detail: "ARIA radio did not change" };
-}
-
 export function fillField(field: ExtractedField, value: string, resume?: ResumeFile): FillOutcome {
   const els: FieldElement[] = field.elements;
   const el = els[0];
   if (!el) return { ok: false, detail: "element missing" };
   switch (field.descriptor.control) {
-    case "radio": {
-      // ARIA-role radio groups (Google Forms): the element is a container with [role="radio"] children
-      if (el.getAttribute?.("role") === "radiogroup") return fillAriaRadio(el as unknown as HTMLElement, value);
+    case "radio":
       return fillRadio(els as HTMLInputElement[], value);
-    }
     case "checkbox":
       return fillCheckbox(el as HTMLInputElement, value);
     case "checkbox_group":
