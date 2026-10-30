@@ -90,7 +90,10 @@ export function shouldDetect(detection: "off" | "job_sites" | "allowed_sites", h
   if (detection === "off") return false;
   if (detection === "allowed_sites") return true;
   try {
-    return isJobHost(hostnameOf(href));
+    const host = hostnameOf(href);
+    if (isJobHost(host)) return true;
+    const path = new URL(href).pathname.toLowerCase();
+    return /\/(careers?|jobs?|apply|application|positions?|openings?|vacanc(y|ies)|requisitions?)(\/|$)/i.test(path);
   } catch {
     return false;
   }

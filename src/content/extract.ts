@@ -163,7 +163,17 @@ function rawLabel(el: FieldElement, root: ParentNode): string {
     const raw = get();
     const label = cleanLabel(raw);
     // A rule drawn with characters ("______") or a lone symbol is decoration, not a question.
-    if (label && /\p{L}/u.test(label) && !GENERIC_LABEL.test(label)) return raw;
+    if (label && /\p{L}/u.test(label) && !GENERIC_LABEL.test(label)) {
+      const placeholder = (el instanceof HTMLElement && el.getAttribute("placeholder") || "").trim();
+      if (placeholder && /\b(current|present)\b/i.test(label) && /\b(expect|desired)\b/i.test(label)) {
+        const pCurrent = /\b(current|present)\b/i.test(placeholder);
+        const pExpected = /\b(expect|desired)\b/i.test(placeholder);
+        if (pCurrent !== pExpected) {
+          return `${raw} › ${placeholder}`;
+        }
+      }
+      return raw;
+    }
   }
   return "";
 }

@@ -34,9 +34,10 @@ export const INSUFFICIENT = "INSUFFICIENT";
 
 export const SYSTEM_PROMPT = [
   "You write short, honest answers to job application questions, in the first person, for the candidate described.",
-  "Use ONLY the facts provided. Never invent employers, job titles, years, degrees, skills, numbers, achievements or links.",
+  "Use the candidate's work history, projects, and skills to provide concrete, authentic answers.",
+  "Never invent companies, job titles, years, degrees, or numbers not grounded in the facts.",
   `If the facts are not enough to answer truthfully, reply with exactly: ${INSUFFICIENT}`,
-  "Plain text, no greeting, no sign-off, at most 120 words.",
+  "Plain text, no greeting, no sign-off, concise and professional.",
 ].join("\n");
 
 /** Profile facts the model may use. Contact details are left out: they are never needed in an answer. */
@@ -47,7 +48,17 @@ export function profileFacts(profile: Profile): string[] {
     ["Field of study", profile.discipline], ["School", profile.school], ["Graduation year", profile.graduationYear],
     ["Skills", profile.skills], ["Target roles", profile.targetRoles],
   ];
-  return facts.filter(([, v]) => v.trim()).map(([k, v]) => `${k}: ${v.trim()}`);
+  if (profile.portfolio?.trim()) facts.push(["Portfolio", profile.portfolio.trim()]);
+  if (profile.github?.trim()) facts.push(["GitHub", profile.github.trim()]);
+  if (profile.projectUrl?.trim()) facts.push(["Featured project", profile.projectUrl.trim()]);
+  if (profile.workHistory?.length) {
+    profile.workHistory.slice(0, 3).forEach((w, i) => {
+      const dates = `${w.start || "Past"} to ${w.current ? "Present" : (w.end || "Past")}`;
+      const desc = w.summary ? ` - ${w.summary}` : "";
+      facts.push([`Work #${i + 1}`, `${w.title} at ${w.company} (${dates})${desc}`]);
+    });
+  }
+  return facts.filter(([, v]) => v && v.trim()).map(([k, v]) => `${k}: ${v.trim()}`);
 }
 
 export function buildDraftPrompt(question: string, profile: Profile, job: { title: string; company: string }): string {
@@ -69,7 +80,7 @@ export function checkDraft(draft: string, profile: Profile, job: { title: string
   const invented = [...new Set(draft.match(/\d+(\.\d+)?/g) ?? [])].filter((n) => !allowed.has(n));
   const warnings: string[] = [];
   if (invented.length) warnings.push(`Contains numbers not in your profile: ${invented.join(", ")}. Check them.`);
-  if (draft.split(/\s+/).length > 160) warnings.push("Longer than usual; consider shortening.");
+  if (draft.split(/\s+/).length > 350) warnings.push("Longer than usual; consider shortening.");
   return warnings;
 }
 

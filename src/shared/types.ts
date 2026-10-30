@@ -46,6 +46,8 @@ export interface QuickFacts {
   race: string;
   veteran: "" | "Yes" | "No" | "Decline";
   disability: "" | "Yes" | "No" | "Decline";
+  introVideoUrl?: string;
+  projectUrl?: string;
   workMode?: "" | "onsite" | "hybrid" | "remote" | "any";
   travel?: "" | "Yes" | "No" | "Decline";
   travelPercent?: string;
@@ -70,6 +72,8 @@ export interface Profile {
   github: string;
   portfolio: string;
   resumeUrl?: string;
+  introVideoUrl?: string;
+  projectUrl?: string;
   currentCompany: string;
   currentTitle: string;
   school: string;

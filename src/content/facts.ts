@@ -125,9 +125,22 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts): Decision | und
   // "Is your current salary negotiable?" asks yes or no. "Could you please share your expectations?" asks for the amount.
   const politeAsk = /^(could|can|would) you (please )?(let us know|tell|share|specify|provide|give|indicate|state)\b/.test(q);
   if (YES_NO_QUESTION.test(q) && !politeAsk && field.control !== "number") return undefined;
-  const asksExpected = /expect|desired|requirement|range|asking|looking for|anticipated|expectativa|pretens|esperad|souhait|gewunscht|erwart|vorstellung/.test(q);
-  const asksCurrent = /\b(current|present|existing|last drawn|now|today|atual|actual|aktuell\w*|actuel\w*|attuale|huidig\w*)\b/.test(q);
-  if (asksExpected && asksCurrent) return undefined; // two values in one box
+  let asksExpected = /expect|desired|requirement|range|asking|looking for|anticipated|expectativa|pretens|esperad|souhait|gewunscht|erwart|vorstellung/.test(q);
+  let asksCurrent = /\b(current|present|existing|last drawn|now|today|atual|actual|aktuell\w*|actuel\w*|attuale|huidig\w*)\b/.test(q);
+  if (asksExpected && asksCurrent) {
+    const hint = normalize(`${field.placeholder} ${field.name}`);
+    const hintExpected = /expect|desired|requirement|range|asking|looking for/.test(hint);
+    const hintCurrent = /\b(current|present|existing|last drawn)\b/.test(hint);
+    if (hintCurrent && !hintExpected) {
+      asksCurrent = true;
+      asksExpected = false;
+    } else if (hintExpected && !hintCurrent) {
+      asksExpected = true;
+      asksCurrent = false;
+    } else {
+      return undefined; // two values in one box
+    }
+  }
   const value = (asksExpected ? facts.expectedCtc?.trim() : asksCurrent ? facts.currentCtc?.trim() : "") ?? "";
   if (!value) return undefined;
   const what = asksExpected ? "expected CTC" : "current CTC";
@@ -242,9 +255,9 @@ export function isStartImmediatelyQuestion(label: string): boolean {
   if (/\b(not|unable|cannot|can t|cant|wont|won t)\b/.test(q)) return false;
   if (/\b(january|february|march|april|may|june|july|august|september|october|november|december|monday|tuesday|wednesday|thursday|friday|saturday|sunday|am|pm|o clock)\b/.test(q)) return false;
   if (/\b\d{1,4}[\/\.-]\d{1,2}[\/\.-]\d{1,4}\b/.test(label)) return false;
-  return /^(can you|are you (able|available) to|could you|would you be able to)\s+(start(\s+work(ing)?)?|begin|commence)\s+(immediately|right away)$/.test(q)
-    || /^(available|able)\s+to\s+(start(\s+work(ing)?)?|begin|commence)\s+(immediately|right away)$/.test(q)
-    || /^start\s+(immediately|right away)$/.test(q);
+  return /^(can you|are you (able|available) to|could you|would you be able to)\s+(start(\s+work(ing)?)?|begin|commence|join)\s+(immediately|right away)$/.test(q)
+    || /^(available|able)\s+to\s+(start(\s+work(ing)?)?|begin|commence|join)\s+(immediately|right away)$/.test(q)
+    || /^(start|join)\s+(immediately|right away)$/.test(q);
 }
 
 /** "Immediately"/"0 days" -> Yes; a number of days or weeks > 0 -> No; anything else asks. */
@@ -285,6 +298,14 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     if (isStartImmediatelyQuestion(field.label)) {
       if (!yesNoField(field)) return undefined;
       const notice = facts.noticePeriod?.trim() ?? "";
+      if (notice && field.options.length) {
+        const numMatch = notice.match(/\b(\d+)\s*(days?|weeks?|months?)\b/i);
+        if (numMatch) {
+          const num = numMatch[1];
+          const tiered = field.options.find((o) => new RegExp(`\\b${num}\\s*day`, "i").test(o));
+          if (tiered) return answer(tiered, "notice period");
+        }
+      }
       const val = startImmediatelyValue(notice);
       if (!val) return undefined;
       let ans: string = val;

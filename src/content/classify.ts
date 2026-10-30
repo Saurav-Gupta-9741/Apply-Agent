@@ -46,6 +46,8 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["github", /git ?hub/],
   ["portfolio", /portfolio|personal (web)?site|^website$|website url|blog/],
   ["resumeUrl", /\b(?:resume|cv|curriculum\s*vitae)\s*[\(/]?\s*(?:url|link|drive|google\s*drive|doc|web\s*link|online)\b|\b(?:link|url)\s*(?:to|for)?\s*(?:your\s*)?(?:resume|cv|curriculum\s*vitae)\b|\b(?:google\s*drive|drive\s*link|cloud\s*link)\b.*\b(?:resume|cv)\b/i],
+  ["introVideoUrl", /\b(?:intro(?:duction)?\s*video|video\s*(?:intro(?:duction)?|pitch|recording|url|link)|loom(?:\.com)?|youtube.*intro)\b/i],
+  ["projectUrl", /\b(?:project\s*(?:url|link)|link\s*(?:to\s*)?project|demo\s*(?:url|link)|live\s*demo)\b/i],
   ["currentCompany", /aktueller arbeitgeber|derzeitiger arbeitgeber|employeur actuel|entreprise actuelle|empresa actual|empresa atual|azienda attuale|huidige werkgever|current (company|employer)|present employer|(most )?recent employer|current or most recent (company|employer)|organi[sz]ation name/],
   ["currentTitle", /current (title|role|position|designation)|job title|aktuelle position|berufsbezeichnung|poste actuel|intitule du poste|cargo actual|puesto actual|cargo atual|ruolo attuale|huidige functie/],
   ["graduationYear", /graduat\w* (year|date)|year of graduation|class of|quelle annee|annee (de|d) (diplom|obtention)|abschlussjahr|jahr des abschlusses|ano de (formatura|conclusao|graduacao|graduacion|egreso)|anno di (laurea|diploma)/],
@@ -191,6 +193,8 @@ export function profileValue(profile: Profile, key: ProfileKey | "fullName"): st
   if (key === "addressLine1") return (profile.addressLine1 || profile.address || "").trim();
   if (key === "addressLine2") return (profile.addressLine2 ?? "").trim();
   if (key === "address") return (profile.address || profile.addressLine1 || "").trim();
+  if (key === "introVideoUrl") return (profile.introVideoUrl || profile.facts?.introVideoUrl || "").trim();
+  if (key === "projectUrl") return (profile.projectUrl || profile.facts?.projectUrl || profile.portfolio || "").trim();
   return (profile[key] ?? "").trim();
 }
 
@@ -263,7 +267,7 @@ const OPENS_WITH_QUESTION_WORD = /^(what|where|which|how|when|who|whom|please|yo
 const MAX_FACT_WORDS = 16;
 
 /** "Would you like to include your LinkedIn profile, personal website or blog?" asks for a link, not a yes or no. */
-const LINK_INVITE = /^(would you like to |do you want to |feel free to |please |you can |optionally )?(include|share|add|provide|link|paste|enter)\b.*\b(linked ?in|git ?hub|website|portfolio|blog|resume|cv)\b/;
+const LINK_INVITE = /^(would you like to |do you want to |feel free to |please |you can |optionally )?(include|share|add|provide|link|paste|enter)\b.*\b(linked ?in|git ?hub|website|portfolio|blog|resume|cv|project\s*(?:url|link)|video\s*(?:url|link)|loom)\b/i;
 
 /** Questions that never take one of the user's profile facts, whatever they seem to ask: yes/no questions, choices
  * about the job, long questions, and questions about someone else (by their words or by their section). */
@@ -293,12 +297,18 @@ export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" |
     if (/\b(?:etc|other\w*)\b/.test(asked) && /(?:linked ?in|git ?hub|website|portfolio)/.test(asked)) return undefined;
     // Strip optional side mentions (e.g. "(portfolio optional)" or "; a portfolio is optional"):
     const primary = asked.replace(/\([^)]*optional[^)]*\)/g, "").replace(/;\s*a portfolio is optional/g, "");
-    const first = /linked ?in|git ?hub|website|portfolio|blog|resume|cv/.exec(primary)?.[0] ?? "";
+    const first = /linked ?in|git ?hub|website|portfolio|blog|resume|cv|project\s*(?:url|link)|video\s*(?:url|link)|loom/i.exec(primary)?.[0] ?? "";
     if (!first) return undefined;
-    return /linked/.test(first) ? "linkedin" : /git/.test(first) ? "github" : /resume|cv/.test(first) ? "resumeUrl" : "portfolio";
+    return /linked/.test(first) ? "linkedin" : /git/.test(first) ? "github" : /resume|cv/.test(first) ? "resumeUrl" : /video/.test(first) ? "introVideoUrl" : /project/.test(first) ? "projectUrl" : "portfolio";
   }
   if (field.control === "url" && /\b(resume|cv|curriculum\s*vitae)\b/i.test(asked)) {
     return "resumeUrl";
+  }
+  if (field.control === "url" && /\b(?:intro(?:duction)?\s*video|loom|video\s*(?:pitch|intro))\b/i.test(asked)) {
+    return "introVideoUrl";
+  }
+  if (field.control === "url" && /\b(?:project\s*(?:url|link)|link\s*(?:to\s*)?project|demo\s*link)\b/i.test(asked)) {
+    return "projectUrl";
   }
   if (notAProfileFact(field)) return undefined;
   const hint = AUTOCOMPLETE[field.autocomplete.toLowerCase()];
