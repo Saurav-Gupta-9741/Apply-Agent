@@ -14,10 +14,16 @@ import type { PageFacts } from "./facts";
 import { jobCountries } from "./joblocation";
 import { normalize } from "../shared/text";
 import { isPrivacyConsentCheckbox } from "../shared/consent";
-import { trackCorrection } from "./corrections";
+import { pruneDisconnectedCorrections, trackCorrection } from "./corrections";
 
 /** Scroll a field into view and outline it briefly, so the user can answer it on the page. */
+let highlightTimeout: ReturnType<typeof setTimeout> | undefined;
+
 export function highlightField(doc: Document, label: string, key?: string): boolean {
+  if (highlightTimeout !== undefined) {
+    clearTimeout(highlightTimeout);
+    highlightTimeout = undefined;
+  }
   const { root } = locate(doc);
   if (!root) return false;
   const fields = extractFields(root);
@@ -26,12 +32,13 @@ export function highlightField(doc: Document, label: string, key?: string): bool
   // Hidden file inputs sit behind a styled button: highlight the visible wrapper instead.
   const target = (field?.elements[0]?.closest("[role='group'], .field, fieldset, li, div") as HTMLElement | null) ?? field?.elements[0];
   if (!target) return false;
-  target.scrollIntoView({ behavior: "smooth", block: "center" });
+  target.scrollIntoView?.({ behavior: "smooth", block: "center" });
   const previous = { outline: target.style.outline, offset: target.style.outlineOffset, radius: target.style.borderRadius };
   target.style.outline = "3px solid #8b8cff";
   target.style.outlineOffset = "4px";
   target.style.borderRadius = "6px";
-  setTimeout(() => {
+  highlightTimeout = setTimeout(() => {
+    highlightTimeout = undefined;
     target.style.outline = previous.outline;
     target.style.outlineOffset = previous.offset;
     target.style.borderRadius = previous.radius;
@@ -67,7 +74,7 @@ async function readMeanings(fields: ExtractedField[], ctx: Pick<AgentContext, "u
   return out;
 }
 
-function locate(doc: Document) {
+export function locate(doc: Document) {
   const adapter = pickAdapter(doc);
   const root = adapter.formRoot(doc) ?? generic.formRoot(doc);
   return { adapter, root };
@@ -417,6 +424,7 @@ export async function runOnce(doc: Document, ctx: AgentContext, beforeSubmit?: B
       return done({ ...filled, status: "needs_user", errors: ["The Next button didn't open a new step. Check the page, then press Fill again."] });
     }
     earlier.push(...settled(filled.fields, step));
+    pruneDisconnectedCorrections();
   }
 }
 

@@ -27,7 +27,7 @@ const WANTS_DETAILS = /^if (you|your|so|yes|applicable)\b|\b(share|describe|prov
  * the right to work?", "What is the source of your right to work?"; both seen on real forms). */
 const WH_QUESTION = /^(in |from |for |to )?(what|which|where|when|how|who|whom|whose|why|qual|quais|quel|quelle|cual|cuales|welche[rs]?|wie|wo|wann)\b/;
 /** A question asked with a verb first: answered yes or no ("Are you subject to a notice period?"). */
-export const YES_NO_QUESTION = /^(are|is|do|does|did|have|has|had|will|would|can|could|should|were|was|may|might|shall)\b/;
+export const YES_NO_QUESTION = /^(are|is|do|does|did|have|has|had|will|would|can|could|should|were|was|may|might|shall|sind|haben|hast|bist|konnen|kann|wurden|etes|avez|pouvez|seriez|esta|estas|tiene|tienes|puede|eres|voce|tem|hai|ha|hanno|siete|sei|bent|heeft|hebben|kunt)\b/;
 /** Long statements with a tick box (legal notices, consent texts) are declarations, not questions to answer for the user. */
 const MAX_ANSWERABLE_WORDS = 35;
 
@@ -46,7 +46,7 @@ function yesNoField(field: FieldDescriptor): boolean {
     return ["combobox", "dropdown", "select", "radio"].includes(field.control) || YES_NO_QUESTION.test(q) || /\?\s*$/.test(field.label);
   }
   const options = field.options.map(normalize);
-  return options.some((o) => /^(yes|oui|ja|si|sim)\b/.test(o)) && options.some((o) => /^(no|non|nein|nao)\b/.test(o));
+  return options.some((o) => /^(yes|oui|ja|si|sim)\b/.test(o)) && options.some((o) => /^(no|non|nein|nao|nee)\b/.test(o));
 }
 
 /** What the page says about the job (read once per page). */
@@ -70,7 +70,7 @@ function theQuestion(label: string): string | undefined {
 }
 
 /** What a yes/no about working there means: the user's right to work, or their need for a visa. */
-const ABOUT_WORKING = /authori[sz]|eligib|entitled|right to work|permitted|legally|sponsor|visa|immigration|work permit|permission to work|droit de travailler|droit au travail|derecho a trabajar|direito de trabalhar|arbeitsberechtigung|berechtigt|arbeitserlaubnis|arbeitsgenehmigung|visum|autoris|permis de travail|autoriz|permiso de trabajo|werkvergunning|permesso|parrainage|patrocinio/;
+const ABOUT_WORKING = /authori[sz]|eligib|entitled|right to work|permitted|legally|sponsor|visa|immigration|work permit|permission to work|droit de travailler|droit au travail|derecho a trabajar|direito de trabalhar|arbeitsberechtigung|berechtigt|arbeitserlaubnis|arbeitsvisum|arbeitsgenehmigung|visum|autoris|permis de travail|autoriz|permiso de trabajo|autorizacao de trabalho|visto de trabalho|permissao de trabalho|werkvergunning|gerechtigd|permesso|parrainage|patrocinio/;
 /** "Do you still wish to proceed?", "Is your right to work tied to another employer?", "…in any country other than
  * India?", "Are you NOT authorized…?": another question, or one turned round in a way a rule must not guess. */
 const NOT_A_PLAIN_ASK = /\b(not|never|neither|nor|except|apart from|besides|other than|wish|proceed|acknowledge|understand|agree|tied|restricted|restriction|type of|kind of)\b|n t\b/;
@@ -85,8 +85,8 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   // it neither makes the question another one nor turns it round.
   const asked = q?.replace(/\bwithout\b.*$/, "") ?? "";
   if (!q || !ABOUT_WORKING.test(q) || NOT_A_PLAIN_ASK.test(asked)) return undefined;
-  const asksAuth = /authori[sz]|right to work|eligib|entitled|legally|permit|permis/.test(asked);
-  const asksSponsor = (/sponsor|visa|immigration/.test(asked)) && (NEEDS.test(asked) || /require|need/.test(asked));
+  const asksAuth = /authori[sz]|right to work|eligib|entitled|legally|permit|permis|arbeitserlaubnis|arbeitsgenehmigung|berechtigt|droit de travailler|droit au travail|derecho a trabajar|direito de trabalhar|autorizacao (?:de|para)?\s*trabalh\w*|autorizacion (?:de|para)?\s*trabaj\w*|autorisation (?:de|pour)?\s*travail\w*|werkvergunning|gerechtigd|permesso/.test(asked);
+  const asksSponsor = (/sponsor|visa|visum|immigration|parrainage|patrocinio/.test(asked)) && (NEEDS.test(asked) || /require|need/.test(asked));
   if (asksAuth && asksSponsor && /\b(?:and|\&)\b\s*(?:(?:do|will|would|can)\s+you\s+)?(?:require|need)\b/i.test(asked)) {
     return undefined;
   }
@@ -102,24 +102,33 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   if (!can.every((x) => x === can[0])) return undefined; // "the US or Canada" with a yes for one and a no for the other
   // Polarity from the question's own words ("…the right to work in Poland without the need for a visa?" asks about the
   // right to work).
-  const needs = NEEDS.test(asked) || /sponsor/.test(asked);
+  const needs = NEEDS.test(asked) || /sponsor|parrainage|patrocinio/.test(asked);
   const yes = needs ? !can[0] : can[0];
-  return answer(yes ? "Yes" : "No", needs ? "sponsorship" : "work authorization");
+  const raw = yes ? "Yes" : "No";
+  const val = field.options.length ? (yesNoOption(field.options, raw) ?? bestOption(field.options, raw) ?? raw) : raw;
+  return answer(val, needs ? "sponsorship" : "work authorization");
 }
 
 const CURRENCY: Array<[string, RegExp]> = [
-  ["INR", /₹|\brs\b|\binr\b|rupees?|\blpa\b|lakhs?|lacs?|crores?/],
-  ["USD", /\$|\busd\b|dollars?/],
-  ["EUR", /€|\beur\b|euros?/],
-  ["GBP", /£|\bgbp\b|\bpounds?\b/],
-  ["OTHER", /¥|₩|₪|₺|\b(chf|sgd|aud|cad|nzd|hkd|jpy|cny|rmb|aed|sar|qar|sek|nok|dkk|pln|czk|huf|zar|myr|idr|php|thb|vnd|brl|mxn|krw|ils|try|ron|bgn)\b|francs?|dirhams?|riyals?|\byen\b|yuan/],
+  ["INR", /₹|\brs\.?\b|\binr\b|rupees?|\blpa\b|lakhs?|lacs?|crores?/i],
+  ["EUR", /€|\beur\b|euros?/i],
+  ["GBP", /£|\bgbp\b|\bpounds?\b/i],
+  ["JPY", /¥|\bjpy\b|\byen\b|万円|円/i],
+  ["CAD", /\bcad\b|c\$|canadian dollars?/i],
+  ["AUD", /\baud\b|a\$|australian dollars?/i],
+  ["SGD", /\bsgd\b|s\$|singapore dollars?/i],
+  ["BRL", /\bbrl\b|r\$|reais|real\b/i],
+  ["MXN", /\bmxn\b|mex\$|mexican pesos?/i],
+  ["CHF", /\bchf\b|francs?|swiss francs?/i],
+  ["USD", /\$|\busd\b|u\.?s\.?\s*dollars?|dollars?/i],
+  ["OTHER", /₩|₪|₺|\b(nzd|hkd|cny|rmb|aed|sar|qar|sek|nok|dkk|pln|czk|huf|zar|myr|idr|php|thb|vnd|krw|ils|try|ron|bgn)\b|dirhams?|riyals?|yuan/i],
 ];
 const PERIOD: Array<[string, RegExp]> = [
-  ["month", /\bmonth(ly)?\b|per month|\bp ?m\b|a month|in hand/],
-  ["hour", /\bhour(ly)?\b|per hour|\bhr\b|\bp ?h\b/],
-  ["week", /\bweek(ly)?\b|per week/],
-  ["day", /\bdaily\b|per day/],
-  ["year", /\bannual(ly)?\b|per annum|\byearly\b|per year|\bp ?a\b|\blpa\b|\bctc\b|a year/],
+  ["month", /\bmonth(ly)?\b|per month|\bp ?m\b|a month|in hand|pro monat|monatlich|par mois|mensuel|por mes|mensal|月給|\bmois\b|\bmonat\b|\bmes\b/i],
+  ["hour", /\bhour(ly)?\b|per hour|\bhr\b|\bp ?h\b|pro stunde|stundensatz|par heure|horaire|por hora|時給/i],
+  ["week", /\bweek(ly)?\b|per week|pro woche|par semaine|por semana/i],
+  ["day", /\bdaily\b|per day|pro tag|par jour|por dia|diario|tagessatz/i],
+  ["year", /\bannual(ly)?\b|per annum|\byearly\b|per year|\bp ?a\b|\blpa\b|\bctc\b|a year|pro jahr|jahr|jahres|jahrlich|annuel(le)?|par an|\ban\b|anual|por ano|年収|年額|\bannee\b/i],
 ];
 const kindOf = (text: string, kinds: Array<[string, RegExp]>) => kinds.find(([, re]) => re.test(text.toLowerCase()))?.[0];
 
@@ -130,12 +139,19 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts): Decision | und
   // "Is your current salary negotiable?" asks yes or no. "Could you please share your expectations?" asks for the amount.
   const politeAsk = /^(could|can|would) you (please )?(let us know|tell|share|specify|provide|give|indicate|state)\b/.test(q);
   if (YES_NO_QUESTION.test(q) && !politeAsk && field.control !== "number") return undefined;
-  let asksExpected = /expect|desired|requirement|range|asking|looking for|anticipated|expectativa|pretens|esperad|souhait|gewunscht|erwart|vorstellung|\b(?:hourly|daily|contract(?:or)?|consulting|billing|pay)\s+rate\b/.test(q);
-  let asksCurrent = /\b(current|present|existing|last drawn|now|today|atual|actual|aktuell\w*|actuel\w*|attuale|huidig\w*)\b/.test(q);
+
+  // CTC split / Fixed vs Variable: Never guess individual split components from total CTC
+  if (/\b(?:fixed\s*(?:pay|salary|ctc|component)|variable\s*(?:pay|salary|ctc|component)|bonus|incentive|in[- ]?hand|take[- ]?home)\b/i.test(q) &&
+      !/\b(?:total|overall|fixed\s*\+\s*variable|all[- ]inclusive)\b/i.test(q)) {
+    return undefined;
+  }
+
+  let asksExpected = /expect|desired|requirement|range|asking|looking for|anticipated|target|expectativa|preten[st]|esperad|desejad|souhait|gewunscht|erwart|vorstellung|ziel|gehaltsvorstellung|zielgehalt|希望|\b(?:hourly|daily|contract(?:or)?|consulting|billing|pay)\s+rate\b/.test(q);
+  let asksCurrent = /\b(current|present|existing|last drawn|now|today|atual|actual|aktuell\w*|derzeitig\w*|actuel\w*|dernier|attuale|huidig\w*|現在|現)\b/.test(q);
   if ((asksExpected && asksCurrent) || (!asksExpected && !asksCurrent)) {
     const hint = normalize(`${field.placeholder} ${field.name}`);
-    const hintExpected = /expect|desired|requirement|range|asking|looking for|\b(?:hourly|daily|contract(?:or)?|consulting|billing|pay)\s+rate\b/.test(hint);
-    const hintCurrent = /\b(current|present|existing|last drawn)\b/.test(hint);
+    const hintExpected = /expect|desired|requirement|range|asking|looking for|target|expectativa|preten[st]|esperad|desejad|souhait|gewunscht|erwart|vorstellung|ziel|gehaltsvorstellung|zielgehalt|希望|\b(?:hourly|daily|contract(?:or)?|consulting|billing|pay)\s+rate\b/.test(hint);
+    const hintCurrent = /\b(current|present|existing|last drawn|atual|actual|aktuell\w*|derzeitig\w*|actuel\w*|dernier|attuale|huidig\w*|現在|現)\b/.test(hint);
     if (hintCurrent && !hintExpected) {
       asksCurrent = true;
       asksExpected = false;
@@ -162,10 +178,21 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts): Decision | und
   if (field.control === "number") {
     // A number box takes a plain amount: "18 LPA" is 18 only where the box itself is in lakhs.
     const inLakhs = /\blakhs?\b|\blacs?\b|\blpa\b/;
-    const n = /\d+(\.\d+)?/.exec(value.replace(/,/g, ""))?.[0];
+    const inManYen = /万円|万/;
+    const inThousands = /\b(?:k€|k\$|k£|k(?:eur|usd|gbp)?|thousands?)\b|(?:\b\d+\s*k\b)/i;
+    const qInThousands = /\b(?:k€|k\$|k£|k(?:eur|usd|gbp)?|thousands?)\b|\bk\b/i;
+
+    let cleanVal = value.replace(/,/g, "");
+    // Normalize European thousands dot separator (e.g. 65.000 or 120.000)
+    if (/^\D*\d{1,3}\.\d{3}(?!\d)/.test(value) && !/\.\d{1,2}$/.test(value)) {
+      cleanVal = value.replace(/\./g, "").replace(/,/g, "");
+    }
+    const n = /\d+(\.\d+)?/.exec(cleanVal)?.[0];
     if (!n) return undefined;
     if (inLakhs.test(value.toLowerCase())) return inLakhs.test(q) ? answer(n, what) : undefined;
-    if (/\d\s*(k|m|cr|crores?)\b/i.test(value)) return undefined;
+    if (inManYen.test(value)) return inManYen.test(q) ? answer(n, what) : undefined;
+    if (inThousands.test(value.toLowerCase())) return qInThousands.test(q) ? answer(n, what) : undefined;
+    if (/\d\s*(?:k|cr|crores?)\b/i.test(value) || /\b\d+\s*m\b/i.test(value)) return undefined;
     return answer(n, what);
   }
   return answer(value, what);
@@ -257,22 +284,34 @@ export function isStartImmediatelyQuestion(label: string): boolean {
   if (hasExceptionClause(label)) return false;
   const q = normalize(label);
   if (WANTS_DETAILS.test(q) || WH_QUESTION.test(q)) return false;
-  if (/\b(not|unable|cannot|can t|cant|wont|won t)\b/.test(q)) return false;
+  if (/\b(not|unable|cannot|can t|cant|wont|won t)\b/.test(q) && !/\b(ab sofort|sofort|per direct)\b/.test(q)) return false;
   if (/\b(january|february|march|april|may|june|july|august|september|october|november|december|monday|tuesday|wednesday|thursday|friday|saturday|sunday|am|pm|o clock)\b/.test(q)) return false;
   if (/\b\d{1,4}[\/\.-]\d{1,2}[\/\.-]\d{1,4}\b/.test(label)) return false;
   return /^(can you|are you (able|available) to|could you|would you be able to)\s+(start(\s+work(ing)?)?|begin|commence|join)\s+(immediately|right away)$/.test(q)
     || /^(available|able)\s+to\s+(start(\s+work(ing)?)?|begin|commence|join)\s+(immediately|right away)$/.test(q)
-    || /^(start|join)\s+(immediately|right away)$/.test(q);
+    || /^(start|join)\s+(immediately|right away)$/.test(q)
+    || /^(konnen sie |kannst du |sind sie in der lage )?(ab sofort|sofort) (anfangen|beginnen|starten|eintreten)$/.test(q)
+    || /^(ab sofort|sofort) (verfugbar|bereit|startklar|eintreten)$/.test(q)
+    || /^(pouvez vous |est ce que vous pouvez |etes vous (en mesure|disponible) pour )?(commencer|debuter) immediatement$/.test(q)
+    || /^disponible immediatement$/.test(q)
+    || /^(puede|puedes|esta|estas) (incorporarse|empezar|comenzar) (de inmediato|inmediatamente)$/.test(q)
+    || /^(tiene |cuenta con )?disponibilidad inmediata$/.test(q)
+    || /^(pode|voce pode) (comecar|iniciar) (de imediato|imediatamente)$/.test(q)
+    || /^disponibilidade imediata$/.test(q)
+    || /^(puoi|e in grado di) iniziare (subito|immediatamente)$/.test(q)
+    || /^disponibilita immediata$/.test(q)
+    || /^(kunt u |kun je )?per direct (beginnen|starten)$/.test(q)
+    || /^(per direct|direct) beschikbaar$/.test(q);
 }
 
 /** "Immediately"/"0 days" -> Yes; a number of days or weeks > 0 -> No; anything else asks. */
 export function startImmediatelyValue(notice: string): "Yes" | "No" | undefined {
   const norm = normalize(notice);
   if (!norm) return undefined;
-  if (/^(immediate(ly)?|0(\s*(days?|weeks?|months?))?|none|no notice|available immediately)$/.test(norm)) {
+  if (/^(immediate(ly)?|0(\s*(days?|weeks?|months?))?|none|no notice|available immediately|sofort|ab sofort|immediat(e)?|immediatement|sans preavis|inmediat[oa]|de inmediato|inmediatamente|sin preaviso|imediat[oa]|imediatamente|sem aviso previo|subito|per direct|direct beschikbaar)$/.test(norm)) {
     return "Yes";
   }
-  if (/^([1-9]\d*)\s*(days?|weeks?|months?)$/.test(norm)) {
+  if (/^([1-9]\d*)\s*(days?|weeks?|months?|tage?n?|wochen?|monate?n?|jours?|semaines?|mois|dias?|semanas?|mes(?:es)?|giorni|settimane|mesi|weken?|maanden?)$/.test(norm)) {
     return "No";
   }
   return undefined;
@@ -281,15 +320,15 @@ export function startImmediatelyValue(notice: string): "Yes" | "No" | undefined 
 export function parseNoticeDays(notice: string): number | undefined {
   const norm = normalize(notice);
   if (!norm) return undefined;
-  if (/^(immediate(ly)?|0(\s*(days?|weeks?|months?))?|none|no notice|available immediately)$/.test(norm)) {
+  if (/^(immediate(ly)?|0(\s*(days?|weeks?|months?))?|none|no notice|available immediately|sofort|ab sofort|immediat(e)?|immediatement|sans preavis|inmediat[oa]|de inmediato|inmediatamente|sin preaviso|imediat[oa]|imediatamente|sem aviso previo|subito|per direct|direct beschikbaar)$/.test(norm)) {
     return 0;
   }
-  const m = norm.match(/\b(\d+)\s*(days?|weeks?|months?)\b/);
+  const m = norm.match(/\b(\d+)\s*(days?|weeks?|months?|tage?n?|wochen?|monate?n?|jours?|semaines?|mois|dias?|semanas?|mes(?:es)?|giorn[io]|settiman[ae]|mesi|mese|dag(?:en)?|week|weken|maand(?:en)?)\b/);
   if (!m || !m[1]) return undefined;
   const num = parseInt(m[1], 10);
   const unit = (m[2] ?? "").toLowerCase();
-  if (unit.startsWith("month")) return num * 30;
-  if (unit.startsWith("week")) return num * 7;
+  if (/^(month|monat|mois|mes|mese|maand)/.test(unit)) return num * 30;
+  if (/^(week|woche|semaine|semana|settimana|wek)/.test(unit)) return num * 7;
   return num;
 }
 
@@ -309,8 +348,8 @@ export function matchNoticeOption(notice: string, options: string[]): string | u
 
   if (candidateDays === 0) {
     return options.find((o) =>
-      /^(immediate(ly)?|0\s*days?|no notice|none|available immediately)\b/i.test(normalize(o)) ||
-      /immediate|right away/i.test(o)
+      /^(immediate(ly)?|0\s*days?|no notice|none|available immediately|sofort|ab sofort|immediat(ement)?|de inmediato|inmediatamente|imediatamente|subito|per direct)\b/i.test(normalize(o)) ||
+      /immediate|right away|sofort|ab sofort|immediat|inmediat|subito|per direct/i.test(normalize(o))
     );
   }
 
@@ -319,24 +358,28 @@ export function matchNoticeOption(notice: string, options: string[]): string | u
     if (optDays !== undefined && optDays === candidateDays) return o;
   }
 
+  if (candidateDays === 180) {
+    const m = options.find((o) => /\b(?:6\s*(?:months?|monate?n?|mois|mes(?:es)?|mesi|maand(?:en)?)|180\s*(?:days?|tage?n?|jours?|dias?|giorni))\b/i.test(normalize(o)));
+    if (m) return m;
+  }
   if (candidateDays === 90) {
-    const m = options.find((o) => /\b(?:3\s*months?|90\s*days?)\b/i.test(o));
+    const m = options.find((o) => /\b(?:3\s*(?:months?|monate?n?|mois|mes(?:es)?|mesi|maand(?:en)?)|90\s*(?:days?|tage?n?|jours?|dias?|giorni))\b/i.test(normalize(o)));
     if (m) return m;
   }
   if (candidateDays === 60) {
-    const m = options.find((o) => /\b(?:2\s*months?|60\s*days?)\b/i.test(o));
+    const m = options.find((o) => /\b(?:2\s*(?:months?|monate?n?|mois|mes(?:es)?|mesi|maand(?:en)?)|60\s*(?:days?|tage?n?|jours?|dias?|giorni))\b/i.test(normalize(o)));
     if (m) return m;
   }
   if (candidateDays === 30) {
-    const m = options.find((o) => /\b(?:1\s*month|30\s*days?|4\s*weeks?)\b/i.test(o));
+    const m = options.find((o) => /\b(?:1\s*(?:month|monat|mois|mes(?:es)?|mese|maand)|30\s*(?:days?|tage?n?|jours?|dias?|giorni)|4\s*(?:weeks?|wochen?|semaines?|semanas?|settimane|weken?))\b/i.test(normalize(o)));
     if (m) return m;
   }
-  if (candidateDays === 14) {
-    const m = options.find((o) => /\b(?:2\s*weeks?|14\s*days?)\b/i.test(o));
+  if (candidateDays === 14 || candidateDays === 15) {
+    const m = options.find((o) => /\b(?:2\s*(?:weeks?|wochen?|semaines?|semanas?|settimane|weken?)|1[45]\s*(?:days?|tage?n?|jours?|dias?|giorni))\b/i.test(normalize(o)));
     if (m) return m;
   }
   if (candidateDays === 7) {
-    const m = options.find((o) => /\b(?:1\s*week|7\s*days?)\b/i.test(o));
+    const m = options.find((o) => /\b(?:1\s*(?:week|woche|semaine|semana|settimana|week)|7\s*(?:days?|tage?n?|jours?|dias?|giorni))\b/i.test(normalize(o)));
     if (m) return m;
   }
 
@@ -381,7 +424,7 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
       if (field.options.length) {
         if (ans === "Yes") {
           const immediateOpt = field.options.find((o) =>
-            /immediate|right away/i.test(o) && !/^(no\b|not)/i.test(normalize(o))
+            /immediate|right away|sofort|ab sofort|immediat|inmediat|subito|per direct/i.test(o) && !/^(no\b|not|non|nein|nao|nee)/i.test(normalize(o))
           );
           if (immediateOpt) {
             ans = immediateOpt;
@@ -392,7 +435,7 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
           }
         } else {
           const notImmediateOpt = field.options.find((o) =>
-            /^(no\b|not available|cannot|can t)/i.test(normalize(o)) && !/available immediately/i.test(o)
+            /^(no\b|not available|cannot|can t|nein|non|nao|nee|nicht sofort)/i.test(normalize(o)) && !/available immediately|ab sofort|sofort/i.test(o)
           );
           if (notImmediateOpt) {
             ans = notImmediateOpt;
@@ -413,7 +456,8 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     const shape = normalize(`${field.label} ${field.placeholder}`);
     if (/\b(dd|mm|yyyy|jjjj|aaaa)\b/.test(shape) || /\b(month|year)\b$/.test(q) || /last (working )?day/.test(q)) return undefined;
     const candidateDays = parseNoticeDays(notice);
-    const unit = /\b(days?|weeks?|months?)\b/.exec(shape)?.[1]?.replace(/s$/, "");
+    const rawUnit = /\b(days?|weeks?|months?|tage?n?|wochen?|monate?n?|jours?|semaines?|mois|dias?|semanas?|meses?|giorni|settimane|mesi|weken?|maanden?)\b/.exec(shape)?.[1]?.toLowerCase();
+    const unit = rawUnit ? (/^(month|monat|mois|mes|mese|maand)/.test(rawUnit) ? "month" : /^(week|woche|semaine|semana|settimana|wek)/.test(rawUnit) ? "week" : "day") : undefined;
     const saved = /^(\d+)\s*(day|week|month)s?$/i.exec(notice);
     if (unit || field.control === "number") {
       if (unit === "month" && candidateDays !== undefined) {
@@ -707,7 +751,7 @@ const LEVEL_RANK: Record<string, number> = {
 
 function askedLanguageLevel(q: string): number {
   if (/\b(?:native|mother\s+tongue|first\s+language|bilingual)\b/i.test(q)) return 5;
-  if (/\b(?:fluent|fluently|fließend|courant)\b/i.test(q)) return 4;
+  if (/\b(?:fluent|fluently|fließend|courant|fluido|fluente|vloeiend)\b/i.test(q)) return 4;
   if (/\b(?:professional|business|working\s+proficiency|work\s+proficiency)\b/i.test(q)) return 3;
   if (/\b(?:conversational)\b/i.test(q)) return 2;
   if (/\b(?:basic|elementary)\b/i.test(q)) return 1;

@@ -20,6 +20,7 @@ interface Tracked {
 }
 
 const tracked = new WeakMap<Element, Tracked>();
+const trackedListeners = new Map<HTMLElement, { blur: () => void; change: () => void }>();
 
 function flush(state: Tracked): void {
   const current = currentValue(state.field).trim();
@@ -34,8 +35,48 @@ function flush(state: Tracked): void {
   }
 }
 
+/** Remove event listeners from elements that have been removed from the DOM (e.g. during SPA step navigation) */
+export function pruneDisconnectedCorrections(): number {
+  let count = 0;
+  for (const [el, handlers] of trackedListeners) {
+    if (!el.isConnected) {
+      el.removeEventListener("blur", handlers.blur);
+      el.removeEventListener("change", handlers.change);
+      trackedListeners.delete(el);
+      count++;
+    }
+  }
+  return count;
+}
+
+/** Explicitly unhook and clean up all correction event listeners */
+export function untrackCorrections(root?: Element | Document): void {
+  if (!root) {
+    for (const [el, handlers] of trackedListeners) {
+      el.removeEventListener("blur", handlers.blur);
+      el.removeEventListener("change", handlers.change);
+    }
+    trackedListeners.clear();
+    return;
+  }
+  for (const [el, handlers] of trackedListeners) {
+    if (root.contains(el)) {
+      el.removeEventListener("blur", handlers.blur);
+      el.removeEventListener("change", handlers.change);
+      trackedListeners.delete(el);
+    }
+  }
+}
+
+/** Number of actively tracked elements with attached event listeners */
+export function getActiveTrackedCount(): number {
+  pruneDisconnectedCorrections();
+  return trackedListeners.size;
+}
+
 /** Track a field ApplyAgent just filled, so user edits are recorded as corrections. */
 export function trackCorrection(doc: Document, field: ExtractedField): void {
+  pruneDisconnectedCorrections();
   const question = field.descriptor.label?.trim();
   if (!question || !isLearnableCorrection(question, field.descriptor.control)) return;
 
@@ -54,5 +95,6 @@ export function trackCorrection(doc: Document, field: ExtractedField): void {
     tracked.set(el, state);
     el.addEventListener("blur", handler);
     el.addEventListener("change", handler);
+    trackedListeners.set(el, { blur: handler, change: handler });
   }
 }
