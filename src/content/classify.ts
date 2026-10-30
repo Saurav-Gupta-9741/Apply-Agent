@@ -307,7 +307,7 @@ export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" |
   if (field.control === "url" && /\b(?:intro(?:duction)?\s*video|loom|video\s*(?:pitch|intro))\b/i.test(asked)) {
     return "introVideoUrl";
   }
-  if (field.control === "url" && /\b(?:project\s*(?:url|link)|link\s*(?:to\s*)?project|demo\s*link)\b/i.test(asked)) {
+  if (field.control === "url" && /\b(?:project\s*(?:url|link|demo)|link\s*(?:to\s*)?(?:your\s*|a\s*)?project|demo\s*(?:link|url)|project\s*demo)\b/i.test(asked)) {
     return "projectUrl";
   }
   if (notAProfileFact(field)) return undefined;

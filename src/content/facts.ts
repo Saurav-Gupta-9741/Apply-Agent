@@ -300,9 +300,15 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
       const notice = facts.noticePeriod?.trim() ?? "";
       if (notice && field.options.length) {
         const numMatch = notice.match(/\b(\d+)\s*(days?|weeks?|months?)\b/i);
-        if (numMatch) {
-          const num = numMatch[1];
-          const tiered = field.options.find((o) => new RegExp(`\\b${num}\\s*day`, "i").test(o));
+        if (numMatch && numMatch[1]) {
+          const rawNum = parseInt(numMatch[1]!, 10);
+          const unit = (numMatch[2] ?? "").toLowerCase();
+          const days = unit.startsWith("month") ? rawNum * 30 : unit.startsWith("week") ? rawNum * 7 : rawNum;
+          const tiered = field.options.find((o) => {
+            const m = o.match(/\b(\d+)\s*days?\b/i);
+            if (m && m[1] && parseInt(m[1]!, 10) === days) return true;
+            return new RegExp(`\\b${rawNum}\\s*${unit}`, "i").test(o);
+          });
           if (tiered) return answer(tiered, "notice period");
         }
       }
