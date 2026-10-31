@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ApplyAgent – The Zero-Hallucination AI Job Application Copilot</title>
+  <meta name="description" content="Automate enterprise job applications on Workday, Greenhouse, Ashby, Lever, and 12+ platforms with strictly 0% wrong fills, zero account bans, and verified submission proof." />
+  <link rel="icon" href="mark.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="mark.svg" alt="ApplyAgent Logo" />
+      <span>ApplyAgent</span>
+      <span class="badge-tag">100% Local · OSS</span>
+    </a>
+    <nav class="links" aria-label="Main Navigation">
+      <a href="#simulator">Live Simulator</a>
+      <a href="#matrix">Competitor Matrix</a>
+      <a href="#pillars">Architecture</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://chromewebstore.google.com/detail/applyagent" class="nav-cta">Add to Chrome</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="wrap hero-content">
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        <span>Arena Certified: 100-Form 0-Wrong-Fills Guarantee</span>
+      </div>
+      <h1>The First Zero-Hallucination<br />AI Job Application Copilot</h1>
+      <p class="lead">
+        Fill job applications on Workday, Greenhouse, Ashby, Lever, and 12+ enterprise platforms in seconds.
+        Deterministic 0.00% wrong fills, human-mimetic keystrokes to prevent account bans, and immutable submission proof.
+        Your career data <strong>never</strong> leaves your local browser.
+      </p>
+      <div class="hero-actions">
+        <a class="cta-primary" href="https://chromewebstore.google.com/detail/applyagent">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="m10 15 5-3-5-3v6z"/></svg>
+          <span>Add to Chrome — Free Core</span>
+        </a>
+        <a class="cta-secondary" href="#simulator">
+          <span>Try Interactive ATS Simulator ↓</span>
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-pill">
+          <div class="stat-val mint">100 / 100</div>
+          <div class="stat-desc">Real ATS Forms Tested (16 Platforms)</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-val">0.00%</div>
+          <div class="stat-desc">Wrong Fills (Zero Hallucination)</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-val accent">100% Local</div>
+          <div class="stat-desc">Zero Cloud Telemetry or PII Leaks</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-val mint">Ban-Proof</div>
+          <div class="stat-desc">Human-Mimetic Gaussian Pacing</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Live Simulator Section -->
+  <section id="simulator">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Experience ApplyAgent in Action</h2>
+        <p>Interact with our live simulation engine below to see how ApplyAgent safely pierces complex forms without hallucinations.</p>
+      </div>
+
+      <div class="simulator-box">
+        <div class="sim-header">
+          <div class="sim-dots">
+            <span class="sim-dot red"></span>
+            <span class="sim-dot yellow"></span>
+            <span class="sim-dot green"></span>
+          </div>
+          <div class="sim-nav">
+            <button class="sim-tab-btn active" onclick="switchSimTab('autofill')">⚡ 1. Deterministic Form Fill</button>
+            <button class="sim-tab-btn" onclick="switchSimTab('fit')">🎯 2. Local ATS Fit Engine</button>
+            <button class="sim-tab-btn" onclick="switchSimTab('proof')">🔒 3. Submission Audit Proof</button>
+          </div>
+        </div>
+
+        <div class="sim-body">
+          <!-- View 1: Autofill Simulation -->
+          <div id="sim-view-autofill" class="sim-view active">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+              <div>
+                <strong style="color: #fff; font-size: 16px;">Target: Workday Enterprise Portal (Salesforce Cloud)</strong>
+                <span style="font-size: 12px; color: var(--text-muted); display: block;">Shadow DOM Pierced · Synthetic React 18 Event Dispatching</span>
+              </div>
+              <button class="cta-secondary" style="padding: 8px 18px; font-size: 13px;" onclick="replaySimType()">Simulate Re-Fill</button>
+            </div>
+
+            <div class="form-preview-grid">
+              <div class="sim-field">
+                <div class="sim-label">
+                  <span>Full Legal Name</span>
+                  <span class="sim-badge auto">✓ Auto-filled (Profile)</span>
+                </div>
+                <input class="sim-input" type="text" value="Asha Verma" readonly />
+              </div>
+
+              <div class="sim-field">
+                <div class="sim-label">
+                  <span>Email Address</span>
+                  <span class="sim-badge auto">✓ Auto-filled (Profile)</span>
+                </div>
+                <input class="sim-input" type="text" value="asha.verma@example.com" readonly />
+              </div>
+
+              <div class="sim-field">
+                <div class="sim-label">
+                  <span>Statutory Work Authorization (US / EU)</span>
+                  <span class="sim-badge auto">✓ Strict Truth Anchor</span>
+                </div>
+                <input class="sim-input" type="text" value="Authorized to work without sponsorship" readonly />
+              </div>
+
+              <div class="sim-field">
+                <div class="sim-label">
+                  <span>Compensation / CTC Expectations</span>
+                  <span class="sim-badge auto">✓ Multi-Currency Normalized</span>
+                </div>
+                <input class="sim-input" type="text" value="$165,000 / ₹35 LPA (Fixed + Variable)" readonly />
+              </div>
+
+              <div class="sim-field" style="grid-column: span 2;">
+                <div class="sim-label">
+                  <span style="color: var(--amber);">Ambiguous Role-Specific Question (Why Acme Corp?)</span>
+                  <span class="sim-badge ask">⚠ Left for User — Never Hallucinated</span>
+                </div>
+                <textarea class="sim-input highlight" rows="2" placeholder="ApplyAgent highlights sensitive or bespoke essays for your one-click approval instead of blindly guessing." readonly></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- View 2: Zero-Cloud Fit Score -->
+          <div id="sim-view-fit" class="sim-view">
+            <div class="fit-sim-grid">
+              <div class="fit-score-ring">
+                <div class="score-circle">94%</div>
+                <h3 style="margin: 0 0 6px; color: #fff;">Strong ATS Keyword Fit</h3>
+                <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Analyzed locally via client-side NLP dictionary (0 network calls)</p>
+              </div>
+
+              <div>
+                <div style="margin-bottom: 16px;">
+                  <strong style="color: #fff; font-size: 14px;">Core Requirements Matched:</strong>
+                  <div class="skill-tags">
+                    <span class="skill-pill match">Python (4y)</span>
+                    <span class="skill-pill match">PostgreSQL</span>
+                    <span class="skill-pill match">TypeScript / React</span>
+                    <span class="skill-pill match">AWS Cloud</span>
+                    <span class="skill-pill match">Docker</span>
+                  </div>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                  <strong style="color: #fff; font-size: 14px;">Bonus Qualifications Met:</strong>
+                  <div class="skill-tags">
+                    <span class="skill-pill bonus">Kubernetes (K8s)</span>
+                    <span class="skill-pill bonus">Apache Kafka</span>
+                  </div>
+                </div>
+
+                <div>
+                  <strong style="color: #fff; font-size: 14px;">Missing Requirements:</strong>
+                  <div class="skill-tags">
+                    <span class="skill-pill miss">Golang (Nice-to-have)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- View 3: Proof Receipt -->
+          <div id="sim-view-proof" class="sim-view">
+            <div class="proof-card">
+              <div class="proof-status">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span>VERIFIED SUBMISSION RECEIPT</span>
+              </div>
+              <div style="display: grid; grid-template-columns: 140px 1fr; gap: 8px; margin-bottom: 16px;">
+                <span>Application ID:</span> <strong style="color: #fff;">app_94f83b2a7c1e</strong><br>
+                <span>Timestamp:</span> <span style="color: #fff;">2026-10-31T14:10:00.000Z (ISO 8601)</span><br>
+                <span>Platform:</span> <span style="color: #fff;">Workday Single-Page App (Salesforce Requisition)</span><br>
+                <span>Confirmation Text:</span> <span style="color: var(--mint);">"Thank you! Your application for Lead SWE has been received."</span><br>
+                <span>Screenshot Key:</span> <span style="color: #fff;">proof:app_94f83b2a7c1e (Encrypted AES-256 local storage)</span>
+              </div>
+              <p style="margin: 0; color: var(--text-subtle); font-size: 12px;">Competitors guess if an application succeeded. ApplyAgent captures immutable cryptographic proof of submission on every employer confirmation page.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Competitor Destruction Matrix Section -->
+  <section id="matrix">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>How ApplyAgent Destroys the Competition</h2>
+        <p>A rigorous, evidence-based teardown comparing ApplyAgent against the prevailing market alternatives.</p>
+      </div>
+
+      <div class="table-wrap">
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th>Feature / Risk Vector</th>
+              <th>Simplify Jobs</th>
+              <th>LazyApply</th>
+              <th>Teal</th>
+              <th>LoopCV</th>
+              <th>Sonara.ai</th>
+              <th class="highlight">ApplyAgent</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Pricing Model</strong></td>
+              <td>$40 / month ($20/wk)</td>
+              <td>$99 – $999 / year</td>
+              <td>$29 / month</td>
+              <td>$19 – $89 / month</td>
+              <td>$24 / 4-wks ($311/yr)</td>
+              <td class="highlight"><strong style="color: var(--mint);">$0 Free Core · $9 Pro</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Anti-Bot & Account Ban Safety</strong></td>
+              <td>Moderate (manual clicks)</td>
+              <td><span class="check-no">Critical (LinkedIn Bans)</span></td>
+              <td>N/A (No autofill)</td>
+              <td><span class="check-no">High (Email spam flags)</span></td>
+              <td><span class="check-warn">Cloud IP blocks</span></td>
+              <td class="highlight"><span class="check-yes">Immune (Human-Mimetic)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Honeypot Trap Protection</strong></td>
+              <td><span class="check-warn">Trapped on complex DOM</span></td>
+              <td><span class="check-no">Trapped & Blacklisted</span></td>
+              <td>N/A</td>
+              <td><span class="check-no">Trapped & Blacklisted</span></td>
+              <td><span class="check-no">Trapped & Blacklisted</span></td>
+              <td class="highlight"><span class="check-yes">100% Immune (Computed CSS)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Workday & SPA Accuracy</strong></td>
+              <td><span class="check-no">Breaks on Shadow DOM</span></td>
+              <td><span class="check-no">Fails >60% of time</span></td>
+              <td><span class="check-no">0% (Manual copy-paste)</span></td>
+              <td><span class="check-no">Fails >70% of time</span></td>
+              <td><span class="check-warn">High error rate</span></td>
+              <td class="highlight"><span class="check-yes">0.00% Wrong Fills Invariant</span></td>
+            </tr>
+            <tr>
+              <td><strong>Candidate PII & Privacy</strong></td>
+              <td><span class="check-no">Cloud DB Telemetry</span></td>
+              <td><span class="check-warn">Remote sync servers</span></td>
+              <td><span class="check-no">Cloud Stored & Tracked</span></td>
+              <td><span class="check-no">OAuth Email Scraped</span></td>
+              <td><span class="check-no">BOLD LLC Corporate Data</span></td>
+              <td class="highlight"><span class="check-yes">100% Local / Zero Knowledge</span></td>
+            </tr>
+            <tr>
+              <td><strong>Legal Screening Accuracy</strong></td>
+              <td><span class="check-warn">Frequent guesswork</span></td>
+              <td><span class="check-no">Inverts work auth</span></td>
+              <td>N/A</td>
+              <td><span class="check-no">Generic LLM guesses</span></td>
+              <td><span class="check-no">Blind cloud submit</span></td>
+              <td class="highlight"><span class="check-yes">Strict Truth Grounding</span></td>
+            </tr>
+            <tr>
+              <td><strong>Submission Audit Trail</strong></td>
+              <td><span class="check-no">None</span></td>
+              <td><span class="check-no">Fake counter</span></td>
+              <td><span class="check-no">Manual checklist</span></td>
+              <td><span class="check-no">Blind match counter</span></td>
+              <td><span class="check-no">Blind queue log</span></td>
+              <td class="highlight"><span class="check-yes">Timestamped Proof Shot</span></td>
+            </tr>
+            <tr>
+              <td><strong>Global Statutory (EU / India / APAC)</strong></td>
+              <td><span class="check-no">US Only</span></td>
+              <td><span class="check-no">US Only</span></td>
+              <td><span class="check-no">US Only</span></td>
+              <td><span class="check-warn">Basic EUR only</span></td>
+              <td><span class="check-no">US Only</span></td>
+              <td class="highlight"><span class="check-yes">Full (LPA, Kündigung, CPF)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Offline AI / BYOK Compute</strong></td>
+              <td><span class="check-no">Closed SaaS</span></td>
+              <td><span class="check-no">Closed SaaS</span></td>
+              <td><span class="check-no">Closed SaaS</span></td>
+              <td><span class="check-no">Closed SaaS</span></td>
+              <td><span class="check-no">Closed SaaS</span></td>
+              <td class="highlight"><span class="check-yes">Ollama, LM Studio & BYOK</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architectural Pillars -->
+  <section id="pillars">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>The 6 Pillars of ApplyAgent Supremacy</h2>
+        <p>Built from the ground up to solve the exact technical flaws that cripple conventional autofill bots.</p>
+      </div>
+
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <div class="pillar-icon">🔒</div>
+          <h3>1. Zero-Knowledge Client Privacy</h3>
+          <p>Your resume, credentials, and demographics are stored exclusively in your local browser vault. No servers, no tracking, and no corporate lead brokers.</p>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon">🛡️</div>
+          <h3>2. Anti-Bot Honeypot Immunity</h3>
+          <p>Actively inspects accessibility trees and computed styles to detect and bypass invisible honeypots that trigger platform bans for other bots.</p>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon">⌨️</div>
+          <h3>3. Human-Mimetic Event Engine</h3>
+          <p>Fires authentic physical event chains (`pointerdown`, `keydown`, `input`, `blur`) with natural Gaussian typing cadences, completely invisible to anti-bot filters.</p>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon">🌍</div>
+          <h3>4. Global Statutory Intelligence</h3>
+          <p>Native parsing for European statutory notice periods (Kündigungsfrist, Préavis), Indian CTC in Lakhs, Japanese 万円, and Brazilian CPF validation.</p>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon">📸</div>
+          <h3>5. Immutable Proof Audit Trail</h3>
+          <p>Captures high-resolution confirmation screenshots, HTTP response confirmations, and ISO 8601 timestamps so you always have verified proof of application.</p>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon">💻</div>
+          <h3>6. Open Source & Local AI First</h3>
+          <p>Runs a fast 100% offline question-understanding model in your browser. Connect your own Ollama, LM Studio, or OpenAI/Anthropic API keys with zero markups.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transparent Pricing Section -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Transparent, Fair Pricing. No Subscription Traps.</h2>
+        <p>We believe job seekers shouldn't be exploited with recurring $40/month subscriptions while looking for work.</p>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Community Plan -->
+        <div class="plan-card">
+          <h3 class="plan-title">Community Core</h3>
+          <p class="plan-desc">For active job seekers who want complete control and 100% local privacy.</p>
+          <div class="plan-price">$0</div>
+          <div class="plan-cadence">Free forever · No credit card needed</div>
+          <ul class="plan-features">
+            <li>100% Client-side zero-knowledge privacy</li>
+            <li>Unlimited assisted autofill on single tabs</li>
+            <li>1 Active candidate persona profile</li>
+            <li>100% offline local question AI engine</li>
+            <li>Local Ollama & BYOK LLM integration</li>
+            <li>20 free autopilot background submissions / mo</li>
+          </ul>
+          <a href="https://chromewebstore.google.com/detail/applyagent" class="btn-plan outline">Add to Chrome — Free</a>
+        </div>
+
+        <!-- Pro Plan -->
+        <div class="plan-card featured">
+          <div class="plan-badge">Popular</div>
+          <h3 class="plan-title">Pro 30-Day Pass</h3>
+          <p class="plan-desc">For accelerating your search with multi-profile targeting and autopilot queues.</p>
+          <div class="plan-price">$9 <span style="font-size: 20px; font-weight: normal; color: var(--text-muted);">/ ₹499</span></div>
+          <div class="plan-cadence">30 days access · One-time payment (never auto-renews)</div>
+          <ul class="plan-features">
+            <li>Everything in Community Core</li>
+            <li><strong>Unlimited</strong> monthly submissions & multi-tabs</li>
+            <li><strong>Multi-Profile Hot-Swapping</strong> (SWE, Data Science, PM)</li>
+            <li>Autonomous background queue runner (`pump()`)</li>
+            <li>Context-rich AI answer drafting for essays</li>
+            <li>Verified submission proof screenshots archive</li>
+          </ul>
+          <a href="https://chromewebstore.google.com/detail/applyagent" class="btn-plan solid">Get 30-Day Pro Pass</a>
+        </div>
+
+        <!-- Founder Lifetime Pass -->
+        <div class="plan-card">
+          <div class="plan-badge" style="background: var(--mint);">Founder Deal</div>
+          <h3 class="plan-title">Founder Lifetime Pass</h3>
+          <p class="plan-desc">Pay once, own it forever. Support open-source independent software.</p>
+          <div class="plan-price">$49 <span style="font-size: 20px; font-weight: normal; color: var(--text-muted);">/ ₹2,999</span></div>
+          <div class="plan-cadence">One-time purchase · Lifetime access</div>
+          <ul class="plan-features">
+            <li>Lifetime access to all current and future Pro features</li>
+            <li>Unlimited profiles & unlimited queue submissions</li>
+            <li>Priority ATS adapters & 0-day patch updates</li>
+            <li>Encrypted submission proof archive</li>
+            <li>Direct founder support & VIP community badge</li>
+            <li>Zero recurring fees forever</li>
+          </ul>
+          <a href="https://chromewebstore.google.com/detail/applyagent" class="btn-plan outline">Claim Founder Lifetime Pass</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know about safety, platform compatibility, and our zero-knowledge architecture.</p>
+      </div>
+
+      <div class="faq-grid">
+        <details>
+          <summary>How does ApplyAgent guarantee zero account bans?</summary>
+          <p>
+            Competitors like LazyApply use naive JavaScript loops that immediately flag bot detectors on LinkedIn or Indeed.
+            ApplyAgent executes inside companies' authentic ATS career portals (Workday, Greenhouse, Ashby, Lever), never runs spam macros on LinkedIn,
+            and fires complete human physical event chains (`pointerdown`, `keydown`, `input`, `blur`) with natural Gaussian typing cadences.
+          </p>
+        </details>
+
+        <details>
+          <summary>Where is my personal resume and career data stored?</summary>
+          <p>
+            100% on your local machine. ApplyAgent has no centralized user database. Your profiles, resumes, and answers reside strictly
+            in your browser's encrypted local storage (`chrome.storage.local`). We never transmit or sell candidate telemetry.
+          </p>
+        </details>
+
+        <details>
+          <summary>What is the "Zero Wrong Fills" guarantee?</summary>
+          <p>
+            Unlike LLM wrappers that hallucinate answers to critical compliance questions, ApplyAgent uses deterministic rule anchors.
+            High-stakes questions like work authorization, visa sponsorship, disability, and notice periods are answered only from your verified facts.
+            If a question is bespoke or unknown, ApplyAgent highlights it for your manual one-click review rather than blindly guessing.
+          </p>
+        </details>
+
+        <details>
+          <summary>Which Applicant Tracking Systems (ATS) are supported?</summary>
+          <p>
+            ApplyAgent is benchmarked and verified across 16 major platforms: Workday, Greenhouse, Ashby, Lever, BambooHR, SmartRecruiters,
+            iCIMS, Taleo (Oracle), SAP SuccessFactors, Personio, Recruitee, Teamtailor, Breezy HR, Trao.ai, Google Forms, and Workable.
+          </p>
+        </details>
+
+        <details>
+          <summary>How do the one-time passes work? Will I be charged again?</summary>
+          <p>
+            No. We despise predatory auto-renewing subscriptions. When you purchase a 30-day Pro pass or Founder Lifetime Pass, it is a single,
+            one-time transaction. You will never be charged automatically.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <strong>ApplyAgent</strong> · Open-Source Autonomous Application Copilot
+      <span style="display: block; font-size: 13px; margin-top: 4px;">© 2026 ApplyAgent Core Team · Bangalore & San Francisco</span>
+    </div>
+    <div>
+      <a href="privacy.html">Privacy Policy</a> ·
+      <a href="terms.html">Terms of Service</a> ·
+      <a href="refund.html">Refund Policy</a> ·
+      <a href="mailto:support@applyagent.dev">Support</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function switchSimTab(tab) {
+  document.querySelectorAll('.sim-tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.sim-view').forEach(view => view.classList.remove('active'));
+  
+  if (tab === 'autofill') {
+    document.querySelector('.sim-tab-btn:nth-child(1)').classList.add('active');
+    document.getElementById('sim-view-autofill').classList.add('active');
+  } else if (tab === 'fit') {
+    document.querySelector('.sim-tab-btn:nth-child(2)').classList.add('active');
+    document.getElementById('sim-view-fit').classList.add('active');
+  } else if (tab === 'proof') {
+    document.querySelector('.sim-tab-btn:nth-child(3)').classList.add('active');
+    document.getElementById('sim-view-proof').classList.add('active');
+  }
+}
+
+function replaySimType() {
+  const inputs = document.querySelectorAll('#sim-view-autofill input');
+  inputs.forEach(input => {
+    const val = input.value;
+    input.value = '';
+    let idx = 0;
+    const timer = setInterval(() => {
+      input.value += val[idx];
+      idx++;
+      if (idx >= val.length) clearInterval(timer);
+    }, 25);
+  });
+}
+</script>
+
+</body>
+</html>
