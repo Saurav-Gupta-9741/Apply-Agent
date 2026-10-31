@@ -33,6 +33,10 @@ export interface LanguageEntry {
 export interface QuickFacts {
   /** Countries where the user may work without sponsorship ("India, EU"). */
   workCountries: string;
+  /** Countries where user has temporary authorization (e.g. US F-1 OPT, STEM OPT, Canada PGWP, UK Graduate Route). */
+  temporaryWorkCountries?: string;
+  /** Independent future sponsorship declaration ("Yes" if requiring H-1B/Skilled Worker later, "No" if permanent). */
+  needsFutureSponsorship?: "" | "Yes" | "No" | "Decline";
   /** Notice period / earliest start ("Immediate", "30 days", "June 2027"). */
   noticePeriod: string;
   currentCtc: string;

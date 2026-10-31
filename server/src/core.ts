@@ -1,6 +1,6 @@
 /** Security-critical helpers for the licence server (WebCrypto only: runs in Cloudflare Workers and Node). */
 
-import { base64urlEncode, type LicensePayload } from "../../src/shared/license";
+import { base64urlEncode, base64urlDecode, type LicensePayload } from "../../src/shared/license";
 
 const encoder = new TextEncoder();
 
@@ -83,4 +83,52 @@ export function extendedUntil(currentPaidUntil: number | undefined, now: number,
 
 export function escapeHtml(text: string): string {
   return text.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+}
+
+export interface UserAccount {
+  email: string;
+  passwordHash: string;
+  salt: string;
+  tier: "free" | "pro" | "founder";
+  paidUntil?: number;
+  lifetime?: boolean;
+  createdAt: number;
+  lastLoginAt: number;
+  activeKey?: string;
+}
+
+export function generateSalt(): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+export async function hashPassword(password: string, salt: string): Promise<string> {
+  return hmacSha256Hex(salt, `pwd:${password}`);
+}
+
+export async function verifyPassword(password: string, salt: string, expectedHash: string): Promise<boolean> {
+  const actualHash = await hashPassword(password, salt);
+  return safeEqual(actualHash, expectedHash);
+}
+
+export async function signAccountToken(payload: { email: string; tier: string; exp: number }, secret: string): Promise<string> {
+  const body = base64urlEncode(encoder.encode(JSON.stringify(payload)));
+  const mac = await hmacSha256Hex(secret, `session:${body}`);
+  return `${body}.${mac}`;
+}
+
+export async function verifyAccountToken(token: string, secret: string, nowSec: number): Promise<{ email: string; tier: string; exp: number } | null> {
+  const parts = token.split(".");
+  if (parts.length !== 2) return null;
+  const [body, mac] = parts;
+  if (!body || !mac) return null;
+  const expectedMac = await hmacSha256Hex(secret, `session:${body}`);
+  if (!safeEqual(expectedMac, mac)) return null;
+  try {
+    const payload = JSON.parse(new TextDecoder().decode(base64urlDecode(body))) as { email: string; tier: string; exp: number };
+    if (!payload.email || typeof payload.exp !== "number" || payload.exp <= nowSec) return null;
+    return payload;
+  } catch {
+    return null;
+  }
 }

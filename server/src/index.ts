@@ -10,8 +10,8 @@
  */
 
 import {
-  escapeHtml, extendedUntil, LICENSE_KEY_FORMAT, LIFETIME_DAYS, PASS_DAYS, licenseKeyForPayment, signLicense, verifyPaymentLinkCallback, verifyWebhook,
-  type PaymentLinkCallback,
+  escapeHtml, extendedUntil, generateSalt, hashPassword, LICENSE_KEY_FORMAT, LIFETIME_DAYS, PASS_DAYS, licenseKeyForPayment, signAccountToken, signLicense, verifyAccountToken, verifyPassword, verifyPaymentLinkCallback, verifyWebhook,
+  type PaymentLinkCallback, type UserAccount,
 } from "./core";
 
 interface KV {
@@ -239,11 +239,170 @@ function plans(env: Env): Response {
   });
 }
 
+async function checkRateLimit(kv: KV, ip: string, action: string, limit: number, windowSec = 60): Promise<boolean> {
+  const key = `rl:${action}:${ip}`;
+  const count = Number((await kv.get(key)) || "0");
+  if (count >= limit) return false;
+  await kv.put(key, String(count + 1), { expirationTtl: windowSec });
+  return true;
+}
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+async function registerAccount(request: Request, env: Env): Promise<Response> {
+  const ip = request.headers.get("CF-Connecting-IP") || "127.0.0.1";
+  if (!(await checkRateLimit(env.LICENSES, ip, "register", 5, 60))) {
+    return json({ error: "Too many registration attempts. Please wait a minute." }, 429);
+  }
+  const body = (await request.json().catch(() => ({}))) as { email?: string; password?: string; licenseKey?: string };
+  const email = (body.email || "").trim().toLowerCase();
+  const password = body.password || "";
+  if (!EMAIL_RE.test(email)) return json({ error: "Invalid email address format" }, 400);
+  if (password.length < 8) return json({ error: "Password must be at least 8 characters long" }, 400);
+
+  const existing = await getJson<UserAccount>(env.LICENSES, `acc:${email}`);
+  if (existing) return json({ error: "An account with this email already exists" }, 409);
+
+  let tier: "free" | "pro" | "founder" = "free";
+  let paidUntil: number | undefined;
+  let isLifetime = false;
+  let activeKey: string | undefined;
+
+  if (body.licenseKey && LICENSE_KEY_FORMAT.test(body.licenseKey)) {
+    const lic = await getJson<LicenseRecord>(env.LICENSES, `lic:${body.licenseKey}`);
+    if (lic && (lic.lifetime || lic.paidUntil > Date.now())) {
+      tier = lic.lifetime ? "founder" : "pro";
+      paidUntil = lic.paidUntil;
+      isLifetime = !!lic.lifetime;
+      activeKey = body.licenseKey;
+    }
+  }
+
+  const salt = generateSalt();
+  const passwordHash = await hashPassword(password, salt);
+  const now = Date.now();
+  const account: UserAccount = {
+    email,
+    passwordHash,
+    salt,
+    tier,
+    paidUntil,
+    lifetime: isLifetime,
+    createdAt: now,
+    lastLoginAt: now,
+    activeKey,
+  };
+
+  await env.LICENSES.put(`acc:${email}`, JSON.stringify(account));
+
+  const sessionExp = Math.floor(now / 1000) + 30 * 86_400;
+  const sessionToken = await signAccountToken({ email, tier, exp: sessionExp }, env.RAZORPAY_WEBHOOK_SECRET);
+
+  let licenseToken: string | undefined;
+  if (tier !== "free" && activeKey) {
+    const exp = isLifetime ? Math.floor(now / 1000) + LIFETIME_DAYS * 86_400 : Math.floor((paidUntil ?? now) / 1000);
+    licenseToken = await signLicense(
+      { key: activeKey, plan: tier, exp, lifetime: isLifetime, email },
+      JSON.parse(env.LICENSE_PRIVATE_JWK) as JsonWebKey,
+    );
+  }
+
+  return json({
+    ok: true,
+    user: { email, tier, paidUntil, lifetime: isLifetime },
+    sessionToken,
+    token: licenseToken,
+  });
+}
+
+async function loginAccount(request: Request, env: Env): Promise<Response> {
+  const ip = request.headers.get("CF-Connecting-IP") || "127.0.0.1";
+  if (!(await checkRateLimit(env.LICENSES, ip, "login", 10, 60))) {
+    return json({ error: "Too many login attempts. Please wait a minute." }, 429);
+  }
+  const body = (await request.json().catch(() => ({}))) as { email?: string; password?: string };
+  const email = (body.email || "").trim().toLowerCase();
+  const password = body.password || "";
+  if (!email || !password) return json({ error: "Email and password required" }, 400);
+
+  const account = await getJson<UserAccount>(env.LICENSES, `acc:${email}`);
+  if (!account) return json({ error: "Invalid email or password" }, 401);
+
+  const ok = await verifyPassword(password, account.salt, account.passwordHash);
+  if (!ok) return json({ error: "Invalid email or password" }, 401);
+
+  const now = Date.now();
+  account.lastLoginAt = now;
+
+  if (account.activeKey) {
+    const lic = await getJson<LicenseRecord>(env.LICENSES, `lic:${account.activeKey}`);
+    if (lic) {
+      account.lifetime = lic.lifetime;
+      account.paidUntil = lic.paidUntil;
+      if (lic.lifetime || lic.paidUntil > now) {
+        account.tier = lic.lifetime ? "founder" : "pro";
+      } else {
+        account.tier = "free";
+      }
+    }
+  } else if (!account.lifetime && account.paidUntil && account.paidUntil <= now) {
+    account.tier = "free";
+  }
+
+  await env.LICENSES.put(`acc:${email}`, JSON.stringify(account));
+
+  const sessionExp = Math.floor(now / 1000) + 30 * 86_400;
+  const sessionToken = await signAccountToken({ email, tier: account.tier, exp: sessionExp }, env.RAZORPAY_WEBHOOK_SECRET);
+
+  let licenseToken: string | undefined;
+  if (account.tier !== "free" && account.activeKey) {
+    const exp = account.lifetime ? Math.floor(now / 1000) + LIFETIME_DAYS * 86_400 : Math.floor((account.paidUntil ?? now) / 1000);
+    licenseToken = await signLicense(
+      { key: account.activeKey, plan: account.tier, exp, lifetime: account.lifetime, email },
+      JSON.parse(env.LICENSE_PRIVATE_JWK) as JsonWebKey,
+    );
+  }
+
+  return json({
+    ok: true,
+    user: { email, tier: account.tier, paidUntil: account.paidUntil, lifetime: account.lifetime },
+    sessionToken,
+    token: licenseToken,
+  });
+}
+
+async function meAccount(request: Request, url: URL, env: Env): Promise<Response> {
+  const authHeader = request.headers.get("Authorization") || "";
+  const token = authHeader.replace(/^Bearer\s+/i, "") || url.searchParams.get("token") || "";
+  if (!token) return json({ error: "Unauthorized" }, 401);
+
+  const nowSec = Math.floor(Date.now() / 1000);
+  const session = await verifyAccountToken(token, env.RAZORPAY_WEBHOOK_SECRET, nowSec);
+  if (!session) return json({ error: "Invalid or expired session" }, 401);
+
+  const account = await getJson<UserAccount>(env.LICENSES, `acc:${session.email.toLowerCase()}`);
+  if (!account) return json({ error: "Account not found" }, 404);
+
+  return json({
+    ok: true,
+    user: {
+      email: account.email,
+      tier: account.tier,
+      paidUntil: account.paidUntil,
+      lifetime: account.lifetime,
+      createdAt: account.createdAt,
+    },
+  });
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     if (request.method === "OPTIONS") return json({});
     try {
+      if (request.method === "POST" && url.pathname === "/auth/register") return await registerAccount(request, env);
+      if (request.method === "POST" && url.pathname === "/auth/login") return await loginAccount(request, env);
+      if (request.method === "GET" && url.pathname === "/auth/me") return await meAccount(request, url, env);
       if (request.method === "GET" && (url.pathname === "/plans" || url.pathname === "/pricing")) return plans(env);
       if (request.method === "GET" && url.pathname === "/buy") return await buy(url, env);
       if (request.method === "GET" && url.pathname === "/thanks") return await thanks(url, env);

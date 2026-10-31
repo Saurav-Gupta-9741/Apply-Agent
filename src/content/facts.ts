@@ -79,7 +79,9 @@ const NEEDS = /\b(require|requires|required|need|needs|needed|benotig\w*|brauch\
 
 function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts, page?: PageFacts): Decision | undefined {
   const allowed = canonicalCountries(facts.workCountries);
-  if (!allowed.length || !yesNoField(field)) return undefined;
+  const tempAllowed = canonicalCountries(facts.temporaryWorkCountries ?? "");
+  const allAllowed = [...new Set([...allowed, ...tempAllowed])];
+  if (!allAllowed.length || !yesNoField(field)) return undefined;
   const q = theQuestion(field.label);
   // What follows "without" is what the user would not need ("…without the need for a visa", "…without restriction"):
   // it neither makes the question another one nor turns it round.
@@ -98,12 +100,19 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   // country decides, when the page names exactly that. A choice made earlier on the form is the user's to recall.
   if (!places.length && page?.jobCountries.length && !/you selected|previous (response|question|answer)|above/.test(q)) places = page.jobCountries;
   if (!places.length) return undefined; // the job's country is not known: the user decides
-  const can = places.map((c) => canWorkIn(c, allowed));
+  const can = places.map((c) => canWorkIn(c, allAllowed));
   if (!can.every((x) => x === can[0])) return undefined; // "the US or Canada" with a yes for one and a no for the other
   // Polarity from the question's own words ("…the right to work in Poland without the need for a visa?" asks about the
   // right to work).
   const needs = NEEDS.test(asked) || /sponsor|parrainage|patrocinio/.test(asked);
-  const yes = needs ? !can[0] : can[0];
+  let yes: boolean;
+  if (needs && facts.needsFutureSponsorship) {
+    yes = facts.needsFutureSponsorship === "Yes";
+  } else if (needs) {
+    yes = !canWorkIn(places[0]!, allowed);
+  } else {
+    yes = can[0]!;
+  }
   const raw = yes ? "Yes" : "No";
   const val = field.options.length ? (yesNoOption(field.options, raw) ?? bestOption(field.options, raw) ?? raw) : raw;
   return answer(val, needs ? "sponsorship" : "work authorization");

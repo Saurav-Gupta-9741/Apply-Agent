@@ -15,6 +15,12 @@ export const JUST_A_DIAL_CODE = /^\s*\+?\d{1,4}\s*$/;
  * length can be read off the first digits. */
 const TWO_DIGIT = new Set("20 27 30 31 32 33 34 36 39 40 41 43 44 45 46 47 48 49 51 52 53 54 55 56 57 58 60 61 62 63 64 65 66 81 82 84 86 90 91 92 93 94 95 98".split(" "));
 
+/** Strips local trunk prefix 0 or (0) when dial code is provided, except for Italy (+39 landlines). */
+export function cleanNationalNumber(national: string, dialCode?: string): string {
+  if (dialCode === "39") return national;
+  return national.replace(/^\(?0\)?[\s.-]*/, "").trim();
+}
+
 /** "+91 90000 00000" or "+919000000000" → code 91 and the national number. Numbers without a "+" are left as they are. */
 export function splitPhone(phone: string): { code?: string; national: string } {
   const text = phone.trim();
@@ -23,7 +29,8 @@ export function splitPhone(phone: string): { code?: string; national: string } {
   const length = /^[17]/.test(digits) ? 1 : TWO_DIGIT.has(digits.slice(0, 2)) ? 2 : 3;
   const code = digits.slice(0, length);
   if (!/^\d+$/.test(code)) return { national: text };
-  return { code, national: digits.slice(length).replace(/^[\s.-]+/, "").trim() };
+  const rawNational = digits.slice(length).replace(/^[\s.-]+/, "").trim();
+  return { code, national: cleanNationalNumber(rawNational, code) };
 }
 
 function describes(el: Element): string {

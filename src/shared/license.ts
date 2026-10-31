@@ -10,6 +10,7 @@ export interface LicensePayload {
   /** Expiry, seconds since epoch. */
   exp: number;
   lifetime?: boolean;
+  email?: string;
 }
 
 const ECDSA = { name: "ECDSA", namedCurve: "P-256" } as const;
@@ -32,14 +33,25 @@ export function base64urlDecode(text: string): Uint8Array<ArrayBuffer> {
 /** Returns the payload if the token is genuine and unexpired, else null. Never throws on bad input. */
 export async function verifyLicense(token: string, publicJwk: JsonWebKey | null, now: Date): Promise<LicensePayload | null> {
   if (!publicJwk || typeof token !== "string") return null;
-  const [body, signature] = token.split(".");
+  const parts = token.split(".");
+  if (parts.length !== 2) return null;
+  const [body, signature] = parts;
   if (!body || !signature) return null;
   try {
     const key = await crypto.subtle.importKey("jwk", publicJwk, ECDSA, false, ["verify"]);
-    const ok = await crypto.subtle.verify(SIGN, key, base64urlDecode(signature), new TextEncoder().encode(body));
+    const sigBytes = base64urlDecode(signature);
+    if (sigBytes.byteLength !== 64) return null;
+    const ok = await crypto.subtle.verify(SIGN, key, sigBytes, new TextEncoder().encode(body));
     if (!ok) return null;
     const payload = JSON.parse(new TextDecoder().decode(base64urlDecode(body))) as LicensePayload;
-    if ((payload.plan !== "pro" && payload.plan !== "founder") || typeof payload.exp !== "number" || payload.exp * 1000 <= now.getTime()) return null;
+    if (
+      (payload.plan !== "pro" && payload.plan !== "founder") ||
+      typeof payload.exp !== "number" ||
+      !Number.isFinite(payload.exp) ||
+      payload.exp * 1000 <= now.getTime()
+    ) {
+      return null;
+    }
     return payload;
   } catch {
     return null;

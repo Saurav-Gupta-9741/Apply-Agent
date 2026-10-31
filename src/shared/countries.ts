@@ -32,10 +32,24 @@ const COUNTRIES: Array<[string, RegExp]> = [
   ["Philippines", /\bphilippines\b/],
   ["Malaysia", /\bmalaysia\b/],
   ["South Africa", /\bsouth africa\b/],
+  ["Austria", /\b(austria|osterreich)\b/],
+  ["Belgium", /\b(belgium|belgique|belgien)\b/],
+  ["Czechia", /\b(czechia|czech republic)\b/],
+  ["Denmark", /\b(denmark|danmark)\b/],
+  ["Finland", /\b(finland|suomi)\b/],
+  ["Greece", /\b(greece|hellas)\b/],
+  ["Hungary", /\b(hungary|magyarorszag)\b/],
+  ["Romania", /\bromania\b/],
+  ["Slovakia", /\bslovakia\b/],
 ];
 
-/** EU member states covered by an EU work right. */
-const EU_MEMBERS = new Set(["Germany", "France", "Netherlands", "Ireland", "Spain", "Italy", "Poland", "Portugal", "Sweden"]);
+/** EU member states covered by an EU work right (all 27 member states). */
+const EU_MEMBERS = new Set([
+  "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark",
+  "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland",
+  "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland",
+  "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden",
+]);
 
 /** Countries named in a text (canonical names), in order of appearance, without duplicates. */
 export function countriesIn(raw: string): string[] {
