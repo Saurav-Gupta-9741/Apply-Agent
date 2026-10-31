@@ -729,20 +729,32 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
   // 0e. Workday / ATS Years of Experience Bracket Matching
   const isYearBracketContext = candidates.some((c) => /\b(years?|less than 1 year)\b/i.test(c.normalized) && /\d/.test(c.normalized));
   if (isYearBracketContext) {
-    const isLessThanOne = /less than 1|^0\b/i.test(wantedTrimmed);
+    const isLessThanOne = /less than 1|^0\b|months?\b/i.test(wantedTrimmed);
     const numMatch = isLessThanOne ? null : /(\d+)/.exec(wantedTrimmed);
     if (isLessThanOne || numMatch) {
       const targetYears = isLessThanOne ? 0 : parseInt(numMatch![1]!, 10);
-      // Match candidate bracket where target falls into [min, max] or tier threshold
+      // 0. If target is 0 / less than 1 year
+      if (targetYears === 0) {
+        for (const c of candidates) {
+          if (/less than 1/i.test(c.normalized)) {
+            return { option: c.raw, stage: "contextual_domain", confidence: 0.98 };
+          }
+        }
+      }
+      // 1. Prioritize bracket starting with targetYears (e.g. 3 -> "3 - 5 years", 5 -> "5 - 7 years")
       for (const c of candidates) {
-        if (targetYears === 0 && /less than 1/i.test(c.normalized)) {
+        const startBracketMatch = /^(\d+)\s*[-–—to\s]+\s*(\d+)\s*years?/i.exec(c.trimmed);
+        if (startBracketMatch && parseInt(startBracketMatch[1]!, 10) === targetYears) {
           return { option: c.raw, stage: "contextual_domain", confidence: 0.98 };
         }
-        // Match bracket like "3 - 5 years" or "3-5 years" starting with targetYears on trimmed text
+      }
+      // 2. Match bracket where target falls into [min, max] or top bracket
+      for (const c of candidates) {
         const startBracketMatch = /^(\d+)\s*[-–—to\s]+\s*(\d+)\s*years?/i.exec(c.trimmed);
         if (startBracketMatch) {
           const minYears = parseInt(startBracketMatch[1]!, 10);
-          if (targetYears === minYears) {
+          const maxYears = parseInt(startBracketMatch[2]!, 10);
+          if (targetYears >= minYears && targetYears <= maxYears) {
             return { option: c.raw, stage: "contextual_domain", confidence: 0.98 };
           }
         }
@@ -756,25 +768,25 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
   }
 
   // 0f. Notice Period Tiers (0, 15, 30, 60, 90 days)
-  const isNoticeContext = candidates.some((c) => /\b(immediately|days|months|notice)\b/i.test(c.normalized));
+  const isNoticeContext = candidates.some((c) => /\b(immediately|days|months|notice|weeks)\b/i.test(c.normalized));
   if (isNoticeContext) {
     if (wantedNorm === "0 days" || wantedClassified.availability === AvailabilityBucket.IMMEDIATE) {
       const imm = candidates.find((c) => c.classified.availability === AvailabilityBucket.IMMEDIATE);
       if (imm) return { option: imm.raw, stage: "contextual_domain", confidence: 0.98 };
     }
-    if (wantedNorm === "15 days" || wantedNorm === "15") {
-      const match15 = candidates.find((c) => /^15\s+to\s+30\s+days/i.test(c.normalizedCore));
+    if (wantedNorm === "15 days" || wantedNorm === "15" || wantedNorm === "2 weeks" || wantedClassified.availability === AvailabilityBucket.TWO_WEEKS) {
+      const match15 = candidates.find((c) => /\b(15 days?|2 weeks?|two weeks?)\b/i.test(c.normalizedCore) || /^15\s+to\s+30\s+days/i.test(c.normalizedCore));
       if (match15) return { option: match15.raw, stage: "contextual_domain", confidence: 0.98 };
     }
-    if (wantedNorm === "30 days" || wantedNorm === "1 month" || wantedNorm === "30") {
+    if (wantedNorm === "30 days" || wantedNorm === "1 month" || wantedNorm === "30" || wantedClassified.availability === AvailabilityBucket.ONE_MONTH) {
       const match30 = candidates.find((c) => /\b(1 month|30 days)\b/i.test(c.normalizedCore) && !c.normalizedCore.startsWith("15 to"));
       if (match30) return { option: match30.raw, stage: "contextual_domain", confidence: 0.98 };
     }
-    if (wantedNorm === "60 days" || wantedNorm === "2 months" || wantedNorm === "60") {
+    if (wantedNorm === "60 days" || wantedNorm === "2 months" || wantedNorm === "60" || wantedClassified.availability === AvailabilityBucket.TWO_MONTHS) {
       const match60 = candidates.find((c) => /\b(2 months|60 days)\b/i.test(c.normalizedCore));
       if (match60) return { option: match60.raw, stage: "contextual_domain", confidence: 0.98 };
     }
-    if (wantedNorm === "90 days" || wantedNorm === "3 months" || wantedNorm === "90") {
+    if (wantedNorm === "90 days" || wantedNorm === "3 months" || wantedNorm === "90" || wantedClassified.availability === AvailabilityBucket.THREE_MONTHS) {
       const match90 = candidates.find((c) => /\b(3 months|90 days)\b/i.test(c.normalizedCore));
       if (match90) return { option: match90.raw, stage: "contextual_domain", confidence: 0.98 };
     }
