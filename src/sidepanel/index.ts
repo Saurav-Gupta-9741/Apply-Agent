@@ -5,15 +5,15 @@ import type {
   QueueStatus, QuickFacts, RunReport, Settings, WorkEntry, UserCorrection, SkillEntry, LanguageEntry,
 } from "../shared/types";
 import {
-  EMPTY_PROFILE, isQueueRunning, loadAnswers, loadApplications, loadProfile, loadQueue, loadSettings, saveAnswers,
-  saveProfile, saveSettings, updateAnswers, updateApplications, upsertAnswer,
+  EMPTY_PROFILE, isQueueRunning, loadAnswers, loadApplications, loadCandidateProfiles, loadProfile, loadQueue, loadSettings, saveAnswers,
+  saveProfile, saveSettings, switchProfile, updateAnswers, updateApplications, upsertAnswer,
   loadCorrections,
 } from "../shared/storage";
 import { pendingSubmission, sendToApplication } from "../shared/frames";
 import { isValidJobUrl, parseJobList } from "../background/queue";
 import { GOOD_MATCH, parseFeed, rankFeed } from "../shared/fit";
 import { aiStatus, checkDraft, draftAnswer } from "../shared/ai";
-import { activate, buyUrl, currentLicense, licensingConfigured, remainingSubmissions, submittedThisMonth } from "../shared/license";
+import { activate, buyUrl, currentLicense, isLifetimeLicense, licensingConfigured, remainingSubmissions, submittedThisMonth } from "../shared/license";
 import { FREE_MONTHLY_SUBMISSIONS, SUPPORT_EMAIL } from "../shared/config";
 import { hydrateIcons, icon } from "./icons";
 import { NEVER_REMEMBER, type PendingQuestion } from "../shared/types";
@@ -916,6 +916,26 @@ async function renderProfile(): Promise<void> {
   profile = await loadProfile();
   const form = $("profile-form");
   form.replaceChildren();
+
+  const candidateProfiles = await loadCandidateProfiles();
+  if (candidateProfiles.length > 1) {
+    const select = h("select", { class: "input" });
+    for (const cp of candidateProfiles) {
+      const opt = h("option", { value: cp.id }, `${cp.name}${cp.targetRole ? ` · ${cp.targetRole}` : ""}`);
+      if (cp.profile.email === profile.email && cp.profile.targetRoles === profile.targetRoles) opt.selected = true;
+      select.append(opt);
+    }
+    select.addEventListener("change", async () => {
+      await switchProfile((select as HTMLSelectElement).value);
+      toast("Persona switched");
+      await renderProfile();
+    });
+    form.append(h("div", { class: "card profile-switch-card" },
+      h("div", { class: "card-head" }, h("h2", {}, "Active Persona"), h("span", { class: "chip accent" }, "Pro")),
+      h("label", { class: "field-label" }, "Switch Candidate Profile", select),
+    ));
+  }
+
   for (const group of PROFILE_GROUPS) {
     const grid = h("div", { class: "form-grid" });
     for (const [key, label, type, full] of group.fields) {
@@ -1839,11 +1859,12 @@ async function renderPlan(): Promise<void> {
   const badge = $("plan-badge");
   const meter = $("plan-meter");
   if (license) {
-    const until = new Date(license.exp * 1000).toLocaleDateString(undefined, { day: "numeric", month: "short" });
-    $("plan-status").textContent = `Pro · unlimited applications until ${until}`;
-    pill.textContent = "Pro";
+    const isLife = isLifetimeLicense(license);
+    const until = new Date(license.exp * 1000).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+    $("plan-status").textContent = isLife ? "Founder · Lifetime Pass active" : `Pro · unlimited applications until ${until}`;
+    pill.textContent = isLife ? "Founder" : "Pro";
     pill.className = "plan-pill pro";
-    badge.textContent = "Pro";
+    badge.textContent = isLife ? "Founder" : "Pro";
     badge.className = "chip accent";
     meter.style.width = "100%";
     meter.parentElement!.classList.remove("low");
@@ -1861,13 +1882,14 @@ async function renderPlan(): Promise<void> {
   if (typeof licenseKey === "string") ($("license-key") as HTMLInputElement).value = licenseKey;
 }
 
-async function openBuy(currency: "INR" | "USD"): Promise<void> {
+async function openBuy(currency: "INR" | "USD", tier: "monthly" | "lifetime" = "monthly"): Promise<void> {
   const { licenseKey } = await chrome.storage.local.get("licenseKey");
-  await chrome.tabs.create({ url: buyUrl(currency, typeof licenseKey === "string" ? licenseKey : undefined) });
+  await chrome.tabs.create({ url: buyUrl(currency, tier, typeof licenseKey === "string" ? licenseKey : undefined) });
 }
 
-$("buy-inr").addEventListener("click", () => void openBuy("INR"));
-$("buy-usd").addEventListener("click", () => void openBuy("USD"));
+$("buy-inr").addEventListener("click", () => void openBuy("INR", "monthly"));
+$("buy-usd").addEventListener("click", () => void openBuy("USD", "monthly"));
+$("buy-founder")?.addEventListener("click", () => void openBuy("USD", "lifetime"));
 $("activate").addEventListener("click", async () => {
   busy($("activate"), true);
   const error = await activate(($("license-key") as HTMLInputElement).value);

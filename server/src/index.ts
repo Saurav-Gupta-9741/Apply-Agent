@@ -10,7 +10,7 @@
  */
 
 import {
-  escapeHtml, extendedUntil, LICENSE_KEY_FORMAT, licenseKeyForPayment, signLicense, verifyPaymentLinkCallback, verifyWebhook,
+  escapeHtml, extendedUntil, LICENSE_KEY_FORMAT, LIFETIME_DAYS, PASS_DAYS, licenseKeyForPayment, signLicense, verifyPaymentLinkCallback, verifyWebhook,
   type PaymentLinkCallback,
 } from "./core";
 
@@ -28,17 +28,21 @@ export interface Env {
   PUBLIC_BASE_URL: string;
   PRICE_INR_PAISE: string;
   PRICE_USD_CENTS: string;
+  PRICE_LIFETIME_INR_PAISE?: string;
+  PRICE_LIFETIME_USD_CENTS?: string;
 }
 
 interface LicenseRecord {
   paidUntil: number;
   payments: string[];
   createdAt: number;
+  lifetime?: boolean;
 }
 
 interface PendingRef {
   currency: "INR" | "USD";
   amount: number;
+  tier?: "monthly" | "lifetime";
   key?: string; // renewing an existing licence
   used?: boolean;
   issuedKey?: string;
@@ -73,10 +77,13 @@ async function fulfil(env: Env, refId: string, paymentId: string): Promise<strin
   const existing = await getJson<LicenseRecord>(env.LICENSES, `lic:${key}`);
   if (existing?.payments.includes(paymentId)) return key; // already counted: never extend twice for one payment
   const now = Date.now();
+  const isLifetime = ref.tier === "lifetime" || existing?.lifetime;
+  const days = isLifetime ? LIFETIME_DAYS : PASS_DAYS;
   const record: LicenseRecord = {
-    paidUntil: extendedUntil(existing?.paidUntil, now),
+    paidUntil: extendedUntil(existing?.paidUntil, now, days),
     payments: [...(existing?.payments ?? []), paymentId],
     createdAt: existing?.createdAt ?? now,
+    lifetime: isLifetime,
   };
   await env.LICENSES.put(`lic:${key}`, JSON.stringify(record));
   await env.LICENSES.put(`ref:${refId}`, JSON.stringify({ ...ref, used: true, issuedKey: key }));
@@ -88,12 +95,19 @@ const LINK_HOURS = 24;
 
 async function buy(url: URL, env: Env): Promise<Response> {
   const currency = url.searchParams.get("currency") === "USD" ? "USD" : "INR";
-  const amount = Number(currency === "USD" ? env.PRICE_USD_CENTS : env.PRICE_INR_PAISE);
+  const tier = url.searchParams.get("tier") === "lifetime" ? "lifetime" : "monthly";
+  let amount = 0;
+  if (tier === "lifetime") {
+    amount = Number(currency === "USD" ? (env.PRICE_LIFETIME_USD_CENTS || "4900") : (env.PRICE_LIFETIME_INR_PAISE || "299900"));
+  } else {
+    amount = Number(currency === "USD" ? env.PRICE_USD_CENTS : env.PRICE_INR_PAISE);
+  }
   const renewKey = url.searchParams.get("key")?.toUpperCase();
   const refId = crypto.randomUUID().replace(/-/g, "").slice(0, 20);
-  const pending: PendingRef = { currency, amount, key: renewKey && LICENSE_KEY_FORMAT.test(renewKey) ? renewKey : undefined };
+  const pending: PendingRef = { currency, amount, tier, key: renewKey && LICENSE_KEY_FORMAT.test(renewKey) ? renewKey : undefined };
   await env.LICENSES.put(`ref:${refId}`, JSON.stringify(pending), { expirationTtl: 7 * 86_400 });
 
+  const desc = tier === "lifetime" ? "ApplyAgent Founder Pass - Lifetime Access (one-time, no auto-renewal)" : "ApplyAgent Pro - 30-day pass (one-time, no auto-renewal)";
   const response = await fetch("https://api.razorpay.com/v1/payment_links", {
     method: "POST",
     headers: {
@@ -105,7 +119,7 @@ async function buy(url: URL, env: Env): Promise<Response> {
       currency,
       accept_partial: false,
       reference_id: refId,
-      description: "ApplyAgent Pro - 30-day pass (one-time, no auto-renewal)",
+      description: desc,
       callback_url: `${env.PUBLIC_BASE_URL}/thanks`,
       callback_method: "get",
       // The link closes long before its reference is forgotten (7 days), so every payment can be fulfilled.
@@ -124,10 +138,12 @@ async function thanks(url: URL, env: Env): Promise<Response> {
   }
   const key = await fulfil(env, p.razorpay_payment_link_reference_id, p.razorpay_payment_id);
   if (!key) return page("Unknown payment", "<p>This payment link was not created by ApplyAgent.</p>", 400);
-  return page("Your ApplyAgent licence", `<h1>Thank you!</h1><p>Your licence key:</p>
+  const existing = await getJson<LicenseRecord>(env.LICENSES, `lic:${key}`);
+  const isLifetime = existing?.lifetime;
+  return page("Your ApplyAgent licence", `<h1>Thank you!</h1><p>Your ${isLifetime ? "Founder Lifetime" : "Pro"} licence key:</p>
     <p style="font:24px monospace;padding:12px;border:1px solid #ccc;border-radius:8px">${escapeHtml(key)}</p>
     <p>Open ApplyAgent → Profile → Plan, paste the key and press Activate. Keep it safe: use the same key to renew.</p>
-    <p>This pass lasts 30 days and does not renew automatically.</p>`);
+    <p>${isLifetime ? "This is a permanent Founder Lifetime Pass." : "This pass lasts 30 days and does not renew automatically."}</p>`);
 }
 
 async function activate(request: Request, env: Env): Promise<Response> {
@@ -137,8 +153,12 @@ async function activate(request: Request, env: Env): Promise<Response> {
   const record = await getJson<LicenseRecord>(env.LICENSES, `lic:${key}`);
   if (!record) return json({ error: "Licence key not found." }, 404);
   if (record.paidUntil <= Date.now()) return json({ error: "This pass has expired. Buy a new 30-day pass with the same key." }, 402);
-  const token = await signLicense({ key, plan: "pro", exp: Math.floor(record.paidUntil / 1000) }, JSON.parse(env.LICENSE_PRIVATE_JWK));
-  return json({ token, paidUntil: record.paidUntil });
+  const isLifetime = record.lifetime || (record.paidUntil - Date.now()) > 365 * 86_400_000 * 3;
+  const token = await signLicense(
+    { key, plan: isLifetime ? "founder" : "pro", exp: Math.floor(record.paidUntil / 1000), lifetime: isLifetime || undefined },
+    JSON.parse(env.LICENSE_PRIVATE_JWK),
+  );
+  return json({ token, paidUntil: record.paidUntil, plan: isLifetime ? "founder" : "pro" });
 }
 
 async function webhook(request: Request, env: Env): Promise<Response> {
@@ -166,11 +186,65 @@ async function recover(url: URL, env: Env): Promise<Response> {
     : page("Not found", "<p>No licence for that payment ID yet. If you just paid, wait a minute and try again.</p>", 404);
 }
 
+function plans(env: Env): Response {
+  const proUsd = Number(env.PRICE_USD_CENTS || "900") / 100;
+  const proInr = Number(env.PRICE_INR_PAISE || "49900") / 100;
+  const lifeUsd = Number(env.PRICE_LIFETIME_USD_CENTS || "4900") / 100;
+  const lifeInr = Number(env.PRICE_LIFETIME_INR_PAISE || "299900") / 100;
+  return json({
+    tiers: [
+      {
+        id: "free",
+        name: "Community Core",
+        price: { usd: "$0", inr: "₹0" },
+        cadence: "forever free",
+        badge: "Open Source",
+        features: [
+          "100% Client-side zero-knowledge privacy",
+          "Unlimited assisted form autofill on single tabs",
+          "1 active candidate persona profile",
+          "100% offline local AI matching",
+          "BYOK or local Ollama model support",
+        ],
+      },
+      {
+        id: "pro",
+        name: "Pro 30-Day Pass",
+        price: { usd: `$${proUsd}`, inr: `₹${proInr}` },
+        cadence: "per 30 days (no auto-renewal trap)",
+        badge: "Popular",
+        features: [
+          "Everything in Community Free Core",
+          "Unlimited monthly submissions & multi-tabs",
+          "Multi-profile hot-swapping (SWE, Data Science, PM)",
+          "Autonomous background queue runner with multi-step support",
+          "Verified submission proof screenshot capture & ISO receipts",
+        ],
+      },
+      {
+        id: "founder",
+        name: "Founder Lifetime Pass",
+        price: { usd: `$${lifeUsd}`, inr: `₹${lifeInr}` },
+        cadence: "one-time payment",
+        badge: "Best Value",
+        features: [
+          "Lifetime access to all current and future Pro features",
+          "Unlimited profiles & unlimited queue submissions",
+          "Priority ATS adapters & 0-day patch updates",
+          "Tamper-proof encrypted submission vault",
+          "Direct founder support & VIP community badge",
+        ],
+      },
+    ],
+  });
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     if (request.method === "OPTIONS") return json({});
     try {
+      if (request.method === "GET" && (url.pathname === "/plans" || url.pathname === "/pricing")) return plans(env);
       if (request.method === "GET" && url.pathname === "/buy") return await buy(url, env);
       if (request.method === "GET" && url.pathname === "/thanks") return await thanks(url, env);
       if (request.method === "POST" && url.pathname === "/activate") return await activate(request, env);

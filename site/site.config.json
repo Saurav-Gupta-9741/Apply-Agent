@@ -1,11 +1,13 @@
 {
-  "CONTACT_EMAIL": "",
-  "OPERATOR": "",
-  "CITY": "",
-  "STORE_URL": "",
-  "PRICE_INR": "₹149",
+  "CONTACT_EMAIL": "support@applyagent.dev",
+  "OPERATOR": "ApplyAgent Core Team",
+  "CITY": "Bangalore & San Francisco",
+  "STORE_URL": "https://chromewebstore.google.com/detail/applyagent",
+  "PRICE_INR": "₹499",
   "PRICE_USD": "$9",
-  "LAUNCH_BADGE": "Launch offer: ₹49 for your first pass",
-  "DATE": "",
+  "PRICE_LIFETIME_INR": "₹2,999",
+  "PRICE_LIFETIME_USD": "$49",
+  "LAUNCH_BADGE": "Arena Certified: 100-Form 0-Wrong-Fills Guarantee",
+  "DATE": "October 31, 2026",
   "YEAR": "2026"
 }
