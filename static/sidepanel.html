@@ -178,9 +178,13 @@
     <!-- Profile & plan ---------------------------------------------------------------------------------->
     <section id="sec-profile" class="section" data-title="Profile & plan" hidden>
       <div class="card plan-card">
-        <div class="card-head"><h2>Plan</h2><span id="plan-badge" class="chip"></span></div>
+        <div class="card-head"><h2>Plan &amp; Account</h2><span id="plan-badge" class="chip"></span></div>
         <p id="plan-status" class="plan-status"></p>
         <div class="meter" aria-hidden="true"><span id="plan-meter"></span></div>
+        <div class="account-row" style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:13px;">
+          <span id="account-status" style="color:var(--color-text-secondary, #94a3b8); font-weight:500;">Account: Guest (Free Plan)</span>
+          <a id="account-portal-link" href="https://saurav-gupta-9741.github.io/Apply-Agent/login.html" target="_blank" rel="noopener" style="color:#60a5fa; text-decoration:none; font-weight:600;">Sign in / Dashboard &rarr;</a>
+        </div>
         <div id="buy-row" class="button-row" hidden>
           <button id="buy-inr" class="btn btn-primary btn-sm">30-day Pro · ₹499</button>
           <button id="buy-usd" class="btn btn-secondary btn-sm">Pay by card · $9</button>

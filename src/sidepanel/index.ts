@@ -1858,6 +1858,9 @@ async function renderPlan(): Promise<void> {
   const pill = $("plan-pill");
   const badge = $("plan-badge");
   const meter = $("plan-meter");
+  const { accountEmail } = await chrome.storage.local.get("accountEmail");
+  const accStatus = document.getElementById("account-status");
+
   if (license) {
     const isLife = isLifetimeLicense(license);
     const until = new Date(license.exp * 1000).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
@@ -1868,6 +1871,11 @@ async function renderPlan(): Promise<void> {
     badge.className = "chip accent";
     meter.style.width = "100%";
     meter.parentElement!.classList.remove("low");
+    if (accStatus) {
+      accStatus.textContent = typeof accountEmail === "string" && accountEmail
+        ? `Account: ${accountEmail} (${isLife ? "Founder Pass" : "Pro Plan"})`
+        : `Account: ${isLife ? "Founder Pass Active" : "Pro Active"}`;
+    }
   } else {
     $("plan-status").textContent = `Free · ${left} of ${FREE_MONTHLY_SUBMISSIONS} applications left this month`;
     pill.textContent = `Free · ${left} left`;
@@ -1876,6 +1884,11 @@ async function renderPlan(): Promise<void> {
     badge.className = `chip ${left ? "" : "warn"}`;
     meter.style.width = `${(left / FREE_MONTHLY_SUBMISSIONS) * 100}%`;
     meter.parentElement!.classList.toggle("low", left <= 5);
+    if (accStatus) {
+      accStatus.textContent = typeof accountEmail === "string" && accountEmail
+        ? `Account: ${accountEmail} (Free Plan)`
+        : "Account: Guest (Community Free)";
+    }
   }
   $("buy-row").hidden = !licensingConfigured();
   const { licenseKey } = await chrome.storage.local.get("licenseKey");
