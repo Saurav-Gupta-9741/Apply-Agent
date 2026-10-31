@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Account & Subscription — ApplyAgent</title>
+  <meta name="description" content="Manage your ApplyAgent account, check your subscription tier (Free, Pro, Founder), and view license keys." />
+  <link rel="icon" href="mark.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .auth-container { max-width: 480px; margin: 48px auto; padding: 32px 24px; background: rgba(18, 22, 34, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; backdrop-filter: blur(12px); box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
+    .auth-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 12px; }
+    .auth-tab { background: none; border: none; color: #94a3b8; font-weight: 600; font-size: 15px; cursor: pointer; padding: 8px 16px; border-radius: 8px; transition: all 0.2s; }
+    .auth-tab.active { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .form-group { margin-bottom: 18px; text-align: left; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
+    .form-input { width: 100%; box-sizing: border-box; padding: 12px 14px; background: rgba(10, 14, 23, 0.9); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; color: #f8fafc; font-size: 14px; outline: none; transition: border 0.2s; }
+    .form-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+    .btn-submit { width: 100%; padding: 12px; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none; border-radius: 8px; color: #fff; font-weight: 600; font-size: 15px; cursor: pointer; transition: opacity 0.2s; margin-top: 8px; }
+    .btn-submit:hover { opacity: 0.95; }
+    .auth-msg { margin-top: 16px; padding: 12px; border-radius: 8px; font-size: 13px; display: none; }
+    .auth-msg.error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; display: block; }
+    .auth-msg.success { background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #86efac; display: block; }
+    .account-badge { display: inline-block; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .badge-free { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
+    .badge-pro { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+    .badge-founder { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .dash-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06); font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="mark.svg" alt="ApplyAgent Logo" />
+      <span>ApplyAgent</span>
+      <span class="badge-tag">100% Local · OSS</span>
+    </a>
+    <nav class="links">
+      <a href="index.html#simulator">Live Simulator</a>
+      <a href="index.html#matrix">Competitor Matrix</a>
+      <a href="index.html#pricing">Pricing</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="login.html" class="nav-cta" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);">Account</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="auth-container" id="authBox">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Create Account</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="formLogin" onsubmit="handleAuth(event, 'login')">
+      <div class="form-group">
+        <label for="loginEmail">Email Address</label>
+        <input type="email" id="loginEmail" class="form-input" placeholder="name@domain.com" required />
+      </div>
+      <div class="form-group">
+        <label for="loginPass">Password</label>
+        <input type="password" id="loginPass" class="form-input" placeholder="••••••••••••" required />
+      </div>
+      <button type="submit" class="btn-submit">Sign In to Dashboard</button>
+    </form>
+
+    <!-- Register Form -->
+    <form id="formRegister" style="display: none;" onsubmit="handleAuth(event, 'register')">
+      <div class="form-group">
+        <label for="regEmail">Email Address</label>
+        <input type="email" id="regEmail" class="form-input" placeholder="name@domain.com" required />
+      </div>
+      <div class="form-group">
+        <label for="regPass">Password (min 8 characters)</label>
+        <input type="password" id="regPass" class="form-input" placeholder="••••••••••••" minlength="8" required />
+      </div>
+      <div class="form-group">
+        <label for="regKey">License Key (Optional, for Pro / Founder activation)</label>
+        <input type="text" id="regKey" class="form-input" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" />
+      </div>
+      <button type="submit" class="btn-submit">Create Free Account</button>
+    </form>
+
+    <!-- Feedback message -->
+    <div id="authMsg" class="auth-msg"></div>
+
+    <!-- Dashboard state (when logged in) -->
+    <div id="dashBox" style="display: none; text-align: left;">
+      <h3 style="margin-top: 0; color: #f8fafc; font-size: 18px;">Account Overview</h3>
+      <div class="dash-row">
+        <span style="color: #94a3b8;">Email</span>
+        <strong id="dashEmail" style="color: #f1f5f9;">user@example.com</strong>
+      </div>
+      <div class="dash-row">
+        <span style="color: #94a3b8;">Current Plan</span>
+        <span id="dashBadge" class="account-badge badge-free">Community Free</span>
+      </div>
+      <div class="dash-row">
+        <span style="color: #94a3b8;">Monthly Quota</span>
+        <span id="dashQuota" style="color: #e2e8f0;">20 applications / month</span>
+      </div>
+      <div class="dash-row">
+        <span style="color: #94a3b8;">Valid Until</span>
+        <span id="dashExp" style="color: #e2e8f0;">Permanent Access</span>
+      </div>
+      <div style="margin-top: 20px; display: flex; gap: 10px;">
+        <button class="btn-submit" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);" onclick="logout()">Sign Out</button>
+        <a href="index.html#pricing" class="btn-submit" style="text-align: center; text-decoration: none;">Upgrade Plan</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const API_BASE = "https://applyagent-licence-worker.YOUR_SUBDOMAIN.workers.dev"; // or local worker
+  function switchTab(mode) {
+    document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
+    document.getElementById('tabRegister').classList.toggle('active', mode === 'register');
+    document.getElementById('formLogin').style.display = mode === 'login' ? 'block' : 'none';
+    document.getElementById('formRegister').style.display = mode === 'register' ? 'block' : 'none';
+    showMsg('', '');
+  }
+
+  function showMsg(text, type) {
+    const el = document.getElementById('authMsg');
+    if (!text) { el.style.display = 'none'; return; }
+    el.className = 'auth-msg ' + type;
+    el.textContent = text;
+    el.style.display = 'block';
+  }
+
+  async function handleAuth(e, mode) {
+    e.preventDefault();
+    showMsg('Contacting secure license server...', 'success');
+    const email = document.getElementById(mode === 'login' ? 'loginEmail' : 'regEmail').value.trim();
+    const password = document.getElementById(mode === 'login' ? 'loginPass' : 'regPass').value;
+    const licenseKey = mode === 'register' ? document.getElementById('regKey').value.trim() : undefined;
+
+    try {
+      const res = await fetch(`${API_BASE}/auth/${mode}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, licenseKey })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showMsg(data.error || 'Authentication error', 'error');
+        return;
+      }
+      renderDashboard(data.user);
+      if (data.sessionToken) localStorage.setItem('applyagent_session', data.sessionToken);
+      if (data.token) localStorage.setItem('applyagent_license', data.token);
+    } catch {
+      // Offline fallback demo
+      renderDashboard({ email, tier: licenseKey ? 'founder' : 'free', lifetime: !!licenseKey });
+    }
+  }
+
+  function renderDashboard(user) {
+    document.getElementById('formLogin').style.display = 'none';
+    document.getElementById('formRegister').style.display = 'none';
+    document.querySelector('.auth-tabs').style.display = 'none';
+    document.getElementById('authMsg').style.display = 'none';
+    document.getElementById('dashBox').style.display = 'block';
+
+    document.getElementById('dashEmail').textContent = user.email;
+    const badge = document.getElementById('dashBadge');
+    badge.className = 'account-badge badge-' + user.tier;
+    badge.textContent = user.tier === 'founder' ? 'Founder Lifetime' : user.tier === 'pro' ? 'Pro 30-Day' : 'Community Free';
+    document.getElementById('dashQuota').textContent = user.tier === 'free' ? '20 applications / month' : 'Unlimited Applications';
+    document.getElementById('dashExp').textContent = user.lifetime ? 'Lifetime Access (Never expires)' : user.paidUntil ? new Date(user.paidUntil).toLocaleDateString() : 'Forever Free Core';
+  }
+
+  function logout() {
+    localStorage.removeItem('applyagent_session');
+    localStorage.removeItem('applyagent_license');
+    document.getElementById('dashBox').style.display = 'none';
+    document.querySelector('.auth-tabs').style.display = 'flex';
+    switchTab('login');
+  }
+</script>
+
+</body>
+</html>
