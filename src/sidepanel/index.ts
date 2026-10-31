@@ -1903,6 +1903,9 @@ async function openBuy(currency: "INR" | "USD", tier: "monthly" | "lifetime" = "
 $("buy-inr").addEventListener("click", () => void openBuy("INR", "monthly"));
 $("buy-usd").addEventListener("click", () => void openBuy("USD", "monthly"));
 $("buy-founder")?.addEventListener("click", () => void openBuy("USD", "lifetime"));
+$("account-portal-btn")?.addEventListener("click", () => {
+  void chrome.tabs.create({ url: "https://saurav-gupta-9741.github.io/Apply-Agent/login.html" });
+});
 $("activate").addEventListener("click", async () => {
   busy($("activate"), true);
   const error = await activate(($("license-key") as HTMLInputElement).value);
