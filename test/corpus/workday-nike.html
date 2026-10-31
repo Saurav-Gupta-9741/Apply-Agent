@@ -1,0 +1,85 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Senior 3D Digital Product Designer</h1>
+<div class="nike-apply-shell" data-automation-id="jobApplicationFlow">
+  <form id="nike-form" data-automation-id="flowForm">
+    <div class="nike-section" data-automation-id="section-personal">
+      <h3 class="nike-h3">Candidate Details</h3>
+      <div class="nike-row">
+        <div class="nike-col">
+          <label for="nk-fn" class="nike-field-label">First Name <span class="req">*</span></label>
+          <input type="text" id="nk-fn" name="firstName" data-automation-id="input-firstName" required />
+        </div>
+        <div class="nike-col">
+          <label for="nk-ln" class="nike-field-label">Last Name <span class="req">*</span></label>
+          <input type="text" id="nk-ln" name="lastName" data-automation-id="input-lastName" required />
+        </div>
+      </div>
+      <div class="nike-row">
+        <div class="nike-col">
+          <label for="nk-email" class="nike-field-label">Email <span class="req">*</span></label>
+          <input type="email" id="nk-email" name="email" data-automation-id="input-email" required />
+        </div>
+        <div class="nike-col">
+          <label for="nk-phone" class="nike-field-label">Phone <span class="req">*</span></label>
+          <input type="tel" id="nk-phone" name="phone" data-automation-id="input-phone" required />
+        </div>
+      </div>
+      <div class="nike-row">
+        <div class="nike-col">
+          <label for="nk-location" class="nike-field-label">Current Location (City, State / Country) <span class="req">*</span></label>
+          <input type="text" id="nk-location" name="location" data-automation-id="input-location" required />
+        </div>
+      </div>
+    </div>
+
+    <div class="nike-section" data-automation-id="section-experience">
+      <h3 class="nike-h3">Portfolio & Experience</h3>
+      <div class="nike-row">
+        <div class="nike-col">
+          <label for="nk-portfolio" class="nike-field-label">Portfolio Website URL <span class="req">*</span></label>
+          <input type="url" id="nk-portfolio" name="portfolioUrl" placeholder="https://..." data-automation-id="input-portfolio" required />
+        </div>
+        <div class="nike-col">
+          <label for="nk-linkedin" class="nike-field-label">LinkedIn Profile URL</label>
+          <input type="url" id="nk-linkedin" name="linkedinUrl" placeholder="https://linkedin.com/in/..." data-automation-id="input-linkedin" />
+        </div>
+      </div>
+      <div class="nike-row">
+        <div class="nike-col">
+          <label for="nk-resume" class="nike-field-label">Resume / CV File <span class="req">*</span></label>
+          <input type="file" id="nk-resume" name="resume" data-automation-id="file-resume" required />
+        </div>
+      </div>
+      <div class="nike-row">
+        <div class="nike-col">
+          <label for="nk-years-exp" class="nike-field-label">Total years of work experience</label>
+          <input type="number" id="nk-years-exp" name="experienceYears" min="0" max="40" data-automation-id="input-exp" />
+        </div>
+      </div>
+    </div>
+
+    <div class="nike-section" data-automation-id="section-questions">
+      <h3 class="nike-h3">Work Authorization & Notice</h3>
+      <fieldset class="nike-fs">
+        <legend class="nike-legend">Are you legally authorized to work in the United States? <span class="req">*</span></legend>
+        <label><input type="radio" name="legal_authorization" value="yes" required /> Yes</label>
+        <label><input type="radio" name="legal_authorization" value="no" /> No</label>
+      </fieldset>
+      <fieldset class="nike-fs">
+        <legend class="nike-legend">Will you now or in the future require visa sponsorship? <span class="req">*</span></legend>
+        <label><input type="radio" name="visa_sponsorship" value="yes" required /> Yes</label>
+        <label><input type="radio" name="visa_sponsorship" value="no" /> No</label>
+      </fieldset>
+      <div class="nike-row">
+        <div class="nike-col">
+          <label for="nk-notice" class="nike-field-label">What is your notice period / availability to start? <span class="req">*</span></label>
+          <input type="text" id="nk-notice" name="noticePeriod" required placeholder="e.g. 1 month notice" />
+        </div>
+      </div>
+    </div>
+
+    <div class="nike-footer">
+      <button type="submit" class="nike-submit-btn" data-automation-id="submitApplication">Submit Application</button>
+    </div>
+  </form>
+</div>

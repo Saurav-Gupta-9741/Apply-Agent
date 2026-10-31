@@ -2,7 +2,7 @@
  * else? Read-only: it never types, clicks or sends anything. Positive signals (JobPosting structured data, resume
  * upload, job-specific questions, ATS host) must clearly outweigh negative ones (password, payment, search). */
 
-import { generic, pickAdapter } from "./adapters";
+import { generic, pickAdapter, isGoogleForms } from "./adapters";
 import { extractFields } from "./extract";
 import { deepQueryAll } from "./dom";
 import { platformFor } from "../shared/platforms";
@@ -72,8 +72,9 @@ export function sensePage(doc: Document, href: string = doc.location?.href ?? ""
   const jobPosting = hasJobPostingData(doc);
   if (jobPosting) add(3, "JobPosting structured data");
   if (platform.ats) add(4, `${platform.name} job board`);
+  if (isGoogleForms(href)) add(3, "Google Forms");
   if (JOB_URL.test(href)) add(2, "job-like address");
-  const heading = (doc.querySelector("h1")?.textContent ?? doc.title ?? "").trim();
+  const heading = (doc.querySelector("h1, [role='heading'][aria-level='1']")?.textContent ?? doc.title ?? "").trim();
   if (ROLE_WORDS.test(heading)) add(1, "role-like title");
 
   const passwords = deepQueryAll(doc, "input[type='password']").filter(visible);
@@ -83,6 +84,7 @@ export function sensePage(doc: Document, href: string = doc.location?.href ?? ""
   if (fields.length) {
     const text = (f: typeof fields[number]) => normalize(`${f.descriptor.label} ${f.descriptor.name} ${f.descriptor.autocomplete}`);
     if (fields.some((f) => f.descriptor.control === "file" && /resume|\bcv\b|curriculum|lebenslauf|curriculo/.test(text(f)))) add(4, "resume upload");
+    if (fields.some((f) => /resume|curriculum|\bcv\b/.test(text(f)))) add(3, "resume question");
     if (fields.some((f) => f.descriptor.control === "email" || /e ?mail/.test(text(f)))) add(2, "email field");
     if (fields.some((f) => /first ?name|last ?name|full name|^name\b|vorname|nachname|prenom|^nom\b|nombre|apellido|cognome|voornaam/.test(text(f)))) add(1, "name fields");
     if (fields.some((f) => f.descriptor.control === "tel" || /phone|mobile/.test(text(f)))) add(1, "phone field");

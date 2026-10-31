@@ -5,7 +5,7 @@ import {
   verifyPaymentLinkCallback, verifyWebhook,
 } from "../server/src/core";
 import worker, { type Env } from "../server/src/index";
-import { remainingSubmissions, verifyLicense } from "../src/shared/license";
+import { isLifetimeLicense, remainingSubmissions, verifyLicense } from "../src/shared/license";
 import type { ApplicationRecord } from "../src/shared/types";
 
 async function keyPair() {
@@ -145,5 +145,42 @@ describe("worker end to end (fake KV, no network)", () => {
     const post = (key: string) => worker.fetch(new Request("https://lic.example.com/activate", { method: "POST", body: JSON.stringify({ key }) }), env);
     expect((await post("nope")).status).toBe(400);
     expect((await post("AAAAA-BBBBB-CCCCC-DDDDD")).status).toBe(404);
+  });
+
+  it("serves plans and pricing endpoint with free, pro, and founder tiers", async () => {
+    const { env } = await makeEnv();
+    const res = await worker.fetch(new Request("https://lic.example.com/plans"), env);
+    expect(res.status).toBe(200);
+    const data = (await res.json()) as { tiers: Array<{ id: string; name: string; price: { usd: string; inr: string } }> };
+    expect(data.tiers).toHaveLength(3);
+    expect(data.tiers.map((t) => t.id)).toEqual(["free", "pro", "founder"]);
+    expect(data.tiers[0]!.price.usd).toBe("$0");
+  });
+
+  it("handles lifetime founder passes and isLifetimeLicense recognition", async () => {
+    const { env, publicJwk, store } = await makeEnv();
+    // Simulate payment fulfilment for lifetime tier
+    await env.LICENSES.put("ref:life1", JSON.stringify({ currency: "USD", amount: 4900, tier: "lifetime" }));
+    const sig = await hmacSha256Hex(env.RAZORPAY_KEY_SECRET, "plink_life|life1|paid|pay_LIFETIME999");
+    const p = new URLSearchParams({
+      razorpay_payment_id: "pay_LIFETIME999", razorpay_payment_link_id: "plink_life", razorpay_payment_link_reference_id: "life1",
+      razorpay_payment_link_status: "paid", razorpay_signature: sig,
+    });
+    const thanksRes = await worker.fetch(new Request(`https://lic.example.com/thanks?${p}`), env);
+    expect(thanksRes.status).toBe(200);
+    const body = await thanksRes.text();
+    expect(body).toContain("Founder Lifetime");
+
+    const key = (await env.LICENSES.get("pay:pay_LIFETIME999"))!;
+    expect(key).toBeDefined();
+
+    const activated = await worker.fetch(new Request("https://lic.example.com/activate", {
+      method: "POST", body: JSON.stringify({ key }),
+    }), env);
+    const { token, plan } = (await activated.json()) as { token: string; plan: string };
+    expect(plan).toBe("founder");
+    const verified = await verifyLicense(token, publicJwk, new Date());
+    expect(verified).toMatchObject({ key, plan: "founder", lifetime: true });
+    expect(isLifetimeLicense(verified)).toBe(true);
   });
 });

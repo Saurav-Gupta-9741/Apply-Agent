@@ -4,26 +4,30 @@
 import {
   NEVER_REMEMBER, type AnswerEntry, type Decision, type FieldDescriptor, type Profile, type ProfileKey, type SensitiveTopic, type WorkEntry,
 } from "../shared/types";
-import { bestOption, normalize, sameQuestionScore } from "../shared/text";
-import { factDecision, HEARD_ABOUT, type PageFacts } from "./facts";
+import { bestOption, normalize, sameQuestionScore, yesNoOption } from "../shared/text";
+import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion } from "../shared/screening";
+import { factDecision, hasConfirmedApplication, HEARD_ABOUT, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, type PageFacts } from "./facts";
 
 const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   // Checked first: identity numbers and signatures are never filled or remembered by the agent.
-  ["identity", /personalausweis|steuer ?id|steueridentifikationsnummer|\biban\b|securite sociale|\bdni\b|\bnie\b|\bcpf\b|codice fiscale|\bbsn\b|aadhaa?r|\bpan\b( card| number| no)?|passport (number|no)|social security|\bssn\b|national (id|insurance)|bank account|\bifsc\b|account number|routing number|tax (id|identification)|driver'?s? licen[cs]e (number|no)/],
+  ["identity", /personalausweis|ausweisnummer|steuer ?id|steueridentifikationsnummer|steuerliche identifikationsnummer|sozialversicherungsnummer|rentenversicherungsnummer|\biban\b|securite sociale|assurance sociale|\bnir\b|\bdni\b|\bnie\b|\bnif\b|\bcif\b|documento (nacional )?de identidad|tarjeta de residencia|\bcpf\b|cadastro de pessoas fisicas|\brg\b( (numero|no))?|registro geral|carteira de identidade|\bpis\b|\bpasep\b|codice fiscale|\bbsn\b|burgerservicenummer|aadhaa?r|\buidai\b|\bpan\b( card| number| no)?|permanent account number|passport (number|no)|social security|\bssn\b|social insurance|\bsin\b( (number|no|code|#))?|\bcanadian sin\b|\bnas\b( canadien)?|national (id|insurance)|\bni\b( (number|no))?|\bnino\b|bank account|\bifsc\b|account number|routing number|tax (id|identification|number|no)|driver'?s? licen[cs]e (number|no)|マイナンバー|個人番号|my ?number/],
   // A typed name that signs something ("Signed (full name)", "Declaration: Full name", "I hereby declare… Name of the
   // candidate:") is a signature: the user types it.
   ["signature", /unterschrift|assinatura|handtekening|signature|\be ?sign(ature)?\b|sign here|\bsigned\b|type your (full )?(legal )?name|electronically sign|\bdeclaration\b|hereby declare|\backnowledg\w*\b.*\bname\b|\binitials\b/],
-  ["sponsorship", /sponsor|visa|visum/],
-  ["work_authorization", /\bwork permit\b|arbeitserlaubnis|aufenthaltstitel|arbeitsgenehmigung|permis de travail|autorisation de travail|autorizacion de trabajo|permiso de trabajo|autorizacao de trabalho|permesso di (lavoro|soggiorno)|werkvergunning|authori[sz]ed to work|work authori[sz]ation|right to work|eligible to work|legally (able|permitted|entitled)/],
-  ["salary", /gehalt|salaire|salari|retribuzione|stipendio|pretension|salary|compensation|\bctc\b|pay expectation|expected pay|desired pay|remuneration/],
-  ["notice_period", /when (are|would|will|could) you (be )?available|available to start|available for employment|^date available$|earliest (date )?(you|to) (could |would |can )?start|kundigungsfrist|eintrittstermin|fruhester eintritt|preavis|disponibilite|preaviso|disponibilidad|fecha de incorporacion|aviso previo|preavviso|opzegtermijn|notice period|start date|when can you (start|join)|earliest (start|joining)|availability to start/],
+  ["sponsorship", /sponsor|visa|visum|parrainage|patrocinio/],
+  ["work_authorization", /\bwork permit\b|arbeitserlaubnis|arbeitsvisum|arbeitsberechtigung|berechtigt|aufenthaltstitel|arbeitsgenehmigung|permis de travail|autorisation (?:de|pour)?\s*travail\w*|autorizacion (?:de|para)?\s*trabaj\w*|permiso de trabajo|autorizacao (?:de|para)?\s*trabalh\w*|visto de trabalho|permissao de trabalho|permesso di (lavor\w*|soggiorno)|werkvergunning|gerechtigd.*werken|authori[sz]ed to work|work authori[sz]ation|right to work|eligible to work|legally (able|permitted|entitled)/],
+  ["salary", /gehalt|salaire|salari|retribuzione|stipendio|preten[st]|remunera|sueldo|ordenado|gehaltsvorstellung|bruttojahresgehalt|zielgehalt|basisgehalt|jahresgehalt|monatsgehalt|verdienst|salary|compensation|\bctc\b|\blpa\b|pay expectation|expected pay|desired pay|\b(?:fixed|variable)\s*pay\b|\bbonus\b|\bincentive\b|\b(?:hourly|daily|contract(?:or)?|consulting|billing|pay)\s+rate\b|\brate of pay\b|\bhourly pay\b|年収|給与|希望給与|月給|時給|報酬|万円/],
+  ["notice_period", /when (are|would|will|could) you (be )?available|available to start|available for employment|^date available$|earliest (date )?(you|to) (could |would |can )?start|kundigungsfrist|eintrittstermin|eintrittsdatum|fruhester eintritt|fruhestes eintrittsdatum|verfugbarkeit|preavis|delai de preavis|disponibilite|date de disponibilite|plazo de (pre)?aviso|preaviso|periodo de preaviso|disponibilidad|disponibilidade|disponibilita|beschikbaarheid|beschikbaarheidsdatum|fecha de incorporacion|aviso previo|prazo de aviso previo|preavviso|periodo di preavviso|opzegtermijn|notice period|start date|when can you (start|join)|earliest (start|joining)|availability to start|when would be your earliest availability|earliest availability|can you start (immediately|right away)|are you (able|available) to start (immediately|right away)|start (immediately|right away)|konnen sie (ab )?sofort (starten|beginnen|anfangen|eintreten)|ab sofort (verfugbar|starten|beginnen|anfangen)|sofort verfugbar|pouvez vous commencer immediatement|etes vous disponible immediatement|disponible immediatement|puede incorporarse inmediatamente|puede comenzar inmediatamente|disponibilidad inmediata|incorporacion inmediata|pode comecar imediatamente|disponibilidade imediata|inicio imediato|入社可能時期|入社日|勤務開始可能日/],
   ["relocation", /relocat|umzug|umziehen|demenag|reubic|mudanza|trasferi|verhuiz/],
-  ["gender", /gender|pronoun|geschlecht|\bgenre\b|\bsexe\b|genero|\bsexo\b|\bsesso\b|geslacht/],
+  ["pronouns", /\bpronouns?\b/],
+  ["sexual_orientation", /\bsexual orientation\b|\blgbt|\bmember of the (lesbian|lgbt)/],
+  ["transgender", /\btransgender\b|sex.*assigned at birth/],
+  ["gender", /gender|geschlecht|\bgenre\b|\bsexe\b|genero|\bgenere\b|\bsexo\b|\bsesso\b|geslacht/],
   ["race", /\brace\b|ethnic|hispanic|latin[oax]|\betnia\b|etnicidad|origine ethnique/],
   ["veteran", /veteran|military|armed forces/],
+  ["accommodation", /\baccommodat|ajustements?|adjustments? (to|during|for)|recursos ou adaptacoes|necessidade de acessibilidade/],
   ["disability", /disabilit|behinderung|schwerbehindert|handicap|discapacidad|deficiencia|disabile/],
-  ["sexual_orientation", /sexual orientation|lgbt/],
-  ["age", /geburtsdatum|\balter\b|date de naissance|fecha de nacimiento|\bedad\b|data de nascimento|\bidade\b|data di nascita|geboortedatum|date of birth|\bdob\b|\bage\b|birth ?date/],
+  ["age", /geburtsdatum|\balter\b|date de naissance|fecha de nacim(i)?ento|\bedad\b|data de nascimento|\bidade\b|data di nascita|geboortedatum|date of birth|\bdob\b|\bage\b|birth ?date|18 years of age|18 years old|over the age of 18|current age|how old are you|what is your age/],
   ["criminal", /vorstrafe|fuhrungszeugnis|casier judiciaire|antecedentes penales|antecedentes criminais|casellario|convict|criminal|felony|background check/],
   ["consent", /datenschutz|einwilligung|ich (stimme|akzeptiere|bestatige|willige)|\bj accepte\b|je (certifie|consens|confirme)|confidentialite|\bacepto\b|consiento|privacidad|\baceito\b|\bconcordo\b|privacidade|\bacconsento\b|ik ga akkoord|\brgpd\b|\bdsgvo\b|\bi (certify|agree|acknowledge|consent|confirm|understand)\b|privacy (policy|notice)|terms (of|and)|data processing|gdpr/],
 ];
@@ -32,15 +36,18 @@ const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
 const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   // Abbreviations only as whole words: "fullname" must not match "lname".
   // "First Name and Last Name" is one box for both.
-  ["fullName", /first (name )?(and|&|\/|\+) (last|family|sur) ?name|name and surname/],
-  ["firstName", /first ?name|given ?name|^(what is |whats )?your preferred name$|^preferred name$|\bfname\b|forename|vorname|\bprenom\b|^nombre$|primer nombre|primeiro nome|voornaam/],
-  ["lastName", /last ?name|family ?name|surname|\blname\b|nachname|familienname|nom de famille|^nom$|apellido|sobrenome|cognome|achternaam/],
-  ["fullName", /^(full )?name$|^your name$|full name|legal name|vollstandiger name|vor und nachname|nom complet|nombre completo|nombre y apellidos|nome completo|volledige naam/],
-  ["email", /e ?mail|courriel|correo|メール|ईमेल|이메일|电子邮件|電子郵件/],
-  ["phone", /phone|mobile|\btel\b|contact number|telef|\bhandy|rufnummer|portable|movil|celular|cellulare|mobiel|電話|电话|फ़?ोन|मोबाइल|전화/],
+  ["fullName", /first (name )?(and )?(last|family|sur) ?name|name and surname|vor und nachname|nom et prenom|nombre y apellidos?|voor en achternaam|nome e cognome/],
+  ["firstName", /first ?name|given ?name|^(what is |whats )?your preferred name$|^preferred name$|\bfname\b|forename|vorname|\bprenom\b|^nombre$|^nome$|primer nombre|primeiro nome|nome de batismo|nome di battesimo|prenome|voornaam/],
+  ["lastName", /last ?name|family ?name|surname|\blname\b|nachname|familienname|familienaam|nom de famille|^nom$|apellido|sobrenome|cognome|achternaam/],
+  ["fullName", /^(full )?name$|^your name$|full name|legal name|voller name|vollstandiger name|vor und nachname|nom complet|nom et prenom|nombre completo|nombre y apellidos?|nome completo|volledige naam|voor en achternaam|nome e cognome/],
+  ["email", /e ?mail|courriel|correo|posta elettronica|adresse electronique|メール|ईमेल|이메일|电子邮件|電子郵件/],
+  ["phone", /phone|mobile|\btel\b|contact number|telef|telefoon|\bhandy|rufnummer|portable|movil|celular|cellulare|mobiel|numero di telefono|numero de tele|電話|电话|फ़?ोन|मोबाइल|전화/],
   ["linkedin", /linked ?in/],
   ["github", /git ?hub/],
-  ["portfolio", /portfolio|personal (web)?site|^website$|website url|blog/],
+  ["portfolio", /portfolio|portafolio|personal (web)?site|persoenliche web(site|seite)|site (web )?personnel|sitio (web )?personal|site pessoal|sito personale|persoonlijke website|^website$|website url|^(sitio|site|sito|pagina) web$|blog/],
+  ["resumeUrl", /\b(?:resume|cv|curriculum\s*vitae|lebenslauf|curriculo)\s*[\(/]?\s*(?:url|link|drive|google\s*drive|doc|web\s*link|online|lien|enlace)\b|\b(?:link|url|lien|enlace)\s*(?:to|for|vers|de|a|para)?\s*(?:your\s*|votre\s*|dein\s*|tu\s*|seu\s*)?(?:resume|cv|curriculum\s*vitae|lebenslauf|curriculo)\b|\b(?:google\s*drive|drive\s*link|cloud\s*link)\b.*\b(?:resume|cv|lebenslauf|curriculo)\b/i],
+  ["introVideoUrl", /\b(?:intro(?:duction)?\s*video|video\s*(?:intro(?:duction)?|pitch|recording|url|link)|loom(?:\.com)?|youtube.*intro)\b/i],
+  ["projectUrl", /\b(?:project\s*(?:url|link)|link\s*(?:to\s*)?project|demo\s*(?:url|link)|live\s*demo)\b/i],
   ["currentCompany", /aktueller arbeitgeber|derzeitiger arbeitgeber|employeur actuel|entreprise actuelle|empresa actual|empresa atual|azienda attuale|huidige werkgever|current (company|employer)|present employer|(most )?recent employer|current or most recent (company|employer)|organi[sz]ation name/],
   ["currentTitle", /current (title|role|position|designation)|job title|aktuelle position|berufsbezeichnung|poste actuel|intitule du poste|cargo actual|puesto actual|cargo atual|ruolo attuale|huidige functie/],
   ["graduationYear", /graduat\w* (year|date)|year of graduation|class of|quelle annee|annee (de|d) (diplom|obtention)|abschlussjahr|jahr des abschlusses|ano de (formatura|conclusao|graduacao|graduacion|egreso)|anno di (laurea|diploma)/],
@@ -49,10 +56,23 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["degree", /\bdegree\b|qualification|abschluss|diplome|titulacion|formacao|laurea|opleiding/],
   ["discipline", /discipline|major|field of study|speciali[sz]ation|studiengang|studienfach|filiere|carrera|indirizzo di studio|studierichting/],
   ["school", /school|universi|college|institution|hochschule|ecole|escuela|faculdade|istituto|hogeschool/],
+  ["educationLevel", /\b(highest level of education|highest education|level of education completed|possui curso superior|completed bachelor s degree)\b/],
+  ["timezone", /\b(time ?zone|est \/ mst)\b/],
+  // Address Line 2 must be checked BEFORE address line 1 and full address:
+  ["addressLine2", /\b(?:address\s*(?:line\s*)?2|address\s*2|apt(?:,?\s*suite|\s*#)?|suite\b|unit\b|apartment|bldg\b|floor\b|etage|piso|complemento)\b/i],
+  ["addressLine1", /\b(?:address\s*(?:line\s*)?1|address\s*1|street\s*address|\bstreet\b|strasse|strasse und hausnummer|rue|calle|rua|straat)\b/i],
+  // Full address before postal code:
+  ["address", /\b(full.*address|complete\s*address|current address|permanent address|mailing address|^address$|^adresse$|^direccion$|^endereco$|^indirizzo$|^adres$|^anschrift$)\b/i],
+  ["postalCode", /^(?!.*\b(street address|full.*address|adresse)\b).*\b(zip( code)?|postal code|pin ?code|postleitzahl|\bplz\b|code postal|codigo postal|\bcep\b|\bcap\b|codice postale|postcode)\b/],
+  // Where both city and state are requested, it is a location question:
+  ["location", /\b(?:city\s*(?:and|,|\/|or)?\s*state|state\s*(?:and|,|\/|or)?\s*city)\b/],
+  ["state", /^(?!.*\bcity\b).*\b(state\s*\/\s*province|state or province|u\.s\.\s*state|canadian province|^state$|^province$|canton|departement|bundesland|provincia|regione|provincie)\b/],
+  // Where both city and country are requested in one field ("City, Country" or "country and city"), it is a location question:
+  ["location", /\b(?:city\s*country|country\s*city|city\s*(?:and|,|\/)\s*country|country\s*(?:and|,|\/)\s*city)\b/],
   ["country", /country|^land$|\bpays\b|\bpais\b|\bpaese\b/],
   // Where the user WANTS to work, before where they live.
   ["preferredLocations", /preferred (job |work )?(location|cit(y|ies))|location preference|desired (job |work )?location|where would you (like|prefer) to work|bevorzugte[rn]? (arbeits)?ort|lieu souhaite|ubicacion (deseada|preferida)/],
-  ["location", /\bcity\b|location|where are you (currently )?(based|located)|where do you (currently )?(live|reside)|town|wohnort|\bstadt\b|\bort\b|\bville\b|ciudad|localidad|cidade|\bcitta\b|woonplaats/],
+  ["location", /\bcity\b|location|where are you (currently )?(based|located)|where do you (currently )?(live|reside)|town|wohnort|\bstadt\b|\bort\b|\bville\b|ciudad|localidad|cidade|\bcitta\b|woonplaats|lieu de residence|luogo di residenza/],
 ];
 
 const AUTOCOMPLETE: Record<string, ProfileKey | "fullName"> = {
@@ -67,14 +87,28 @@ const AUTOCOMPLETE: Record<string, ProfileKey | "fullName"> = {
   country: "country",
   organization: "currentCompany",
   "organization-title": "currentTitle",
+  "address-line1": "addressLine1",
+  "address-line2": "addressLine2",
+  "street-address": "addressLine1",
+  "postal-code": "postalCode",
+  "address-level1": "state",
 };
 
 /** Answers reused for a new question only when it is clearly the same question. */
 const ANSWER_MATCH_THRESHOLD = 0.75;
 
+/** Statements announcing purpose of data collection must not turn a question into a sensitive topic. */
+const PURPOSE_DISCLOSURE = /\b(?:used (?:solely )?for|for (?:compensation|employment|compliance|tax|reporting|record|administrative) purposes)\b/i;
+
 export function sensitiveTopic(field: FieldDescriptor): SensitiveTopic | undefined {
-  const text = normalize(`${field.label} ${field.name}`);
-  for (const [topic, pattern] of SENSITIVE) if (pattern.test(text)) return topic;
+  const labelWithoutPurpose = field.label
+    .split(/(?<=[.?!])\s+/)
+    .filter((s) => !PURPOSE_DISCLOSURE.test(s))
+    .join(" ");
+  const text = normalize(`${labelWithoutPurpose} ${field.name}`);
+  for (const [topic, pattern] of SENSITIVE) {
+    if (pattern.test(text)) return topic;
+  }
   return undefined;
 }
 
@@ -94,15 +128,41 @@ export function questionKey(field: Pick<FieldDescriptor, "label" | "section">): 
   return field.section && OTHER_PERSON_SECTION.test(normalize(field.section)) ? `${field.section} › ${field.label}` : field.label;
 }
 
+/** A single tick box, or choices that include both a Yes and a No. */
+function yesNoChoice(field: FieldDescriptor): boolean {
+  if (field.control === "checkbox") return true;
+  return field.options.length > 0 && !!yesNoOption(field.options, "Yes") && !!yesNoOption(field.options, "No");
+}
+
 export function findAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic?: SensitiveTopic): AnswerEntry | undefined {
   const label = field.label ? questionKey(field) : "";
   if (!label) return undefined;
+
+  const labelPolarity = questionPolarity(label);
+
   let best: AnswerEntry | undefined;
   let bestScore = 0;
-  for (const entry of answers) {
+  for (const entry of (answers ?? [])) {
     // A sensitive answer is only reused for a question about the same topic.
-    if (topic && entry.topic !== topic) continue;
-    const score = normalize(entry.question) === normalize(label) || sameKindOfQuestion(entry.question, label)
+    const entryTopic = entry.topic ?? sensitiveTopic({ label: entry.question, name: "", control: "text", required: false, options: [], autocomplete: "", placeholder: "", key: "" });
+    if (topic && entryTopic !== topic) continue;
+
+    // Strict polarity: a saved answer is reused only for a question with the same polarity.
+    if (questionPolarity(entry.question) !== labelPolarity) continue;
+
+    // An exact match always reuses the user's saved answer to this exact question.
+    if (normalize(entry.question) === normalize(label)) {
+      bestScore = 1;
+      best = entry;
+      break;
+    }
+
+    // A general screening answer or fuzzy match must never match company/place-specific questions or questions with exceptions.
+    if (isCompanyOrPlaceSpecific(label) || hasExceptionClause(label)) continue;
+
+    // A common screening answer is a bare Yes/No: reused only where the form asks for exactly that.
+    const score = sameKindOfQuestion(entry.question, label)
+      || yesNoChoice(field) && sameScreeningQuestion(entry.question, label)
       ? 1 : sameQuestionScore(entry.question, label);
     if (score > bestScore) {
       bestScore = score;
@@ -130,11 +190,16 @@ function sameFactAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic: S
 
 export function profileValue(profile: Profile, key: ProfileKey | "fullName"): string {
   if (key === "fullName") return `${profile.firstName} ${profile.lastName}`.trim();
+  if (key === "addressLine1") return (profile.addressLine1 || profile.address || "").trim();
+  if (key === "addressLine2") return (profile.addressLine2 ?? "").trim();
+  if (key === "address") return (profile.address || profile.addressLine1 || "").trim();
+  if (key === "introVideoUrl") return (profile.introVideoUrl || profile.facts?.introVideoUrl || "").trim();
+  if (key === "projectUrl") return (profile.projectUrl || profile.facts?.projectUrl || profile.portfolio || "").trim();
   return (profile[key] ?? "").trim();
 }
 
 /** Uploads that are not the resume, even when the question mentions it. */
-const OTHER_DOCUMENT = /portfolio|cover ?letter|transcript|writing sample|work sample|code sample|certificat|photo|picture|headshot|passport|id proof|marksheet|mark sheet|recommendation|reference letter|anschreiben|zeugnis|lettre de motivation|carta de (presentacion|motivacion)/;
+const OTHER_DOCUMENT = /portfolio|cover ?letter|transcript|writing sample|work sample|code sample|certificat|photo|picture|headshot|passport|id proof|marksheet|mark sheet|recommendation|reference letter|anschreiben|zeugnis|lettre de motivation|carta de (presentacion|motivacion|motivacao|apresentacao)|lettera (di )?motivazion\w*|motivatiebrief/;
 
 /** "Phone Device Type", "Country Phone Code", "Extension": about the phone, but not the number. */
 const NOT_THE_NUMBER = /device type|phone type|type of phone|country (phone )?code|phone code|dial(l)?ing code|extension|\bext\b/;
@@ -193,7 +258,7 @@ const OTHER_PERSON_SECTION = /emergency|next of kin|\breferences?\b|\breferee|\b
  * location(s)?"), details of a past job at this company ("…please list your work email address"), part of a value
  * ("Email address without domain"), "What is your experience with GitHub Copilot?", requests to describe something
  * ("Describe any training or qualifications…") and full street addresses (a city is not one). */
-const NOT_A_FACT = /^(are|is|do|does|did|have|has|had|will|would|can|could|should|were|was|may|might|shall|sind|haben|hast|bist|konnen|wurden|etes|avez|pouvez|seriez|esta|estas|tiene|tienes|puede|eres|voce|tem)\b|\b(applying|apply) (for|to)\b|^(?!(which|what)\b).*\bdid you attend\b|\binterested in\b|\bif (different|yes|so)\b|^se sim\b|^si oui\b|^wenn ja\b|^if (you )?(selected|chose|choose|answered|picked|ticked|checked)\b|\bif you (have )?(previously|ever|formerly) (worked|been employed)\b|\b(work|company|corporate) email\b|without (the )?domain|before the @|\bexperience (with|in|using|of)\b|^(please )?(briefly )?(describe|tell us|explain|elaborate)\b|\bstreet\b|\bzip\b|postal code|\bpin ?code\b|\b(want|wish|plan|hope|like) to (attend|study|join|work)\b|\b(target|preferred|desired|dream|future)\b (school|universit\w*|college|institut\w*|compan\w*|employer|job|role|position|title)|\bhigh school\b|\bsecondary\b|\b(10th|12th|tenth|twelfth|ssc|hsc|matric\w*|intermediate)\b|\bbirth\b|\bcitizenship\b|\bcountry code\b|\bdial\w*\b|\bpass ?(word|code)\b|\bpin\b|\b(event|fair|conference|meetup|webinar|info session)\b/;
+const NOT_A_FACT = /^(are|is|do|does|did|have|has|had|will|would|can|could|should|were|was|may|might|shall|sind|haben|hast|bist|konnen|wurden|etes|avez|pouvez|seriez|esta|estas|tiene|tienes|puede|eres|voce|tem)\b|\b(applying|apply) (for|to)\b|^(?!(which|what)\b).*\bdid you attend\b|\binterested in\b|\bif (different|yes|so)\b|^se sim\b|^si oui\b|^wenn ja\b|^if (you )?(selected|chose|choose|answered|picked|ticked|checked)\b|\bif you (have )?(previously|ever|formerly) (worked|been employed)\b|\b(work|company|corporate) email\b|without (the )?domain|before the @|\bexperience (with|in|using|of)\b|^(please )?(briefly )?(describe|tell us|explain|elaborate)\b|\bexamples of (your )?work\b|\bvisual merchandising\b|\b(want|wish|plan|hope|like) to (attend|study|join|work)\b|\b(target|preferred|desired|dream|future)\b (school|universit\w*|college|institut\w*|compan\w*|employer|job|role|position|title)|\bhigh school\b|\bsecondary\b|\b(10th|12th|tenth|twelfth|ssc|hsc|matric\w*|intermediate)\b|\bbirth\b|\bcitizenship\b|\bcountry code\b|\bdial\w*\b|\bpass ?(word|code)\b|\bpin\b|\b(event|fair|conference|meetup|webinar|info session)\b|\b(aadhaar|pan|ssn|sin|cpf|dni|nie|steuer)\b/;
 /** "…3 days a week in the office, are you able to commute to the location?" asks yes or no, wherever the "are you" is.
  * Questions that open with a question word ("Where are you located?") still ask for a fact. */
 const YES_NO_INSIDE = /\b(are|do|would|will|can|could|should|have) you\b/;
@@ -202,25 +267,48 @@ const OPENS_WITH_QUESTION_WORD = /^(what|where|which|how|when|who|whom|please|yo
 const MAX_FACT_WORDS = 16;
 
 /** "Would you like to include your LinkedIn profile, personal website or blog?" asks for a link, not a yes or no. */
-const LINK_INVITE = /^(would you like to |do you want to |feel free to |please |you can |optionally )?(include|share|add|provide|link|paste|enter)\b.*\b(linked ?in|git ?hub|website|portfolio|blog)\b/;
+const LINK_INVITE = /^(would you like to |do you want to |feel free to |please |you can |optionally |veuillez |souhaitez vous |por favor |desea |deseja |inserisci |bitte )?(include|share|add|provide|link|paste|enter|partage\w*|indiqu\w*|fourni\w*|ajoute\w*|geben|teilen|eintragen|hinzufugen|compart\w*|indica\w*|anad\w*|inser\w*|inclu\w*|deel|toevoegen)\b.*\b(linked ?in|git ?hub|website|portfolio|portafolio|blog|resume|cv|lebenslauf|curriculo|project\s*(?:url|link)|video\s*(?:url|link)|loom)\b/i;
 
 /** Questions that never take one of the user's profile facts, whatever they seem to ask: yes/no questions, choices
  * about the job, long questions, and questions about someone else (by their words or by their section). */
 export function notAProfileFact(field: FieldDescriptor): boolean {
-  const asked = normalize(field.label);
+  const labelWithoutPurpose = field.label
+    .split(/(?<=[.?!])\s+/)
+    .filter((s) => !PURPOSE_DISCLOSURE.test(s))
+    .join(" ");
+  const asked = normalize(labelWithoutPurpose);
   if (NOT_A_FACT.test(asked)) return true;
   if (YES_NO_INSIDE.test(asked) && !OPENS_WITH_QUESTION_WORD.test(asked)) return true;
   if (asked.split(" ").length > MAX_FACT_WORDS) return true;
+  // Open-ended lists of alternative links ("etc.", "other..") must not be guessed as a single profile fact:
+  if (/\b(?:etc|other\w*)\b/i.test(field.label) && /(?:linked ?in|git ?hub|website|portfolio|twitter|\bx\b|reddit|youtube)/i.test(field.label)) return true;
   if (OTHER_PERSON.test(normalize(`${field.label} ${field.name.replace(/([a-z])([A-Z])/g, "$1 $2")}`)) || SOMEONE_ELSES.test(field.label)) return true;
   return !!field.section && OTHER_PERSON_SECTION.test(normalize(field.section));
 }
 
 export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" | undefined {
-  const asked = normalize(field.label);
+  const labelWithoutPurpose = field.label
+    .split(/(?<=[.?!])\s+/)
+    .filter((s) => !PURPOSE_DISCLOSURE.test(s))
+    .join(" ");
+  const asked = normalize(labelWithoutPurpose);
   if ((field.control === "text" || field.control === "url") && LINK_INVITE.test(asked)) {
-    // The first link the question names: "LinkedIn profile, personal website or blog" → LinkedIn.
-    const first = /linked ?in|git ?hub|website|portfolio|blog/.exec(asked)?.[0] ?? "";
-    return /linked/.test(first) ? "linkedin" : /git/.test(first) ? "github" : "portfolio";
+    // Open-ended lists of alternative links ("etc.", "other..") must not be guessed; ask the user:
+    if (/\b(?:etc|other\w*)\b/.test(asked) && /(?:linked ?in|git ?hub|website|portfolio)/.test(asked)) return undefined;
+    // Strip optional side mentions (e.g. "(portfolio optional)" or "; a portfolio is optional"):
+    const primary = asked.replace(/\([^)]*optional[^)]*\)/g, "").replace(/;\s*a portfolio is optional/g, "");
+    const first = /linked ?in|git ?hub|website|portfolio|portafolio|blog|resume|cv|lebenslauf|curriculo|project\s*(?:url|link)|video\s*(?:url|link)|loom/i.exec(primary)?.[0] ?? "";
+    if (!first) return undefined;
+    return /linked/.test(first) ? "linkedin" : /git/.test(first) ? "github" : /resume|cv|lebenslauf|curriculo/.test(first) ? "resumeUrl" : /video/.test(first) ? "introVideoUrl" : /project/.test(first) ? "projectUrl" : "portfolio";
+  }
+  if (field.control === "url" && /\b(resume|cv|curriculum\s*vitae|lebenslauf|curriculo)\b/i.test(asked)) {
+    return "resumeUrl";
+  }
+  if (field.control === "url" && /\b(?:intro(?:duction)?\s*video|loom|video\s*(?:pitch|intro))\b/i.test(asked)) {
+    return "introVideoUrl";
+  }
+  if (field.control === "url" && /\b(?:project\s*(?:url|link|demo)|link\s*(?:to\s*)?(?:your\s*|a\s*)?project|demo\s*(?:link|url)|project\s*demo)\b/i.test(asked)) {
+    return "projectUrl";
   }
   if (notAProfileFact(field)) return undefined;
   const hint = AUTOCOMPLETE[field.autocomplete.toLowerCase()];
@@ -239,6 +327,36 @@ export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" |
 }
 
 export function decide(field: FieldDescriptor, profile: Profile, answers: AnswerEntry[], page?: PageFacts): Decision {
+  if (isStartImmediatelyQuestion(field.label)) {
+    // An answer the user saved for this kind of question (never a notice period such as "30 days"), else the quick answer.
+    const entry = findAnswer(field, answers, "notice_period");
+    if (entry && isStartImmediatelyQuestion(entry.question)) {
+      let val: string | undefined = entry.answer;
+      if (field.options.length) {
+        if (/^(yes|y|true)\b/i.test(val)) {
+          const imm = field.options.find((o) => /immediate|right away/i.test(o) && !/^(no\b|not)/i.test(normalize(o)));
+          val = imm ?? yesNoOption(field.options, entry.answer) ?? bestOption(field.options, entry.answer);
+        } else {
+          val = yesNoOption(field.options, entry.answer) ?? bestOption(field.options, entry.answer);
+        }
+      }
+      if (val) return { kind: "answer", value: val, question: entry.question };
+    }
+    const quick = factDecision(field, profile, "notice_period", page);
+    return quick ?? { kind: "ask", reason: "sensitive", topic: "notice_period" };
+  }
+  if (isAppliedBeforeQuestion(field.label)) {
+    if (hasConfirmedApplication(page)) {
+      let val = "Yes";
+      if (field.options.length) {
+        const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
+        if (match) val = match;
+      }
+      return { kind: "answer", value: val, question: "Tracker › confirmed previous application" };
+    }
+    return { kind: "ask", reason: "unknown" };
+  }
+
   const topic = sensitiveTopic(field);
   // Identity numbers and signatures: the user types them on the page; optional ones stay blank.
   if (topic && NEVER_REMEMBER.has(topic)) {
@@ -246,7 +364,14 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   }
   if (topic) {
     const entry = findAnswer(field, answers, topic);
-    if (entry) return { kind: "answer", value: entry.answer, question: entry.question };
+    if (entry) {
+      let val = entry.answer;
+      if (field.options.length) {
+        const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
+        if (match) val = match;
+      }
+      return { kind: "answer", value: val, question: entry.question };
+    }
     // The user's quick answers, only where the question clearly is that question (see facts.ts).
     const someoneElse = OTHER_PERSON.test(normalize(field.label)) || SOMEONE_ELSES.test(field.label)
       || (!!field.section && OTHER_PERSON_SECTION.test(normalize(field.section)));
@@ -260,7 +385,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
     // "Please attach your portfolio if it is not linked in your resume" asks for a portfolio, not the resume
     // (seen on a real form). Another document named in the question wins, unless the question starts with the resume.
     const label = normalize(field.label);
-    if (OTHER_DOCUMENT.test(text) && !/^(upload )?(your )?(resume|cv|curriculum|lebenslauf|curriculo)\b/.test(label)) {
+    if (OTHER_DOCUMENT.test(text) && !/^(upload |telecharger |deposer |joindre |subir |adjuntar |anexar |enviar |carica |hochladen )?(your |votre |mon |ihr(en)? |tu |su |seu |il tuo )?(resume|cv|curriculum|lebenslauf|curriculo)\b/.test(label)) {
       return field.required ? { kind: "ask", reason: "unknown" } : { kind: "skip", reason: "optional attachment (not your resume)" };
     }
     if (/resume|\bcv\b|curriculum|lebenslauf|curriculo/.test(text)) {
@@ -269,12 +394,37 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
     return field.required ? { kind: "ask", reason: "unknown" } : { kind: "skip", reason: "optional attachment" };
   }
 
+  if (page?.url && isPreviousEmployeeQuestion(field)) {
+    const prev = previousEmployerAnswer(field, profile, page);
+    if (prev) return prev;
+  }
+  if (isWorkModeQuestion(field)) {
+    const wm = workModeAnswer(field, profile);
+    if (wm) return wm;
+  }
+  if (isTravelQuestion(field)) {
+    const tr = travelAnswer(field, profile.facts);
+    if (tr) return tr;
+  }
+  const la = languageAnswer(field, profile);
+  if (la) return la;
+
+  const sk = skillsExperienceAnswer(field, profile);
+  if (sk) return sk;
+
   // Work-experience blocks come from the work history, never from an answer given for another job.
   const work = workDecision(field, profile);
   if (work) return work;
 
   const remembered = findAnswer(field, answers);
-  if (remembered) return { kind: "answer", value: remembered.answer, question: remembered.question };
+  if (remembered) {
+    let val = remembered.answer;
+    if (field.options.length) {
+      const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
+      if (match) val = match;
+    }
+    return { kind: "answer", value: val, question: remembered.question };
+  }
   const quick = factDecision(field, profile, undefined);
   if (quick) return quick;
 
@@ -287,6 +437,9 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   if (key) {
     const value = profileValue(profile, key);
     if (value) return { kind: "profile", key, value };
+    if (key === "addressLine2" && !field.required) {
+      return { kind: "skip", reason: "optional address line 2 empty" };
+    }
     return field.required ? { kind: "ask", reason: "missing_profile_value" } : { kind: "skip", reason: `no ${key} in profile` };
   }
 

@@ -1,0 +1,22 @@
+{
+  "totalQuestions": 1539,
+  "modelOof": {
+    "total": 1539,
+    "accuracy": "77.6%",
+    "precisionAtActThreshold": "95.7%",
+    "actThreshold": 0.85
+  },
+  "automation": {
+    "autoFilled": 552,
+    "autoShare": "35.9%",
+    "draft": 0,
+    "askOnce": 838,
+    "humanOnly": 149,
+    "wrong": 0,
+    "wrongList": []
+  },
+  "latency": {
+    "p50Ms": 0.111,
+    "p99Ms": 5.066
+  }
+}

@@ -1,0 +1,67 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Senior Cloud Infrastructure Software Engineer - OCI</h1>
+<div class="taleo-page">
+  <form id="taleoApplyForm">
+    <div class="taleo-section">
+      <div class="titlelabel">Personal Information</div>
+      <div class="taleo-field">
+        <label for="cand_fn" class="label">First Name</label><span class="required">*</span>
+        <input type="text" id="cand_fn" name="candidateProfile.firstName" class="editfield" required />
+      </div>
+      <div class="taleo-field">
+        <label for="cand_ln" class="label">Last Name</label><span class="required">*</span>
+        <input type="text" id="cand_ln" name="candidateProfile.lastName" class="editfield" required />
+      </div>
+      <div class="taleo-field">
+        <label for="cand_email" class="label">Email Address</label><span class="required">*</span>
+        <input type="email" id="cand_email" name="candidateProfile.emailAddress" class="editfield" required />
+      </div>
+      <div class="taleo-field">
+        <label for="cand_phone" class="label">Phone</label><span class="required">*</span>
+        <input type="tel" id="cand_phone" name="candidateProfile.phone" class="editfield" required />
+      </div>
+      <div class="taleo-field">
+        <label for="cand_company" class="label">Current Employer</label>
+        <input type="text" id="cand_company" name="candidateProfile.currentEmployer" class="editfield" />
+      </div>
+      <div class="taleo-field">
+        <label for="cand_title" class="label">Current Job Title</label>
+        <input type="text" id="cand_title" name="candidateProfile.jobTitle" class="editfield" />
+      </div>
+      <div class="taleo-field">
+        <label for="cand_resume" class="label">Resume / CV Attachment</label><span class="required">*</span>
+        <input type="file" id="cand_resume" name="candidateProfile.resume" required />
+      </div>
+    </div>
+
+    <div class="taleo-section">
+      <div class="titlelabel">Employment & Salary Preferences</div>
+      <div class="taleo-field">
+        <label for="cand_avail" class="label">When are you available to start? (Notice Period)</label><span class="required">*</span>
+        <input type="text" id="cand_avail" name="candidateProfile.availableDate" class="editfield" required />
+      </div>
+      <div class="taleo-field">
+        <label for="cand_salary" class="label">Desired Annual Salary ($ USD)</label><span class="required">*</span>
+        <input type="text" id="cand_salary" name="candidateProfile.desiredSalary" class="editfield" required />
+      </div>
+      <div class="taleo-field">
+        <label for="cand_work_auth" class="label">Are you legally authorized to work in the United States?</label><span class="required">*</span>
+        <select id="cand_work_auth" name="candidateProfile.workAuthorized" required>
+          <option value="">Select...</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+      <div class="taleo-field">
+        <label class="label">
+          <input type="checkbox" id="cand_agree" name="candidateProfile.termsAgree" required />
+          I certify that all statements made are true and agree to Oracle employment terms *
+        </label>
+      </div>
+    </div>
+
+    <div class="taleo-action-bar">
+      <input type="submit" id="taleo_submit" value="Submit Application" class="taleo-button" />
+    </div>
+  </form>
+</div>

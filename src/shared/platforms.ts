@@ -62,8 +62,9 @@ export function hostnameOf(url: string): string {
 }
 
 export function platformFor(url: string): PlatformInfo {
-  const host = hostnameOf(url);
+    const host = hostnameOf(url);
   if (!host) return { name: "", policy: "assist", ats: false };
+  if (host === "docs.google.com" && /\/forms\//i.test(url)) return { name: "Google Forms", policy: "assist", ats: false };
   for (const [pattern, name] of HANDS_OFF) if (pattern.test(host)) return { name, policy: "hands_off", ats: false };
   for (const [pattern, name] of ATS) if (pattern.test(host)) return { name, policy: "assist", ats: true };
   return { name: host.replace(/^www\./, ""), policy: "assist", ats: false };
@@ -89,7 +90,10 @@ export function shouldDetect(detection: "off" | "job_sites" | "allowed_sites", h
   if (detection === "off") return false;
   if (detection === "allowed_sites") return true;
   try {
-    return isJobHost(hostnameOf(href));
+    const host = hostnameOf(href);
+    if (isJobHost(host)) return true;
+    const path = new URL(href).pathname.toLowerCase();
+    return /\/(careers?|jobs?|apply|application|positions?|openings?|vacanc(y|ies)|requisitions?)(\/|$)/i.test(path);
   } catch {
     return false;
   }
@@ -97,6 +101,7 @@ export function shouldDetect(detection: "off" | "job_sites" | "allowed_sites", h
 
 /** Where "Job sites only" detection runs when the user granted access to every site. */
 export const JOB_SITE_MATCHES = [
+  "https://docs.google.com/forms/*",
   "https://*.greenhouse.io/*", "https://*.lever.co/*", "https://*.ashbyhq.com/*", "https://*.workable.com/*",
   "https://*.smartrecruiters.com/*", "https://*.recruitee.com/*", "https://*.myworkdayjobs.com/*", "https://*.icims.com/*",
   "https://*.taleo.net/*", "https://*.bamboohr.com/*", "https://*.jobvite.com/*", "https://*.breezy.hr/*",

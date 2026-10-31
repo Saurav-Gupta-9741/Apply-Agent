@@ -121,6 +121,7 @@ function describeDecision(d: RunReport["fields"][number]["decision"]): string {
     case "answer": return "answer";
     case "resume": return "resume";
     case "ask": return `ask:${d.topic ?? d.reason}`;
+    case "draft": return `draft:${d.question}`;
     case "skip": return `skip:${d.reason}`;
   }
 }

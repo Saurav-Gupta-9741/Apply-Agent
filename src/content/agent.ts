@@ -1,21 +1,29 @@
 /** The agent: reads the form, decides every field, fills and verifies, and submits only when everything
  * required is filled, no CAPTCHA is waiting, and (in review mode) the user has pressed Submit. */
 
-import type { AnswerEntry, Decision, FieldResult, Mode, Profile, RunReport } from "../shared/types";
-import { generic, pickAdapter } from "./adapters";
+import type { AnswerEntry, ApplicationRecord, Decision, FieldResult, Mode, Profile, RunReport } from "../shared/types";
+import { generic, isGoogleForms, pickAdapter } from "./adapters";
 import { workEntries } from "./classify";
 import { codeOptionFor, dialCodePickerFor, isDialCodePicker, JUST_A_DIAL_CODE, phoneBoxFor, selectedCode, splitPhone } from "./phone";
 import { decideWithMeaning, type Meaning } from "./meaning";
 import { detectConfirmation, hasCaptcha, visibleErrors } from "./detect";
 import { DROPDOWN, extractFields, inWorkSection, sectionHeadings, type ExtractedField } from "./extract";
-import { currentValue, fillCombobox, fillDropdown, fillField, type FillOutcome } from "./fill";
+import { currentValue, fillCombobox, fillDropdown, fillField, fire, type FillOutcome } from "./fill";
 import { deepQueryAll } from "./dom";
 import type { PageFacts } from "./facts";
 import { jobCountries } from "./joblocation";
 import { normalize } from "../shared/text";
+import { isPrivacyConsentCheckbox } from "../shared/consent";
+import { pruneDisconnectedCorrections, trackCorrection } from "./corrections";
 
 /** Scroll a field into view and outline it briefly, so the user can answer it on the page. */
+let highlightTimeout: ReturnType<typeof setTimeout> | undefined;
+
 export function highlightField(doc: Document, label: string, key?: string): boolean {
+  if (highlightTimeout !== undefined) {
+    clearTimeout(highlightTimeout);
+    highlightTimeout = undefined;
+  }
   const { root } = locate(doc);
   if (!root) return false;
   const fields = extractFields(root);
@@ -24,12 +32,13 @@ export function highlightField(doc: Document, label: string, key?: string): bool
   // Hidden file inputs sit behind a styled button: highlight the visible wrapper instead.
   const target = (field?.elements[0]?.closest("[role='group'], .field, fieldset, li, div") as HTMLElement | null) ?? field?.elements[0];
   if (!target) return false;
-  target.scrollIntoView({ behavior: "smooth", block: "center" });
+  target.scrollIntoView?.({ behavior: "smooth", block: "center" });
   const previous = { outline: target.style.outline, offset: target.style.outlineOffset, radius: target.style.borderRadius };
   target.style.outline = "3px solid #8b8cff";
   target.style.outlineOffset = "4px";
   target.style.borderRadius = "6px";
-  setTimeout(() => {
+  highlightTimeout = setTimeout(() => {
+    highlightTimeout = undefined;
     target.style.outline = previous.outline;
     target.style.outlineOffset = previous.offset;
     target.style.borderRadius = previous.radius;
@@ -48,6 +57,7 @@ export interface AgentContext {
   page?: PageFacts;
   /** The local question model: what each question means (absent in tests and when the model cannot run). */
   understand?: (texts: string[]) => Promise<Array<Meaning | null> | null>;
+  applications?: ApplicationRecord[];
 }
 
 const UNDERSTAND_TIMEOUT_MS = 10_000;
@@ -64,7 +74,7 @@ async function readMeanings(fields: ExtractedField[], ctx: Pick<AgentContext, "u
   return out;
 }
 
-function locate(doc: Document) {
+export function locate(doc: Document) {
   const adapter = pickAdapter(doc);
   const root = adapter.formRoot(doc) ?? generic.formRoot(doc);
   return { adapter, root };
@@ -79,7 +89,7 @@ export async function scanForm(doc: Document, ctx: Omit<AgentContext, "mode">): 
   const { adapter, root } = locate(doc);
   const report = baseReport(doc, adapter.platform, adapter.jobTitle(doc));
   if (!root) return report;
-  const page: PageFacts = ctx.page ?? { jobCountries: jobCountries(doc) };
+  const page: PageFacts = ctx.page ?? { jobCountries: jobCountries(doc), url: doc.location?.href ?? "", applications: ctx.applications };
   const fields = extractFields(root);
   const meanings = await readMeanings(fields, ctx);
   report.fields = fields.map((field) => {
@@ -89,8 +99,8 @@ export async function scanForm(doc: Document, ctx: Omit<AgentContext, "mode">): 
       : decideWithMeaning(field.descriptor, ctx.profile, ctx.answers, page, meanings.get(field.descriptor.label));
     const existing = code ? "" : currentValue(field); // a picker's default code is not the user's choice
     const status: FieldResult["status"] = existing ? "already_filled"
-      : decision.kind === "ask" ? "needs_user" : decision.kind === "skip" ? "skipped" : "filled";
-    return { field: field.descriptor, decision, status, detail: status === "filled" ? "would fill" : undefined };
+      : decision.kind === "ask" ? "needs_user" : decision.kind === "draft" ? "needs_user" : decision.kind === "skip" ? "skipped" : "filled";
+    return { field: field.descriptor, decision, status, review: decision.kind === "draft" || undefined, detail: decision.kind === "draft" ? "draft ready for review" : status === "filled" ? "would fill" : undefined };
   });
   report.captcha = hasCaptcha(doc);
   report.status = report.fields.some((r) => r.field.required && r.status === "needs_user") || report.captcha
@@ -216,13 +226,13 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
 /** Fill everything the agent is allowed to fill. Never overwrites a value already present. */
 export async function fillForm(doc: Document, context: AgentContext): Promise<RunReport> {
   // Where the job is, read once: it answers "Will you require sponsorship to work here?" (see facts.ts).
-  const ctx: AgentContext = { ...context, page: context.page ?? { jobCountries: jobCountries(doc) } };
+  const ctx: AgentContext = { ...context, page: context.page ?? { jobCountries: jobCountries(doc), url: doc.location?.href ?? "", applications: context.applications } };
   const { adapter, root } = locate(doc);
   const report = baseReport(doc, adapter.platform, adapter.jobTitle(doc));
   if (!root) {
     // A page without a form may be the confirmation page of an earlier submission.
     const confirmation = detectConfirmation(doc);
-    return confirmation.confirmed ? { ...report, status: "submitted_confirmed", confirmationText: confirmation.text } : report;
+    return confirmation.confirmed ? { ...report, status: "submitted_confirmed", confirmationText: confirmation.text, submittedAt: new Date().toISOString() } : report;
   }
 
   // 1. The resume first: many sites read it and fill the form themselves. Wait until that is finished, then fill
@@ -235,14 +245,28 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
     uploads.push(result);
   }
   // Resume parsers start a moment after the upload and take a few seconds: give them time before typing.
+  // Start pre-reading question meanings concurrently while the resume parser settles:
+  const preRemaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file");
+  const meaningsPromise = readMeanings(preRemaining, ctx);
   if (uploaded.size) await settle(doc, 1000, 10_000, 2000);
   // 2. One block per job in the work history ("Add another" in a repeating experience section).
   await addWorkBlocks(doc, ctx);
   // 3. Everything else, read again: the page may have changed meanwhile.
   const rest: FieldResult[] = [];
   const remaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file"); // files: step 1
-  const meanings = await readMeanings(remaining, ctx);
-  for (const field of remaining) rest.push(await fillOne(field, ctx, meanings.get(field.descriptor.label)));
+  const meanings = await meaningsPromise;
+  const newFields = remaining.filter((f) => !meanings.has(f.descriptor.label));
+  if (newFields.length) {
+    const postMeanings = await readMeanings(newFields, ctx);
+    for (const [label, m] of postMeanings) meanings.set(label, m);
+  }
+  for (const field of remaining) {
+    const res = await fillOne(field, ctx, meanings.get(field.descriptor.label));
+    if (res.status === "filled" && (res.decision.kind === "profile" || res.decision.kind === "answer" || res.decision.kind === "work")) {
+      trackCorrection(doc, field);
+    }
+    rest.push(res);
+  }
   const results = [...uploads, ...rest];
 
   report.fields = results;
@@ -278,8 +302,8 @@ function invalidFields(root: HTMLElement): string[] {
   const form = root instanceof HTMLFormElement ? root : root.closest("form");
   if (!form || form.noValidate || form.checkValidity()) return [];
   return extractFields(form)
-    .filter((f) => f.elements.some((e) => !e.checkValidity()))
-    .map((f) => `${f.descriptor.label || f.descriptor.name}: ${f.elements[0]?.validationMessage || "invalid"}`);
+    .filter((f) => f.elements.some((e) => "checkValidity" in e && typeof (e as HTMLInputElement).checkValidity === "function" && !(e as HTMLInputElement).checkValidity()))
+    .map((f) => { const first = f.elements[0]; const msg = first && "validationMessage" in first && typeof (first as HTMLInputElement).validationMessage === "string" ? (first as HTMLInputElement).validationMessage : "invalid"; return `${f.descriptor.label || f.descriptor.name}: ${msg || "invalid"}`; });
 }
 
 export async function submitForm(doc: Document, timeoutMs = 20000, beforeSubmit?: BeforeSubmit): Promise<RunReport> {
@@ -306,7 +330,7 @@ export async function submitForm(doc: Document, timeoutMs = 20000, beforeSubmit?
   while (Date.now() < deadline) {
     await sleep(500);
     const confirmation = detectConfirmation(doc);
-    if (confirmation.confirmed) return { ...report, status: "submitted_confirmed", confirmationText: confirmation.text };
+    if (confirmation.confirmed) return { ...report, status: "submitted_confirmed", confirmationText: confirmation.text, submittedAt: new Date().toISOString() };
     if (hasCaptcha(doc)) return { ...report, status: "needs_user", captcha: true };
     const errors = visibleErrors(doc).filter((e) => !before.has(e));
     if (errors.length) return { ...report, status: "needs_user", errors };
@@ -392,7 +416,7 @@ export async function runOnce(doc: Document, ctx: AgentContext, beforeSubmit?: B
     if (outcome.kind === "confirmed") {
       // That "Next" button sent the application: record it like a submission, honestly.
       await beforeSubmit?.(filled);
-      return done({ ...filled, status: "submitted_confirmed", confirmationText: outcome.text });
+      return done({ ...filled, status: "submitted_confirmed", confirmationText: outcome.text, submittedAt: new Date().toISOString() });
     }
     if (outcome.kind === "captcha") return done({ ...filled, status: "needs_user", captcha: true });
     if (outcome.kind === "errors") return done({ ...filled, status: "needs_user", errors: outcome.errors });
@@ -400,5 +424,29 @@ export async function runOnce(doc: Document, ctx: AgentContext, beforeSubmit?: B
       return done({ ...filled, status: "needs_user", errors: ["The Next button didn't open a new step. Check the page, then press Fill again."] });
     }
     earlier.push(...settled(filled.fields, step));
+    pruneDisconnectedCorrections();
   }
+}
+
+/** Ticks only eligible privacy/data-processing consent checkboxes on user command. Never ticks marketing or certifications. */
+export function tickConsentCheckboxes(doc: Document): number {
+  const { root } = locate(doc);
+  if (!root) return 0;
+  const fields = extractFields(root).filter((f) => f.descriptor.control === "checkbox");
+  let count = 0;
+  for (const f of fields) {
+    if (isPrivacyConsentCheckbox(f.descriptor.label)) {
+      const el = f.elements[0] as HTMLInputElement;
+      if (el && !el.checked) {
+        el.click();
+        if (!el.checked) {
+          el.checked = true;
+          fire(el, "input");
+          fire(el, "change");
+        }
+        count++;
+      }
+    }
+  }
+  return count;
 }

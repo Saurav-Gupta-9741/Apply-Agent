@@ -74,10 +74,11 @@ export const LICENSE_KEY_FORMAT = /^[A-HJ-NP-Z2-9]{5}(-[A-HJ-NP-Z2-9]{5}){3}$/;
 
 const DAY_MS = 86_400_000;
 export const PASS_DAYS = 30;
+export const LIFETIME_DAYS = 3650; // 10-year Lifetime Founder Pass
 
-/** New expiry when a 30-day pass is bought: stacks on top of time still remaining. */
-export function extendedUntil(currentPaidUntil: number | undefined, now: number): number {
-  return Math.max(currentPaidUntil ?? 0, now) + PASS_DAYS * DAY_MS;
+/** New expiry when a pass is bought: stacks on top of time still remaining. */
+export function extendedUntil(currentPaidUntil: number | undefined, now: number, days = PASS_DAYS): number {
+  return Math.max(currentPaidUntil ?? 0, now) + days * DAY_MS;
 }
 
 export function escapeHtml(text: string): string {

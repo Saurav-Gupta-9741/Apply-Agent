@@ -6,9 +6,10 @@ import { FREE_MONTHLY_SUBMISSIONS, LICENSE_PUBLIC_JWK, LICENSE_SERVER } from "./
 
 export interface LicensePayload {
   key: string;
-  plan: "pro";
+  plan: "pro" | "founder";
   /** Expiry, seconds since epoch. */
   exp: number;
+  lifetime?: boolean;
 }
 
 const ECDSA = { name: "ECDSA", namedCurve: "P-256" } as const;
@@ -38,7 +39,7 @@ export async function verifyLicense(token: string, publicJwk: JsonWebKey | null,
     const ok = await crypto.subtle.verify(SIGN, key, base64urlDecode(signature), new TextEncoder().encode(body));
     if (!ok) return null;
     const payload = JSON.parse(new TextDecoder().decode(base64urlDecode(body))) as LicensePayload;
-    if (payload.plan !== "pro" || typeof payload.exp !== "number" || payload.exp * 1000 <= now.getTime()) return null;
+    if ((payload.plan !== "pro" && payload.plan !== "founder") || typeof payload.exp !== "number" || payload.exp * 1000 <= now.getTime()) return null;
     return payload;
   } catch {
     return null;
@@ -68,9 +69,15 @@ export function licensingConfigured(): boolean {
   return !!LICENSE_SERVER && !!LICENSE_PUBLIC_JWK;
 }
 
-export function buyUrl(currency: "INR" | "USD", existingKey?: string): string {
+export function isLifetimeLicense(license: LicensePayload | null): boolean {
+  if (!license) return false;
+  return license.lifetime === true || license.plan === "founder" || (license.exp - Date.now() / 1000) > 365 * 86_400 * 3;
+}
+
+export function buyUrl(currency: "INR" | "USD", tier: "monthly" | "lifetime" = "monthly", existingKey?: string): string {
   const url = new URL("/buy", LICENSE_SERVER);
   url.searchParams.set("currency", currency);
+  if (tier !== "monthly") url.searchParams.set("tier", tier);
   if (existingKey) url.searchParams.set("key", existingKey);
   return url.toString();
 }

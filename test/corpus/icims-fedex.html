@@ -1,0 +1,77 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Senior Logistics Systems Engineer</h1>
+<div class="icims-form-wrapper">
+  <form id="fedex-career-form">
+    <div class="icims-section">
+      <h3 class="icims-section-title">Personal Information</h3>
+      <div class="icims-control-group">
+        <label for="fx-fname" class="icims-label">First Name *</label>
+        <input type="text" id="fx-fname" name="applicant_first_name" required />
+      </div>
+      <div class="icims-control-group">
+        <label for="fx-lname" class="icims-label">Last Name *</label>
+        <input type="text" id="fx-lname" name="applicant_last_name" required />
+      </div>
+      <div class="icims-control-group">
+        <label for="fx-email" class="icims-label">Email *</label>
+        <input type="email" id="fx-email" name="applicant_email" required />
+      </div>
+      <div class="icims-control-group">
+        <label for="fx-phone" class="icims-label">Phone *</label>
+        <input type="tel" id="fx-phone" name="applicant_phone" required />
+      </div>
+      <div class="icims-control-group">
+        <label for="fx-addr1" class="icims-label">Address Line 1 *</label>
+        <input type="text" id="fx-addr1" name="applicant_addr1" required />
+      </div>
+      <div class="icims-control-group">
+        <label for="fx-addr2" class="icims-label">Address Line 2</label>
+        <input type="text" id="fx-addr2" name="applicant_addr2" />
+      </div>
+      <div class="icims-control-group">
+        <label for="fx-city" class="icims-label">City *</label>
+        <input type="text" id="fx-city" name="applicant_city" required />
+      </div>
+      <div class="icims-control-group">
+        <label for="fx-zip" class="icims-label">Postal Code *</label>
+        <input type="text" id="fx-zip" name="applicant_zip" required />
+      </div>
+      <div class="icims-control-group">
+        <label for="fx-cv" class="icims-label">Resume / CV *</label>
+        <input type="file" id="fx-cv" name="applicant_resume" required />
+      </div>
+    </div>
+
+    <div class="icims-section">
+      <h3 class="icims-section-title">Job Specific Questions</h3>
+      <div class="icims-control-group">
+        <label for="fx-driver" class="icims-label">Do you possess a valid Driver's License? *</label>
+        <select id="fx-driver" name="has_driver_license" required>
+          <option value="">Select...</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+      <div class="icims-control-group">
+        <label for="fx-age" class="icims-label">Are you 18 years of age or older? *</label>
+        <select id="fx-age" name="is_18_or_older" required>
+          <option value="">Select...</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+      <div class="icims-control-group">
+        <label for="fx-veteran" class="icims-label">Military Veteran Status</label>
+        <select id="fx-veteran" name="military_status">
+          <option value="">Select...</option>
+          <option value="veteran">I am a veteran</option>
+          <option value="non_veteran">I am not a veteran</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="icims-submit">
+      <button type="submit" class="icims-btn-submit">Submit Application</button>
+    </div>
+  </form>
+</div>

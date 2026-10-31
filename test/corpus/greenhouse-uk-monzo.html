@@ -1,0 +1,63 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Staff Infrastructure Security Engineer</h1>
+<div class="greenhouse-uk-portal">
+  <form id="monzo-apply">
+    <div class="field">
+      <label for="mz-fn">First Name *</label>
+      <input type="text" id="mz-fn" name="first_name" required autocomplete="given-name" />
+    </div>
+    <div class="field">
+      <label for="mz-ln">Last Name *</label>
+      <input type="text" id="mz-ln" name="last_name" required autocomplete="family-name" />
+    </div>
+    <div class="field">
+      <label for="mz-email">Email Address *</label>
+      <input type="email" id="mz-email" name="email" required autocomplete="email" />
+    </div>
+    <div class="field">
+      <label for="mz-phone">Phone Number *</label>
+      <input type="tel" id="mz-phone" name="phone" required autocomplete="tel" />
+    </div>
+    <div class="field">
+      <label for="mz-cv">Resume / CV *</label>
+      <input type="file" id="mz-cv" name="resume" required accept=".pdf,.doc,.docx" />
+    </div>
+    <div class="field">
+      <label for="mz-linkedin">LinkedIn Profile</label>
+      <input type="url" id="mz-linkedin" name="urls[LinkedIn]" />
+    </div>
+    <div class="field">
+      <label for="mz-ni">National Insurance Number (NI Number)</label>
+      <input type="text" id="mz-ni" name="national_insurance" placeholder="QQ 12 34 56 A" />
+    </div>
+    <div class="field">
+      <label for="mz-rtw">Do you have the legal right to work in the United Kingdom? *</label>
+      <select id="mz-rtw" name="right_to_work_uk" required>
+        <option value="">Please select</option>
+        <option value="uk_citizen">Yes (UK/Irish Citizen)</option>
+        <option value="settled_status">Yes (EU Settled/Pre-Settled Status or Indefinite Leave to Remain)</option>
+        <option value="work_visa">Yes (Skilled Worker or Graduate Visa)</option>
+        <option value="need_sponsorship">No (Require Visa Sponsorship)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="mz-notice">What is your notice period with your current employer? *</label>
+      <input type="text" id="mz-notice" name="notice_period" required placeholder="e.g. 3 months" />
+    </div>
+    <div class="field">
+      <label for="mz-salary">Expected gross annual salary (£ GBP) *</label>
+      <input type="text" id="mz-salary" name="salary_expectation_gbp" required placeholder="e.g. £130,000" />
+    </div>
+    <div class="field">
+      <label for="mz-disability">Equal Opportunities: Disability status</label>
+      <select id="mz-disability" name="disability">
+        <option value="">Prefer not to say</option>
+        <option value="no">No known disability</option>
+        <option value="yes">Yes, I have a physical or mental health condition</option>
+      </select>
+    </div>
+    <div class="submit-section">
+      <button type="submit" class="btn-monzo">Submit Application</button>
+    </div>
+  </form>
+</div>

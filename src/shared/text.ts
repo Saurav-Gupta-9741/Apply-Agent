@@ -6,18 +6,42 @@ export function cssAttr(value: string): string {
   return value.replace(/["\\]/g, "\\$&");
 }
 
+const CLEAN_LABEL_CACHE_MAX = 2048;
+const cleanLabelCache = new Map<string, string>();
+
 export function cleanLabel(text: string): string {
-  return text
+  if (!text) return "";
+  const cached = cleanLabelCache.get(text);
+  if (cached !== undefined) return cached;
+
+  const result = text
     .replace(/\s+/g, " ")
     .replace(/\(\s*(required|optional|erforderlich|pflichtfeld|obligatoire|facultatif|obligatorio|opcional|obrigat[oó]rio|obbligatorio|facoltativo|verplicht|optioneel)\s*\)/gi, "")
     .replace(/[*✱]+/g, "")
     .trim();
+
+  if (cleanLabelCache.size >= CLEAN_LABEL_CACHE_MAX) {
+    const it = cleanLabelCache.keys();
+    for (let i = 0; i < CLEAN_LABEL_CACHE_MAX / 4; i++) {
+      const k = it.next().value;
+      if (k !== undefined) cleanLabelCache.delete(k);
+    }
+  }
+  cleanLabelCache.set(text, result);
+  return result;
 }
+
+const NORMALIZE_CACHE_MAX = 2048;
+const normalizeCache = new Map<string, string>();
 
 /** Lower-case words without accents ("Prénom" → "prenom", "Straße" → "strasse"). Letters of every script are kept,
  * so a Hindi or Japanese label is not reduced to nothing. */
 export function normalize(text: string): string {
-  return text
+  if (!text) return "";
+  const cached = normalizeCache.get(text);
+  if (cached !== undefined) return cached;
+
+  const result = text
     .toLowerCase()
     .normalize("NFKD")
     .replace(/(\p{Script=Latin})\p{M}+/gu, "$1") // accents (Latin only: in Hindi and other scripts the marks are letters' vowels)
@@ -25,6 +49,21 @@ export function normalize(text: string): string {
     .replace(/['’]/g, "") // "Master's" and "Masters" are the same word
     .replace(/[^\p{L}\p{M}\p{N}]+/gu, " ")
     .trim();
+
+  if (normalizeCache.size >= NORMALIZE_CACHE_MAX) {
+    const it = normalizeCache.keys();
+    for (let i = 0; i < NORMALIZE_CACHE_MAX / 4; i++) {
+      const k = it.next().value;
+      if (k !== undefined) normalizeCache.delete(k);
+    }
+  }
+  normalizeCache.set(text, result);
+  return result;
+}
+
+export function clearTextCaches(): void {
+  cleanLabelCache.clear();
+  normalizeCache.clear();
 }
 
 const STOPWORDS = new Set(["the", "a", "an", "you", "your", "are", "is", "do", "of", "to", "in", "for", "and", "or", "what", "please"]);
@@ -85,4 +124,19 @@ export function bestOption(options: string[], wanted: string, minScore = 0.6): s
     }
   }
   return bestScore >= minScore ? best : undefined;
+}
+
+/** Match a Yes or No answer to choice options (e.g. ["Yes", "No"], ["Yes, I do", "No, I do not"], ["I agree", "I disagree"]). */
+export function yesNoOption(options: string[], wanted: string): string | undefined {
+  const match = bestOption(options, wanted);
+  if (match) return match;
+  const isYes = /^(yes|y|true|agree|ja|oui|si|sim)\b/i.test(wanted.trim());
+  const isNo = /^(no|n|false|disagree|nein|non|nao|nee)\b/i.test(wanted.trim());
+  if (isYes) {
+    return options.find((o) => /^(yes|y|true|agree|i agree|ja|oui|si|sim)\b/i.test(normalize(o)));
+  }
+  if (isNo) {
+    return options.find((o) => /^(no|n|false|disagree|i disagree|nein|non|nao|nee)\b/i.test(normalize(o)));
+  }
+  return undefined;
 }

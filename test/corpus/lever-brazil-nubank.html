@@ -1,0 +1,67 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Software Engineer - Core Banking Ledger</h1>
+<div class="lever-brazil-container">
+  <form id="lever-nubank-apply">
+    <div class="application-section">
+      <h3>Informações Pessoais</h3>
+      <div class="application-field">
+        <label for="br-name">Nome completo *</label>
+        <input type="text" id="br-name" name="name" required placeholder="Seu nome completo" />
+      </div>
+      <div class="application-field">
+        <label for="br-email">E-mail *</label>
+        <input type="email" id="br-email" name="email" required placeholder="seuemail@exemplo.com" />
+      </div>
+      <div class="application-field">
+        <label for="br-phone">Telefone / Celular *</label>
+        <input type="tel" id="br-phone" name="phone" required placeholder="(11) 98765-4321" />
+      </div>
+      <div class="application-field">
+        <label for="br-city">Cidade / Estado *</label>
+        <input type="text" id="br-city" name="location" required placeholder="São Paulo, SP" />
+      </div>
+      <div class="application-field">
+        <label for="br-resume">Currículo (PDF ou DOCX) *</label>
+        <input type="file" id="br-resume" name="resume" required accept=".pdf,.docx,.doc" />
+      </div>
+    </div>
+
+    <div class="application-section">
+      <h3>Identificação & Perguntas Específicas</h3>
+      <div class="application-field">
+        <label for="br-cpf">CPF (Cadastro de Pessoas Físicas) *</label>
+        <input type="text" id="br-cpf" name="cpf" required placeholder="000.000.000-00" />
+      </div>
+      <div class="application-field">
+        <label for="br-salary">Pretensão salarial (BRL / mês ou ano) *</label>
+        <input type="text" id="br-salary" name="pretensao_salarial" required placeholder="Ex: R$ 18.000/mês" />
+      </div>
+      <div class="application-field">
+        <label for="br-notice">Prazo de aviso prévio (Notice period) *</label>
+        <input type="text" id="br-notice" name="aviso_previo" required placeholder="Ex: 30 dias" />
+      </div>
+      <div class="application-field">
+        <label for="br-work-auth">Autorização para trabalhar no Brasil *</label>
+        <select id="br-work-auth" name="autorizacao_trabalho" required>
+          <option value="">Selecione...</option>
+          <option value="sim">Sim, sou cidadão brasileiro ou possuo visto permanente</option>
+          <option value="nao">Não, preciso de patrocínio de visto</option>
+        </select>
+      </div>
+      <div class="application-field">
+        <label for="br-linkedin">Perfil do LinkedIn</label>
+        <input type="url" id="br-linkedin" name="urls[LinkedIn]" placeholder="https://www.linkedin.com/in/..." />
+      </div>
+      <div class="application-field">
+        <label>
+          <input type="checkbox" id="br-lgpd" name="lgpd_consent" required />
+          Concordo com os termos de privacidade e autorizo o processamento dos meus dados conforme a LGPD *
+        </label>
+      </div>
+    </div>
+
+    <div class="application-submit">
+      <button type="submit" class="lever-submit-btn">Enviar Candidatura</button>
+    </div>
+  </form>
+</div>

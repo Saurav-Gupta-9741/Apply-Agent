@@ -20,11 +20,22 @@ export interface Meaning {
 
 /** Act on the model's reading from this confidence (98.6% right on real questions it had never seen). */
 export const ACT_CONFIDENCE = 0.85;
+/** Safe profile facts where wrong is impossible or harmless: names, email, phone, links, location. */
+export const SAFE_ACT_CONFIDENCE = 0.80;
+export const SAFE_PROFILE_INTENTS = new Set<string>([
+  "firstName", "lastName", "fullName", "email", "phone", "linkedin", "github", "portfolio", "resumeUrl",
+]);
+
+/** Required confidence to act on a model reading. */
+export function actThreshold(intent: string): number {
+  return SAFE_PROFILE_INTENTS.has(intent) ? SAFE_ACT_CONFIDENCE : ACT_CONFIDENCE;
+}
+
 /** Doubt the rules from this confidence. */
 export const DOUBT_CONFIDENCE = 0.95;
 
 const PROFILE_INTENTS = new Set<string>([
-  "firstName", "lastName", "fullName", "email", "phone", "location", "country", "linkedin", "github", "portfolio", "currentCompany",
+  "firstName", "lastName", "fullName", "email", "phone", "location", "country", "linkedin", "github", "portfolio", "resumeUrl", "currentCompany",
   "currentTitle", "school", "degree", "discipline", "graduationYear", "experienceYears",
 ]);
 const TOPIC_OF: Record<string, SensitiveTopic> = {
@@ -50,6 +61,7 @@ const EVIDENCE: Record<string, RegExp> = {
   linkedin: /linked ?in/,
   github: /git ?hub|git ?lab|bitbucket|\bcode\b|repositor/,
   portfolio: /portfolio|website|web site|personal (site|page)|\burl\b|\blink\b|behance|dribbble/,
+  resumeUrl: /resume|cv|curriculum\s*vitae|drive|link|url/,
   currentCompany: /compan|employer|organi[sz]ation|\bfirm\b|where do you (currently )?work/,
   currentTitle: /title|\brole\b|position|designation|\bjob\b/,
   school: /school|universit|college|institut|alma mater|stud(y|ied)|educat/,
@@ -142,7 +154,7 @@ export function decideWithMeaning(field: FieldDescriptor, profile: Profile, answ
   const ruleGaveUp = rule.kind === "ask" && rule.reason !== "sensitive" || rule.kind === "skip" && /not in profile|optional choice/.test(rule.reason)
     || rule.kind === "ask" && rule.reason === "sensitive" && !rule.topic;
   const sensitiveGap = rule.kind === "ask" && rule.reason === "sensitive" && rule.topic && TOPIC_OF[meaning.intent] === rule.topic;
-  if ((ruleGaveUp || sensitiveGap) && meaning.confidence >= ACT_CONFIDENCE && !NEVER_FROM_PROFILE.has(meaning.intent)) {
+  if ((ruleGaveUp || sensitiveGap) && meaning.confidence >= actThreshold(meaning.intent) && !NEVER_FROM_PROFILE.has(meaning.intent)) {
     const decision = fromMeaning(field, profile, meaning, page);
     if (decision) return decision;
   }
@@ -157,7 +169,7 @@ function readsAsEnglish(label: string): boolean {
 
 /** Readings close enough not to doubt each other (a full name where the rules saw a first name, a city vs country…). */
 function sameFamily(a: string, b: string): boolean {
-  const families = [["firstName", "fullName", "lastName"], ["location", "country", "state", "address"], ["linkedin", "github", "portfolio", "other_links"],
+  const families = [["firstName", "fullName", "lastName"], ["location", "country", "state", "address"], ["linkedin", "github", "portfolio", "other_links", "resumeUrl", "resume"],
     ["degree", "education_level", "discipline"], ["currentTitle", "currentCompany"]];
   return families.some((f) => f.includes(a) && f.includes(b)) && !(a === "firstName" && b === "lastName") && !(a === "lastName" && b === "firstName");
 }

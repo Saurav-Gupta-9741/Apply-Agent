@@ -1,0 +1,68 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Senior Solution Architect - Cloud Platform</h1>
+<div class="sapFiori sapUiForm">
+  <form id="sapApplyForm">
+    <div class="sapUiFormSection">
+      <h2>Personal Data</h2>
+      <div class="sapUiFormElement">
+        <label id="sf_fname_lbl" for="sf_fname">First Name <span class="sapMLabelRequiredStar">*</span></label>
+        <input type="text" id="sf_fname" name="firstName" data-sf-field="firstName" class="sapMInput" required />
+      </div>
+      <div class="sapUiFormElement">
+        <label id="sf_lname_lbl" for="sf_lname">Last Name <span class="sapMLabelRequiredStar">*</span></label>
+        <input type="text" id="sf_lname" name="lastName" data-sf-field="lastName" class="sapMInput" required />
+      </div>
+      <div class="sapUiFormElement">
+        <label id="sf_email_lbl" for="sf_email">Email <span class="sapMLabelRequiredStar">*</span></label>
+        <input type="email" id="sf_email" name="email" data-sf-field="email" class="sapMInput" required />
+      </div>
+      <div class="sapUiFormElement">
+        <label id="sf_phone_lbl" for="sf_phone">Phone Number <span class="sapMLabelRequiredStar">*</span></label>
+        <input type="tel" id="sf_phone" name="phone" data-sf-field="cellPhone" class="sapMInput" required />
+      </div>
+      <div class="sapUiFormElement">
+        <label id="sf_city_lbl" for="sf_city">City <span class="sapMLabelRequiredStar">*</span></label>
+        <input type="text" id="sf_city" name="city" data-sf-field="city" class="sapMInput" required />
+      </div>
+      <div class="sapUiFormElement">
+        <label id="sf_country_lbl" for="sf_country">Country <span class="sapMLabelRequiredStar">*</span></label>
+        <input type="text" id="sf_country" name="country" data-sf-field="country" class="sapMInput" required />
+      </div>
+      <div class="sapUiFormElement">
+        <label id="sf_resume_lbl" for="sf_resume">CV / Resume upload <span class="sapMLabelRequiredStar">*</span></label>
+        <input type="file" id="sf_resume" name="resume" data-sf-field="resume" required />
+      </div>
+    </div>
+
+    <div class="sapUiFormSection">
+      <h2>Application Questions</h2>
+      <div class="sapUiFormElement">
+        <label id="sf_salary_lbl" for="sf_salary">Desired Gross Annual Salary (EUR / Gehaltsvorstellung) <span class="sapMLabelRequiredStar">*</span></label>
+        <input type="text" id="sf_salary" name="desiredSalary" class="sapMInput" required placeholder="z.B. 95000" />
+      </div>
+      <div class="sapUiFormElement">
+        <label id="sf_notice_lbl" for="sf_notice">Notice Period / Kündigungsfrist <span class="sapMLabelRequiredStar">*</span></label>
+        <input type="text" id="sf_notice" name="noticePeriod" class="sapMInput" required placeholder="e.g. 3 months" />
+      </div>
+      <div class="sapUiFormElement">
+        <label id="sf_permit_lbl" for="sf_permit">EU Work Permit / Arbeitserlaubnis <span class="sapMLabelRequiredStar">*</span></label>
+        <select id="sf_permit" name="euWorkPermit" required>
+          <option value="">Please select</option>
+          <option value="citizen">EU Citizen</option>
+          <option value="valid_permit">Valid EU Work Permit</option>
+          <option value="need_sponsorship">Need Sponsorship</option>
+        </select>
+      </div>
+      <div class="sapUiFormElement">
+        <label>
+          <input type="checkbox" id="sf_privacy" name="agreeDataPrivacy" required />
+          I acknowledge and agree to SAP's Data Privacy Statement (DSGVO) *
+        </label>
+      </div>
+    </div>
+
+    <div class="sapUiActions">
+      <button type="submit" class="sapMBtn sapMBtnEmphasized">Submit Application</button>
+    </div>
+  </form>
+</div>

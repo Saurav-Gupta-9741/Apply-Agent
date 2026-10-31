@@ -1,9 +1,9 @@
 /** Content script: runs inside the job page (and inside embedded application iframes). */
 
 import type { Detection, Message, RunReport } from "../shared/types";
-import { loadAnswers, loadProfile, loadSettings } from "../shared/storage";
+import { loadAnswers, loadApplications, loadProfile, loadSettings } from "../shared/storage";
 import { generic, pickAdapter } from "./adapters";
-import { highlightField, runOnce, scanForm, submitForm } from "./agent";
+import { highlightField, runOnce, scanForm, submitForm, tickConsentCheckboxes } from "./agent";
 import { detectConfirmation, hasCaptcha } from "./detect";
 import { findApplyControl, sensePage } from "./sense";
 import { isApplicationPage } from "./target";
@@ -13,6 +13,10 @@ declare global {
   interface Window {
     __applyAgentLoaded?: boolean;
   }
+}
+
+function pageUrl(): string {
+  return typeof location !== "undefined" ? location.href : "about:blank";
 }
 
 function formRoot(): HTMLElement | null {
@@ -30,7 +34,7 @@ const understand = (texts: string[]) =>
   chrome.runtime.sendMessage({ type: "UNDERSTAND", texts } satisfies Message).catch(() => null) as Promise<Array<{ intent: string; confidence: number } | null> | null>;
 
 const platform = ((): ReturnType<typeof platformFor> => {
-  const own = platformFor(location.href);
+  const own = platformFor(pageUrl());
   if (own.policy === "hands_off") return own;
   for (const origin of Array.from(location.ancestorOrigins ?? [])) {
     const around = platformFor(`${origin}/`);
@@ -42,7 +46,7 @@ const platform = ((): ReturnType<typeof platformFor> => {
 /** Hands-off platforms get a clear refusal instead of any reading or typing. */
 function handsOffReport(): RunReport {
   return {
-    status: "not_a_form", platform: platform.name, url: location.href, jobTitle: document.title, fields: [], captcha: false,
+    status: "not_a_form", platform: platform.name, url: pageUrl(), jobTitle: typeof document !== "undefined" ? document.title : "", fields: [], captcha: false,
     errors: [HANDS_OFF_MESSAGE(platform.name)],
   };
 }
@@ -53,15 +57,27 @@ const RECHECK_DELAY_MS = 1200;
 let lastSignature = "";
 let rechecks = 0;
 let timer: ReturnType<typeof setTimeout> | undefined;
+let detectObserver: MutationObserver | undefined;
+
+export function stopSilentDetection(): void {
+  if (timer !== undefined) {
+    clearTimeout(timer);
+    timer = undefined;
+  }
+  if (detectObserver) {
+    detectObserver.disconnect();
+    detectObserver = undefined;
+  }
+}
 
 async function detect(): Promise<void> {
-  const sense = sensePage(document, location.href);
+  const sense = sensePage(document, pageUrl());
   const detection: Detection = {
     kind: sense.kind, platform: sense.platform, jobTitle: sense.jobTitle, hasApplyButton: sense.hasApplyButton, url: location.href,
   };
   if (sense.kind === "application_form") {
     // What the agent WOULD do. Nothing is typed or uploaded.
-    const scan = await scanForm(document, { profile: await loadProfile(), answers: await loadAnswers(), understand });
+    const scan = await scanForm(document, { profile: await loadProfile(), answers: await loadAnswers(), applications: await loadApplications(), understand });
     detection.total = scan.fields.length;
     detection.fill = scan.fields.filter((f) => f.status === "filled").length;
     detection.ask = scan.fields.filter((f) => f.status === "needs_user").length;
@@ -75,13 +91,13 @@ async function detect(): Promise<void> {
   chrome.runtime.sendMessage({ type: "DETECTED", detection } satisfies Message).catch(() => undefined);
 }
 
-let checkedHref = location.href;
+let checkedHref = pageUrl();
 
 /** Throttled, not debounced: pages that never stop changing (tickers, carousels) still get checked. Capped per
  * address so a busy page costs a dozen reads at most; a single-page site moving to a new address starts again. */
 function scheduleDetect(): void {
-  if (location.href !== checkedHref) {
-    checkedHref = location.href;
+  if (pageUrl() !== checkedHref) {
+    checkedHref = pageUrl();
     rechecks = 0;
   }
   if (timer !== undefined || rechecks >= MAX_RECHECKS) return;
@@ -93,11 +109,14 @@ function scheduleDetect(): void {
 }
 
 async function startSilentDetection(): Promise<void> {
+  if (typeof chrome === "undefined" || !chrome?.storage?.local) return;
   if (platform.policy === "hands_off") return;
-  if (!shouldDetect((await loadSettings()).detection, location.href)) return;
+  if (!shouldDetect((await loadSettings()).detection, pageUrl())) return;
   await detect().catch(() => undefined);
   // Many sites show the form only after "Apply" is clicked: re-check quietly when the page changes.
-  new MutationObserver(() => scheduleDetect()).observe(document.documentElement, { childList: true, subtree: true });
+  if (detectObserver) detectObserver.disconnect();
+  detectObserver = new MutationObserver(() => scheduleDetect());
+  detectObserver.observe(document.documentElement, { childList: true, subtree: true });
 }
 
 /** One run at a time per page: a second Fill, Save-and-refill or Submit while one is under way would type into the
@@ -105,7 +124,7 @@ async function startSilentDetection(): Promise<void> {
 let busy = false;
 
 function plainReport(status: RunReport["status"], error: string): RunReport {
-  const sense = sensePage(document, location.href);
+  const sense = sensePage(document, pageUrl());
   return { status, platform: sense.platform, url: location.href, jobTitle: sense.jobTitle, fields: [], captcha: false, errors: error ? [error] : [] };
 }
 
@@ -115,12 +134,13 @@ if (!window.__applyAgentLoaded) {
   // Each frame rates its own page, so the extension can send its messages to the one frame holding the application
   // (never to a search box or newsletter form on the page around an embedded application). See shared/frames.ts.
   (globalThis as { __applyAgentRate?: () => unknown }).__applyAgentRate = () => {
-    const sense = sensePage(document, location.href);
+    const sense = sensePage(document, pageUrl());
     return { score: sense.score, kind: sense.kind, form: !!formRoot(), handsOff: platform.policy === "hands_off" };
   };
 
-  chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse: (r: unknown) => void) => {
-    const acting = ["RUN", "SUBMIT", "SCAN", "HIGHLIGHT", "OPEN_APPLICATION"].includes(message.type);
+  if (typeof chrome !== "undefined" && chrome.runtime?.onMessage?.addListener) {
+    chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse: (r: unknown) => void) => {
+    const acting = ["RUN", "SUBMIT", "SCAN", "HIGHLIGHT", "OPEN_APPLICATION", "TICK_CONSENT"].includes(message.type);
     if (acting && platform.policy === "hands_off") {
       // Answer once: from the top frame, or from the frame that holds the form when the page around it is not ours.
       if (window !== window.top && !formRoot()) return false;
@@ -147,6 +167,12 @@ if (!window.__applyAgentLoaded) {
       return false;
     }
     // Every frame receives the message; only the frame holding the form answers.
+    if (message.type === "TICK_CONSENT") {
+      if (!formRoot()) return false;
+      const count = tickConsentCheckboxes(document);
+      sendResponse({ count });
+      return false;
+    }
     if (message.type === "HIGHLIGHT") {
       if (!formRoot()) return false;
       sendResponse(highlightField(document, message.label, message.key));
@@ -160,7 +186,7 @@ if (!window.__applyAgentLoaded) {
       }
       (async () => {
         try {
-          sendResponse(await scanForm(document, { profile: await loadProfile(), answers: await loadAnswers(), understand }));
+          sendResponse(await scanForm(document, { profile: await loadProfile(), answers: await loadAnswers(), applications: await loadApplications(), understand }));
         } catch (error) {
           sendResponse(plainReport("needs_user", `Could not read this form: ${String(error)}`));
         }
@@ -169,7 +195,7 @@ if (!window.__applyAgentLoaded) {
     }
     if ((message.type === "RUN" || message.type === "SUBMIT") && !hasApplicationForm() && window === window.top) {
       // A sign-in wall (Workday, Taleo…): say so plainly instead of "no form found". Passwords are the user's.
-      const sense = sensePage(document, location.href);
+      const sense = sensePage(document, pageUrl());
       if (hasCaptcha(document)) {
         // The site shows a robot check instead of the form: the user solves it, then presses Fill again.
         sendResponse({
@@ -207,7 +233,7 @@ if (!window.__applyAgentLoaded) {
       void working(true); // the toolbar icon animates while this tab is being filled
       try {
         const report = message.type === "RUN"
-          ? await runOnce(document, { profile: await loadProfile(), answers: await loadAnswers(), mode: message.mode, understand }, markSubmitting)
+          ? await runOnce(document, { profile: await loadProfile(), answers: await loadAnswers(), applications: await loadApplications(), mode: message.mode, understand }, markSubmitting)
           : await submitForm(document, 20000, markSubmitting);
         sendResponse(report);
         chrome.runtime.sendMessage({ type: "RUN_RESULT", report } satisfies Message).catch(() => undefined);
@@ -220,7 +246,8 @@ if (!window.__applyAgentLoaded) {
       }
     })();
     return true; // keep the channel open for the async response
-  });
+    });
+  }
 
   // A submission that navigated to a new page reports its confirmation from here.
   const confirmation = formRoot() ? { confirmed: false } : detectConfirmation(document);
@@ -234,10 +261,13 @@ if (!window.__applyAgentLoaded) {
       fields: [],
       captcha: false,
       confirmationText: confirmation.text,
+      submittedAt: new Date().toISOString(),
       errors: [],
     };
     chrome.runtime.sendMessage({ type: "RUN_RESULT", report } satisfies Message).catch(() => undefined);
   }
 
-  void startSilentDetection();
+  window.addEventListener("pagehide", stopSilentDetection);
+  window.addEventListener("beforeunload", stopSilentDetection);
+  if (typeof chrome !== "undefined" && chrome?.storage?.local) void startSilentDetection();
 }

@@ -10,12 +10,12 @@ const COUNTRIES: Array<[string, RegExp]> = [
   ["United Kingdom", /\b(united kingdom|uk|u k|great britain|britain|england|scotland|wales|northern ireland)\b/],
   ["Canada", /\bcanada\b/],
   ["European Union", /\b(european union|eu|eea|europe|schengen)\b/],
-  ["Germany", /\b(germany|deutschland)\b/],
-  ["France", /\bfrance\b/],
-  ["Netherlands", /\b(netherlands|holland)\b/],
+  ["Germany", /\b(germany|deutschland|allemagne|alemania|germania)\b/],
+  ["France", /\b(france|frankreich|francia)\b/],
+  ["Netherlands", /\b(netherlands|holland|nederland|pays bas|paises bajos|paesi bassi)\b/],
   ["Ireland", /\b(ireland|republic of ireland)\b/],
-  ["Spain", /\b(spain|espana)\b/],
-  ["Italy", /\b(italy|italia)\b/],
+  ["Spain", /\b(spain|espana|spanien|espagne|spagna)\b/],
+  ["Italy", /\b(italy|italia|italien|italie)\b/],
   ["Poland", /\bpoland\b/],
   ["Portugal", /\bportugal\b/],
   ["Sweden", /\bsweden\b/],
@@ -27,7 +27,7 @@ const COUNTRIES: Array<[string, RegExp]> = [
   ["United Arab Emirates", /\b(united arab emirates|uae|dubai|abu dhabi)\b/],
   ["Saudi Arabia", /\b(saudi arabia|ksa)\b/],
   ["Israel", /\bisrael\b/],
-  ["Brazil", /\b(brazil|brasil)\b/],
+  ["Brazil", /\b(brazil|brasil|brasilien|bresil|brasile)\b/],
   ["Mexico", /\bmexico\b/],
   ["Philippines", /\bphilippines\b/],
   ["Malaysia", /\bmalaysia\b/],
@@ -88,6 +88,20 @@ export function countriesInLocation(raw: string): string[] {
   const text = normalize(raw);
   for (const [country, pattern] of CITIES) if (pattern.test(text) && !found.includes(country)) found.push(country);
   if (US_STATE.test(raw) && !found.includes("United States")) found.push("United States");
+  return found;
+}
+
+/** All recognized cities and countries in a text. */
+export function extractPlacesInText(raw: string): string[] {
+  const found: string[] = [];
+  const text = normalize(raw);
+  for (const [, pattern] of CITIES) {
+    const match = pattern.exec(text);
+    if (match && match[1]) found.push(match[1]);
+  }
+  for (const [country, pattern] of COUNTRIES) {
+    if (pattern.test(text) && !found.includes(country.toLowerCase())) found.push(country.toLowerCase());
+  }
   return found;
 }
 

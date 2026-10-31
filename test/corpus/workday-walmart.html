@@ -1,0 +1,82 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Staff Big Data Engineer - Supply Chain Intelligence</h1>
+<div class="wd-page-wrapper" data-automation-id="wd-page">
+  <form id="walmart-application" data-automation-id="applicationForm">
+    <div class="wd-card" data-automation-id="personalInfoSection">
+      <h3>Candidate Profile</h3>
+      <div class="wd-form-group">
+        <label for="wm-first-name" class="wd-label">First Name *</label>
+        <input type="text" id="wm-first-name" name="candidate.firstName" data-automation-id="legalName_firstName" required class="wd-input" />
+      </div>
+      <div class="wd-form-group">
+        <label for="wm-last-name" class="wd-label">Last Name *</label>
+        <input type="text" id="wm-last-name" name="candidate.lastName" data-automation-id="legalName_lastName" required class="wd-input" />
+      </div>
+      <div class="wd-form-group">
+        <label for="wm-email" class="wd-label">Email Address *</label>
+        <input type="email" id="wm-email" name="candidate.email" data-automation-id="contact_email" required class="wd-input" />
+      </div>
+      <div class="wd-form-group">
+        <label for="wm-phone" class="wd-label">Phone Number *</label>
+        <input type="tel" id="wm-phone" name="candidate.phone" data-automation-id="contact_phone" required class="wd-input" />
+      </div>
+      <div class="wd-form-group">
+        <label for="wm-street" class="wd-label">Street Address *</label>
+        <input type="text" id="wm-street" name="candidate.street" data-automation-id="address_street" required class="wd-input" />
+      </div>
+      <div class="wd-form-group">
+        <label for="wm-city" class="wd-label">City *</label>
+        <input type="text" id="wm-city" name="candidate.city" data-automation-id="address_city" required class="wd-input" />
+      </div>
+      <div class="wd-form-group">
+        <label for="wm-zip" class="wd-label">Zip Code *</label>
+        <input type="text" id="wm-zip" name="candidate.zip" data-automation-id="address_zip" required class="wd-input" />
+      </div>
+    </div>
+
+    <div class="wd-card" data-automation-id="resumeCard">
+      <h3>Documents</h3>
+      <div class="wd-file-section" data-automation-id="dropZoneContainer">
+        <label for="wm-resume-file" class="wd-label">Resume / CV *</label>
+        <input type="file" id="wm-resume-file" name="resumeFile" data-automation-id="fileUpload" required />
+      </div>
+    </div>
+
+    <div class="wd-card" data-automation-id="screeningSection">
+      <h3>Screening Questions</h3>
+      <div class="wd-form-group">
+        <label for="wm-desired-salary" class="wd-label">Desired Salary / Compensation Expectations *</label>
+        <input type="text" id="wm-desired-salary" name="desired_compensation" placeholder="e.g. $185,000 / year" required class="wd-input" />
+      </div>
+      <fieldset class="wd-fieldset">
+        <legend class="wd-legend">Have you previously worked for Walmart or any of its subsidiaries? *</legend>
+        <label><input type="radio" name="prior_walmart_employee" value="yes" required /> Yes</label>
+        <label><input type="radio" name="prior_walmart_employee" value="no" /> No</label>
+      </fieldset>
+      <fieldset class="wd-fieldset">
+        <legend class="wd-legend">Are you legally authorized to work in the United States without restriction? *</legend>
+        <label><input type="radio" name="authorized_us" value="yes" required /> Yes</label>
+        <label><input type="radio" name="authorized_us" value="no" /> No</label>
+      </fieldset>
+      <fieldset class="wd-fieldset">
+        <legend class="wd-legend">Will you now or in the future require visa sponsorship for employment authorization? *</legend>
+        <label><input type="radio" name="sponsorship_req" value="yes" required /> Yes</label>
+        <label><input type="radio" name="sponsorship_req" value="no" /> No</label>
+      </fieldset>
+      <div class="wd-form-group">
+        <label for="wm-hear-about" class="wd-label">How did you hear about this opportunity? *</label>
+        <select id="wm-hear-about" name="source" required class="wd-select">
+          <option value="">Select a source</option>
+          <option value="careers_site">Walmart Careers Website</option>
+          <option value="linkedin">LinkedIn</option>
+          <option value="indeed">Indeed</option>
+          <option value="referral">Employee Referral</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="wd-actions">
+      <button type="submit" data-automation-id="pageSubmitButton" class="wd-btn">Submit Application</button>
+    </div>
+  </form>
+</div>

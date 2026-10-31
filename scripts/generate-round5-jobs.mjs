@@ -1,0 +1,65 @@
+// Generate reports/round5-jobs.json with 50 unseen companies
+import { writeFileSync } from "node:fs";
+
+const jobs = [
+  // Greenhouse (20)
+  { platform: "greenhouse", company: "Twitch", url: "https://job-boards.greenhouse.io/twitch/jobs/8872835002" },
+  { platform: "greenhouse", company: "Gusto", url: "https://job-boards.greenhouse.io/gusto/jobs/7899871" },
+  { platform: "greenhouse", company: "Reddit", url: "https://job-boards.greenhouse.io/reddit/jobs/8153017" },
+  { platform: "greenhouse", company: "Chime", url: "https://job-boards.greenhouse.io/chime/jobs/8569366002" },
+  { platform: "greenhouse", company: "Discord", url: "https://job-boards.greenhouse.io/discord/jobs/8806482002" },
+  { platform: "greenhouse", company: "Coursera", url: "https://job-boards.greenhouse.io/coursera/jobs/6222902004" },
+  { platform: "greenhouse", company: "GitLab", url: "https://job-boards.greenhouse.io/gitlab/jobs/8638232002" },
+  { platform: "greenhouse", company: "Pinterest", url: "https://job-boards.greenhouse.io/pinterest/jobs/8280238" },
+  { platform: "greenhouse", company: "Mixpanel", url: "https://job-boards.greenhouse.io/mixpanel/jobs/8172398" },
+  { platform: "greenhouse", company: "Duolingo", url: "https://job-boards.greenhouse.io/duolingo/jobs/8851677002" },
+  { platform: "greenhouse", company: "Dropbox", url: "https://job-boards.greenhouse.io/dropbox/jobs/8159652" },
+  { platform: "greenhouse", company: "Airtable", url: "https://job-boards.greenhouse.io/airtable/jobs/8403107002" },
+  { platform: "greenhouse", company: "Checkr", url: "https://job-boards.greenhouse.io/checkr/jobs/8238127" },
+  { platform: "greenhouse", company: "Elastic", url: "https://job-boards.greenhouse.io/elastic/jobs/8148720" },
+  { platform: "greenhouse", company: "MongoDB", url: "https://job-boards.greenhouse.io/mongodb/jobs/8209134" },
+  { platform: "greenhouse", company: "Stripe", url: "https://job-boards.greenhouse.io/stripe/jobs/8172487" },
+  { platform: "greenhouse", company: "Ripple", url: "https://job-boards.greenhouse.io/ripple/jobs/8225681" },
+  { platform: "greenhouse", company: "Okta", url: "https://job-boards.greenhouse.io/okta/jobs/8079108" },
+  { platform: "greenhouse", company: "Lyft", url: "https://job-boards.greenhouse.io/lyft/jobs/8885206002" },
+  { platform: "greenhouse", company: "Instacart", url: "https://job-boards.greenhouse.io/instacart/jobs/8250324" },
+
+  // Ashby (19)
+  { platform: "ashby", company: "Linear", url: "https://jobs.ashbyhq.com/linear/d3bc1ced-3ce4-4086-a050-555055dbb1ff" },
+  { platform: "ashby", company: "Resend", url: "https://jobs.ashbyhq.com/resend/cde17f7c-4c70-435f-be38-ef5abe94ff22" },
+  { platform: "ashby", company: "Sentry", url: "https://jobs.ashbyhq.com/sentry/81f09568-da7d-4ed1-8283-614f846c9b00" },
+  { platform: "ashby", company: "Brex", url: "https://jobs.ashbyhq.com/brex/8912603002" },
+  { platform: "ashby", company: "Perplexity", url: "https://jobs.ashbyhq.com/perplexity/d5bc2302-202f-4596-9c4d-8720d1e79064" },
+  { platform: "ashby", company: "Modal", url: "https://jobs.ashbyhq.com/modal/9b33ebe7-e829-4f03-97ba-5c94dbd7daf6" },
+  { platform: "ashby", company: "Vanta", url: "https://jobs.ashbyhq.com/vanta/7e8b02ec-cf23-41de-87c7-3910459f34a2" },
+  { platform: "ashby", company: "Dust", url: "https://jobs.ashbyhq.com/dust/58b990de-e5a2-4e60-ab42-f76b67b11183" },
+  { platform: "ashby", company: "Ramp", url: "https://jobs.ashbyhq.com/ramp/34413f8d-26bf-4bbc-8ade-eb309a0e2245" },
+  { platform: "ashby", company: "OpenAI", url: "https://jobs.ashbyhq.com/openai/240d459b-696d-43eb-8497-fab3e56ecd9b" },
+  { platform: "ashby", company: "Runway", url: "https://jobs.ashbyhq.com/runway/950876a1-709e-49b7-93f3-6e130efdf6fa" },
+  { platform: "ashby", company: "Synthesia", url: "https://jobs.ashbyhq.com/synthesia/c3c79cb1-3ead-46ac-abf2-04502e4655bd" },
+  { platform: "ashby", company: "Coinbase", url: "https://jobs.ashbyhq.com/coinbase/8175363" },
+  { platform: "ashby", company: "Poolside", url: "https://jobs.ashbyhq.com/poolside/ade02c95-890f-4f1d-9ca6-05076b6fe687" },
+  { platform: "ashby", company: "Baseten", url: "https://jobs.ashbyhq.com/baseten/fc6e5f2e-eb2d-4a6c-8a51-8422e8662bde" },
+  { platform: "ashby", company: "LangChain", url: "https://jobs.ashbyhq.com/langchain/74e5f9f4-e44a-4594-ba26-abdf71bf287d" },
+  { platform: "ashby", company: "Cognition", url: "https://jobs.ashbyhq.com/cognition/d2290c46-34c0-4d77-b678-e91ae64e76f9" },
+  { platform: "ashby", company: "Cerebras", url: "https://jobs.ashbyhq.com/cerebras/3f85f614-264f-4987-9fb5-320ee2798e97" },
+  { platform: "ashby", company: "Temporal", url: "https://jobs.ashbyhq.com/temporal/30600762-62fe-4ffb-9b6e-98f145329ea3" },
+
+  // Lever (6)
+  { platform: "lever", company: "Palantir", url: "https://jobs.lever.co/palantir/6ed76ce8-4156-4b60-b120-403538bd66cd/apply" },
+  { platform: "lever", company: "Spotify", url: "https://jobs.lever.co/spotify/2a55d6c9-c564-443a-be3e-a3851db5a93b/apply" },
+  { platform: "lever", company: "Basis", url: "https://jobs.lever.co/basis/0379590a-e64f-4b02-93ff-e57aa385e4e0/apply" },
+  { platform: "lever", company: "Zimperium", url: "https://jobs.lever.co/zimperium/5b35759a-d445-4fcb-b255-d719330af055/apply" },
+  { platform: "lever", company: "Supermove", url: "https://jobs.lever.co/supermove/0f318ca9-3c7b-4350-ab02-21ab44fa4b17/apply" },
+  { platform: "lever", company: "Kinsta", url: "https://jobs.lever.co/kinsta/caadac8e-381f-42a2-9801-202b351fff28/apply" },
+
+  // Breezy (5)
+  { platform: "breezy", company: "In All Media", url: "https://inallmedia-llc.breezy.hr/p/fff789af67a7-fullstack-engineer-2134-python-java-react" },
+  { platform: "breezy", company: "Bond-Pro", url: "https://bond-pro.breezy.hr/p/a8385360980b-junior-software-engineer-0-4-years" },
+  { platform: "breezy", company: "Aimpoint Digital", url: "https://aimpoint-digital.breezy.hr/p/f116e82e2b81-lead-ai-engineer-2026-us-col-uk" },
+  { platform: "breezy", company: "Helpware", url: "https://helpware-inc.breezy.hr/p/d4db6e40584c-senior-python-engineer" },
+  { platform: "breezy", company: "Vagaro", url: "https://vagaro.breezy.hr/p/9204043b85ff-data-engineer" },
+];
+
+writeFileSync("reports/round5-jobs.json", JSON.stringify(jobs, null, 1));
+console.log(`Wrote ${jobs.length} jobs to reports/round5-jobs.json`);

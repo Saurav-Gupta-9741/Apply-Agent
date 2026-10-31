@@ -1,0 +1,82 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Senior Machine Learning Engineer - Firefly & Generative AI</h1>
+<div class="adobe-workday-app" data-automation-id="jobApplicationRoot">
+  <form id="adobe-form" data-automation-id="applicationForm">
+    <div class="adobe-section" data-automation-id="myInfo">
+      <h2>Personal Details</h2>
+      <div class="adobe-grid">
+        <div class="adobe-cell">
+          <label for="ad-first" class="adobe-label">First Name *</label>
+          <input type="text" id="ad-first" name="firstName" data-automation-id="legalFirstName" required />
+        </div>
+        <div class="adobe-cell">
+          <label for="ad-last" class="adobe-label">Last Name *</label>
+          <input type="text" id="ad-last" name="lastName" data-automation-id="legalLastName" required />
+        </div>
+        <div class="adobe-cell">
+          <label for="ad-email" class="adobe-label">Email *</label>
+          <input type="email" id="ad-email" name="email" data-automation-id="emailAddress" required />
+        </div>
+        <div class="adobe-cell">
+          <label for="ad-phone" class="adobe-label">Phone *</label>
+          <input type="tel" id="ad-phone" name="phone" data-automation-id="mobilePhone" required />
+        </div>
+      </div>
+    </div>
+
+    <div class="adobe-section" data-automation-id="profiles">
+      <h2>Professional Links & Profiles</h2>
+      <div class="adobe-grid">
+        <div class="adobe-cell">
+          <label for="ad-github" class="adobe-label">GitHub Profile URL *</label>
+          <input type="url" id="ad-github" name="githubUrl" data-automation-id="github" required placeholder="https://github.com/..." />
+        </div>
+        <div class="adobe-cell">
+          <label for="ad-linkedin" class="adobe-label">LinkedIn Profile</label>
+          <input type="url" id="ad-linkedin" name="linkedinUrl" data-automation-id="linkedin" placeholder="https://linkedin.com/in/..." />
+        </div>
+        <div class="adobe-cell">
+          <label for="ad-current-company" class="adobe-label">Current Company / Employer</label>
+          <input type="text" id="ad-current-company" name="currentCompany" data-automation-id="employer" />
+        </div>
+        <div class="adobe-cell">
+          <label for="ad-education" class="adobe-label">Highest level of education completed</label>
+          <select id="ad-education" name="educationLevel" data-automation-id="educationSelect">
+            <option value="">Select Level</option>
+            <option value="bachelor">Bachelor's Degree</option>
+            <option value="master">Master's Degree</option>
+            <option value="phd">Doctorate / PhD</option>
+          </select>
+        </div>
+      </div>
+      <div class="adobe-cell full-width">
+        <label for="ad-resume" class="adobe-label">Resume / CV *</label>
+        <input type="file" id="ad-resume" name="resumeFile" data-automation-id="resumeDoc" required />
+      </div>
+    </div>
+
+    <div class="adobe-section" data-automation-id="legalDisclosures">
+      <h2>Legal & Privacy</h2>
+      <fieldset class="adobe-fieldset">
+        <legend class="adobe-legend">Are you legally authorized to work in the United States? *</legend>
+        <label><input type="radio" name="us_work_eligibility" value="yes" required /> Yes</label>
+        <label><input type="radio" name="us_work_eligibility" value="no" /> No</label>
+      </fieldset>
+      <fieldset class="adobe-fieldset">
+        <legend class="adobe-legend">Will you now or in the future require visa sponsorship? *</legend>
+        <label><input type="radio" name="sponsorship_needed" value="yes" required /> Yes</label>
+        <label><input type="radio" name="sponsorship_needed" value="no" /> No</label>
+      </fieldset>
+      <div class="adobe-consent-box">
+        <label>
+          <input type="checkbox" id="ad-ccpa" name="ccpa_consent" required />
+          I acknowledge and agree to Adobe's Candidate Privacy Policy and California CCPA notice *
+        </label>
+      </div>
+    </div>
+
+    <div class="adobe-submit-bar">
+      <button type="submit" class="adobe-submit-button" data-automation-id="submitApp">Submit Application</button>
+    </div>
+  </form>
+</div>

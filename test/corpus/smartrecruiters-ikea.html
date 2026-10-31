@@ -1,0 +1,58 @@
+<!-- Real application form, saved by e2e/coverage.spec.ts (scripts and styles removed). -->
+<h1>Supply Chain Data Scientist</h1>
+<div class="sr-ikea-container">
+  <form class="application-form" id="ikea-apply">
+    <div class="form-group">
+      <label for="ik-fn">First Name *</label>
+      <input type="text" id="ik-fn" name="firstName" required />
+    </div>
+    <div class="form-group">
+      <label for="ik-ln">Last Name *</label>
+      <input type="text" id="ik-ln" name="lastName" required />
+    </div>
+    <div class="form-group">
+      <label for="ik-email">Email *</label>
+      <input type="email" id="ik-email" name="email" required />
+    </div>
+    <div class="form-group">
+      <label for="ik-phone">Phone *</label>
+      <input type="tel" id="ik-phone" name="phone" required />
+    </div>
+    <div class="form-group">
+      <label for="ik-location">Location / City *</label>
+      <input type="text" id="ik-location" name="location" required />
+    </div>
+    <div class="form-group">
+      <label for="ik-resume">Resume / CV *</label>
+      <div class="dropzone" data-testid="dropzone">
+        <input type="file" id="ik-resume" name="resume" required />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="ik-notice">Notice period *</label>
+      <input type="text" id="ik-notice" name="noticePeriod" required placeholder="e.g. 2 months" />
+    </div>
+    <div class="form-group">
+      <label for="ik-salary">Expected salary / compensation *</label>
+      <input type="text" id="ik-salary" name="expectedSalary" required />
+    </div>
+    <div class="form-group">
+      <label for="ik-eng">English language proficiency *</label>
+      <select id="ik-eng" name="englishLevel" required>
+        <option value="">Select...</option>
+        <option value="fluent">Fluent / Native</option>
+        <option value="professional">Professional working proficiency</option>
+        <option value="basic">Basic</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>
+        <input type="checkbox" id="ik-consent" name="agreeTerms" required />
+        I consent to the processing of my candidate data in accordance with SmartRecruiters privacy policy *
+      </label>
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn-submit">Submit Application</button>
+    </div>
+  </form>
+</div>

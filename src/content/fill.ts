@@ -2,7 +2,7 @@
  * the value back to verify it stuck. */
 
 import { deepQueryAll, scopeOf } from "./dom";
-import type { ExtractedField, FieldElement } from "./extract";
+import { isDropzone, visibleText, type ExtractedField, type FieldElement } from "./extract";
 import type { ResumeFile } from "../shared/types";
 import { bestOption, cleanLabel, cssAttr, normalize } from "../shared/text";
 
@@ -11,13 +11,62 @@ export interface FillOutcome {
   detail?: string;
 }
 
-function fire(el: Element, type: string): void {
+export function fireEvent(el: Element, type: string, init: Record<string, unknown> = {}): boolean {
+  let event: Event;
+  const eventInit = { bubbles: true, composed: true, cancelable: true, ...init };
+
+  try {
+    if (type.startsWith("pointer") && typeof PointerEvent !== "undefined") {
+      event = new PointerEvent(type, {
+        pointerId: 1,
+        pointerType: "mouse",
+        isPrimary: true,
+        ...eventInit,
+      });
+    } else if ((type.startsWith("mouse") || type === "click") && typeof MouseEvent !== "undefined") {
+      event = new MouseEvent(type, {
+        button: 0,
+        buttons: type === "pointerdown" || type === "mousedown" ? 1 : 0,
+        ...eventInit,
+      });
+    } else if (type.startsWith("key") && typeof KeyboardEvent !== "undefined") {
+      event = new KeyboardEvent(type, {
+        key: typeof init.key === "string" ? init.key : "Unidentified",
+        code: typeof init.code === "string" ? init.code : "",
+        ...eventInit,
+      });
+    } else if ((type === "focus" || type === "blur") && typeof FocusEvent !== "undefined") {
+      event = new FocusEvent(type, {
+        ...eventInit,
+      });
+    } else if (type === "input" && typeof InputEvent !== "undefined") {
+      event = new InputEvent(type, {
+        inputType: "insertText",
+        data: typeof init.data === "string" ? init.data : undefined,
+        ...eventInit,
+      });
+    } else {
+      event = new Event(type, eventInit);
+    }
+  } catch {
+    event = new Event(type, eventInit);
+  }
+
+  return el.dispatchEvent(event);
+}
+
+export function fire(el: Element, type: string): void {
   // composed: the event leaves a shadow root, so frameworks listening above a web component hear it too.
-  el.dispatchEvent(new Event(type, { bubbles: true, composed: true }));
+  fireEvent(el, type);
 }
 
 /** Frameworks track values through the native setter; assigning `.value` directly is invisible to them. */
-function setNativeValue(el: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement, value: string): void {
+export function setNativeValue(el: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement, value: string): void {
+  // React 16+ uses a custom _valueTracker on inputs to detect whether value changed
+  const tracker = (el as any)._valueTracker;
+  if (tracker && typeof tracker.setValue === "function") {
+    tracker.setValue("");
+  }
   const proto = Object.getPrototypeOf(el) as object;
   const setter = Object.getOwnPropertyDescriptor(proto, "value")?.set;
   if (setter) setter.call(el, value);
@@ -53,17 +102,82 @@ export function formatDateFor(el: HTMLInputElement | HTMLTextAreaElement, value:
   return [a, b, c].filter((t): t is string => !!t).map(part).join(sep);
 }
 
-function fillText(el: HTMLInputElement | HTMLTextAreaElement, rawValue: string, hint = ""): FillOutcome {
+export interface TypingOptions {
+  delayMs?: number;
+  keystrokeDelayMs?: number;
+}
+
+export function fillText(el: HTMLInputElement | HTMLTextAreaElement, rawValue: string, hint = ""): FillOutcome {
   const value = formatDateFor(el, rawValue, hint);
   // The browser would silently cut a long answer at maxlength: refuse instead, so the user can shorten it.
   if (el.maxLength > 0 && value.length > el.maxLength) {
     return { ok: false, detail: `answer is ${value.length} characters; this field allows ${el.maxLength}` };
   }
+  // Realistic anti-bot event sequence: pointerdown -> focus -> keydown -> input -> change -> blur
+  fireEvent(el, "pointerdown");
+  fireEvent(el, "mousedown");
   el.focus();
+  fireEvent(el, "focusin");
+  fireEvent(el, "focus");
+
+  const lastChar = value.slice(-1) || "a";
+  fireEvent(el, "keydown", { key: lastChar });
   setNativeValue(el, value);
-  fire(el, "input");
-  fire(el, "change");
+  fireEvent(el, "input", { data: value });
+  fireEvent(el, "keyup", { key: lastChar });
+
+  fireEvent(el, "change");
   el.blur();
+  fireEvent(el, "focusout");
+  fireEvent(el, "blur");
+
+  return el.value === value ? { ok: true } : { ok: false, detail: "value did not stick" };
+}
+
+export async function fillTextHumanized(
+  el: HTMLInputElement | HTMLTextAreaElement,
+  rawValue: string,
+  hint = "",
+  options: TypingOptions = {}
+): Promise<FillOutcome> {
+  const value = formatDateFor(el, rawValue, hint);
+  if (el.maxLength > 0 && value.length > el.maxLength) {
+    return { ok: false, detail: `answer is ${value.length} characters; this field allows ${el.maxLength}` };
+  }
+
+  // 1. Pointer targeting & focus
+  fireEvent(el, "pointerdown");
+  fireEvent(el, "mousedown");
+  el.focus();
+  fireEvent(el, "focusin");
+  fireEvent(el, "focus");
+  fireEvent(el, "pointerup");
+  fireEvent(el, "mouseup");
+  fireEvent(el, "click");
+
+  const delay = options.keystrokeDelayMs ?? (options.delayMs ?? 10);
+  if (delay > 0) await sleep(delay);
+
+  // 2. Character-by-character typing with synthetic delays
+  setNativeValue(el, "");
+  for (let i = 0; i < value.length; i++) {
+    const char = value[i]!;
+    fireEvent(el, "keydown", { key: char, code: `Key${char.toUpperCase()}` });
+    const current = value.slice(0, i + 1);
+    setNativeValue(el, current);
+    fireEvent(el, "input", { data: char, inputType: "insertText" });
+    fireEvent(el, "keyup", { key: char, code: `Key${char.toUpperCase()}` });
+    if (delay > 0 && i < value.length - 1) {
+      await sleep(delay);
+    }
+  }
+
+  // 3. Commit and blur
+  fireEvent(el, "change");
+  el.blur();
+  fireEvent(el, "focusout");
+  fireEvent(el, "blur");
+
   return el.value === value ? { ok: true } : { ok: false, detail: "value did not stick" };
 }
 
@@ -72,15 +186,24 @@ function fillSelect(el: HTMLSelectElement, value: string): FillOutcome {
   const match = bestOption(options.map(optionLabel), value);
   const option = options.find((o) => optionLabel(o) === match) ?? options.find((o) => normalize(o.value) === normalize(value));
   if (!option) return { ok: false, detail: `no option matches "${value}"` };
+  fireEvent(el, "pointerdown");
+  fireEvent(el, "mousedown");
+  el.focus();
   setNativeValue(el, option.value);
   fire(el, "input");
   fire(el, "change");
+  el.blur();
+  fireEvent(el, "blur");
   return el.value === option.value ? { ok: true } : { ok: false, detail: "selection did not stick" };
 }
 
 function radioLabel(radio: HTMLInputElement): string {
   const byFor = radio.id ? scopeOf(radio).querySelector(`label[for="${cssAttr(radio.id)}"]`) : null;
-  return cleanLabel((byFor ?? radio.closest("label"))?.textContent ?? radio.value);
+  const roleChoice = radio.closest("[role='radio'], [role='checkbox'], .docssharedWizToggleLabeledControl");
+  const roleAria = roleChoice?.getAttribute("aria-label");
+  const roleText = roleChoice ? cleanLabel(visibleText(roleChoice)) : "";
+  const labelText = (byFor ?? radio.closest("label"))?.textContent ?? "";
+  return cleanLabel(roleAria || labelText || roleText || radio.value);
 }
 
 function fillRadio(radios: HTMLInputElement[], value: string): FillOutcome {
@@ -88,8 +211,18 @@ function fillRadio(radios: HTMLInputElement[], value: string): FillOutcome {
   const match = bestOption(labels, value);
   const radio = radios[labels.indexOf(match ?? "\u0000")];
   if (!radio) return { ok: false, detail: `no choice matches "${value}"` };
-  if (!radio.checked) radio.click();
-  return radio.checked ? { ok: true } : { ok: false, detail: "choice did not stick" };
+  const target = (radio.closest("[role='radio']") as HTMLElement | null) ?? radio;
+  if (!radio.checked) {
+    fireEvent(target, "pointerdown");
+    fireEvent(target, "mousedown");
+    target.click();
+    if (!radio.checked) {
+      fireEvent(radio, "pointerdown");
+      radio.click();
+    }
+  }
+  const isChecked = radio.checked || target.getAttribute("aria-checked") === "true";
+  return isChecked ? { ok: true } : { ok: false, detail: "choice did not stick" };
 }
 
 const YES = /^(yes|y|true|1|agree|i agree|checked)$/i;
@@ -98,8 +231,19 @@ const NO = /^(no|n|false|0|unchecked)$/i;
 function fillCheckbox(el: HTMLInputElement, value: string): FillOutcome {
   const want = YES.test(value.trim()) ? true : NO.test(value.trim()) ? false : undefined;
   if (want === undefined) return { ok: false, detail: `"${value}" is not a yes/no answer` };
-  if (el.checked !== want) el.click();
-  return el.checked === want ? { ok: true } : { ok: false, detail: "checkbox did not change" };
+  const target = (el.closest("[role='checkbox']") as HTMLElement | null) ?? el;
+  const current = el.checked || target.getAttribute("aria-checked") === "true";
+  if (current !== want) {
+    fireEvent(target, "pointerdown");
+    fireEvent(target, "mousedown");
+    target.click();
+    if (el.checked !== want && target.getAttribute("aria-checked") !== (want ? "true" : "false")) {
+      fireEvent(el, "pointerdown");
+      el.click();
+    }
+  }
+  const isChecked = el.checked || target.getAttribute("aria-checked") === "true";
+  return isChecked === want ? { ok: true } : { ok: false, detail: "checkbox did not change" };
 }
 
 /** "Select all that apply": tick every listed choice; fail (and change nothing) if any choice is unknown. */
@@ -108,8 +252,17 @@ function fillCheckboxGroup(boxes: HTMLInputElement[], value: string): FillOutcom
   const wanted = value.split(/[,;|]/).map((v) => v.trim()).filter(Boolean);
   const picks = wanted.map((w) => labels.indexOf(bestOption(labels, w) ?? "\u0000"));
   if (!wanted.length || picks.some((i) => i < 0)) return { ok: false, detail: `no choices match "${value}"` };
-  for (const i of picks) if (!boxes[i]!.checked) boxes[i]!.click();
-  return picks.every((i) => boxes[i]!.checked) ? { ok: true } : { ok: false, detail: "choices did not stick" };
+  for (const i of picks) {
+    const box = boxes[i]!;
+    const target = (box.closest("[role='checkbox']") as HTMLElement | null) ?? box;
+    const isChecked = box.checked || target.getAttribute("aria-checked") === "true";
+    if (!isChecked) {
+      target.click();
+      if (!box.checked && target.getAttribute("aria-checked") !== "true") box.click();
+    }
+  }
+  return picks.every((i) => boxes[i]!.checked || boxes[i]!.closest("[role='checkbox']")?.getAttribute("aria-checked") === "true")
+    ? { ok: true } : { ok: false, detail: "choices did not stick" };
 }
 
 function base64ToBytes(data: string): Uint8Array<ArrayBuffer> {
@@ -119,14 +272,42 @@ function base64ToBytes(data: string): Uint8Array<ArrayBuffer> {
   return bytes;
 }
 
-function fillFile(el: HTMLInputElement, resume: ResumeFile): FillOutcome {
+function fillFile(el: HTMLElement, resume: ResumeFile): FillOutcome {
   if (typeof DataTransfer === "undefined") return { ok: false, detail: "file upload not supported here" };
   const transfer = new DataTransfer();
   transfer.items.add(new File([base64ToBytes(resume.dataBase64)], resume.name, { type: resume.type }));
-  el.files = transfer.files;
-  fire(el, "input");
-  fire(el, "change");
-  return el.files?.length === 1 && el.files[0]?.name === resume.name ? { ok: true } : { ok: false, detail: "upload did not stick" };
+  if (el instanceof HTMLInputElement && el.type === "file") {
+    el.files = transfer.files;
+    fire(el, "input");
+    fire(el, "change");
+    return el.files?.length === 1 && el.files[0]?.name === resume.name ? { ok: true } : { ok: false, detail: "upload did not stick" };
+  }
+  const dragOverEvent = typeof DragEvent !== "undefined"
+    ? new DragEvent("dragover", { bubbles: true, cancelable: true, composed: true })
+    : new Event("dragover", { bubbles: true, cancelable: true, composed: true });
+  try { Object.defineProperty(dragOverEvent, "dataTransfer", { value: transfer }); } catch {}
+  el.dispatchEvent(dragOverEvent);
+  const dropEvent = typeof DragEvent !== "undefined"
+    ? new DragEvent("drop", { bubbles: true, cancelable: true, composed: true })
+    : new Event("drop", { bubbles: true, cancelable: true, composed: true });
+  try { Object.defineProperty(dropEvent, "dataTransfer", { value: transfer }); } catch {}
+  el.dispatchEvent(dropEvent);
+  el.click();
+  const dynamicInput = el.querySelector<HTMLInputElement>("input[type='file']") ?? scopeOf(el).querySelector<HTMLInputElement>("input[type='file']");
+  if (dynamicInput && dynamicInput.files !== transfer.files) {
+    try {
+      dynamicInput.files = transfer.files;
+    } catch {
+      try {
+        Object.defineProperty(dynamicInput, "files", { value: transfer.files, configurable: true });
+      } catch {}
+    }
+    fire(dynamicInput, "input");
+    fire(dynamicInput, "change");
+  }
+  const val = currentValue({ descriptor: { control: "file" } as any, elements: [el as any] });
+  const hasStuck = !!val || (dynamicInput?.files?.length === 1) || el.getAttribute("data-filename") === resume.name || el.classList.contains("has-file") || (el.textContent?.includes(resume.name) ?? false);
+  return hasStuck ? { ok: true } : { ok: false, detail: "upload did not stick" };
 }
 
 /** Whether the field already holds a value (so a re-run never overwrites what the user typed). */
@@ -134,20 +315,38 @@ export function currentValue(field: ExtractedField): string {
   const [el] = field.elements;
   if (!el) return "";
   if (field.descriptor.control === "radio") {
+    // ARIA radio groups (Google Forms): check aria-checked on div[role="radio"] children
+    if (el.getAttribute?.("role") === "radiogroup") {
+      const checked = el.querySelector("[role='radio'][aria-checked='true']");
+      return checked ? cleanLabel(checked.getAttribute("aria-label") || checked.textContent || "") : "";
+    }
     const checked = (field.elements as HTMLInputElement[]).find((r) => r.checked);
     return checked ? radioLabel(checked) : "";
   }
   if (field.descriptor.control === "checkbox_group") {
+    // ARIA checkbox groups (Google Forms)
+    if (el.getAttribute?.("role") === "group" && el.querySelector("[role='checkbox']")) {
+      return Array.from(el.querySelectorAll("[role='checkbox'][aria-checked='true']"))
+        .map((b) => cleanLabel(b.getAttribute("aria-label") || b.textContent || "")).join(", ");
+    }
     return (field.elements as HTMLInputElement[]).filter((c) => c.checked).map(radioLabel).join(", ");
   }
   if (el instanceof HTMLInputElement && el.type === "checkbox") return el.checked ? "yes" : "";
   if (el instanceof HTMLInputElement && el.type === "file") return el.files?.length ? el.files[0]!.name : "";
+  if (isDropzone(el)) {
+    const dynamicInput = el.querySelector<HTMLInputElement>("input[type='file']");
+    if (dynamicInput?.files?.length) return dynamicInput.files[0]!.name;
+    const dataFile = el.getAttribute("data-filename");
+    if (dataFile) return dataFile;
+    const nameEl = el.querySelector("[class*='filename' i], [class*='file-name' i], .file-name, .uploaded-file");
+    if (nameEl && cleanLabel(nameEl.textContent ?? "")) return cleanLabel(nameEl.textContent ?? "");
+  }
   if (field.descriptor.control === "dropdown") return dropdownValue(el);
   if (el instanceof HTMLSelectElement) {
     const selected = el.selectedOptions[0];
     return selected && selected.value ? optionLabel(selected) : "";
   }
-  return el.value.trim();
+  return ("value" in el) ? el.value.trim() : "";
 }
 
 export function fillField(field: ExtractedField, value: string, resume?: ResumeFile): FillOutcome {
@@ -171,6 +370,36 @@ export function fillField(field: ExtractedField, value: string, resume?: ResumeF
       return { ok: false, detail: field.descriptor.control };
     default:
       return fillText(el as HTMLInputElement | HTMLTextAreaElement, value, `${field.descriptor.label} ${field.descriptor.placeholder}`);
+  }
+}
+
+export async function fillFieldHumanized(
+  field: ExtractedField,
+  value: string,
+  resume?: ResumeFile,
+  options?: TypingOptions
+): Promise<FillOutcome> {
+  const els: FieldElement[] = field.elements;
+  const el = els[0];
+  if (!el) return { ok: false, detail: "element missing" };
+  switch (field.descriptor.control) {
+    case "combobox":
+      return fillCombobox(el as HTMLInputElement, value, 6000, options?.keystrokeDelayMs ?? options?.delayMs);
+    case "dropdown":
+      return fillDropdown(el as HTMLElement, value);
+    case "radio":
+    case "checkbox":
+    case "checkbox_group":
+    case "select":
+    case "file":
+      return fillField(field, value, resume);
+    default:
+      return fillTextHumanized(
+        el as HTMLInputElement | HTMLTextAreaElement,
+        value,
+        `${field.descriptor.label} ${field.descriptor.placeholder}`,
+        options
+      );
   }
 }
 
@@ -239,19 +468,20 @@ async function pickFromList(owner: HTMLElement, value: string, timeoutMs: number
 }
 
 /** Type into a searchable dropdown (e.g. a location typeahead backed by a server) and pick the best match. */
-export async function fillCombobox(input: HTMLInputElement, value: string, timeoutMs = 6000): Promise<FillOutcome> {
-  input.focus();
-  setNativeValue(input, value);
-  fire(input, "input");
-  input.dispatchEvent(new KeyboardEvent("keyup", { key: value.slice(-1), bubbles: true, composed: true }));
+export async function fillCombobox(input: HTMLInputElement, value: string, timeoutMs = 6000, delayMs = 0): Promise<FillOutcome> {
+  if (delayMs > 0) {
+    await fillTextHumanized(input, value, "", { keystrokeDelayMs: delayMs });
+  } else {
+    fillText(input, value);
+  }
   return pickFromList(input, value, timeoutMs);
 }
 
-const DROPDOWN_PLACEHOLDER = /^(select( one| an option)?|choose( one)?|please select|--+|—|bitte w[äa]hlen|s[ée]lectionner|seleccion(e|a|ar)|selecione)\W*$/i;
+const DROPDOWN_PLACEHOLDER = /^(select|choose|please select)\b|^(select( one| an option)?|choose( one)?|please select|--+|—|bitte w[äa]hlen|s[ée]lectionner|seleccion(e|a|ar)|selecione)\W*$/i;
 
 /** What a custom dropdown currently shows, without its placeholder ("Select One"). */
 export function dropdownValue(el: Element): string {
-  const text = cleanLabel(el.textContent ?? "") || cleanLabel(el.getAttribute("value") ?? "");
+  const text = cleanLabel(el.textContent ?? "") || cleanLabel(el.getAttribute("value") ?? "") || cleanLabel(el.getAttribute("data-value") ?? "");
   return DROPDOWN_PLACEHOLDER.test(text) ? "" : text;
 }
 

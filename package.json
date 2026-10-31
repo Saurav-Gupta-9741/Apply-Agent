@@ -1,6 +1,6 @@
 {
   "name": "applyagent",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Chrome extension that fills job applications on company career sites, with proof of every submission",
   "type": "module",
@@ -9,6 +9,7 @@
     "watch": "node build.mjs --watch",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "eval": "vitest run test/automation-eval.test.ts",
     "e2e": "playwright test --grep-invert \"live read-only\"",
     "e2e:live": "node -e \"process.env.LIVE=1;require('child_process').execSync('npx playwright test e2e/live-scan.spec.ts',{stdio:'inherit',env:process.env})\"",
     "test:all": "npm run typecheck && npm test && npm run e2e"

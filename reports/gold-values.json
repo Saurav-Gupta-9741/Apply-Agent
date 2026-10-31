@@ -1,0 +1,5202 @@
+[
+  {
+    "id": "gold-0",
+    "label": "Are you at least 18 years of age/?",
+    "control": "combobox",
+    "options": [],
+    "intent": "age",
+    "gold": {
+      "A": "Yes",
+      "B": "Yes",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-1",
+    "label": "Are you 18 years of age or older?",
+    "control": "combobox",
+    "options": [],
+    "intent": "age",
+    "gold": {
+      "A": "Yes",
+      "B": "Yes",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-2",
+    "label": "What is your current age?",
+    "control": "radio",
+    "options": [],
+    "intent": "age",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-3",
+    "label": "Are you at least 18 years of age?",
+    "control": "combobox",
+    "options": [],
+    "intent": "age",
+    "gold": {
+      "A": "Yes",
+      "B": "Yes",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-4",
+    "label": "I confirm that I am proficient in English, both written and spoken, at a C1+ level.",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "Fluent",
+      "B": "Fluent",
+      "C": "Fluent"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-5",
+    "label": "I confirm that I am proficient in German, both written and spoken, at a C1+ level.",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-6",
+    "label": "Do you identify as transgender?",
+    "control": "combobox",
+    "options": [],
+    "intent": "transgender",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-7",
+    "label": "I identify as transgender:",
+    "control": "combobox",
+    "options": [],
+    "intent": "transgender",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-8",
+    "label": "[Optional] Pronouns - how should we refer to you in the third person?",
+    "control": "combobox",
+    "options": [],
+    "intent": "pronouns",
+    "gold": {
+      "A": "She/Her",
+      "B": "He/Him",
+      "C": "She/Her"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-9",
+    "label": "[Optional, if \"other\" is selected above] My pronouns are",
+    "control": "text",
+    "options": [],
+    "intent": "pronouns",
+    "gold": {
+      "A": "She/Her",
+      "B": "He/Him",
+      "C": "She/Her"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-10",
+    "label": "Pronouns",
+    "control": "combobox",
+    "options": [],
+    "intent": "pronouns",
+    "gold": {
+      "A": "She/Her",
+      "B": "He/Him",
+      "C": "She/Her"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-11",
+    "label": "pronouns",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "pronouns",
+    "gold": {
+      "A": "She/Her",
+      "B": "He/Him",
+      "C": "She/Her"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-12",
+    "label": "At Samsara, we encourage employees to bring their whole selves to work (this includes applicants too!) Feel free to share your preferred name and pronouns (she/her, they/them, he/him, ze/zir etc.).",
+    "control": "text",
+    "options": [],
+    "intent": "pronouns",
+    "gold": {
+      "A": "She/Her",
+      "B": "He/Him",
+      "C": "She/Her"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-13",
+    "label": "Gender Pronouns (She/Her/Hers, He/Him/His, They/Them/Theirs, etc.)",
+    "control": "text",
+    "options": [],
+    "intent": "pronouns",
+    "gold": {
+      "A": "She/Her",
+      "B": "He/Him",
+      "C": "She/Her"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-14",
+    "label": "What pronouns would you like our team to use when addressing you?",
+    "control": "radio",
+    "options": [],
+    "intent": "pronouns",
+    "gold": {
+      "A": "She/Her",
+      "B": "He/Him",
+      "C": "She/Her"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-15",
+    "label": "Are you able to work onsite in the Esri location of this job posting, or relocate to do so?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-16",
+    "label": "What is the address from which you plan on working? If you would need to relocate, please type \"relocating\".",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "gold": {
+      "A": "12 MG Road",
+      "B": "456 Tech Park Road",
+      "C": "78 Marine Drive"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-17",
+    "label": "How would you describe your sexual orientation? (mark all that apply)",
+    "control": "combobox",
+    "options": [],
+    "intent": "sexual_orientation",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-18",
+    "label": "How would you describe your sexual orientation?",
+    "control": "combobox",
+    "options": [],
+    "intent": "sexual_orientation",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-19",
+    "label": "What experience do you have partnering with Store Planning, Store Design, or Store Development on new stores, remodels, or changes to store layouts and fixtures?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-20",
+    "label": "What visual merchandising, space-planning, design, or planogram software are you proficient in? And what tools or software have you used to create planograms, floor plans, fixture layouts, visual directives, or in-store execution guides?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-21",
+    "label": "How many years of experience do you have in B2B SaaS Product Design?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-22",
+    "label": "Do you have experience designing content platforms or content management experiences?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-23",
+    "label": "Have you designed AI-powered content creation or generative AI experiences?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-24",
+    "label": "Have you designed complex workflows for enterprise users?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-25",
+    "label": "Have you worked for Speechmatics in the past?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-26",
+    "label": "Are you currently a Speechmatics employee?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-27",
+    "label": "Are you willing to work in a hybrid capacity from the office location(s) associated with this role?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-28",
+    "label": "We're committed to ensuring an inclusive and accessible recruitment process. Do you require any adjustments or accommodations to support you during the interview?",
+    "control": "textarea",
+    "options": [],
+    "intent": "accommodation",
+    "gold": {
+      "A": "No",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-29",
+    "label": "Collaboration within our tech hubs is important to us, can you work 4 days from the office and 1 day per week from home?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-30",
+    "label": "Você trabalha atualmente no Inter?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-31",
+    "label": "Qual seu nível de fluência na língua inglesa?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-32",
+    "label": "Qual o seu nível de fluência na língua espanhola?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-33",
+    "label": "Você possui curso superior completo?",
+    "control": "combobox",
+    "options": [],
+    "intent": "education_level",
+    "gold": {
+      "A": "Bachelor's Degree",
+      "B": "Master's Degree",
+      "C": "Bachelor's Degree"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-34",
+    "label": "Caso você tenha respondido SIM para a pergunta anterior, em qual curso você se formou? Caso você tenha respondido NÃO, preencha o campo abaixo com NA",
+    "control": "combobox",
+    "options": [],
+    "intent": "discipline",
+    "gold": {
+      "A": "Computer Science",
+      "B": "Computer Science",
+      "C": "Mass Communication"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-35",
+    "label": "Você deseja informar alguma necessidade de acessibilidade para participar das etapas do processo seletivo?",
+    "control": "combobox",
+    "options": [],
+    "intent": "accommodation",
+    "gold": {
+      "A": "No",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-36",
+    "label": "Quais recursos ou adaptações podem contribuir para sua participação no processo seletivo?",
+    "control": "text",
+    "options": [],
+    "intent": "accommodation",
+    "gold": {
+      "A": "No",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-37",
+    "label": "Have you used developer tools related to AI, LLMs, or infrastructure (e.g. inference, orchestration, agentic workflows)?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-38",
+    "label": "Are you open to working in-person in one of our offices 25% of the time?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-39",
+    "label": "Have you been employed, or otherwise engaged, by an Asana entity in the past? (Previous independent contractors, select \"Yes.\")",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-40",
+    "label": "Are you able to work in our San Francisco office on Tuesdays and Thursdays?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-41",
+    "label": "HISTORY WITH ANDURIL",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-42",
+    "label": "Have you ever been employed by Anduril or any company that Anduril has acquired?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-43",
+    "label": "Are you willing to travel up to 25% of the time?",
+    "control": "combobox",
+    "options": [],
+    "intent": "travel",
+    "gold": {
+      "A": "No",
+      "B": "No",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-44",
+    "label": "Which U.S. State or Canadian Province do you reside in?",
+    "control": "combobox",
+    "options": [],
+    "intent": "state",
+    "gold": {
+      "A": "Maharashtra",
+      "B": "Karnataka",
+      "C": "Maharashtra"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-45",
+    "label": "Have you previously been employed at Affirm for any length of time?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-46",
+    "label": "Have you previously worked for Veeam (including as a contractor or intern)? Current Veeam employees are required to apply through the Internal Job Board.",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-47",
+    "label": "Street Address",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "gold": {
+      "A": "12 MG Road",
+      "B": "456 Tech Park Road",
+      "C": "78 Marine Drive"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-48",
+    "label": "Address Line 1",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "gold": {
+      "A": "12 MG Road",
+      "B": "456 Tech Park Road",
+      "C": "78 Marine Drive"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-49",
+    "label": "Zip/Postal Code",
+    "control": "text",
+    "options": [],
+    "intent": "postal_code",
+    "gold": {
+      "A": "411001",
+      "B": "560100",
+      "C": "400020"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-50",
+    "label": "State/Province",
+    "control": "text",
+    "options": [],
+    "intent": "state",
+    "gold": {
+      "A": "Maharashtra",
+      "B": "Karnataka",
+      "C": "Maharashtra"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-51",
+    "label": "What is the highest level of education you’ve completed?",
+    "control": "combobox",
+    "options": [],
+    "intent": "education_level",
+    "gold": {
+      "A": "Bachelor's Degree",
+      "B": "Master's Degree",
+      "C": "Bachelor's Degree"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-52",
+    "label": "Have you previously been employed by Magnet Forensics (or acquired/merged company) in any capacity? (i.e. employee, contractor, co-op, vendor)?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-53",
+    "label": "Do you have at least 6 years of experience in Customer Success, Strategic Account Management, Technical Account Management, or a related customer-facing role?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-54",
+    "label": "Do you have at least 2 years of experience leading technical, customer-facing teams?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-55",
+    "label": "Which of the following experience do you have? Select all that apply.",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-56",
+    "label": "Which of the following qualifications do you have? Select all that apply.",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-57",
+    "label": "Address",
+    "control": "textarea",
+    "options": [],
+    "intent": "address",
+    "gold": {
+      "A": "12 MG Road",
+      "B": "456 Tech Park Road",
+      "C": "78 Marine Drive"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-58",
+    "label": "Are you currently located within commuting distance to the assigned office location for this role?",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-59",
+    "label": "Great Gray's Hybrid Work Policy, which currently requires in-office attendance four (4) days per week, applies to this position. Please indicate your understanding of and ability to comply with this requirement below.",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-60",
+    "label": "Are you bilingual (French and English)?",
+    "control": "select",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "Yes",
+      "B": "Yes",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-61",
+    "label": "Do you have experience managing Service Desk operations using an ITSM/ticketing platform such as Jira Service Management, ServiceNow, or a similar platform, including ticket queues, SLAs, and escalations?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-62",
+    "label": "Do you have experience overseeing employee technology lifecycle processes, including new hire equipment provisioning, asset inventory/CMDB management, and equipment recovery for separated employees?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-63",
+    "label": "Are you willing and able to work on-site in Davie, Florida five days per week and travel periodically to other company locations, including Syracuse, New York?",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-64",
+    "label": "Have you previously configured, integrated, or troubleshooting CRM systems (e.g., ActiveCampaign, HubSpot, Salesforce, or custom CRMs) with field tracking, tags, and automated triggers? If yes, share an example (briefly).",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-65",
+    "label": "Which AI tools do you actively use in your daily workflow to assist with code drafting, debugging, or task automation?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-66",
+    "label": "Have you built or configured AI agents, custom connectors, or automated workflows (e.g., using Claude, OpenAI APIs, or custom harnesses) to deliver automated reports or assets to other departments?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-67",
+    "label": "What state or province do you live in?",
+    "control": "text",
+    "options": [],
+    "intent": "state",
+    "gold": {
+      "A": "Maharashtra",
+      "B": "Karnataka",
+      "C": "Maharashtra"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-68",
+    "label": "Have you ever worked for Figma before, as an employee or a contractor/consultant?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-69",
+    "label": "Have you been rejected for this role at Samsara within the past 6 months?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-70",
+    "label": "How many years of experience do you have in a closing sales role?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-71",
+    "label": "Do you have experience independently closing new deals larger than $10,000?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-72",
+    "label": "What is the zip code of your primary residence?",
+    "control": "text",
+    "options": [],
+    "intent": "postal_code",
+    "gold": {
+      "A": "411001",
+      "B": "560100",
+      "C": "400020"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-73",
+    "label": "Have you previously worked at Samsara?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-74",
+    "label": "Have you ever been employed by Stripe or a Stripe affiliate?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-75",
+    "label": "What time zone are you located in?",
+    "control": "combobox",
+    "options": [],
+    "intent": "timezone",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-76",
+    "label": "Have you ever worked at MongoDB before?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-77",
+    "label": "Are you able to communicate fluently in English?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "Yes",
+      "B": "Yes",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-78",
+    "label": "Are you able to communicate fluently in Spanish?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-79",
+    "label": "What's your postal code?",
+    "control": "text",
+    "options": [],
+    "intent": "postal_code",
+    "gold": {
+      "A": "411001",
+      "B": "560100",
+      "C": "400020"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-80",
+    "label": "Are you currently or have you ever worked for Airbnb in any capacity? This could include, but is not limited to, a full-time employee, intern, apprentice, or contingent worker.",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-81",
+    "label": "This role requires working on-site at the Airbnb office five days a week. Please confirm you are able to meet this requirement.",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-82",
+    "label": "Have you been the maintainer or contributor for an open-source project? (Maintaining includes tasks such as triaging issues, reviewing pull requests, managing releases, or overseeing community contributions.)",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-83",
+    "label": "Are you currently based in EST / MST?",
+    "control": "combobox",
+    "options": [],
+    "intent": "timezone",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-84",
+    "label": "Do you speak fluent German?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-85",
+    "label": "Have you actively used Salesforce as your primary CRM in a professional role?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-86",
+    "label": "Which of the following best describes your experience in a sales development, business development, or outbound sales role within the technology industry?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-87",
+    "label": "Have you previously worked at or consulted for GitLab?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-88",
+    "label": "Are you willing to work for 5 days a week, from our Bangalore office?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-89",
+    "label": "Have you previously been employed by Coinbase in any capacity?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-90",
+    "label": "Which of the following best describes how you use AI tools today?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-91",
+    "label": "Do you have professional-level proficiency in English, including reading, writing, and speaking?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "Yes",
+      "B": "Yes",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-92",
+    "label": "Do you have professional-level proficiency in French, including reading, writing, and speaking?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-93",
+    "label": "Do you have at least 3 years of experience in financial services, crypto, investigations, legal or tech industry?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-94",
+    "label": "How many years of experience do you have in Infrastructure Security?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-95",
+    "label": "How many years of relevant work experience do you have in Banking Operations, Financial Operations, or Transaction Reconciliation?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-96",
+    "label": "Which of the following industries have you worked in?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-97",
+    "label": "Which type of transactions have you worked with?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-98",
+    "label": "What is your experience with transaction reconciliation and debit/credit posting?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-99",
+    "label": "What is your experience with banking/payment disputes, chargebacks, and regulatory reporting (including RBI submissions)?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-100",
+    "label": "How would you rate your proficiency in Excel?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "Advanced",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-101",
+    "label": "How would you rate your proficiency in Power BI?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "Intermediate",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-102",
+    "label": "Are you comfortable working onsite five days a week at either our Mumbai or Bangalore office?",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-103",
+    "label": "Relevant Experience in Product",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-104",
+    "label": "Do you have experience Managing Team?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-105",
+    "label": "Are you comfortable working from our Pune or Bengaluru office at least 3 days a week?",
+    "control": "text",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-106",
+    "label": "Degree",
+    "control": "combobox",
+    "options": [],
+    "intent": "degree",
+    "gold": {
+      "A": "Bachelor of Technology",
+      "B": "Master of Technology",
+      "C": "Bachelor of Arts"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-107",
+    "label": "Discipline",
+    "control": "combobox",
+    "options": [],
+    "intent": "discipline",
+    "gold": {
+      "A": "Computer Science",
+      "B": "Computer Science",
+      "C": "Mass Communication"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-108",
+    "label": "Have you independently managed full outbound prospecting sequences (calls, email, and social) in a tech sales role?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-109",
+    "label": "This role requires at least 3 days a week in the office, are you able to easily commute to the location the role is based in?",
+    "control": "select",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-110",
+    "label": "Are you comfortable commuting to and working onsite at our New York City office location?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-111",
+    "label": "School",
+    "control": "combobox",
+    "options": [],
+    "intent": "school",
+    "gold": {
+      "A": "Pune University",
+      "B": "IISc Bangalore",
+      "C": "Mumbai University"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-112",
+    "label": "Which institution do you attend?",
+    "control": "textarea",
+    "options": [],
+    "intent": "school",
+    "gold": {
+      "A": "Pune University",
+      "B": "IISc Bangalore",
+      "C": "Mumbai University"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-113",
+    "label": "What is your level of English proficiency?",
+    "control": "radio",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "Fluent",
+      "B": "Fluent",
+      "C": "Fluent"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-114",
+    "label": "Would you like to make us aware of any adjustments needed for your interview process?",
+    "control": "textarea",
+    "options": [],
+    "intent": "accommodation",
+    "gold": {
+      "A": "No",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-115",
+    "label": "Postal Code",
+    "control": "text",
+    "options": [],
+    "intent": "postal_code",
+    "gold": {
+      "A": "411001",
+      "B": "560100",
+      "C": "400020"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-116",
+    "label": "Address Line 2",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "gold": {
+      "A": "ASK",
+      "B": "Tower B, Apt 304",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-117",
+    "label": "Are you able to work from our Manchester office 3 days a week?",
+    "control": "textarea",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-118",
+    "label": "Have you worked on Web applications previously? If so, what technologies did you use?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-119",
+    "label": "It is important to us to create an accessible and inclusive interview experience. Please let us know if there are any adjustments we can make to assist you during the hiring and interview process.",
+    "control": "text",
+    "options": [],
+    "intent": "accommodation",
+    "gold": {
+      "A": "No",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-120",
+    "label": "How many years of experience do you have in technical customer-facing roles?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-121",
+    "label": "How many years of experience do you have in a consulting or professional services role?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-122",
+    "label": "Do you have hands-on experience implementing, configuring, or troubleshooting enterprise backup and recovery solutions?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-123",
+    "label": "Have you worked on backup and restore across enterprise workloads such as VMware, NAS, SQL databases, AWS/Azure VMs, Microsoft 365, or Google Workspace?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-124",
+    "label": "Have you led or supported end-to-end customer implementations, including requirement discovery, solution design, deployment, and post-deployment optimization?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-125",
+    "label": "This job will be physically based in the office location indicated on this job description. Which of the following describes your current or future situation?",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-126",
+    "label": "Most positions require the intern to be onsite at one of our locations. Will you be available to work onsite for the duration of the internship?",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-127",
+    "label": "Please list the school or university you will be enrolled in during the internship or co-op?",
+    "control": "textarea",
+    "options": [],
+    "intent": "school",
+    "gold": {
+      "A": "Pune University",
+      "B": "IISc Bangalore",
+      "C": "Mumbai University"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-128",
+    "label": "What is the name of the school you are currently attending?",
+    "control": "textarea",
+    "options": [],
+    "intent": "school",
+    "gold": {
+      "A": "Pune University",
+      "B": "IISc Bangalore",
+      "C": "Mumbai University"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-129",
+    "label": "What is the highest level of education completed? Do not include degrees that are in progress or with a future graduation date.",
+    "control": "select",
+    "options": [],
+    "intent": "education_level",
+    "gold": {
+      "A": "Bachelor's Degree",
+      "B": "Master's Degree",
+      "C": "Bachelor's Degree"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-130",
+    "label": "Have you ever been employed by an Allegiant company, Sun Country, or through a Third Party Contractor Agency onsite?",
+    "control": "radio",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-131",
+    "label": "This position requires working at our Las Vegas, NV headquarters. Please select the option that best describes your current situation:",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-132",
+    "label": "Which AI tools do you use in your daily work and what do you use them for? (Please list the tool and describe its specific use case.)",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-133",
+    "label": "Are you able to travel as necessary for work?",
+    "control": "combobox",
+    "options": [],
+    "intent": "travel",
+    "gold": {
+      "A": "Yes",
+      "B": "No",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-134",
+    "label": "Are you at least 18 years old?",
+    "control": "combobox",
+    "options": [],
+    "intent": "age",
+    "gold": {
+      "A": "Yes",
+      "B": "Yes",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-135",
+    "label": "Have you ever worked for LogicSource Inc. or one of its clients?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-136",
+    "label": "If you have ever worked for LogicSource or one of its clients, which one and when?",
+    "control": "textarea",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-137",
+    "label": "What is your preferred work arrangement?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-138",
+    "label": "How often are you willing to travel?",
+    "control": "combobox",
+    "options": [],
+    "intent": "travel",
+    "gold": {
+      "A": "Yes",
+      "B": "No",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-139",
+    "label": "Are you comfortable with traveling to client site/local office?",
+    "control": "combobox",
+    "options": [],
+    "intent": "travel",
+    "gold": {
+      "A": "Yes",
+      "B": "No",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-140",
+    "label": "Have you ever been employed at Baringa before?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-141",
+    "label": "Do you require any reasonable adjustments during your recruitment process?",
+    "control": "textarea",
+    "options": [],
+    "intent": "accommodation",
+    "gold": {
+      "A": "No",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-142",
+    "label": "Have you worked on the following aspect of Payroll?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-143",
+    "label": "Street Address 1",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "gold": {
+      "A": "12 MG Road",
+      "B": "456 Tech Park Road",
+      "C": "78 Marine Drive"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-144",
+    "label": "Street Address 2",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "gold": {
+      "A": "ASK",
+      "B": "Tower B, Apt 304",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-145",
+    "label": "State",
+    "control": "combobox",
+    "options": [],
+    "intent": "state",
+    "gold": {
+      "A": "Maharashtra",
+      "B": "Karnataka",
+      "C": "Maharashtra"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-146",
+    "label": "Zip Code",
+    "control": "text",
+    "options": [],
+    "intent": "postal_code",
+    "gold": {
+      "A": "411001",
+      "B": "560100",
+      "C": "400020"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-147",
+    "label": "If you selected \"Other\" as your school, please list the name here.",
+    "control": "text",
+    "options": [],
+    "intent": "school",
+    "gold": {
+      "A": "Pune University",
+      "B": "IISc Bangalore",
+      "C": "Mumbai University"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-148",
+    "label": "Have you previously worked for Success Academy Charter Schools?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-149",
+    "label": "If you have previously worked at Success Academy, please list your work email address.",
+    "control": "text",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-150",
+    "label": "Are you able and willing to work a hybrid schedule that requires in-office attendance on Tuesday, Wednesday, and Thursday?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-151",
+    "label": "Have you been previously employed at Sony Music Entertainment?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-152",
+    "label": "Do you have experience in Live Chat with Customers?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-153",
+    "label": "Do you have experience in coding on one of the systems programming language and scripting?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-154",
+    "label": "Experience with Low-level Monitoring & Profiling",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-155",
+    "label": "Do you have experience with Distributed SQL Databases",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-156",
+    "label": "How many years of experience do you have debugging, optimizing, and maintaining complex software systems in a professional environment?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-157",
+    "label": "What is the highest level of education you have completed?",
+    "control": "combobox",
+    "options": [],
+    "intent": "education_level",
+    "gold": {
+      "A": "Bachelor's Degree",
+      "B": "Master's Degree",
+      "C": "Bachelor's Degree"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-158",
+    "label": "Which programming languages have you used professionally?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-159",
+    "label": "What is your experience with AI Tools like Claude?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-160",
+    "label": "Do you have minimum 3+ years of full time experience with .NET & C#? (excluding internships)",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-161",
+    "label": "What is your experience with AI-assisted development tools (e.g., GitHub Copilot, Cursor, Claude Code)?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-162",
+    "label": "This role is based in Alameda, CA, and requires on-site work five days per week. Are you able to reliably commute to Alameda for this schedule?",
+    "control": "select",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-163",
+    "label": "Province",
+    "control": "text",
+    "options": [],
+    "intent": "state",
+    "gold": {
+      "A": "Maharashtra",
+      "B": "Karnataka",
+      "C": "Maharashtra"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-164",
+    "label": "Tiene experiencia previa en el cargo a postular? Coméntanos",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-165",
+    "label": "Parles-tu couramment le français ?",
+    "control": "radio",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-166",
+    "label": "Ton niveau d'anglais te permet-il de travailler avec de la documentation et des interlocuteurs anglophones ?",
+    "control": "radio",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-167",
+    "label": "Le mandat est hybride, avec 2 jours par semaine obligatoires sur place à Montréal. Est-ce que cela te convient ?",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-168",
+    "label": "Décris un traitement AS/400 (IBM i) ou Mainframe que tu as développé ou supporté en production : quelles technologies (COBOL, CL, SQL/400, DB2, Control-M…), quel était ton rôle exact, et quelle criticité ou volumétrie ?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-169",
+    "label": "Combien d'années d'expérience professionnelle as-tu sur AS/400 (IBM i) ou Mainframe ?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-170",
+    "label": "As-tu au moins 5 ans d'expérience professionnelle sur AS/400 (IBM i) ou Mainframe ?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-171",
+    "label": "Do you have at least ten (10+) years of experience in construction, architecture, engineering, or a related field, with a focus on leadership and project delivery?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-172",
+    "label": "ZIP",
+    "control": "text",
+    "options": [],
+    "intent": "postal_code",
+    "gold": {
+      "A": "411001",
+      "B": "560100",
+      "C": "400020"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-173",
+    "label": "How many years of experience do you have in engineering leadership or management roles?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-174",
+    "label": "Have you used AI-powered coding tools (such as GitHub Copilot, Cursor, or similar) in your development work?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-175",
+    "label": "Mailing address",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "gold": {
+      "A": "12 MG Road",
+      "B": "456 Tech Park Road",
+      "C": "78 Marine Drive"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-176",
+    "label": "Pour des raisons de conformité en matière de droit du travail et de paie, indique la province canadienne dans laquelle tu es domicilié(e) :",
+    "control": "combobox",
+    "options": [],
+    "intent": "state",
+    "gold": {
+      "A": "Maharashtra",
+      "B": "Karnataka",
+      "C": "Maharashtra"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-177",
+    "label": "Laquelle des affirmations suivantes décrit le mieux ta façon de travailler avec les outils d'IA aujourd'hui ?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-178",
+    "label": "How many years of experience do you have as a Product Manager?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-179",
+    "label": "Proficiency in German",
+    "control": "radio",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-180",
+    "label": "Do you have experience defining and delivering technical features specifically for developers (such as APIs, CI/CD pipelines, containerization, or cloud platform infrastructure)?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-181",
+    "label": "Have you ever worked for a Sony company previously?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-182",
+    "label": "This position will be on-site. Are you currently able to commute regularly to the Waterloo Office?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-183",
+    "label": "What are your personal pronouns?",
+    "control": "combobox",
+    "options": [],
+    "intent": "pronouns",
+    "gold": {
+      "A": "She/Her",
+      "B": "He/Him",
+      "C": "She/Her"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-184",
+    "label": "Sexual Orientation",
+    "control": "combobox",
+    "options": [],
+    "intent": "sexual_orientation",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-185",
+    "label": "Do you require any reasonable adjustments?",
+    "control": "combobox",
+    "options": [],
+    "intent": "accommodation",
+    "gold": {
+      "A": "No",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-186",
+    "label": "What pronouns would you like us to use for you?",
+    "control": "text",
+    "options": [],
+    "intent": "pronouns",
+    "gold": {
+      "A": "She/Her",
+      "B": "He/Him",
+      "C": "She/Her"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-187",
+    "label": "Have you ever been employed at Virgin Active before?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-188",
+    "label": "Given that this role requires you to be present at our Buffalo Grove, IL location 2 days each week, do you have reliable means of transportation, and are you willing to commit to this onsite schedule?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-189",
+    "label": "Hybrid work policy",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-190",
+    "label": "Will you be able to come to office 5 times a month?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-191",
+    "label": "Is your gender identity the same as the sex you were assigned at birth?",
+    "control": "combobox",
+    "options": [],
+    "intent": "transgender",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-192",
+    "label": "Which of the following best describes your sexual orientation?",
+    "control": "combobox",
+    "options": [],
+    "intent": "sexual_orientation",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-193",
+    "label": "How old are you?",
+    "control": "combobox",
+    "options": [],
+    "intent": "age",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-194",
+    "label": "What is your highest level of education?",
+    "control": "combobox",
+    "options": [],
+    "intent": "education_level",
+    "gold": {
+      "A": "Bachelor's Degree",
+      "B": "Master's Degree",
+      "C": "Bachelor's Degree"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-195",
+    "label": "Have you ever been employed by Vonage or any other company within the Ericsson Group, including Ericsson, RedBee Media, FYI Television (US), Cradlepoint, Iconectiv (Telcordia), or Emodo?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-196",
+    "label": "Do you now or have you in the past worked for Bottomline Technologies?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-197",
+    "label": "Are you at least 18 years of age (or will be within the next 2 weeks)?",
+    "control": "combobox",
+    "options": [],
+    "intent": "age",
+    "gold": {
+      "A": "Yes",
+      "B": "Yes",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-198",
+    "label": "Have you previously worked at Scion?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-199",
+    "label": "What is your age?",
+    "control": "combobox",
+    "options": [],
+    "intent": "age",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-200",
+    "label": "Which option(s) best describes your sexual orientation (check all that apply)?",
+    "control": "combobox",
+    "options": [],
+    "intent": "sexual_orientation",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-201",
+    "label": "Which option best describes your highest degree or level of education you have completed?",
+    "control": "combobox",
+    "options": [],
+    "intent": "degree",
+    "gold": {
+      "A": "Bachelor of Technology",
+      "B": "Master of Technology",
+      "C": "Bachelor of Arts"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-202",
+    "label": "We are a hybrid team, where in office attendance is required. Are you comfortable commuting to our designated offer 3 times a week?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-203",
+    "label": "Do you identify as transgender? (select one)",
+    "control": "combobox",
+    "options": [],
+    "intent": "transgender",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-204",
+    "label": "Do you have experience in Capital or Investment Banking?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-205",
+    "label": "Have you worked with OTC derivatives, including Fixed Income or Equity underlyings?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-206",
+    "label": "Are you experienced in writing BRDs (Business Requirement Documents) and FSDs (Functional Specification Documents)?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-207",
+    "label": "Do you have practical knowledge of Front-to-Back trade lifecycle, clearing, and settlement processes?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-208",
+    "label": "Birthday",
+    "control": "date",
+    "options": [],
+    "intent": "age",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-209",
+    "label": "Office based role - are you willing to be office based 5 days per week (WFH available up to 30 days per year)",
+    "control": "select",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "Yes",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-210",
+    "label": "College/University",
+    "control": "text",
+    "options": [],
+    "intent": "school",
+    "gold": {
+      "A": "Pune University",
+      "B": "IISc Bangalore",
+      "C": "Mumbai University"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-211",
+    "label": "Do you have experience working with individuals with disabilities? If so, please describe.",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-212",
+    "label": "Do you have experience working in Medicaid-funded and/or human services organizations? If so, please describe.",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-213",
+    "label": "What accounting software systems have you used professionally?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-214",
+    "label": "What is your level of proficiency in Microsoft Excel?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-215",
+    "label": "Do you have 2+ years of full-cycle, accrual-based accounting experience managing multiple clients or entities?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-216",
+    "label": "Have you used QuickBooks Online regularly in a prior role?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-217",
+    "label": "Have you processed AP with Bill.com in a prior role?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-218",
+    "label": "Do you have at least 1 year of recruiting experience?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-219",
+    "label": "What type of ATS and sourcing platforms have you used?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-220",
+    "label": "Are you willing to work in-office 5 days a week?",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-221",
+    "label": "How proficient are you with Microsoft excel?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-222",
+    "label": "Do you have any certifications? If none type N/A",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-223",
+    "label": "This is an office based position. Are you able to commute daily to PO15 5TT?",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-224",
+    "label": "What applicable qualifications do you hold?",
+    "control": "textarea",
+    "options": [],
+    "intent": "degree",
+    "gold": {
+      "A": "Bachelor of Technology",
+      "B": "Master of Technology",
+      "C": "Bachelor of Arts"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-225",
+    "label": "This role requires working on‑site at least three days a week in Wayzata, Minnesota. Are you able to meet this requirement?",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-226",
+    "label": "What industries have you done recruiting in?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-227",
+    "label": "What ATS(s) do you have experience working in?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-228",
+    "label": "What is your full street address? (Street, City, State, Zip)",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "gold": {
+      "A": "12 MG Road",
+      "B": "456 Tech Park Road",
+      "C": "78 Marine Drive"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-229",
+    "label": "Have you ever been employed by Agile Defense or any of its subsidiaries, affiliates, or acquired companies?",
+    "control": "radio",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-230",
+    "label": "What active industry related certifications do you have?",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-231",
+    "label": "What is your current address?",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "gold": {
+      "A": "12 MG Road",
+      "B": "456 Tech Park Road",
+      "C": "78 Marine Drive"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-232",
+    "label": "Do you have at least 3+ years of experience managing major retail accounts in CPG, FMCG or supplements in the UK, Ireland or Europe?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-233",
+    "label": "Have you personally managed a retailer’s supplier or vendor portal (item setup, content updates and performance data) and run promotional planning for that account?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-234",
+    "label": "We operate under a hybrid work schedule, which incudes three days in-person at our office located in the Merchandise Mart, downtown Chicago. Are you able to commit to the commute and be in the office with our team three days a week?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-235",
+    "label": "Are you a current or former employee of Berlin Packaging?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-236",
+    "label": "Do you require an accommodation for the interview process? If yes, please explain.",
+    "control": "textarea",
+    "options": [],
+    "intent": "accommodation",
+    "gold": {
+      "A": "No",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-237",
+    "label": "Are you over the age of 18 ?",
+    "control": "combobox",
+    "options": [],
+    "intent": "age",
+    "gold": {
+      "A": "Yes",
+      "B": "Yes",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-238",
+    "label": "Are you now, or have you ever been employed by Fanatics, Inc. or any of its affiliates or subsidiaries?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-239",
+    "label": "Have you worked for Loenbro or any of its affiliates in the past?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-240",
+    "label": "Are you local and within commuting distance to this job?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-241",
+    "label": "Please list any additional education, training or certifications relevant to the job (ie. OSHA, TWIC, etc.).",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-242",
+    "label": "Will you be able to regularly commute and work in an office in job posting location?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-243",
+    "label": "Do you hold a completed bachelor’s degree?",
+    "control": "combobox",
+    "options": [],
+    "intent": "education_level",
+    "gold": {
+      "A": "Bachelor's Degree",
+      "B": "Master's Degree",
+      "C": "Bachelor's Degree"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-244",
+    "label": "In which environments have you professionally worked on marketing analytics or advertising campaign measurement? Select all that apply. Select “None of the above” only if no other option applies.",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-245",
+    "label": "Which advertising platforms have you personally used to execute campaigns or extract and analyze campaign performance data? Select all that apply. Select “None of the above” only if no other option applies.",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-246",
+    "label": "Which types of campaigns have you professionally analyzed or supported with performance measurement?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-247",
+    "label": "Which activities have you personally performed in a professional marketing analytics role? Select all that apply. Select “None of the above” only if no other option applies.",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-248",
+    "label": "How many years of professional experience do you have analyzing marketing or advertising campaign performance? Exclude academic projects.",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "8"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-249",
+    "label": "Which option best describes your experience communicating analytical findings and managing requests from clients or vendors? Select the highest level you have performed.",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-250",
+    "label": "Which option best describes your professional use of Excel and PowerPoint?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-251",
+    "label": "What is your current English proficiency level?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "Fluent",
+      "B": "Fluent",
+      "C": "Fluent"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-252",
+    "label": "Are you a former LINQ Employee, intern, or contractor?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-253",
+    "label": "How many years of professional experience do you have designing for life sciences, healthcare or hard science companies? Please list 2-3 relevant companies/clients and describe what drew you to work in these sectors.",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-254",
+    "label": "Highest level of education",
+    "control": "radio",
+    "options": [],
+    "intent": "education_level",
+    "gold": {
+      "A": "Bachelor's Degree",
+      "B": "Master's Degree",
+      "C": "Bachelor's Degree"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-255",
+    "label": "How would you best describe your experience owning a product or major product area?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-256",
+    "label": "Full Permanent Address",
+    "control": "textarea",
+    "options": [],
+    "intent": "address",
+    "gold": {
+      "A": "12 MG Road",
+      "B": "456 Tech Park Road",
+      "C": "78 Marine Drive"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-257",
+    "label": "Current address",
+    "control": "text",
+    "options": [],
+    "intent": "address",
+    "gold": {
+      "A": "12 MG Road",
+      "B": "456 Tech Park Road",
+      "C": "78 Marine Drive"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-258",
+    "label": "Are you willing to work onsite?",
+    "control": "text",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-259",
+    "label": "Do you require any adjustments to be made to the recruitment process?",
+    "control": "textarea",
+    "options": [],
+    "intent": "accommodation",
+    "gold": {
+      "A": "No",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-260",
+    "label": "Are you able to work on-site at least 3 days per week in either Thousand Oaks or San Francisco?",
+    "control": "radio",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-261",
+    "label": "Do you have any technical certifications? Please detail",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-262",
+    "label": "How many years have you been active on the platform?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-263",
+    "label": "Do you have experience in the Creator Economy beyond Twitch?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-264",
+    "label": "Are you currently a Twitch employee?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-265",
+    "label": "Are you a current employee with Amazon or any Amazon subsidiary (outside of Twitch)?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-266",
+    "label": "Have you previously been employed by Amazon or any Amazon subsidiary?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-267",
+    "label": "Zip Code / Postal Code (Non-U.S. based candidates, please enter \"00000\")",
+    "control": "text",
+    "options": [],
+    "intent": "postal_code",
+    "gold": {
+      "A": "411001",
+      "B": "560100",
+      "C": "400020"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-268",
+    "label": "Do you have experience building with AI tools? For example: designing and deploying AI agents, automations, or workflows that execute multi-step work.",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-269",
+    "label": "What AI tools have you used to build?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-270",
+    "label": "Do you have direct experience in program management?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-271",
+    "label": "Have you ever, or are you currently working at Gusto or Symmetry in any capacity (ie: employee or contingent worker)?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-272",
+    "label": "I identify as transgender (please select one):",
+    "control": "combobox",
+    "options": [],
+    "intent": "transgender",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-273",
+    "label": "I identify my sexual orientation as (please select one):",
+    "control": "combobox",
+    "options": [],
+    "intent": "sexual_orientation",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-274",
+    "label": "The person in this role is required to live within 50 miles (80 km) commuting distance of the office where the role is listed. Are you currently based within 50 miles of the job location, or able to relocate there before your start date?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-275",
+    "label": "Do you acknowledge that this is a hybrid role based in San Francisco, New York and/or Chicago and you will be required to come into the office four days a week?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-276",
+    "label": "I identify my sexual orientation as:",
+    "control": "combobox",
+    "options": [],
+    "intent": "sexual_orientation",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-277",
+    "label": "I consider myself a member of the LGBTQ+ community.",
+    "control": "combobox",
+    "options": [],
+    "intent": "sexual_orientation",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-278",
+    "label": "Do you have experience in B2B sales, business development, or sales development, including at least 1 year of hands-on outbound prospecting?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-279",
+    "label": "This role is based in Singapore and focuses primarily on Australia and New Zealand. Have you sold or prospected into these markets before",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-280",
+    "label": "Pronouns (the pronouns you use)",
+    "control": "text",
+    "options": [],
+    "intent": "pronouns",
+    "gold": {
+      "A": "She/Her",
+      "B": "He/Him",
+      "C": "She/Her"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-281",
+    "label": "Do you consider yourself a member of the Lesbian, Gay, Bisexual, Transgender, Queer/Questioning Community?",
+    "control": "combobox",
+    "options": [],
+    "intent": "sexual_orientation",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-282",
+    "label": "Do you have a minimum of one to three years of experience closing sales in a SaaS (Software as a Service) environment?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-283",
+    "label": "Are you able and willing to join us in the office 3 days/week?",
+    "control": "combobox",
+    "options": [],
+    "intent": "onsite",
+    "gold": {
+      "A": "Yes",
+      "B": "ASK",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-284",
+    "label": "What are your pronouns?",
+    "control": "text",
+    "options": [],
+    "intent": "pronouns",
+    "gold": {
+      "A": "She/Her",
+      "B": "He/Him",
+      "C": "She/Her"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-285",
+    "label": "What college/university do you attend?",
+    "control": "text",
+    "options": [],
+    "intent": "school",
+    "gold": {
+      "A": "Pune University",
+      "B": "IISc Bangalore",
+      "C": "Mumbai University"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-286",
+    "label": "Please describe any need for a reasonable accommodation for this hiring process (no documentation required).",
+    "control": "text",
+    "options": [],
+    "intent": "accommodation",
+    "gold": {
+      "A": "No",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-287",
+    "label": "Please share your gender pronouns.",
+    "control": "combobox",
+    "options": [],
+    "intent": "pronouns",
+    "gold": {
+      "A": "She/Her",
+      "B": "He/Him",
+      "C": "She/Her"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-288",
+    "label": "Do you have an advanced english level (writing, listening, speaking)?",
+    "control": "combobox",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "Yes",
+      "B": "Yes",
+      "C": "Yes"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-289",
+    "label": "Have you been employed by Lyft, or any subsidiary, affiliate, or business unit of Lyft, in the past (whether on a full-time or part-time basis)?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-290",
+    "label": "Zip / postal code",
+    "control": "text",
+    "options": [],
+    "intent": "postal_code",
+    "gold": {
+      "A": "411001",
+      "B": "560100",
+      "C": "400020"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-291",
+    "label": "Are you currently, or have you previously, worked for Instacart?",
+    "control": "combobox",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-292",
+    "label": "Which state or province do you currently live in?",
+    "control": "combobox",
+    "options": [],
+    "intent": "state",
+    "gold": {
+      "A": "Maharashtra",
+      "B": "Karnataka",
+      "C": "Maharashtra"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-293",
+    "label": "Do you have 4+ years of experience in account management, digital advertising, paid media, ad operations, ecommerce, client services, or a related field?",
+    "control": "combobox",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-294",
+    "label": "Do you identify as a member of the LGBT2QIA+ community?",
+    "control": "combobox",
+    "options": [],
+    "intent": "sexual_orientation",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-295",
+    "label": "Please elaborate on your experience building software in AWS (with Terraform)",
+    "control": "textarea",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-296",
+    "label": "What B2B SaaS companies have you been part of?",
+    "control": "text",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-297",
+    "label": "Preferred Pronouns",
+    "control": "text",
+    "options": [],
+    "intent": "pronouns",
+    "gold": {
+      "A": "She/Her",
+      "B": "He/Him",
+      "C": "She/Her"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-298",
+    "label": "Language Skill(s) (Check all that apply)",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-299",
+    "label": "Which university are you currently attending or did you last attend? Please select \"Other (School Not Listed)\" if your school is not listed.",
+    "control": "select",
+    "options": [],
+    "intent": "school",
+    "gold": {
+      "A": "Pune University",
+      "B": "IISc Bangalore",
+      "C": "Mumbai University"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-300",
+    "label": "Have you ever been previously employed by Spotify?",
+    "control": "checkbox_group",
+    "options": [],
+    "intent": "previous_employee",
+    "gold": {
+      "A": "ASK",
+      "B": "No",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-301",
+    "label": "Please share your time zone.",
+    "control": "text",
+    "options": [],
+    "intent": "timezone",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-302",
+    "label": "Do you currently hold an active CPA license?",
+    "control": "radio",
+    "options": [],
+    "intent": "skills_experience",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "No"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-303",
+    "label": "1. What is your level of spoken English? Do you have experience working or communicating in international teams?",
+    "control": "text",
+    "options": [],
+    "intent": "language_proficiency",
+    "gold": {
+      "A": "Fluent",
+      "B": "Fluent",
+      "C": "Fluent"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-304",
+    "label": "By selecting yes to this question you confirm that you have read Esri’s Applicant Privacy Notice.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-305",
+    "label": "I confirm that my application details, including work history, education, and former Ebury employment status, are accurate and truthful. I understand that providing false, misleading, or omitted information may result in the rejection of my application or the withdrawal of any employment offer.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-306",
+    "label": "By checking this box, I agree to allow Ebury to retain my data for future opportunities for employment for up to 365 days after the conclusion of consideration of my current application for employment.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-307",
+    "label": "By checking this box, I consent to Smartsheet collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-308",
+    "label": "Concordo que os dados pessoais serão coletados, tratados e compartilhados pelo Grupo Inter nos termos da Politica de Privacidade do Grupo Inter disponível para consulta, a qualquer tempo, por meio do site https://www.bancointer.com.br/politica-de-privacidade/. Ainda, o Inter esclarecerá suas dúvidas relacionadas à privacidade pelo e-mail privacidade@inter.co",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-309",
+    "label": "We use Metaview to help our interviewers focus on the conversation instead of taking notes. Do you consent to Metaview transcribing our interviews? Metaview privacy policy: https://www.metaview.ai/privacy-policy",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-310",
+    "label": "Applicant Privacy Policy",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-311",
+    "label": "I acknowledge that I have reviewed and understood the Applicant Privacy Policy (link below).",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-312",
+    "label": "By checking this box, I consent to Asana collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-313",
+    "label": "Candidate Notice: Please read and accept the Global Personal Data Privacy Notice for Candidates.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-314",
+    "label": "By checking this box, I agree to allow Veeam Software to store and process my data for the purpose of considering my eligibility regarding my current application for employment.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-315",
+    "label": "By checking this box, I agree to allow Jensen Hughes to store and process my data for the purpose of considering my eligibility regarding my current application for employment.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-316",
+    "label": "If selected, I understand that completing a CLEAR verification check is required prior to receiving an offer of employment.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-317",
+    "label": "Yes, Magnet Forensics can contact me about future job opportunities for up to 1 year Privacy policy",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-318",
+    "label": "Yes, Sophos can contact me about future job opportunities for up to 1 year Privacy policy",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-319",
+    "label": "I understand",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-320",
+    "label": "Do you consent to Socure processing your data to verify your identity under Socure's Recruiting Privacy Policy?",
+    "control": "radio",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-321",
+    "label": "By checking this box, I consent to MongoDB collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-322",
+    "label": "By selecting \"I agree\", I understand that the information I have provided as part of this job application will be processed in accordance with Toast's Applicant Privacy Statement.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-323",
+    "label": "Reconozco recepción y acepto el Aviso de Privacidad de Airbnb. (I acknowledge receipt and accept the Airbnb Privacy Notice.)",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-324",
+    "label": "By selecting 'I acknowledge' and submitting this application, you confirm that you have read Elastic's Candidate Privacy Statement and understand how your data will be processed to evaluate your candidacy. In jurisdictions where consent is legally required, your submission constitutes express consent to the processing of your personal data for recruitment purposes.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-325",
+    "label": "By checking this box, I consent to Twilio collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-326",
+    "label": "I confirm, that I have read the Celonis Privacy Notice for the handling of my personal data in the application process.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-327",
+    "label": "I confirm the information provided in this application, including but not limited to my resume and the above information, is true and correct. I understand that false statements or material omissions of any kind during the hiring process may result in the rescinding of any offer of employment or dismissal once employed.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-328",
+    "label": "By checking this box, I consent to Celonis collecting, storing, and processing my responses to the demographic data surveys above.",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-329",
+    "label": "I understand that Coinbase may use AI tools to assist in the application and interview process.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-330",
+    "label": "By submitting my application, I acknowledge that I have read and understand Vercel’s Job Applicant Privacy Notice - https://vercel.com/legal/job-applicant-privacy-notice",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-331",
+    "label": "If you agree with our Privacy Policy, please check the box below. Our Privacy Policy is available at www.zeta.tech/in/careers/privacy_policy",
+    "control": "select",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-332",
+    "label": "Yes, Mindtickle can contact me about future job opportunities for up to 2 years Privacy policy",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-333",
+    "label": "What is your Notice Period?",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-334",
+    "label": "If the answer to the question above is yes, what is the length of the notice period?",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-335",
+    "label": "What's your notice period? (In days)",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-336",
+    "label": "What is your notice period?",
+    "control": "textarea",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-337",
+    "label": "What is your available start date?",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-338",
+    "label": "What is your notice period to begin working with Magnet Forensics?",
+    "control": "select",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-339",
+    "label": "What is your notice period (in days)? (mention 0 if immediately available)",
+    "control": "select",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-340",
+    "label": "What is your notice period and when would you be available to start?",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-341",
+    "label": "If offered a position, what is your ideal start-date?",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-342",
+    "label": "What is your required notice period?",
+    "control": "radio",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-343",
+    "label": "How many days is your notice period?",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-344",
+    "label": "What is your notice period/ availability?",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-345",
+    "label": "How long is your Notice Period?",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-346",
+    "label": "Notice period Current notice period duration: Earliest possible joining date:",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-347",
+    "label": "Notice Period",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-348",
+    "label": "What is your current notice period?",
+    "control": "radio",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-349",
+    "label": "Notice Period (In days)",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-350",
+    "label": "Para tornar nosso processo seletivo ainda mais eficiente, o Inter utiliza um sistema de inteligência artificial (IA), que nos auxilia a analisar a transcrição das entrevistas realizadas com candidatos que participam dos processos seletivos. Dessa forma, conseguimos registrar com mais precisão as informações fornecidas pelos candidatos, facilitando a análise das competências que buscamos. Destacamos que o sistema de inteligência artificial utilizado pelo Inter serve apenas como uma ferramenta de apoio nos processos seletivos. As tomadas de decisão sempre são realizadas por pessoas. Ao selecionar o campo abaixo, você autoriza que o Inter utilize sistema de inteligência artificial para transcrição da(s) entrevista(s) e utilize os dados fornecidos na entrevista transcrita, no currículo e no processo de inscrição para analisar se suas competências estão alinhadas com o que buscamos neste processo seletivo. Informamos, ainda, que o sistema de inteligência artificial não utilizará dados sensíveis para análise de suas competências. Além disso, reforçamos que você poderá, a qualquer tempo, exercer seus direitos previstos na Lei Geral de Proteção de Dados Pessoais (LGPD), inclusive o direito de revogar o consentimento e solicitar revisão das análises realizadas por inteligência artificial. Para exercer direitos relacionados à privacidade e/ou determinar suas preferências no tratamento dos seus dados pessoais pelo Inter, você pode acessar gratuitamente a Central de Privacidade no Super App, e/ou entrar em contato conosco através do e-mail \"privacidade@inter.co\". Por fim, reforçamos que você pode optar por não fornecer o consentimento, sem que isso gere qualquer tipo de prejuízo na sua candidatura a este processo seletivo. Caso tenha alguma dúvida sobre como o Inter trata os seus dados pessoais, consulte a nossa Política de Privacidade.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-351",
+    "label": "Acknowledge/Confirm",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-352",
+    "label": "What is your preferred name?",
+    "control": "text",
+    "options": [],
+    "intent": "firstName",
+    "gold": {
+      "A": "Asha",
+      "B": "Rohan",
+      "C": "Priya"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-353",
+    "label": "Nome da empresa",
+    "control": "text",
+    "options": [],
+    "intent": "currentCompany",
+    "gold": {
+      "A": "ASK",
+      "B": "Flipkart",
+      "C": "Acme Media"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-354",
+    "label": "AI Policy for Application",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-355",
+    "label": "Please read the arbitration agreement below",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-356",
+    "label": "Agreement to Arbitrate",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-357",
+    "label": "Preferred Name",
+    "control": "text",
+    "options": [],
+    "intent": "firstName",
+    "gold": {
+      "A": "Asha",
+      "B": "Rohan",
+      "C": "Priya"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-358",
+    "label": "Do you consent to receiving follow up communication via text message (or SMS message) regarding your application to the phone number you provided?",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-359",
+    "label": "Acknowledge/Accept",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-360",
+    "label": "When are you available to start a new position?",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-361",
+    "label": "Date Available",
+    "control": "text",
+    "options": [],
+    "intent": "notice_period",
+    "gold": {
+      "A": "Immediate",
+      "B": "30 days",
+      "C": "60 days"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-362",
+    "label": "From where do you intend to work?",
+    "control": "text",
+    "options": [],
+    "intent": "location",
+    "gold": {
+      "A": "Pune",
+      "B": "Bangalore",
+      "C": "Mumbai"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-363",
+    "label": "Processing of Personal Data",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-364",
+    "label": "AI Policy for Interviewers",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-365",
+    "label": "To ensure we can focus fully on our conversation, we use BrightHire to record and transcribe interviews. This helps us get to know you better without the distraction of note-taking. We also use BrightHire to help us analyze interview notes and for internal Stripe interview quality training and assurance purposes. After the recruitment process ends, recordings may be shared internally for recruiter and interviewer training to help us improve our interview processes. Please confirm if you consent to BrightHire being enabled for this interview and for your personal data to be collected and processed for the purposes mentioned above, by responding below",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-366",
+    "label": "Acknowledge",
+    "control": "checkbox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-367",
+    "label": "Company name",
+    "control": "text",
+    "options": [],
+    "intent": "currentCompany",
+    "gold": {
+      "A": "ASK",
+      "B": "Flipkart",
+      "C": "Acme Media"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-368",
+    "label": "Please double-check all the information provided above. Ensuring accuracy is crucial, as any errors or omissions may impact the review of your application.",
+    "control": "combobox",
+    "options": [],
+    "intent": "consent",
+    "gold": {
+      "A": "ASK",
+      "B": "ASK",
+      "C": "ASK"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-369",
+    "label": "Country",
+    "control": "combobox",
+    "options": [],
+    "intent": "country",
+    "gold": {
+      "A": "India",
+      "B": "India",
+      "C": "India"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-370",
+    "label": "País",
+    "control": "combobox",
+    "options": [],
+    "intent": "country",
+    "gold": {
+      "A": "India",
+      "B": "India",
+      "C": "India"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-371",
+    "label": "Country of Residence",
+    "control": "combobox",
+    "options": [],
+    "intent": "country",
+    "gold": {
+      "A": "India",
+      "B": "India",
+      "C": "India"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-372",
+    "label": "Please enter the country you are legally registered to work in.",
+    "control": "text",
+    "options": [],
+    "intent": "country",
+    "gold": {
+      "A": "India",
+      "B": "India",
+      "C": "India"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-373",
+    "label": "Please select the country where you currently reside.",
+    "control": "combobox",
+    "options": [],
+    "intent": "country",
+    "gold": {
+      "A": "India",
+      "B": "India",
+      "C": "India"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-374",
+    "label": "Please choose the country in which you are located.",
+    "control": "combobox",
+    "options": [],
+    "intent": "country",
+    "gold": {
+      "A": "India",
+      "B": "India",
+      "C": "India"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-375",
+    "label": "What is your current country of residence?",
+    "control": "combobox",
+    "options": [],
+    "intent": "country",
+    "gold": {
+      "A": "India",
+      "B": "India",
+      "C": "India"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-376",
+    "label": "What is your current or most recent employer?",
+    "control": "text",
+    "options": [],
+    "intent": "currentCompany",
+    "gold": {
+      "A": "ASK",
+      "B": "Flipkart",
+      "C": "Acme Media"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-377",
+    "label": "Current Company",
+    "control": "text",
+    "options": [],
+    "intent": "currentCompany",
+    "gold": {
+      "A": "ASK",
+      "B": "Flipkart",
+      "C": "Acme Media"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-378",
+    "label": "Current company",
+    "control": "text",
+    "options": [],
+    "intent": "currentCompany",
+    "gold": {
+      "A": "ASK",
+      "B": "Flipkart",
+      "C": "Acme Media"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-379",
+    "label": "Most Recent Employer",
+    "control": "text",
+    "options": [],
+    "intent": "currentCompany",
+    "gold": {
+      "A": "ASK",
+      "B": "Flipkart",
+      "C": "Acme Media"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-380",
+    "label": "Current company name",
+    "control": "text",
+    "options": [],
+    "intent": "currentCompany",
+    "gold": {
+      "A": "ASK",
+      "B": "Flipkart",
+      "C": "Acme Media"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-381",
+    "label": "Please list your most recent Employer here.",
+    "control": "text",
+    "options": [],
+    "intent": "currentCompany",
+    "gold": {
+      "A": "ASK",
+      "B": "Flipkart",
+      "C": "Acme Media"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-382",
+    "label": "Email",
+    "control": "text",
+    "options": [],
+    "intent": "email",
+    "gold": {
+      "A": "asha@example.com",
+      "B": "rohan@example.com",
+      "C": "priya@example.com"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-383",
+    "label": "E-mail",
+    "control": "text",
+    "options": [],
+    "intent": "email",
+    "gold": {
+      "A": "asha@example.com",
+      "B": "rohan@example.com",
+      "C": "priya@example.com"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-384",
+    "label": "Please enter your personal email ID (If you havent already)",
+    "control": "text",
+    "options": [],
+    "intent": "email",
+    "gold": {
+      "A": "asha@example.com",
+      "B": "rohan@example.com",
+      "C": "priya@example.com"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-385",
+    "label": "What is your total work experience?",
+    "control": "combobox",
+    "options": [],
+    "intent": "experienceYears",
+    "gold": {
+      "A": "2",
+      "B": "5",
+      "C": "8"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-386",
+    "label": "Total Years of Experience",
+    "control": "text",
+    "options": [],
+    "intent": "experienceYears",
+    "gold": {
+      "A": "2",
+      "B": "5",
+      "C": "8"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-387",
+    "label": "First Name",
+    "control": "text",
+    "options": [],
+    "intent": "firstName",
+    "gold": {
+      "A": "Asha",
+      "B": "Rohan",
+      "C": "Priya"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-388",
+    "label": "Preferred First Name",
+    "control": "text",
+    "options": [],
+    "intent": "firstName",
+    "gold": {
+      "A": "Asha",
+      "B": "Rohan",
+      "C": "Priya"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-389",
+    "label": "Legal First Name",
+    "control": "textarea",
+    "options": [],
+    "intent": "firstName",
+    "gold": {
+      "A": "Asha",
+      "B": "Rohan",
+      "C": "Priya"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-390",
+    "label": "Nome",
+    "control": "text",
+    "options": [],
+    "intent": "firstName",
+    "gold": {
+      "A": "Asha",
+      "B": "Rohan",
+      "C": "Priya"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-391",
+    "label": "First name",
+    "control": "text",
+    "options": [],
+    "intent": "firstName",
+    "gold": {
+      "A": "Asha",
+      "B": "Rohan",
+      "C": "Priya"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-392",
+    "label": "Last Name",
+    "control": "text",
+    "options": [],
+    "intent": "lastName",
+    "gold": {
+      "A": "Verma",
+      "B": "Sharma",
+      "C": "Nair"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-393",
+    "label": "Legal Last Name",
+    "control": "textarea",
+    "options": [],
+    "intent": "lastName",
+    "gold": {
+      "A": "Verma",
+      "B": "Sharma",
+      "C": "Nair"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-394",
+    "label": "Sobrenome",
+    "control": "text",
+    "options": [],
+    "intent": "lastName",
+    "gold": {
+      "A": "Verma",
+      "B": "Sharma",
+      "C": "Nair"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-395",
+    "label": "Preferred Last Name",
+    "control": "text",
+    "options": [],
+    "intent": "lastName",
+    "gold": {
+      "A": "Verma",
+      "B": "Sharma",
+      "C": "Nair"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-396",
+    "label": "Last Name / Surname",
+    "control": "text",
+    "options": [],
+    "intent": "lastName",
+    "gold": {
+      "A": "Verma",
+      "B": "Sharma",
+      "C": "Nair"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-397",
+    "label": "Last name",
+    "control": "text",
+    "options": [],
+    "intent": "lastName",
+    "gold": {
+      "A": "Verma",
+      "B": "Sharma",
+      "C": "Nair"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-398",
+    "label": "Location (City)",
+    "control": "combobox",
+    "options": [],
+    "intent": "location",
+    "gold": {
+      "A": "Pune",
+      "B": "Bangalore",
+      "C": "Mumbai"
+    },
+    "reachable": true
+  },
+  {
+    "id": "gold-399",
+    "label": "Where are you located?",
+    "control": "text",
+    "options": [],
+    "intent": "location",
+    "gold": {
+      "A": "Pune",
+      "B": "Bangalore",
+      "C": "Mumbai"
+    },
+    "reachable": true
+  }
+]

@@ -2,24 +2,32 @@
 
 import type {
   AnswerEntry, ApplicationRecord, Detection, FeedJob, FieldResult, FitResult, Message, Mode, Profile, ProfileKey, QueueItem,
-  QueueStatus, QuickFacts, RunReport, Settings, WorkEntry,
+  QueueStatus, QuickFacts, RunReport, Settings, WorkEntry, UserCorrection, SkillEntry, LanguageEntry,
 } from "../shared/types";
 import {
-  EMPTY_PROFILE, isQueueRunning, loadAnswers, loadApplications, loadProfile, loadQueue, loadSettings, saveAnswers,
-  saveProfile, saveSettings, updateAnswers, updateApplications, upsertAnswer,
+  EMPTY_PROFILE, isQueueRunning, loadAnswers, loadApplications, loadCandidateProfiles, loadProfile, loadQueue, loadSettings, saveAnswers,
+  saveProfile, saveSettings, switchProfile, updateAnswers, updateApplications, upsertAnswer,
+  loadCorrections,
 } from "../shared/storage";
 import { pendingSubmission, sendToApplication } from "../shared/frames";
 import { isValidJobUrl, parseJobList } from "../background/queue";
 import { GOOD_MATCH, parseFeed, rankFeed } from "../shared/fit";
 import { aiStatus, checkDraft, draftAnswer } from "../shared/ai";
-import { activate, buyUrl, currentLicense, licensingConfigured, remainingSubmissions, submittedThisMonth } from "../shared/license";
+import { activate, buyUrl, currentLicense, isLifetimeLicense, licensingConfigured, remainingSubmissions, submittedThisMonth } from "../shared/license";
 import { FREE_MONTHLY_SUBMISSIONS, SUPPORT_EMAIL } from "../shared/config";
 import { hydrateIcons, icon } from "./icons";
 import { NEVER_REMEMBER, type PendingQuestion } from "../shared/types";
 import { findAnswer, questionKey } from "../content/classify";
+import { isAppliedBeforeQuestion } from "../content/facts";
 import { HANDS_OFF_MESSAGE, isHandsOff, platformFor } from "../shared/platforms";
 import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shared/backup";
+import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
+import { isPrivacyConsentCheckbox } from "../shared/consent";
+import { findSuggestedCorrection } from "../shared/corrections";
 import { buildDiagnostic } from "../shared/diagnostic";
+
+let cachedCorrections: UserCorrection[] = [];
+void loadCorrections().then((c) => { cachedCorrections = c; });
 
 // --- DOM helpers ----------------------------------------------------------------------------------
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -456,7 +464,7 @@ const FIELD_CHIP: Record<FieldResult["status"], [string, string]> = {
 /** The line under a field in "Field details": the value it gets (so the user can check it), what the site already
  * put there, or why it was not filled. */
 function fieldNote(r: FieldResult): string {
-  const value = r.decision.kind === "profile" || r.decision.kind === "answer" || r.decision.kind === "work" ? r.decision.value
+  const value = r.decision.kind === "profile" || r.decision.kind === "answer" || r.decision.kind === "work" || r.decision.kind === "draft" ? r.decision.value
     : r.decision.kind === "resume" ? "your resume file" : "";
   const short = (text: string) => (text.length > 80 ? `${text.slice(0, 79)}…` : text);
   if (r.review) return r.detail ?? "";
@@ -499,6 +507,7 @@ function answerInput(r: FieldResult): HTMLInputElement | HTMLSelectElement | HTM
 
 interface CardContext {
   job: { title: string; company: string };
+  corrections?: UserCorrection[];
   /** After an answer is saved (re-run the form, or retry waiting queue jobs). */
   onSaved: () => Promise<void>;
   /** Scroll to the field on the page, when the page is open. */
@@ -515,14 +524,17 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   const sensitive = r.decision.kind === "ask" && r.decision.reason === "sensitive";
   const youOnly = topic !== undefined && NEVER_REMEMBER.has(topic);
   const upload = r.field.control === "file";
+  const appliedBefore = isAppliedBeforeQuestion(r.field.label);
+  const onPageOnly = youOnly || upload || appliedBefore;
   const why = youOnly ? NEVER_TEXT[topic!]!
     : upload ? "Attach this file yourself on the page. ApplyAgent only attaches your resume."
-      : sensitive ? "Sensitive: only you answer this. Saved for this topic."
-        : r.decision.kind === "ask" && r.decision.reason === "missing_profile_value" ? "Missing from your profile."
-          : r.status === "failed" ? `Could not fill: ${r.detail ?? "unknown reason"}` : "New question: answer once, reused next time.";
+      : appliedBefore ? "Company-specific: answer it on the page."
+        : sensitive ? "Sensitive: only you answer this. Saved for this topic."
+          : r.decision.kind === "ask" && r.decision.reason === "missing_profile_value" ? "Missing from your profile."
+            : r.status === "failed" ? `Could not fill: ${r.detail ?? "unknown reason"}` : "New question: answer once, reused next time.";
   const whyRow = h("span", { class: "question-why" });
-  whyRow.append(icon(youOnly ? "lock" : sensitive ? "shield" : upload ? "upload" : "info", 14), h("span", {}, why));
-  const card = h("div", { class: `question${sensitive || youOnly ? " sensitive" : ""}` },
+  whyRow.append(icon(youOnly ? "lock" : appliedBefore ? "lock" : sensitive ? "shield" : upload ? "upload" : "info", 14), h("span", {}, why));
+  const card = h("div", { class: `question${sensitive || youOnly || appliedBefore ? " sensitive" : ""}` },
     h("div", { class: "question-title" }, (r.field.label && questionKey(r.field)) || "(unlabelled field)"), whyRow);
   const foot = h("div", { class: "question-foot" });
   const left = h("div", { class: "button-row" });
@@ -531,7 +543,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     show.addEventListener("click", ctx.showOnPage);
     left.append(show);
   }
-  if (youOnly || upload) {
+  if (onPageOnly) {
     // Nothing to type here: the user acts on the page itself.
     foot.append(left);
     card.append(foot);
@@ -541,6 +553,22 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   const input = answerInput(r);
   if (r.field.maxLength && !(input instanceof HTMLSelectElement)) input.maxLength = r.field.maxLength;
   card.append(input);
+  const suggested = findSuggestedCorrection(ctx.corrections ?? [], r.field.label);
+  if (suggested && suggested.count === 1 && !onPageOnly) {
+    const chipBtn = button(`Use previous correction: "${suggested.answer}"`, {
+      variant: "ghost",
+      size: "sm",
+      icon: "wand",
+    });
+    chipBtn.style.marginTop = "4px";
+    chipBtn.style.marginBottom = "4px";
+    chipBtn.addEventListener("click", () => {
+      input.value = suggested.answer;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    card.append(chipBtn);
+  }
   // AI drafts only for new free-text questions, never for sensitive ones, and always for review.
   const textual = !r.field.options.length && ["text", "textarea"].includes(r.field.control);
   if (textual && r.decision.kind === "ask" && r.decision.reason === "unknown") {
@@ -584,6 +612,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     }
     const entry: AnswerEntry = { question: questionKey(r.field), answer: value, topic, updatedAt: new Date().toISOString() };
     busy(save, true);
+    // An answer to a question ApplyAgent asked goes straight to the answer bank; only edits of filled fields are corrections.
     await updateAnswers((answers) => upsertAnswer(answers, entry));
     await ctx.onSaved();
     busy(save, false);
@@ -599,10 +628,32 @@ function renderQuestions(report: RunReport): void {
   const pending = report.fields.filter((f) => f.status === "needs_user" || (f.status === "failed" && f.field.required));
   if (!pending.length) return;
   box.append(h("p", { class: "section-label" }, `Needs your answer · ${pending.length}`));
+  const corrections = cachedCorrections;
+
+  const hasConsent = pending.some((f) => f.field.control === "checkbox" && isPrivacyConsentCheckbox(f.field.label));
+  if (hasConsent) {
+    const consentBtn = button("Tick the privacy/data-processing consent boxes on this page", {
+      variant: "secondary",
+      icon: "check",
+    });
+    consentBtn.id = "tick-consent";
+    consentBtn.style.marginBottom = "8px";
+    consentBtn.style.width = "100%";
+    consentBtn.addEventListener("click", async () => {
+      busy(consentBtn, true);
+      const res = (await send({ type: "TICK_CONSENT" })) as { count?: number } | undefined;
+      const count = res?.count ?? 0;
+      toast(count > 0 ? `Ticked ${count} privacy consent box${count === 1 ? "" : "es"}` : "No privacy consent boxes found to tick");
+      await run();
+      busy(consentBtn, false);
+    });
+    box.append(consentBtn);
+  }
   const job = { title: report.jobTitle, company: companyFromUrl(report.url) };
   for (const r of pending) {
     box.append(questionCard(r, {
       job,
+      corrections,
       onSaved: async () => {
         toast("Answer saved");
         await run(); // re-run: the new answer is filled, nothing else is overwritten
@@ -828,13 +879,23 @@ const PROFILE_GROUPS: Array<{ title: string; fields: Array<[ProfileKey, string, 
     ["firstName", "First name", "text"], ["lastName", "Last name", "text"], ["email", "Email", "email"],
     ["phone", "Phone", "tel"], ["location", "City", "text"], ["country", "Country", "text"],
   ] },
+  { title: "Address & Location", fields: [
+    ["addressLine1", "Address line 1", "text", true],
+    ["addressLine2", "Address line 2 (apt, suite)", "text", true],
+    ["state", "State / Province", "text"],
+    ["postalCode", "Postal / ZIP code", "text"],
+    ["timezone", "Timezone (e.g. IST, UTC)", "text"],
+  ] },
   { title: "Links", fields: [
     ["linkedin", "LinkedIn URL", "url", true], ["github", "GitHub URL", "url"], ["portfolio", "Portfolio / website", "url"],
+    ["resumeUrl", "Resume Drive / Cloud link", "url", true],
   ] },
   { title: "Experience & education", fields: [
     ["currentTitle", "Current title", "text"], ["currentCompany", "Current company", "text"],
     ["experienceYears", "Total years of experience", "text"], ["graduationYear", "Graduation year", "text"],
-    ["school", "School / university", "text", true], ["degree", "Degree", "text"], ["discipline", "Field of study", "text"],
+    ["school", "School / university", "text", true], ["degree", "Degree", "text"],
+    ["educationLevel", "Education level (e.g. Bachelor's, Master's)", "text"],
+    ["discipline", "Field of study", "text"],
   ] },
   { title: "Job preferences", fields: [
     ["targetRoles", "Target roles (comma-separated)", "text", true],
@@ -855,15 +916,37 @@ async function renderProfile(): Promise<void> {
   profile = await loadProfile();
   const form = $("profile-form");
   form.replaceChildren();
+
+  const candidateProfiles = await loadCandidateProfiles();
+  if (candidateProfiles.length > 1) {
+    const select = h("select", { class: "input" });
+    for (const cp of candidateProfiles) {
+      const opt = h("option", { value: cp.id }, `${cp.name}${cp.targetRole ? ` · ${cp.targetRole}` : ""}`);
+      if (cp.profile.email === profile.email && cp.profile.targetRoles === profile.targetRoles) opt.selected = true;
+      select.append(opt);
+    }
+    select.addEventListener("change", async () => {
+      await switchProfile((select as HTMLSelectElement).value);
+      toast("Persona switched");
+      await renderProfile();
+    });
+    form.append(h("div", { class: "card profile-switch-card" },
+      h("div", { class: "card-head" }, h("h2", {}, "Active Persona"), h("span", { class: "chip accent" }, "Pro")),
+      h("label", { class: "field-label" }, "Switch Candidate Profile", select),
+    ));
+  }
+
   for (const group of PROFILE_GROUPS) {
     const grid = h("div", { class: "form-grid" });
     for (const [key, label, type, full] of group.fields) {
       const input = h("input", { class: "input", type, name: key, autocomplete: "off" });
-      input.value = profile[key];
+      input.value = profile[key] ?? "";
       grid.append(h("label", { class: `field-label${full ? " span-2" : ""}` }, label, input));
     }
     form.append(h("div", { class: "card" }, h("div", { class: "card-head" }, h("h2", {}, group.title)), grid));
   }
+  form.append(skillsCard(profile.skillsInventory ?? [], profile.skillsComplete ?? false));
+  form.append(languagesCard(profile.languages ?? [], profile.languagesComplete ?? false));
   form.append(workCard(profile.workHistory ?? []));
   showResume(profile.resume ? profile.resume.name : "Upload your resume (PDF or DOCX, max 5 MB)", !!profile.resume);
 }
@@ -914,10 +997,14 @@ function workCard(entries: WorkEntry[]): HTMLElement {
   entries.forEach((e, i) => list.append(workRow(e, i)));
   const add = button("Add a job", { variant: "ghost", icon: "plus", size: "sm" });
   add.id = "add-job";
+  const completeCheck = h("input", { type: "checkbox", id: "work-history-complete" }) as HTMLInputElement;
+  completeCheck.checked = !!profile.workHistoryComplete;
   const card = h("div", { class: "card" },
     h("div", { class: "card-head" }, h("h2", {}, "Work history"), h("span", { class: "muted" }, "Newest first")),
     h("p", { class: "hint" }, "Used for \"Work experience\" sections that ask for each job. Without it, your current job above is used."),
-    list, add);
+    list, add,
+    h("label", { class: "check-label span-2", style: "margin-top: 10px; display: flex; align-items: center; gap: 8px;" },
+      completeCheck, "My work history is complete (answer \"No\" to previous employer checks)"));
   add.addEventListener("click", () => {
     list.append(workRow({ title: "", company: "", location: "", start: "", end: "", current: false, summary: "" }, list.children.length));
     renumberWork(card);
@@ -925,6 +1012,114 @@ function workCard(entries: WorkEntry[]): HTMLElement {
   });
   queueMicrotask(() => renumberWork(card));
   return card;
+}
+
+function skillsCard(entries: SkillEntry[] = [], isComplete = false): HTMLElement {
+  const list = h("div", { class: "stack", id: "skills-list" });
+  const row = (name = "", years = 1, level = "Intermediate") => {
+    const nameInput = h("input", { class: "input", type: "text", "data-skill": "name", placeholder: "Skill name (e.g. Python)", autocomplete: "off" }) as HTMLInputElement;
+    nameInput.value = name;
+    const yearsInput = h("input", { class: "input", type: "number", min: "0", max: "50", "data-skill": "years", placeholder: "Years" }) as HTMLInputElement;
+    yearsInput.value = String(years);
+    const levelSelect = h("select", { class: "input", "data-skill": "level" },
+      h("option", { value: "Beginner" }, "Beginner"),
+      h("option", { value: "Intermediate" }, "Intermediate"),
+      h("option", { value: "Advanced" }, "Advanced"),
+      h("option", { value: "Expert" }, "Expert"),
+    ) as HTMLSelectElement;
+    levelSelect.value = level;
+    const remove = iconButton("trash", "Remove skill", true);
+    const wrap = h("div", { class: "work-row skill-row", style: "display: grid; grid-template-columns: 2fr 1fr 1.5fr auto; gap: 8px; align-items: end;" },
+      h("label", { class: "field-label" }, "Skill", nameInput),
+      h("label", { class: "field-label" }, "Years", yearsInput),
+      h("label", { class: "field-label" }, "Proficiency", levelSelect),
+      remove,
+    );
+    remove.addEventListener("click", () => wrap.remove());
+    return wrap;
+  };
+  entries.forEach((s) => list.append(row(s.name, s.years, s.level || "Intermediate")));
+
+  const add = button("Add skill", { variant: "ghost", icon: "plus", size: "sm" });
+  add.id = "add-skill";
+  add.addEventListener("click", () => {
+    const newRow = row();
+    list.append(newRow);
+    newRow.querySelector<HTMLInputElement>("input")?.focus();
+  });
+
+  const completeCheck = h("input", { type: "checkbox", id: "skills-complete" }) as HTMLInputElement;
+  completeCheck.checked = isComplete;
+
+  return h("div", { class: "card" },
+    h("div", { class: "card-head" }, h("h2", {}, "Skills inventory"), h("span", { class: "muted" }, "Technical skills")),
+    h("p", { class: "hint" }, "Exact skills and years. Used to answer technical knockout and experience questions honestly."),
+    list,
+    h("div", { class: "button-row" }, add),
+    h("label", { class: "check-label span-2", style: "margin-top: 10px; display: flex; align-items: center; gap: 8px;" },
+      completeCheck, "My skills list is complete (answer \"No\" to unlisted skills)"),
+  );
+}
+
+function languagesCard(entries: LanguageEntry[] = [], isComplete = false): HTMLElement {
+  const list = h("div", { class: "stack", id: "languages-list" });
+  const row = (language = "", proficiency = "Fluent") => {
+    const langInput = h("input", { class: "input", type: "text", "data-lang": "name", placeholder: "Language (e.g. English)", autocomplete: "off" }) as HTMLInputElement;
+    langInput.value = language;
+    const profSelect = h("select", { class: "input", "data-lang": "proficiency" },
+      h("option", { value: "Basic" }, "Basic"),
+      h("option", { value: "Conversational" }, "Conversational"),
+      h("option", { value: "Professional" }, "Professional"),
+      h("option", { value: "Fluent" }, "Fluent"),
+      h("option", { value: "Native" }, "Native"),
+    ) as HTMLSelectElement;
+    profSelect.value = proficiency;
+    const remove = iconButton("trash", "Remove language", true);
+    const wrap = h("div", { class: "work-row lang-row", style: "display: grid; grid-template-columns: 2fr 2fr auto; gap: 8px; align-items: end;" },
+      h("label", { class: "field-label" }, "Language", langInput),
+      h("label", { class: "field-label" }, "Proficiency", profSelect),
+      remove,
+    );
+    remove.addEventListener("click", () => wrap.remove());
+    return wrap;
+  };
+  entries.forEach((l) => list.append(row(l.language, l.proficiency)));
+
+  const add = button("Add language", { variant: "ghost", icon: "plus", size: "sm" });
+  add.id = "add-language";
+  add.addEventListener("click", () => {
+    const newRow = row();
+    list.append(newRow);
+    newRow.querySelector<HTMLInputElement>("input")?.focus();
+  });
+
+  const completeCheck = h("input", { type: "checkbox", id: "languages-complete" }) as HTMLInputElement;
+  completeCheck.checked = isComplete;
+
+  return h("div", { class: "card" },
+    h("div", { class: "card-head" }, h("h2", {}, "Languages"), h("span", { class: "muted" }, "Languages you speak")),
+    list,
+    h("div", { class: "button-row" }, add),
+    h("label", { class: "check-label span-2", style: "margin-top: 10px; display: flex; align-items: center; gap: 8px;" },
+      completeCheck, "My languages list is complete (answer \"No\" to unlisted languages)"),
+  );
+}
+
+function readSkillsInventoryFromUI(): SkillEntry[] {
+  return Array.from(document.querySelectorAll<HTMLElement>("#skills-list .skill-row")).map((row) => {
+    const name = row.querySelector<HTMLInputElement>("[data-skill='name']")?.value.trim() ?? "";
+    const years = parseInt(row.querySelector<HTMLInputElement>("[data-skill='years']")?.value ?? "0", 10) || 0;
+    const level = row.querySelector<HTMLSelectElement>("[data-skill='level']")?.value ?? "Intermediate";
+    return { name, years, level };
+  }).filter((s) => s.name);
+}
+
+function readLanguagesFromUI(): LanguageEntry[] {
+  return Array.from(document.querySelectorAll<HTMLElement>("#languages-list .lang-row")).map((row) => {
+    const language = row.querySelector<HTMLInputElement>("[data-lang='name']")?.value.trim() ?? "";
+    const proficiency = (row.querySelector<HTMLSelectElement>("[data-lang='proficiency']")?.value ?? "Fluent") as any;
+    return { language, proficiency };
+  }).filter((l) => l.language);
 }
 
 function readWorkHistory(): WorkEntry[] {
@@ -959,6 +1154,18 @@ $("save-profile").addEventListener("click", async () => {
   const work = readWorkHistory();
   if (work.length) profile.workHistory = work;
   else delete profile.workHistory;
+  profile.workHistoryComplete = (document.querySelector<HTMLInputElement>("#work-history-complete"))?.checked ?? false;
+
+  const skills = readSkillsInventoryFromUI();
+  if (skills.length) profile.skillsInventory = skills;
+  else delete profile.skillsInventory;
+  profile.skillsComplete = (document.querySelector<HTMLInputElement>("#skills-complete"))?.checked ?? false;
+
+  const languages = readLanguagesFromUI();
+  if (languages.length) profile.languages = languages;
+  else delete profile.languages;
+  profile.languagesComplete = (document.querySelector<HTMLInputElement>("#languages-complete"))?.checked ?? false;
+
   await saveProfile(profile);
   showResume(profile.resume ? profile.resume.name : "Upload your resume (PDF or DOCX, max 5 MB)", !!profile.resume);
   toast("Profile saved");
@@ -969,6 +1176,7 @@ $("save-profile").addEventListener("click", async () => {
 const EMPTY_FACTS: QuickFacts = {
   workCountries: "", noticePeriod: "", currentCtc: "", expectedCtc: "", relocate: "", heardFrom: "",
   gender: "", hispanic: "", race: "", veteran: "", disability: "",
+  workMode: "", maxOfficeDays: "", travel: "", travelPercent: "", needsAccommodation: "", pronouns: "", over18: "",
 };
 
 type QuickField = { key: keyof QuickFacts; label: string; hint?: string; placeholder?: string; choices?: Array<[string, string]> };
@@ -981,6 +1189,13 @@ const QUICK_MAIN: QuickField[] = [
   { key: "expectedCtc", label: "Expected CTC", placeholder: "e.g. 20 LPA" },
   { key: "relocate", label: "Willing to relocate?", choices: [ASK_ME, ["Yes", "Yes"], ["No", "No"]] },
   { key: "heardFrom", label: "How did you hear about the job?", placeholder: "e.g. LinkedIn" },
+  { key: "workMode", label: "Work mode preference", choices: [ASK_ME, ["any", "Flexible / Any"], ["hybrid", "Hybrid"], ["onsite", "Onsite"], ["remote", "Remote"]] },
+  { key: "maxOfficeDays", label: "Max in-office days per week (for hybrid)", placeholder: "e.g. 3" },
+  { key: "travel", label: "Willing to travel for work?", choices: [ASK_ME, ["Yes", "Yes"], ["No", "No"]] },
+  { key: "travelPercent", label: "Max travel percentage", placeholder: "e.g. 10% or 25%" },
+  { key: "over18", label: "Are you 18 or older?", choices: [ASK_ME, ["Yes", "Yes"], ["No", "No"]] },
+  { key: "pronouns", label: "Pronouns (optional)", placeholder: "e.g. she/her or he/him" },
+  { key: "needsAccommodation", label: "Disability / accessibility accommodation needed?", choices: [ASK_ME, ["No", "No"], ["Yes", "Yes"]] },
 ];
 const QUICK_DIVERSITY: QuickField[] = [
   { key: "gender", label: "Gender", choices: [ASK_ME, ["Male", "Male"], ["Female", "Female"], ["Non-binary", "Non-binary"], ["Decline", "Prefer not to say"]] },
@@ -1000,7 +1215,7 @@ function quickInput(field: QuickField, facts: QuickFacts): HTMLElement {
   } else {
     control = h("input", { class: "input", type: "text", "data-fact": field.key, placeholder: field.placeholder ?? "", autocomplete: "off" }) as HTMLInputElement;
   }
-  control.value = facts[field.key];
+  control.value = String(facts[field.key] ?? "");
   const label = h("label", { class: "field-label span-2" }, field.label, control);
   if (field.hint) label.append(h("span", { class: "muted" }, field.hint));
   return label;
@@ -1010,15 +1225,33 @@ async function renderQuick(): Promise<void> {
   const facts = { ...EMPTY_FACTS, ...((await loadProfile()).facts ?? {}) };
   const save = button("Save quick answers", { variant: "primary", size: "sm" });
   save.id = "save-quick";
+  const declineDiversity = button("Answer all diversity questions with 'Prefer not to say'", { variant: "ghost", size: "sm" });
+  declineDiversity.id = "decline-diversity";
+  declineDiversity.type = "button";
   const card = h("form", { class: "card quick", id: "quick-form", novalidate: true },
     h("div", { class: "card-head" }, h("h2", {}, "Quick answers"), h("span", { class: "muted" }, "Answer once, used on every form")),
     h("p", { class: "hint" }, "Most forms ask these in their own words. ApplyAgent uses an answer only where the question clearly matches it; anything unclear is still asked. Leave a box empty to be asked on each form."),
     h("div", { class: "form-grid" }, ...QUICK_MAIN.map((f) => quickInput(f, facts))),
     h("details", { class: "details-inline" }, h("summary", {}, "Diversity questions (mostly US forms, optional)"),
       h("p", { class: "hint" }, "Used only where a form lists choices and one clearly matches; never typed as text."),
+      h("div", { class: "button-row" }, declineDiversity),
       h("div", { class: "form-grid" }, ...QUICK_DIVERSITY.map((f) => quickInput(f, facts)))),
     h("div", { class: "button-row" }, save));
   card.addEventListener("submit", (e) => e.preventDefault());
+  declineDiversity.addEventListener("click", async () => {
+    for (const key of ["gender", "hispanic", "race", "veteran", "disability"]) {
+      const select = card.querySelector<HTMLSelectElement>(`[data-fact="${key}"]`);
+      if (select) select.value = "Decline";
+    }
+    const next = { ...EMPTY_FACTS };
+    card.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-fact]").forEach((el) => {
+      (next as Record<string, string>)[el.dataset.fact!] = el.value.trim();
+    });
+    const current = await loadProfile();
+    await saveProfile({ ...current, facts: next });
+    profile = { ...profile, facts: next };
+    toast("Diversity answers set to 'Prefer not to say'");
+  });
   save.addEventListener("click", async () => {
     const next = { ...EMPTY_FACTS };
     card.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-fact]").forEach((el) => {
@@ -1032,8 +1265,65 @@ async function renderQuick(): Promise<void> {
   $("quick-card").replaceChildren(card);
 }
 
+
+async function renderScreening(): Promise<void> {
+  const container = $("screening-card");
+  if (!container) return;
+  const answers = await loadAnswers();
+  const byQ = new Map(answers.map((a) => [a.question.trim().toLowerCase(), a.answer]));
+
+  const save = button("Save screening answers", { variant: "primary", size: "sm" });
+  save.id = "save-screening";
+
+  const selects = new Map<string, HTMLSelectElement>();
+  const formRows = COMMON_SCREENING_QUESTIONS.map((q) => {
+    const select = h("select", { class: "input", "data-screening": q.question, "aria-label": q.question }) as HTMLSelectElement;
+    select.append(h("option", { value: "" }, "Ask me on each form"));
+    select.append(h("option", { value: "Yes" }, "Yes"));
+    select.append(h("option", { value: "No" }, "No"));
+    const current = byQ.get(q.question.trim().toLowerCase());
+    if (current === "Yes" || current === "No") select.value = current;
+    selects.set(q.question, select);
+    const label = h("label", { class: "field-label span-2" }, q.question, select);
+    return label;
+  });
+
+  const card = h("form", { class: "card quick", id: "screening-form", novalidate: true },
+    h("div", { class: "card-head" }, h("h2", {}, "Common screening questions"), h("span", { class: "muted" }, "Pre-answer yes/no questions")),
+    h("p", { class: "hint" }, "Pre-answer general yes/no questions commonly asked across job applications. Unanswered questions will be asked on each form."),
+    h("details", { class: "details-inline" },
+      h("summary", {}, `Screening questions (${COMMON_SCREENING_QUESTIONS.length})`),
+      h("div", { class: "form-grid" }, ...formRows),
+      h("div", { class: "button-row" }, save)));
+
+  card.addEventListener("submit", (e) => e.preventDefault());
+  save.addEventListener("click", async () => {
+    let currentAnswers = await loadAnswers();
+    for (const q of COMMON_SCREENING_QUESTIONS) {
+      const select = selects.get(q.question);
+      if (!select) continue;
+      const val = select.value.trim();
+      if (val === "Yes" || val === "No") {
+        currentAnswers = upsertAnswer(currentAnswers, {
+          question: q.question,
+          answer: val,
+          updatedAt: new Date().toISOString(),
+        });
+      } else {
+        currentAnswers = currentAnswers.filter((a) => a.question.trim().toLowerCase() !== q.question.trim().toLowerCase());
+      }
+    }
+    await saveAnswers(currentAnswers);
+    toast("Screening answers saved");
+    await renderAnswers();
+  });
+
+  container.replaceChildren(card);
+}
+
 // --- Answers -----------------------------------------------------------------------------------------
 async function renderAnswers(): Promise<void> {
+  void renderScreening();
   const answers = await loadAnswers();
   setCount("answers", answers.length);
   const list = $("answer-list");
@@ -1329,6 +1619,7 @@ $("queue-clear").addEventListener("click", () => void queueMessage({ type: "QUEU
 // Live updates while the queue runs in the background.
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== "local") return;
+  if (changes.corrections?.newValue) cachedCorrections = changes.corrections.newValue as UserCorrection[];
   if (changes.queue || changes.queueRunning || changes.settings) void renderQueue();
   if (changes.applications) void renderTracker();
   if (changes.answers) {
@@ -1568,11 +1859,12 @@ async function renderPlan(): Promise<void> {
   const badge = $("plan-badge");
   const meter = $("plan-meter");
   if (license) {
-    const until = new Date(license.exp * 1000).toLocaleDateString(undefined, { day: "numeric", month: "short" });
-    $("plan-status").textContent = `Pro · unlimited applications until ${until}`;
-    pill.textContent = "Pro";
+    const isLife = isLifetimeLicense(license);
+    const until = new Date(license.exp * 1000).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+    $("plan-status").textContent = isLife ? "Founder · Lifetime Pass active" : `Pro · unlimited applications until ${until}`;
+    pill.textContent = isLife ? "Founder" : "Pro";
     pill.className = "plan-pill pro";
-    badge.textContent = "Pro";
+    badge.textContent = isLife ? "Founder" : "Pro";
     badge.className = "chip accent";
     meter.style.width = "100%";
     meter.parentElement!.classList.remove("low");
@@ -1590,13 +1882,14 @@ async function renderPlan(): Promise<void> {
   if (typeof licenseKey === "string") ($("license-key") as HTMLInputElement).value = licenseKey;
 }
 
-async function openBuy(currency: "INR" | "USD"): Promise<void> {
+async function openBuy(currency: "INR" | "USD", tier: "monthly" | "lifetime" = "monthly"): Promise<void> {
   const { licenseKey } = await chrome.storage.local.get("licenseKey");
-  await chrome.tabs.create({ url: buyUrl(currency, typeof licenseKey === "string" ? licenseKey : undefined) });
+  await chrome.tabs.create({ url: buyUrl(currency, tier, typeof licenseKey === "string" ? licenseKey : undefined) });
 }
 
-$("buy-inr").addEventListener("click", () => void openBuy("INR"));
-$("buy-usd").addEventListener("click", () => void openBuy("USD"));
+$("buy-inr").addEventListener("click", () => void openBuy("INR", "monthly"));
+$("buy-usd").addEventListener("click", () => void openBuy("USD", "monthly"));
+$("buy-founder")?.addEventListener("click", () => void openBuy("USD", "lifetime"));
 $("activate").addEventListener("click", async () => {
   busy($("activate"), true);
   const error = await activate(($("license-key") as HTMLInputElement).value);
