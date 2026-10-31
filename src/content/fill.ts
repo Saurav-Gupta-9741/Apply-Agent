@@ -182,16 +182,52 @@ export async function fillTextHumanized(
 }
 
 function fillSelect(el: HTMLSelectElement, value: string): FillOutcome {
-  const options = Array.from(el.options);
-  const match = bestOption(options.map(optionLabel), value);
-  const option = options.find((o) => optionLabel(o) === match) ?? options.find((o) => normalize(o.value) === normalize(value));
+  const allOptions = Array.from(el.options);
+  // Exclude placeholder and disabled options from match candidates
+  const validOptions = allOptions.filter((o) => !o.disabled && !DROPDOWN_PLACEHOLDER.test(cleanLabel(o.textContent ?? "")));
+  const candidates = validOptions.length > 0 ? validOptions : allOptions;
+
+  // 1. Try matching by option label
+  const labels = candidates.map(optionLabel);
+  const matchLabel = bestOption(labels, value);
+  let option = matchLabel ? candidates[labels.indexOf(matchLabel)] : undefined;
+
+  // 2. Try matching by option value attribute
+  if (!option) {
+    const values = candidates.map((o) => cleanLabel(o.value));
+    const matchVal = bestOption(values, value);
+    if (matchVal) {
+      option = candidates[values.indexOf(matchVal)];
+    }
+  }
+
+  // 3. Fallback to raw normalized value match
+  if (!option) {
+    option = candidates.find((o) => normalize(o.value) === normalize(value));
+  }
+
   if (!option) return { ok: false, detail: `no option matches "${value}"` };
+
   fireEvent(el, "pointerdown");
   fireEvent(el, "mousedown");
   el.focus();
+
+  el.selectedIndex = allOptions.indexOf(option);
+  option.selected = true;
   setNativeValue(el, option.value);
+
   fire(el, "input");
   fire(el, "change");
+
+  // Trigger plugin events if wrapped in Chosen or Select2
+  try {
+    const customSelect = el.parentElement?.querySelector(".select2-container, .chosen-container");
+    if (customSelect) {
+      fireEvent(el, "chosen:updated");
+      fireEvent(el, "select2:select");
+    }
+  } catch {}
+
   el.blur();
   fireEvent(el, "blur");
   return el.value === option.value ? { ok: true } : { ok: false, detail: "selection did not stick" };
@@ -406,13 +442,39 @@ export async function fillFieldHumanized(
 /** Placeholder rows shown while results load, or when there are none: never picked, never a reason to give up. */
 const NOT_AN_OPTION = /^(loading|searching|please wait|no (results|options|matches)|type to search|start typing|keine ergebnisse|aucun r[ée]sultat|sin resultados|nenhum resultado)\b|…$|\.\.\.$/i;
 
+const OPTION_SELECTOR = [
+  "[role='option']",
+  "[data-automation-id='promptOption']",
+  "[data-reach-combobox-option]",
+  "li.select2-results__option",
+  "li.active-result",
+  "[role='listbox'] > li",
+  "[role='listbox'] > div[tabindex]",
+  ".quantumWizMenuPaperselectOption",
+  ".select-options > .option",
+  ".fabric-select-option",
+  ".dropdown-menu > li",
+  ".dropdown-menu > .dropdown-item",
+].join(", ");
+
 function visibleOptions(scope: ParentNode): HTMLElement[] {
-  return deepQueryAll<HTMLElement>(scope, "[role='option']").filter((o) => {
-    if (o.getAttribute("aria-disabled") === "true" || o.closest("[hidden], [aria-hidden='true']")) return false;
+  const elements = deepQueryAll<HTMLElement>(scope, OPTION_SELECTOR);
+  const unique = Array.from(new Set(elements));
+  return unique.filter((o) => {
+    if (
+      o.getAttribute("aria-disabled") === "true" ||
+      o.classList.contains("disabled") ||
+      (o as any).disabled === true ||
+      o.closest("[hidden], [aria-hidden='true']")
+    ) {
+      return false;
+    }
     const style = o.ownerDocument.defaultView?.getComputedStyle(o);
     return !style || (style.display !== "none" && style.visibility !== "hidden");
   });
 }
+
+const LIST_CONTAINERS = "[role='listbox'], .exportSelectPopup, .select2-dropdown, .chosen-drop, [data-automation-id*='promptPopup'], [data-automation-id*='menu'], .dropdown-menu.show, .fabric-select-menu";
 
 /** The list a dropdown opened, when it does not name it: the one inside the field's own group, else the only open list
  * on the page. Never every option on the page: another open list, or a menu built of options, is not this field's. */
@@ -421,7 +483,7 @@ function listNear(owner: HTMLElement): ParentNode | undefined {
   for (let depth = 0; node && depth < 5; depth++, node = node.parentElement) {
     if (visibleOptions(node).length) return node;
   }
-  const lists = deepQueryAll<HTMLElement>(owner.ownerDocument, "[role='listbox']").filter((l) => visibleOptions(l).length);
+  const lists = deepQueryAll<HTMLElement>(owner.ownerDocument, LIST_CONTAINERS).filter((l) => visibleOptions(l).length);
   if (lists.length === 1) return lists[0];
   if (lists.length) return undefined;
   // Options with no list around them (a portal at the end of the page): only when they all sit together.
@@ -435,8 +497,10 @@ function sleep(ms: number): Promise<void> {
 }
 
 function choose(option: HTMLElement): void {
-  option.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, composed: true }));
-  option.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, composed: true }));
+  fireEvent(option, "pointerdown");
+  fireEvent(option, "mousedown");
+  fireEvent(option, "pointerup");
+  fireEvent(option, "mouseup");
   option.click();
 }
 
@@ -454,7 +518,10 @@ async function pickFromList(owner: HTMLElement, value: string, timeoutMs: number
       continue;
     }
     const options = visibleOptions(scope).filter((o) => !NOT_AN_OPTION.test(cleanLabel(o.textContent ?? "")));
-    const labels = options.map((o) => cleanLabel(o.textContent ?? ""));
+    const labels = options.map((o) => {
+      const primary = o.querySelector("[data-automation-id='promptOptionTitle'], .primary-text, .title");
+      return cleanLabel((primary ?? o).textContent ?? "");
+    });
     const match = bestOption(labels, value);
     if (match) {
       choose(options[labels.indexOf(match)]!);
@@ -481,16 +548,26 @@ const DROPDOWN_PLACEHOLDER = /^(select|choose|please select)\b|^(select( one| an
 
 /** What a custom dropdown currently shows, without its placeholder ("Select One"). */
 export function dropdownValue(el: Element): string {
-  const text = cleanLabel(el.textContent ?? "") || cleanLabel(el.getAttribute("value") ?? "") || cleanLabel(el.getAttribute("data-value") ?? "");
+  const selectedChild = el.querySelector(".combobox-selected-text, .selected-value, [data-selected], .filter-option-inner-inner");
+  const text = cleanLabel(selectedChild?.textContent ?? "") ||
+    cleanLabel(el.textContent ?? "") ||
+    cleanLabel(el.getAttribute("data-value") ?? "") ||
+    cleanLabel(el.getAttribute("data-selected") ?? "") ||
+    cleanLabel(el.getAttribute("value") ?? "");
   return DROPDOWN_PLACEHOLDER.test(text) ? "" : text;
 }
 
 /** Open a custom dropdown (a button with a list of choices), pick the best match, and check that it shows it. */
 export async function fillDropdown(el: HTMLElement, value: string, timeoutMs = 4000): Promise<FillOutcome> {
   el.focus();
-  el.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, composed: true }));
+  fireEvent(el, "pointerdown");
+  fireEvent(el, "mousedown");
+  fireEvent(el, "pointerup");
+  fireEvent(el, "mouseup");
   el.click();
-  if (el.getAttribute("aria-expanded") === "false") el.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true, composed: true }));
+  if (el.getAttribute("aria-expanded") === "false") {
+    el.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true, composed: true }));
+  }
   const picked = await pickFromList(el, value, timeoutMs);
   if (!picked.ok) return picked;
   await sleep(120);

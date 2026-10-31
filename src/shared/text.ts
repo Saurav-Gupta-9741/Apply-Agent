@@ -102,28 +102,11 @@ export function similarity(a: string, b: string): number {
   return shared / (x.size + y.size - shared);
 }
 
-/** Best option for a wanted value: exact (case-insensitive), then prefix, then word overlap. */
+import { bestOption as matchBestOption } from "./option-matcher";
+
+/** Best option for a wanted value: multi-stage fuzzy, semantic, and anti-overfitting matching. */
 export function bestOption(options: string[], wanted: string, minScore = 0.6): string | undefined {
-  const w = normalize(wanted);
-  if (!w) return undefined;
-  const exact = options.find((o) => normalize(o) === w);
-  if (exact) return exact;
-  // Whole-word prefixes only: "No" must match "No, I do not" but never "None".
-  const prefix = options.find((o) => {
-    const n = normalize(o);
-    return n.startsWith(w + " ") || (n.length >= 3 && w.startsWith(n + " "));
-  });
-  if (prefix) return prefix;
-  let best: string | undefined;
-  let bestScore = 0;
-  for (const o of options) {
-    const s = similarity(o, wanted);
-    if (s > bestScore) {
-      bestScore = s;
-      best = o;
-    }
-  }
-  return bestScore >= minScore ? best : undefined;
+  return matchBestOption(options, wanted, minScore);
 }
 
 /** Match a Yes or No answer to choice options (e.g. ["Yes", "No"], ["Yes, I do", "No, I do not"], ["I agree", "I disagree"]). */

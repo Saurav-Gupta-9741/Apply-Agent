@@ -37,9 +37,9 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   // Abbreviations only as whole words: "fullname" must not match "lname".
   // "First Name and Last Name" is one box for both.
   ["fullName", /first (name )?(and )?(last|family|sur) ?name|name and surname|vor und nachname|nom et prenom|nombre y apellidos?|voor en achternaam|nome e cognome/],
-  ["firstName", /first ?name|given ?name|^(what is |whats )?your preferred name$|^preferred name$|\bfname\b|forename|vorname|\bprenom\b|^nombre$|^nome$|primer nombre|primeiro nome|nome de batismo|nome di battesimo|prenome|voornaam|名前|名|下の名前|الاسم الأول|पहला नाम/],
-  ["lastName", /last ?name|family ?name|surname|\blname\b|nachname|familienname|familienaam|nom de famille|^nom$|apellido|sobrenome|cognome|achternaam|名字|姓|苗字|اسم العائلة|उपनाम/],
-  ["fullName", /^(full )?name$|^your name$|full name|legal name|voller name|vollstandiger name|vor und nachname|nom complet|nom et prenom|nombre completo|nombre y apellidos?|nome completo|volledige naam|voor en achternaam|nome e cognome|氏名|お名前|フルネーム|الاسم الكامل|पूरा नाम/],
+  ["firstName", /first ?name|given ?name|^(what is |whats )?your preferred name$|^preferred name$|\bfname\b|forename|vorname|\bprenom\b|^nombre$|^nome$|primer nombre|primeiro nome|nome de batismo|nome di battesimo|prenome|voornaam|下の名前|ファーストネーム|^名$|الاسم الأول|पहला नाम/],
+  ["lastName", /last ?name|family ?name|surname|\blname\b|nachname|familienname|familienaam|nom de famille|^nom$|apellido|sobrenome|cognome|achternaam|名字|苗字|^姓$|اسم العائلة|उपनाम/],
+  ["fullName", /^(full )?name$|^your name$|full name|legal name|voller name|vollstandiger name|vor und nachname|nom complet|nom et prenom|nombre completo|nombre y apellidos?|nome completo|volledige naam|voor en achternaam|nome e cognome|氏名|お名前|フルネーム|^名前$|الاسم الكامل|पूरा नाम/],
   ["email", /e ?mail|courriel|correo|posta elettronica|adresse electronique|メール|ईमेल|이메일|电子邮件|電子郵件/],
   ["phone", /phone|mobile|\btel\b|contact number|telef|telefoon|\bhandy|rufnummer|portable|movil|celular|cellulare|mobiel|numero di telefono|numero de tele|電話|电话|फ़?ोन|मोबाइल|전화/],
   ["linkedin", /linked ?in/],
