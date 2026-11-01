@@ -5,6 +5,7 @@ import {
   NEVER_REMEMBER, type AnswerEntry, type Decision, type FieldDescriptor, type Profile, type ProfileKey, type SensitiveTopic, type WorkEntry,
 } from "../shared/types";
 import { bestOption, normalize, sameQuestionScore, yesNoOption } from "../shared/text";
+import { parseRequirement } from "../shared/requirements";
 import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion } from "../shared/screening";
 import { factDecision, hasConfirmedApplication, HEARD_ABOUT, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, type PageFacts } from "./facts";
 
@@ -163,7 +164,34 @@ function yesNoChoice(field: FieldDescriptor): boolean {
   return field.options.length > 0 && !!yesNoOption(field.options, "Yes") && !!yesNoOption(field.options, "No");
 }
 
-export function findAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic?: SensitiveTopic): AnswerEntry | undefined {
+const COUNTRY_MENTION = /\b(united states|u\.?s\.?a?|canada|u\.?k\.?|united kingdom|great britain|germany|deutschland|france|india|australia|singapore|ireland|netherlands|spain|italy)\b/i;
+
+function extractCountry(text: string): string | undefined {
+  const m = COUNTRY_MENTION.exec(text);
+  if (!m) return undefined;
+  const c = m[1]!.toLowerCase().replace(/\./g, "");
+  if (c === "us" || c === "usa" || c === "united states") return "united states";
+  if (c === "uk" || c === "united kingdom" || c === "great britain") return "united kingdom";
+  return c;
+}
+
+const COMPANY_NAME_IN_QUESTION = /\b(?:worked|employed|contractor|interned)\s+(?:at|for|with)\s+([A-Z][a-zA-Z0-9&]+)|\b(?:at|for|with)\s+([A-Z][a-zA-Z0-9&]+)\s+previously\b/i;
+
+function extractCompany(text: string): string | undefined {
+  const m = COMPANY_NAME_IN_QUESTION.exec(text);
+  return m ? (m[1] ?? m[2])?.trim().toLowerCase() : undefined;
+}
+
+const HERE_OR_THIS_COMPANY = /\b(here|this company|our company|this organization|our organization|for us|with us)\b/i;
+const SPONSOR_REQUIRE_PATTERN = /\b(require|need|will you.*require|in the future.*require|visa sponsorship)\b/i;
+const AUTH_WITHOUT_PATTERN = /\b(authorized to work without|legally authorized.*without|without.*sponsorship)\b/i;
+
+export function findAnswer(
+  field: FieldDescriptor,
+  answers: AnswerEntry[],
+  topic?: SensitiveTopic,
+  page?: PageFacts
+): AnswerEntry | undefined {
   const label = field.label ? questionKey(field) : "";
   if (!label) return undefined;
 
@@ -182,8 +210,42 @@ export function findAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic
     // Strict polarity: a saved answer is reused only for a question with the same polarity.
     if (questionPolarity(entry.question) !== labelPolarity) continue;
 
+    // 1. Company trap: never reuse across different companies
+    const entryCo = entry.company?.toLowerCase() || extractCompany(entry.question);
+    const labelCo = page?.company?.toLowerCase() || extractCompany(label);
+    if (entryCo && labelCo && entryCo !== labelCo) continue;
+    if (HERE_OR_THIS_COMPANY.test(label) || HERE_OR_THIS_COMPANY.test(entry.question)) {
+      if (entry.company && page?.company && entry.company.toLowerCase() !== page.company.toLowerCase()) continue;
+    }
+
+    // 2. Number trap: match numbers/years
+    const reqEntry = parseRequirement(entry.question);
+    const reqLabel = parseRequirement(label);
+    if (reqEntry && reqLabel) {
+      if (reqEntry.unit !== reqLabel.unit || reqEntry.min !== reqLabel.min || reqEntry.max !== reqLabel.max) continue;
+    } else {
+      const numsEntry = (entry.question.match(/\b\d+\b/g) || []).join(",");
+      const numsLabel = (label.match(/\b\d+\b/g) || []).join(",");
+      if (numsEntry && numsLabel && numsEntry !== numsLabel) continue;
+    }
+
+    // 3. Country trap: never reuse across different countries
+    const countryEntry = extractCountry(entry.question);
+    const countryLabel = extractCountry(label);
+    if (countryEntry && countryLabel && countryEntry !== countryLabel) continue;
+
+    // 4. Negation / Sponsorship trap
+    const isSponsorReq = SPONSOR_REQUIRE_PATTERN.test(label) && !AUTH_WITHOUT_PATTERN.test(label);
+    const entrySponsorReq = SPONSOR_REQUIRE_PATTERN.test(entry.question) && !AUTH_WITHOUT_PATTERN.test(entry.question);
+    if (isSponsorReq !== entrySponsorReq && (topic === "sponsorship" || topic === "work_authorization" || entryTopic === "sponsorship" || entryTopic === "work_authorization")) {
+      continue;
+    }
+
     // An exact match always reuses the user's saved answer to this exact question.
     if (normalize(entry.question) === normalize(label)) {
+      if (isCompanyOrPlaceSpecific(label) && entry.company && page?.company && entry.company.toLowerCase() !== page.company.toLowerCase()) {
+        continue;
+      }
       bestScore = 1;
       best = entry;
       break;
@@ -367,7 +429,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   }
   if (isStartImmediatelyQuestion(field.label)) {
     // An answer the user saved for this kind of question (never a notice period such as "30 days"), else the quick answer.
-    const entry = findAnswer(field, answers, "notice_period");
+    const entry = findAnswer(field, answers, "notice_period", page);
     if (entry && isStartImmediatelyQuestion(entry.question)) {
       let val: string | undefined = entry.answer;
       if (field.options.length) {
@@ -396,7 +458,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   }
 
   if (topic) {
-    const entry = findAnswer(field, answers, topic);
+    const entry = findAnswer(field, answers, topic, page);
     if (entry) {
       let val = entry.answer;
       if (field.options.length) {
@@ -449,7 +511,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   const work = workDecision(field, profile);
   if (work) return work;
 
-  const remembered = findAnswer(field, answers);
+  const remembered = findAnswer(field, answers, undefined, page);
   if (remembered) {
     let val = remembered.answer;
     if (field.options.length) {

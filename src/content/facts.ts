@@ -55,6 +55,8 @@ export interface PageFacts {
   jobCountries: string[];
   /** URL of the application page, to identify the company and check application history. */
   url?: string;
+  /** Company name for the job, if known. */
+  company?: string;
   /** Confirmed application history from the tracker. */
   applications?: ApplicationRecord[];
 }
@@ -255,7 +257,7 @@ function diversityAnswer(field: FieldDescriptor, facts: QuickFacts, topic: Sensi
   }
   if (topic === "disability" && facts.disability) {
     const v = choice(field, facts.disability, { Yes: /^yes\b|^i have a disability/, No: /^no\b|do not have a disability|don ?t have a disability/, Decline: DECLINE },
-      { Yes: "Yes", No: "No" }); // "I do not want" is a fragment, not an answer
+      { Yes: "Yes", No: "No", Decline: "Decline" });
     return v ? answer(v, "disability") : undefined;
   }
   if (topic === "race" && facts.race) {
@@ -263,12 +265,55 @@ function diversityAnswer(field: FieldDescriptor, facts: QuickFacts, topic: Sensi
       const v = choice(field, "Decline", { Decline: DECLINE }, { Decline: "Decline" });
       return v ? answer(v, "race/ethnicity") : undefined;
     }
-    if (!field.options.length || field.control === "text") return undefined;
-    // Exactly one choice that is the saved answer, or starts with it as a whole word ("Asian (Not Hispanic or Latino)").
-    // Several sub-groups that all start with it ("Asian or Asian British - Indian / - Pakistani…") are the user's pick.
     const saved = normalize(facts.race);
-    const fits = field.options.filter((o) => normalize(o) === saved || normalize(o).startsWith(`${saved} `));
-    return fits.length === 1 ? answer(fits[0]!, "race/ethnicity") : undefined;
+    const v = choice(field, facts.race, {
+      Asian: /^asian\b/,
+      Black: /^black|african american/,
+      White: /^white/,
+      Hispanic: /^hispanic|latino/,
+      Decline: DECLINE,
+    }, { Asian: "Asian", Black: "Black", White: "White", Hispanic: "Hispanic", Decline: "Decline" });
+    if (v) return answer(v, "race/ethnicity");
+    if (field.options.length) {
+      const fits = field.options.filter((o) => normalize(o) === saved || normalize(o).startsWith(`${saved} `));
+      if (fits.length === 1) return answer(fits[0]!, "race/ethnicity");
+    }
+  }
+  if (topic === "veteran" && facts.veteran && !/another country|foreign|other countr/.test(q)) {
+    const v = choice(field, facts.veteran, {
+      Yes: /^(?!.*\b(not|decline|don ?t|prefer)\b).*(veteran|^yes\b)/, No: /\b(not a|am not|non) ?(protected )?veteran|^no\b/, Decline: DECLINE,
+    }, { Yes: "Yes", No: "No", Decline: "Decline" });
+    return v ? answer(v, "veteran status") : undefined;
+  }
+  if (topic === "pronouns" && facts.pronouns) {
+    if (/\bif\s+["']?other["']?\s+is\s+selected\b/i.test(q)) return undefined;
+    if (field.control === "text") return answer(facts.pronouns, "pronouns");
+    const v = choice(field, facts.pronouns, {
+      "she/her": /she\/her|she \/ her|she\/hers|female/i,
+      "he/him": /he\/him|he \/ him|he\/his|male/i,
+      "they/them": /they\/them|they \/ them/i,
+      Decline: DECLINE,
+    }, { "she/her": "she/her", "he/him": "he/him", "they/them": "they/them", Decline: "Decline" });
+    return v ? answer(v, "pronouns") : undefined;
+  }
+  if (topic === "sexual_orientation" && facts.sexualOrientation) {
+    const v = choice(field, facts.sexualOrientation, {
+      Heterosexual: /straight|heterosexual/,
+      Decline: DECLINE,
+    }, { Heterosexual: "Heterosexual", Decline: "I prefer not to say" });
+    return v ? answer(v, "sexual orientation") : undefined;
+  }
+  if (topic === "transgender" && facts.transgender) {
+    const target = /\b(same as|assigned at birth)\b/i.test(q) ? (facts.transgender === "No" ? "Yes" : "No") : facts.transgender;
+    const v = choice(field, target, { Yes: /^yes\b/, No: /^no\b/, Decline: DECLINE }, { Yes: "Yes", No: "No", Decline: "Decline" });
+    return v ? answer(v, "transgender") : undefined;
+  }
+  if (topic === "accommodation" && facts.needsAccommodation) {
+    if (field.control === "text" || field.control === "textarea") {
+      if (facts.needsAccommodation === "No") return answer("None", "accommodation");
+    }
+    const v = choice(field, facts.needsAccommodation, { Yes: /^yes\b/, No: /^no\b/, Decline: DECLINE }, { Yes: "Yes", No: "No", Decline: "Decline" });
+    return v ? answer(v, "accommodation") : undefined;
   }
   return undefined;
 }
@@ -592,10 +637,16 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     return answer(notice, "notice period");
   }
   if (topic === "relocation") {
-    if (!facts.relocate || !/^(are you |would you be |will you be )?(willing|open|able|ready) to relocate( if (needed|required|necessary))?$/.test(q)) return undefined;
-    return yesNoField(field) ? answer(facts.relocate, "relocation") : undefined;
+    if (!facts.relocate) return undefined;
+    if (field.control === "textarea" || field.control === "text") return undefined;
+    if (!/\b(relocat|open to (?:relocation|relocating)|willing to relocate)\b/i.test(q)) return undefined;
+    if (yesNoField(field)) {
+      const match = field.options.length ? (yesNoOption(field.options, facts.relocate) ?? facts.relocate) : facts.relocate;
+      return answer(match, "relocation");
+    }
+    return undefined;
   }
-  if (topic && ["gender", "race", "veteran", "disability"].includes(topic)) return diversityAnswer(field, facts, topic);
+  if (topic && ["gender", "race", "veteran", "disability", "pronouns", "sexual_orientation", "transgender", "accommodation"].includes(topic)) return diversityAnswer(field, facts, topic);
   if ((topic === "age" || /\b(?:18 years (?:of age )?or older|at least 18|over 18|18 or older)\b/i.test(q)) && facts.over18 && yesNoField(field)) {
     if (/^(are you |do you confirm you are |confirm you are )?(at least 18|18 years (?:of age )?or older|18 or older|over the age of 18)/i.test(q)) {
       const match = field.options.length ? (yesNoOption(field.options, facts.over18) ?? facts.over18) : facts.over18;
@@ -660,9 +711,12 @@ export function mentions(text: string, term: string): boolean {
   if (lowerTerm === "google cloud" || lowerTerm === "gcp") {
     return /\b(?:google cloud|gcp)\b/i.test(raw);
   }
+  if (lowerTerm === "open source" || lowerTerm === "open-source") {
+    return /\bopen[- ]source\b/i.test(raw);
+  }
 
   // General term whole-word matching:
-  const escaped = escapeRegex(cleanTerm);
+  const escaped = escapeRegex(cleanTerm).replace(/\s+/g, "[- ]");
   const regex = new RegExp(`\\b${escaped}\\b`, "i");
   return regex.test(raw);
 }

@@ -167,6 +167,8 @@ export interface AnswerEntry {
   answer: string;
   topic?: SensitiveTopic;
   updatedAt: string;
+  company?: string;
+  country?: string;
 }
 
 export interface UserCorrection {
