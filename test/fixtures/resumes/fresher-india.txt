@@ -1,0 +1,27 @@
+PRIYA SHARMA
+Jodhpur, Rajasthan, India | +91 98765 43210 | priya.sharma+jobs@gmail.com
+linkedin.com/in/priya-sharma-dev | github.com/priyasharma
+
+EDUCATION
+Indian Institute of Technology Jodhpur
+B.Tech in Computer Science and Engineering | CGPA 8.4/10 | 2021 - 2025
+Kendriya Vidyalaya, Jodhpur
+Class XII (CBSE) | 92.4% | 2021
+
+INTERNSHIPS
+Software Development Intern | Flipkart | May 2024 - Jul 2024
+• Built a dashboard in React and Node.js used by 40 sellers.
+• Wrote unit tests with Jest.
+
+PROJECTS
+Campus Ride Share
+• A ride sharing app built with Flutter and Firebase.
+
+TECHNICAL SKILLS
+Languages: Python, Java, C++, JavaScript
+Web: React, Node.js, Express, HTML, CSS
+Databases: MySQL, MongoDB
+Tools: Git, Docker, Linux
+
+LANGUAGES
+English (Fluent), Hindi (Native)

@@ -1,0 +1,17 @@
+Ananya Iyer
+Chennai, Tamil Nadu
+ananya.iyer@yahoo.co.in
+Phone: 044 2345 6789
+
+Experience
+Quality Analyst - Zoho Corporation
+• Wrote test plans for Zoho CRM.
+Test Engineer - Freshworks
+• Automated UI tests with Selenium.
+
+Education
+Anna University
+B.Sc. Computer Science
+
+Skills
+Selenium, Java, SQL, Jira

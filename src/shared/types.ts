@@ -275,6 +275,36 @@ export interface ApplicationRecord {
   confirmationText?: string;
   /** Storage key of a PNG screenshot taken on the confirmation page, when permitted. */
   screenshotKey?: string;
+  // --- tracker CRM (all optional; set by the user in the Tracker) ---
+  /** Where this application stands. Absent: "Applied" (the agent recorded a submission). */
+  stage?: TrackerStage;
+  company?: string;
+  notes?: string;
+  /** Next follow-up day, "YYYY-MM-DD" (local). */
+  followUpAt?: string;
+  /** First time the employer responded (stage reached Assessment, Interview or Offer). */
+  respondedAt?: string;
+  stageChangedAt?: string;
+}
+
+/** Stages of an application in the tracker (a light CRM, kept on this computer). */
+export type TrackerStage = "Saved" | "Applied" | "Assessment" | "Interview" | "Offer" | "Rejected" | "Withdrawn";
+
+/** A job the user saved from any page (title and address only, read from the tab: nothing on the page is touched).
+ * Kept apart from submitted applications, so a saved job never counts as a submission. */
+export interface SavedJob {
+  id: string;
+  url: string;
+  title: string;
+  company: string;
+  createdAt: string;
+  stage: TrackerStage;
+  notes?: string;
+  followUpAt?: string;
+  /** When the user marked it applied (by hand, outside ApplyAgent). */
+  appliedAt?: string;
+  respondedAt?: string;
+  stageChangedAt?: string;
 }
 
 /** A candidate profile persona allowing users to maintain multiple profiles (e.g. Fullstack SWE, Data Scientist). */

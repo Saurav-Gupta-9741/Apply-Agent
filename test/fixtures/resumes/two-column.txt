@@ -1,0 +1,14 @@
+MEERA NAIR
+CONTACT                           EXPERIENCE
+meera.nair@gmail.com              Frontend Developer | Swiggy
++91 87654 32109                   Jan 2022 - Present
+Kochi, Kerala, India              • Built the restaurant menu editor in React.
+linkedin.com/in/meeranair         • Cut bundle size by 30% with code splitting.
+                                  UI Developer | Tata Consultancy Services
+SKILLS                            Jul 2019 - Dec 2021
+React, TypeScript, Redux          • Built internal portals in Angular.
+CSS, Figma, Jest
+                                  EDUCATION
+LANGUAGES                         College of Engineering Trivandrum
+Malayalam (Native)                B.Tech in Information Technology
+English (Fluent)                  2015 - 2019 | 78.5%
