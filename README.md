@@ -28,6 +28,18 @@ Practice safely first: `python -m http.server 8080 --directory testpages` → `h
 | **Answers** | Answers you gave once, reused only for the same question |
 | **Tracker** | Every application: "applied ✓" with confirmation text (+ screenshot when visible) or "needs check" |
 
+## Pricing
+| Plan | Price | Length |
+|---|---|---|
+| **Free** | ₹0 | 20 submitted applications a month, every feature |
+| **Pro** | ₹149 in India, $9 abroad | 30 days, unlimited |
+| **Founder** (limited) | ₹2999 in India, $49 abroad | 10 years, unlimited |
+
+Every plan is a one-time payment with **no auto-renewal**. Buying Pro again stacks 30 days; upgrading a Pro key to
+Founder sets it to 10 years from now (never shorter than what is left). Licence keys only, no accounts: a lost key is
+recovered with the Razorpay payment ID. Prices live in `server/wrangler.toml` (`PRICE_*`, `FOUNDER_ENABLED="false"`
+takes Founder off sale) and are served at `GET /plans`; the website's copies are in `site/site.config.json`.
+
 ## Rules the agent never breaks
 - Only facts from your profile or answers you gave; unknown optional fields stay blank; nothing you typed is overwritten
 - A saved answer is reused only for the same question ("years with Python" is never reused for "years with Java")

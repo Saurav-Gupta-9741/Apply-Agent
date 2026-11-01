@@ -256,6 +256,8 @@ export interface RunReport {
   errors: string[];
   /** Steps completed on a multi-step application (absent for one-page forms). */
   steps?: number;
+  /** The site showed a robot check or a rate-limit page: the run stopped there (ApplyAgent never solves these). */
+  challenge?: string;
 }
 
 export type Mode = "review" | "auto";
@@ -319,6 +321,8 @@ export interface QueueItem {
   tabId?: number;
   /** Questions this job needs answered before it can continue (status "needs_user"). */
   questions?: PendingQuestion[];
+  /** Safe pacing: a queued item that waits for a limit or a pause, until this time (ms since epoch). */
+  waitUntil?: number;
   addedAt: string;
   updatedAt: string;
 }
@@ -374,6 +378,13 @@ export type Message =
   | { type: "PANEL_REFRESH" }
   /** Scroll to a field and outline it, so the user can answer it on the page. */
   | { type: "HIGHLIGHT"; label: string; key?: string }
+  /** Consent review: list the consent and agreement boxes on the application (read-only). */
+  | { type: "CONSENT_LIST" }
+  /** Scroll to one consent box and outline it. */
+  | { type: "CONSENT_SHOW"; id: string }
+  /** Tick exactly one consent box, after the user clicked "Tick this box" for it. Refused when its label or place
+   * changed since the list was read, or when it is in another frame. */
+  | { type: "CONSENT_TICK"; id: string; label: string; frameUrl: string }
   | { type: "SUBMIT" }
   | { type: "RECORD_CORRECTION"; question: string; answer: string; control?: string }
   | { type: "RUN_RESULT"; report: RunReport }

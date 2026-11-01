@@ -74,11 +74,26 @@ export const LICENSE_KEY_FORMAT = /^[A-HJ-NP-Z2-9]{5}(-[A-HJ-NP-Z2-9]{5}){3}$/;
 
 const DAY_MS = 86_400_000;
 export const PASS_DAYS = 30;
-export const LIFETIME_DAYS = 3650; // 10-year Lifetime Founder Pass
+export const LIFETIME_DAYS = 3650; // Founder plan: 10 years
 
 /** New expiry when a pass is bought: stacks on top of time still remaining. */
 export function extendedUntil(currentPaidUntil: number | undefined, now: number, days = PASS_DAYS): number {
   return Math.max(currentPaidUntil ?? 0, now) + days * DAY_MS;
+}
+
+/** Paid-until after a payment for `tier` on a key whose current state is `current` (undefined for a new key).
+ *  - Pro (30 days) stacks on remaining time, also on a Founder key (which stays Founder: never another 10 years).
+ *  - Founder sets max(current, now + 10 years): an upgrade from Pro never shortens the key, and buying Founder
+ *    again never stacks a second decade. */
+export function paidUntilAfter(
+  current: { paidUntil: number; lifetime?: boolean } | null | undefined,
+  now: number,
+  tier: "monthly" | "lifetime",
+): { paidUntil: number; lifetime: boolean } {
+  if (tier === "lifetime") {
+    return { paidUntil: Math.max(current?.paidUntil ?? 0, now + LIFETIME_DAYS * DAY_MS), lifetime: true };
+  }
+  return { paidUntil: extendedUntil(current?.paidUntil, now, PASS_DAYS), lifetime: current?.lifetime === true };
 }
 
 export function escapeHtml(text: string): string {

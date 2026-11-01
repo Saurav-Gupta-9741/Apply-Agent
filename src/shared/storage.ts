@@ -100,10 +100,17 @@ export async function setQueueRunning(running: boolean): Promise<void> {
 
 /** Read, change and write one stored list as one step. Two saves close together (two clicks, two panel windows, the
  * panel and the background) each see the other's result instead of overwriting it. */
-async function exclusive<T>(name: string, fn: () => Promise<T>): Promise<T> {
+export async function exclusive<T>(name: string, fn: () => Promise<T>): Promise<T> {
   const locks = (globalThis.navigator as Navigator | undefined)?.locks;
-  return locks ? locks.request(`applyagent:${name}`, fn) : fn();
+  if (locks) return locks.request(`applyagent:${name}`, fn);
+  // No Web Locks (older browsers, tests): at least serialise the steps taken in this context.
+  const previous = fallbackChains.get(name) ?? Promise.resolve();
+  const next = previous.then(fn, fn);
+  fallbackChains.set(name, next.catch(() => undefined));
+  return next;
 }
+
+const fallbackChains = new Map<string, Promise<unknown>>();
 
 export async function loadProfile(): Promise<Profile> {
   const data = await chrome.storage.local.get(KEYS.profile);

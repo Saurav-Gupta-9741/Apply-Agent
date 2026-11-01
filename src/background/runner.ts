@@ -8,6 +8,12 @@ import {
 import { applicationUrl, planNext, reconcileQueue, submittedToday } from "./queue";
 import { currentLicense, remainingSubmissions } from "../shared/license";
 import { pendingSubmission, sendToApplication } from "../shared/frames";
+import {
+  checkStart, clockTime, loadPacing, loadPacingState, prune, recordChallenge, siteKey, tryStart, waitNote, type PaceDecision,
+} from "../shared/pacing";
+
+/** The one-shot alarm that resumes the queue when the earliest waiting item may start. */
+export const PACE_ALARM = "queue-pace";
 
 const PAGE_LOAD_TIMEOUT_MS = 30_000;
 const FORM_RETRIES = 3; // single-page apps often render the form a moment after "load"
@@ -46,8 +52,14 @@ export function pendingQuestions(report: RunReport | undefined): PendingQuestion
   return questions.length ? questions : undefined;
 }
 
+/** What the user reads when a site showed a robot check (the backoff times are added by the runner). */
+export function challengeNote(detail: string): string {
+  return `Stopped: the site showed ${detail}. ApplyAgent never solves or bypasses these. Solve it in the tab yourself if you want, then press Retry.`;
+}
+
 export function queueStatusFor(report: RunReport | undefined): { status: QueueStatus; note: string } {
   if (!report) return { status: "failed", note: "No application form found on this page" };
+  if (report.challenge) return { status: "needs_user", note: challengeNote(report.challenge) };
   switch (report.status) {
     case "submitted_confirmed":
       return { status: "applied", note: report.confirmationText ?? "Confirmed by the employer's site" };
@@ -228,12 +240,29 @@ async function runItem(item: QueueItem): Promise<void> {
   if ((!report || report.status === "not_a_form") && (await openApplication(tab.id))) {
     report = await runInTab(tab.id, { type: "RUN", mode: settings.mode, continuing: true }); // the application we opened
   }
-  const { status, note } = queueStatusFor(report);
+  let { status, note } = queueStatusFor(report);
+  if (report?.challenge) note = await backOff(report.url || url, report.challenge, note);
   await setItem(item.id, { status, note, title: item.title || report?.jobTitle || "", questions: pendingQuestions(report) });
   // Finished tabs close; tabs that need the user stay open for them.
   if (status === "applied" || status === "failed") {
     setTimeout(() => void chrome.tabs.remove(tab.id!).catch(() => undefined), 3000);
   }
+}
+
+/** A site showed a robot check: pause that site for 30 minutes and the whole queue for 10, and say so. */
+export async function backOff(url: string, detail: string, note = challengeNote(detail)): Promise<string> {
+  const state = await recordChallenge(url, detail);
+  const site = state.sitePausedUntil[siteKey(url)];
+  await scheduleResume(state.queuePausedUntil);
+  return `${note} This site is paused until ${site ? clockTime(site) : "later"} and the queue until ${clockTime(state.queuePausedUntil)}.`;
+}
+
+/** Wake the queue when the earliest waiting item may start (the 1-minute pump alarm also keeps checking). */
+async function scheduleResume(at: number | undefined): Promise<void> {
+  if (!at || typeof chrome === "undefined" || !chrome.alarms?.create) return;
+  const existing = await chrome.alarms.get(PACE_ALARM).catch(() => undefined);
+  if (existing && existing.scheduledTime <= at && existing.scheduledTime > Date.now()) return;
+  await chrome.alarms.create(PACE_ALARM, { when: Math.max(at, Date.now() + 1000) });
 }
 
 // --- the pump --------------------------------------------------------------------------------------------
@@ -246,12 +275,22 @@ export async function pump(): Promise<void> {
   try {
     if (!(await isQueueRunning())) return;
     await reconcile();
-    const [queue, applications, settings, license] = await Promise.all([loadQueue(), loadApplications(), loadSettings(), currentLicense()]);
+    const [queue, applications, settings, license, pacing, paceState] = await Promise.all([
+      loadQueue(), loadApplications(), loadSettings(), currentLicense(), loadPacing(), loadPacingState(),
+    ]);
     const now = new Date();
+    // Safe pacing: items a limit holds back now are left out of this round (they wait, with the reason shown).
+    const state = prune(paceState, now.getTime());
+    const waits = new Map<string, Exclude<PaceDecision, { ok: true }>>();
+    for (const q of queue) {
+      if (q.status !== "queued") continue;
+      const decision = checkStart(state, pacing, siteKey(applicationUrl(q.url)), now.getTime());
+      if (!decision.ok) waits.set(q.id, decision);
+    }
     // Free plan: the monthly allowance caps today's budget too.
     const left = remainingSubmissions(license, applications, now);
     const effectiveCap = Math.min(settings.dailyCap, submittedToday(applications, now) + left);
-    const plan = planNext(queue, applications, { ...settings, dailyCap: effectiveCap }, now);
+    const plan = planNext(queue, applications, { ...settings, dailyCap: effectiveCap }, now, (q) => !waits.has(q.id));
     if (left === 0 && queue.some((q) => q.status === "queued")) {
       const note = "Free plan limit reached (20 applications this month). Upgrade to Pro or wait until next month.";
       await updateQueue((q) => q.map((x) => (x.status === "queued" && x.note !== note ? { ...x, note } : x)));
@@ -261,13 +300,30 @@ export async function pump(): Promise<void> {
       await setQueueRunning(false); // nothing left to do
       return;
     }
+    // Every start is checked and counted in one locked step, so starts at the same moment never pass a limit together.
+    const starting: QueueItem[] = [];
+    for (const item of plan.start) {
+      const decision = await tryStart(applicationUrl(item.url), now.getTime());
+      if (decision.ok) starting.push(item);
+      else waits.set(item.id, decision);
+    }
     await updateQueue((q) => q.map((x) => {
       const skipped = plan.skip.find((s) => s.item.id === x.id);
       if (skipped) return { ...x, status: "skipped" as const, note: skipped.note, updatedAt: new Date().toISOString() };
-      if (plan.start.some((s) => s.id === x.id)) return { ...x, status: "running" as const, note: "Starting…", updatedAt: new Date().toISOString() };
+      if (starting.some((s) => s.id === x.id)) {
+        return { ...x, status: "running" as const, note: "Starting…", waitUntil: undefined, updatedAt: new Date().toISOString() };
+      }
+      const wait = x.status === "queued" ? waits.get(x.id) : undefined;
+      if (wait) {
+        const note = waitNote(wait, pacing, now.getTime());
+        return x.note === note && x.waitUntil === wait.nextAt ? x : { ...x, note, waitUntil: wait.nextAt, updatedAt: new Date().toISOString() };
+      }
+      if (x.status === "queued" && x.waitUntil !== undefined) return { ...x, note: undefined, waitUntil: undefined };
       return x;
     }));
-    for (const item of plan.start) {
+    const nextWake = Math.min(...[...waits.values()].map((w) => w.nextAt));
+    if (Number.isFinite(nextWake)) await scheduleResume(nextWake);
+    for (const item of starting) {
       void startItem(item)
         .catch(async (e: unknown) => setItem(item.id, { status: "failed", note: e instanceof Error ? e.message : "Unexpected error" }))
         .finally(() => void pump());
@@ -286,8 +342,10 @@ async function reconcile(): Promise<void> {
 
 /** A page in a queued item's tab reported. "Applied" only counts where ApplyAgent submitted in that tab (submitted). */
 export async function onTabReport(tabId: number, report: RunReport, submitted: boolean): Promise<void> {
-  const { status, note } = queueStatusFor(report);
+  let { status, note } = queueStatusFor(report);
   if (status === "applied" && !submitted) return;
+  // A robot check, in a queued tab or in a tab the user filled from the panel: the queue backs off either way.
+  if (report.challenge && report.url) note = await backOff(report.url, report.challenge, note);
   await updateQueue((queue) => queue.map((q) =>
     q.tabId === tabId && q.status !== "applied"
       ? { ...q, status, note, questions: pendingQuestions(report), updatedAt: new Date().toISOString() }

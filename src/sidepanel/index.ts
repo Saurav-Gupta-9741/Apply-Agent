@@ -24,6 +24,8 @@ import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shar
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
 import { findSuggestedCorrection } from "../shared/corrections";
 import { buildDiagnostic } from "../shared/diagnostic";
+import { clockTime, loadPacing, loadPacingState, PACING_BOUNDS, savePacing, statusLine, type PacingSettings } from "../shared/pacing";
+import type { ConsentBox, ConsentList, TickResult } from "../shared/consent-review";
 
 let cachedCorrections: UserCorrection[] = [];
 void loadCorrections().then((c) => { cachedCorrections = c; });
@@ -375,6 +377,7 @@ function clearReport(): void {
   $("fields-box").hidden = true;
   $("report-problem").hidden = true;
   lastReport = undefined;
+  clearConsent();
 }
 
 chrome.tabs.onActivated.addListener(() => {
@@ -674,7 +677,9 @@ function showReport(report: RunReport | undefined): void {
       break;
     case "needs_user": {
       const parts = [];
-      if (report.captcha) parts.push("Solve the CAPTCHA on the page, then press Fill again.");
+      if (report.challenge) {
+        parts.push(`ApplyAgent stopped: the site is showing ${report.challenge}. It never solves or gets past these checks. If you want to go on, solve it on the page yourself, then press Fill again.`);
+      } else if (report.captcha) parts.push("Solve the CAPTCHA on the page, then press Fill again.");
       if (report.errors.length) parts.push(`The site reported: ${report.errors.join("; ")}`);
       if (report.fields.some((f) => f.status === "needs_user")) parts.push("Answer the questions below.");
       setStatus(parts.join(" ") || "Some required fields could not be filled.", "warn");
@@ -745,6 +750,10 @@ async function run(): Promise<void> {
       return;
     }
     showReport(report);
+    // After a fill: the consent boxes on the page, for the user to read and decide one by one.
+    if (report && !report.challenge && report.status !== "submitted_confirmed" && report.status !== "submitted_unconfirmed" && report.status !== "not_a_form") {
+      await loadConsent(tabId);
+    }
   } finally {
     agentRunning = false;
     runTabId = undefined;
@@ -822,6 +831,98 @@ $("submit").addEventListener("click", async () => {
     markState("idle");
   }
 });
+
+// --- Consent review ----------------------------------------------------------------------------------
+/** The tab and frame the listed consent boxes belong to: "Tick this box" acts there only. */
+let consentTab: number | undefined;
+let consentFrameUrl = "";
+
+const CONSENT_TAG: Record<ConsentBox["tag"], [string, string]> = {
+  legal: ["Legal — read carefully", "warn"], marketing: ["Marketing", "plain"], consent: ["Consent", "info"],
+};
+
+function clearConsent(): void {
+  consentTab = undefined;
+  consentFrameUrl = "";
+  $("consent-list").replaceChildren();
+  $("consent-box").hidden = true;
+}
+
+function consentMessage(tabId: number, message: Message): Promise<unknown> {
+  // The same frame targeting as Fill: only the frame holding the application answers.
+  return sendToApplication(tabId, message) as Promise<unknown>;
+}
+
+async function loadConsent(tabId: number): Promise<void> {
+  const result = (await consentMessage(tabId, { type: "CONSENT_LIST" })) as Partial<ConsentList> & Partial<RunReport> | undefined;
+  if (!result || !Array.isArray(result.boxes)) {
+    clearConsent();
+    return;
+  }
+  consentTab = tabId;
+  consentFrameUrl = result.frameUrl ?? "";
+  renderConsent(result.boxes);
+}
+
+function renderConsent(boxes: ConsentBox[]): void {
+  const list = $("consent-list");
+  list.replaceChildren();
+  $("consent-box").hidden = boxes.length === 0;
+  const open = boxes.filter((b) => !b.checked).length;
+  $("consent-summary").textContent = `${boxes.length} found · ${open} not ticked`;
+  for (const box of boxes) list.append(consentItem(box));
+}
+
+function consentItem(box: ConsentBox): HTMLLIElement {
+  const [tagText, tagTone] = CONSENT_TAG[box.tag];
+  const textEl = h("p", { class: "consent-text" }, box.label);
+  const long = box.label.length > 180;
+  if (long) textEl.classList.add("clamped");
+  const chips = h("div", { class: "chips" },
+    chip(box.required ? "Required by form" : "Optional", box.required ? "warn" : "plain"),
+    chip(tagText, tagTone),
+    chip(box.checked ? "Ticked" : "Not ticked", box.checked ? "ok" : ""));
+  const item = h("li", { class: `consent-item ${box.tag}${box.checked ? " ticked" : ""}`, "data-consent": box.id }, chips, textEl);
+  if (box.optOut) item.append(h("span", { class: "consent-note" }, "This box says no: ticking it refuses or opts out."));
+  const row = h("div", { class: "button-row" });
+  if (long) {
+    const more = button("Show full text", { variant: "ghost", size: "sm" });
+    more.setAttribute("aria-expanded", "false");
+    more.addEventListener("click", () => {
+      const clamped = textEl.classList.toggle("clamped");
+      more.setAttribute("aria-expanded", String(!clamped));
+      more.querySelector("span")!.textContent = clamped ? "Show full text" : "Show less";
+    });
+    row.append(more);
+  }
+  const show = button("Show on page", { variant: "ghost", icon: "external", size: "sm" });
+  show.addEventListener("click", () => {
+    if (consentTab !== undefined) void consentMessage(consentTab, { type: "CONSENT_SHOW", id: box.id });
+  });
+  row.append(show);
+  if (!box.checked) {
+    const tick = button("Tick this box", { variant: "secondary", icon: "check", size: "sm", title: "Ticks this one box on the page, nothing else" });
+    tick.addEventListener("click", async () => {
+      if (consentTab === undefined) return;
+      busy(tick, true);
+      const result = (await consentMessage(consentTab, {
+        type: "CONSENT_TICK", id: box.id, label: box.label, frameUrl: consentFrameUrl,
+      })) as Partial<TickResult> & Partial<RunReport> | undefined;
+      busy(tick, false);
+      if (result?.ok) {
+        toast(result.already ? "That box was already ticked" : box.required ? "Ticked that one box. Press Fill again to continue." : "Ticked that one box");
+        await loadConsent(consentTab);
+        return;
+      }
+      const reason = result?.reason ?? result?.errors?.[0] ?? "Could not reach the page. Nothing was ticked.";
+      toast(reason, "warn");
+      setStatus(reason, "warn");
+    });
+    row.append(tick);
+  }
+  item.append(row);
+  return item;
+}
 
 // --- Report a problem --------------------------------------------------------------------------------
 $("report-problem").addEventListener("click", async () => {
@@ -1498,6 +1599,7 @@ async function renderQueue(): Promise<void> {
     summary.append(chip(`${n} ${text.toLowerCase()}`, tone.replace(" live", "")));
   }
   setCount("queue", (counts.needs_user ?? 0) + (counts.ready ?? 0), true);
+  await renderPacing();
   await renderInbox(queue);
 
   const list = $("queue-list");
@@ -1507,7 +1609,8 @@ async function renderQueue(): Promise<void> {
     return;
   }
   for (const q of queue) {
-    const [text, tone] = QUEUE_CHIP[q.status];
+    const waiting = q.status === "queued" && q.waitUntil !== undefined && q.waitUntil > Date.now();
+    const [text, tone] = waiting ? ["Waiting", "info"] : QUEUE_CHIP[q.status];
     const body = h("div", { class: "item-body" },
       h("div", { class: "item-top" }, h("span", { class: "item-title" }, q.title || q.company || hostOf(q.url)), chip(text, tone)),
       h("div", { class: "item-sub truncate" }, [q.company, hostOf(q.url)].filter(Boolean).join(" · ")));
@@ -1592,6 +1695,41 @@ for (const id of ["set-parallel", "set-cap", "set-mode"]) {
     toast("Queue settings saved");
   });
 }
+// --- Safe pacing ------------------------------------------------------------------------------------------
+const PACE_INPUTS: Array<[string, "maxPerHour" | "maxPerDay" | "perSiteCooldownMinutes"]> = [
+  ["pace-hour", "maxPerHour"], ["pace-day", "maxPerDay"], ["pace-gap", "perSiteCooldownMinutes"],
+];
+
+async function renderPacing(): Promise<void> {
+  const [pacing, state] = await Promise.all([loadPacing(), loadPacingState()]);
+  for (const [id, key] of PACE_INPUTS) {
+    if (document.activeElement !== $(id)) ($(id) as HTMLInputElement).value = String(pacing[key]);
+  }
+  const now = Date.now();
+  $("pacing-status").textContent = statusLine(state, pacing, now);
+  const pause = $("pacing-pause");
+  const paused = state.queuePausedUntil > now;
+  pause.hidden = !paused;
+  pause.textContent = paused ? `A site showed a robot check, so the queue is paused until ${clockTime(state.queuePausedUntil)}.` : "";
+}
+
+for (const [id, key] of PACE_INPUTS) {
+  $(id).addEventListener("change", async () => {
+    const input = $(id) as HTMLInputElement;
+    const [min, max] = PACING_BOUNDS[key];
+    const wanted = Number(input.value);
+    const valid = Number.isFinite(wanted) && input.value.trim() !== "";
+    const saved: PacingSettings = await savePacing(valid ? { [key]: wanted } : {});
+    input.value = String(saved[key]);
+    toast(saved[key] === wanted ? "Safe pacing saved" : `Saved as ${saved[key]} (allowed: ${min}–${max})`, saved[key] === wanted ? "ok" : "warn");
+    await renderPacing();
+  });
+}
+// The status line counts down by itself ("next at 14:05" goes away when that time comes).
+setInterval(() => {
+  if (!$("sec-queue").hidden) void renderPacing();
+}, 30_000);
+
 $("queue-start").addEventListener("click", () => void queueMessage({ type: "QUEUE_START" }));
 $("queue-pause").addEventListener("click", () => void queueMessage({ type: "QUEUE_PAUSE" }));
 $("queue-clear").addEventListener("click", () => void queueMessage({ type: "QUEUE_CLEAR_FINISHED" }));
@@ -1601,6 +1739,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== "local") return;
   if (changes.corrections?.newValue) cachedCorrections = changes.corrections.newValue as UserCorrection[];
   if (changes.queue || changes.queueRunning || changes.settings) void renderQueue();
+  else if (changes.pacing || changes.pacingState) void renderPacing();
   if (changes.applications) void renderTracker();
   if (changes.answers) {
     void renderAnswers();

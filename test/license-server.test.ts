@@ -159,7 +159,7 @@ describe("worker end to end (fake KV, no network)", () => {
     const thanksRes = await worker.fetch(new Request(`https://lic.example.com/thanks?${p}`), env);
     expect(thanksRes.status).toBe(200);
     const body = await thanksRes.text();
-    expect(body).toContain("Founder Lifetime");
+    expect(body).toContain("Founder (10 years)");
 
     const key = (await env.LICENSES.get("pay:pay_LIFETIME999"))!;
     expect(key).toBeDefined();

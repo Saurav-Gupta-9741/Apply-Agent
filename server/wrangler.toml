@@ -11,6 +11,9 @@ id = "REPLACE_WITH_KV_NAMESPACE_ID"
 PUBLIC_BASE_URL = "https://applyagent-license.REPLACE.workers.dev"
 PRICE_INR_PAISE = "14900"   # ₹149
 PRICE_USD_CENTS = "900"     # $9 (needs international payments enabled on your Razorpay account)
+PRICE_LIFETIME_INR_PAISE = "299900"  # ₹2999 Founder plan (10 years, one-time)
+PRICE_LIFETIME_USD_CENTS = "4900"    # $49 Founder plan
+FOUNDER_ENABLED = "true"             # "false" takes the limited Founder plan off sale (hidden in /plans, checkout refused)
 
 # Secrets (never commit): npx wrangler secret put <NAME>
 #   RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, RAZORPAY_WEBHOOK_SECRET, LICENSE_PRIVATE_JWK

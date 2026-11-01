@@ -3,9 +3,10 @@
   "OPERATOR": "",
   "CITY": "",
   "STORE_URL": "",
-  "PRICE_INR": "₹149",
-  "PRICE_USD": "$9",
-  "LAUNCH_BADGE": "Launch offer: ₹49 for your first pass",
+  "PRICE_PRO_INR": "149",
+  "PRICE_PRO_USD": "9",
+  "PRICE_FOUNDER_INR": "2999",
+  "PRICE_FOUNDER_USD": "49",
   "DATE": "",
   "YEAR": "2026"
 }

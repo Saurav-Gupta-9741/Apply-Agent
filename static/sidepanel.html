@@ -87,6 +87,11 @@
       <p class="hint center shortcut-hint">Tip: press <kbd id="fill-shortcut">Alt+Shift+F</kbd> on any application, or right-click → <em>Fill this application with ApplyAgent</em>.</p>
       <div id="status" class="banner" role="status" hidden></div>
       <div id="questions" class="stack"></div>
+      <div id="consent-box" class="card consent-card" hidden>
+        <div class="card-head"><h2>Consent boxes on this page</h2><span id="consent-summary" class="muted"></span></div>
+        <p class="hint">ApplyAgent never ticks these for you. Read each one. To agree, press "Tick this box": it ticks that one box only.</p>
+        <ul id="consent-list" class="cards"></ul>
+      </div>
       <button id="submit" class="btn btn-primary btn-lg btn-block" hidden><span data-icon="send"></span><span>Submit application</span></button>
       <details id="fields-box" class="card details" hidden>
         <summary><span>Field details</span><span id="fields-summary" class="muted"></span></summary>
@@ -151,6 +156,19 @@
           <button id="queue-pause" class="btn btn-secondary"><span data-icon="pause" data-size="16"></span><span>Pause</span></button>
           <button id="queue-clear" class="btn btn-ghost"><span data-icon="broom" data-size="16"></span><span>Clear finished</span></button>
         </div>
+      </div>
+      <div class="card" id="pacing-card">
+        <div class="card-head"><h2>Safe pacing</h2><span id="pacing-status" class="muted" aria-live="polite"></span></div>
+        <p class="hint">Keeps the queue well under what job sites allow. If a site shows a robot check, ApplyAgent stops and waits; it never tries to get past one.</p>
+        <div class="settings-grid pacing-grid">
+          <label class="field-label">Per hour
+            <input type="number" id="pace-hour" class="input" min="1" max="20" step="1" inputmode="numeric" /></label>
+          <label class="field-label">Per day
+            <input type="number" id="pace-day" class="input" min="1" max="100" step="1" inputmode="numeric" /></label>
+          <label class="field-label">Same site gap (min)
+            <input type="number" id="pace-gap" class="input" min="0" max="30" step="1" inputmode="numeric" /></label>
+        </div>
+        <p id="pacing-pause" class="hint" hidden></p>
       </div>
       <div class="queue-status"><span id="queue-state" class="chip"></span><div id="queue-summary" class="chips"></div></div>
       <div id="inbox" class="stack" hidden></div>

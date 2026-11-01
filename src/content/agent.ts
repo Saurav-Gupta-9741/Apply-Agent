@@ -6,7 +6,7 @@ import { generic, isGoogleForms, pickAdapter } from "./adapters";
 import { workEntries } from "./classify";
 import { codeOptionFor, dialCodePickerFor, isDialCodePicker, JUST_A_DIAL_CODE, phoneBoxFor, selectedCode, splitPhone } from "./phone";
 import { decideWithMeaning, type Meaning } from "./meaning";
-import { detectConfirmation, hasCaptcha, visibleErrors } from "./detect";
+import { detectChallenge, detectConfirmation, hasCaptcha, visibleErrors } from "./detect";
 import { DROPDOWN, extractFields, inWorkSection, sectionHeadings, type ExtractedField } from "./extract";
 import { currentValue, fillCombobox, fillDropdown, fillField, type FillOutcome } from "./fill";
 import { deepQueryAll } from "./dom";
@@ -14,6 +14,8 @@ import type { PageFacts } from "./facts";
 import { jobCountries } from "./joblocation";
 import { normalize } from "../shared/text";
 import { pruneDisconnectedCorrections, trackCorrection } from "./corrections";
+import { isConsentLabel } from "../shared/consent-review";
+import { questionKey } from "./classify";
 
 /** Scroll a field into view and outline it briefly, so the user can answer it on the page. */
 let highlightTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -57,7 +59,26 @@ export interface AgentContext {
   /** The local question model: what each question means (absent in tests and when the model cannot run). */
   understand?: (texts: string[]) => Promise<Array<Meaning | null> | null>;
   applications?: ApplicationRecord[];
+  /** Safe pacing: a fixed pause after each field the agent fills, so the page's own scripts react (0 when absent). */
+  pauseBetweenFieldsMs?: number;
+  /** Stop at once when the page shows a robot check or a rate-limit message (on unless switched off). */
+  stopOnChallenge?: boolean;
 }
+
+/** The run stops here: the site shows a robot check or says it is limiting requests. Never solved, never bypassed. */
+function challengeReport(report: RunReport, kind: string, detail: string): RunReport {
+  return { ...report, status: "needs_user", captcha: kind === "captcha" || report.captcha, challenge: detail };
+}
+
+/** Consent and agreement boxes are the user's decision: the agent ticks one only with the user's own saved answer to
+ * exactly that box. Everything else is left for the side panel's consent review, one box at a time. */
+function consentGuard(field: ExtractedField["descriptor"], decision: Decision): Decision | undefined {
+  if (field.control !== "checkbox" || !isConsentLabel(field.label)) return undefined;
+  const exact = decision.kind === "answer" && normalize(decision.question) === normalize(questionKey(field));
+  return exact ? undefined : { kind: "ask", reason: "sensitive", topic: "consent" };
+}
+
+const CONSENT_DETAIL = "Consent box: read it and decide under \"Consent boxes on this page\"";
 
 const UNDERSTAND_TIMEOUT_MS = 10_000;
 
@@ -94,16 +115,22 @@ export async function scanForm(doc: Document, ctx: Omit<AgentContext, "mode">): 
   report.fields = fields.map((field) => {
     const first = field.elements[0];
     const code = first && isDialCodePicker(first) && phoneBoxFor(first) ? splitPhone(ctx.profile.phone).code : undefined;
-    const decision: Decision = code ? { kind: "profile", key: "phone", value: `+${code}` }
+    const decided: Decision = code ? { kind: "profile", key: "phone", value: `+${code}` }
       : decideWithMeaning(field.descriptor, ctx.profile, ctx.answers, page, meanings.get(field.descriptor.label));
+    const guarded = consentGuard(field.descriptor, decided);
+    const decision: Decision = guarded ?? decided;
     const existing = code ? "" : currentValue(field); // a picker's default code is not the user's choice
     const status: FieldResult["status"] = existing ? "already_filled"
+      : guarded && !field.descriptor.required ? "skipped"
       : decision.kind === "ask" ? "needs_user" : decision.kind === "draft" ? "needs_user" : decision.kind === "skip" ? "skipped" : "filled";
+    if (guarded && !existing) return { field: field.descriptor, decision, status, detail: CONSENT_DETAIL };
     return { field: field.descriptor, decision, status, review: decision.kind === "draft" || undefined, detail: decision.kind === "draft" ? "draft ready for review" : status === "filled" ? "would fill" : undefined };
   });
   report.captcha = hasCaptcha(doc);
   report.status = report.fields.some((r) => r.field.required && r.status === "needs_user") || report.captcha
     ? "needs_user" : "ready_to_submit";
+  const challenge = ctx.stopOnChallenge === false ? null : detectChallenge(doc);
+  if (challenge) report.challenge = challenge.detail;
   return report;
 }
 
@@ -208,6 +235,8 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
     };
   }
   if (decision.kind === "skip") return { field: field.descriptor, decision, status: "skipped", detail: decision.reason };
+  const guarded = consentGuard(field.descriptor, decision);
+  if (guarded) return { field: field.descriptor, decision: guarded, status: field.descriptor.required ? "needs_user" : "skipped", detail: CONSENT_DETAIL };
   if (decision.kind === "ask") return { field: field.descriptor, decision, status: "needs_user" };
   const el = field.elements[0]!;
   let value = decision.kind === "resume" ? ctx.profile.resume?.name ?? "" : decision.value;
@@ -228,6 +257,12 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
   const ctx: AgentContext = { ...context, page: context.page ?? { jobCountries: jobCountries(doc), url: doc.location?.href ?? "", applications: context.applications } };
   const { adapter, root } = locate(doc);
   const report = baseReport(doc, adapter.platform, adapter.jobTitle(doc));
+  const stopOnChallenge = ctx.stopOnChallenge !== false;
+  const challengeNow = () => (stopOnChallenge ? detectChallenge(doc) : null);
+  const pause = Math.max(0, ctx.pauseBetweenFieldsMs ?? 0);
+  // A robot check or rate-limit page: stop before touching anything.
+  const before = challengeNow();
+  if (before) return challengeReport(report, before.kind, before.detail);
   if (!root) {
     // A page without a form may be the confirmation page of an earlier submission.
     const confirmation = detectConfirmation(doc);
@@ -259,16 +294,23 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
     const postMeanings = await readMeanings(newFields, ctx);
     for (const [label, m] of postMeanings) meanings.set(label, m);
   }
-  for (const field of remaining) {
+  for (const [index, field] of remaining.entries()) {
+    // A robot check that appears while filling (some sites show one after a few fields): stop right there.
+    const challenge = challengeNow();
+    if (challenge) return challengeReport({ ...report, fields: [...uploads, ...rest] }, challenge.kind, challenge.detail);
     const res = await fillOne(field, ctx, meanings.get(field.descriptor.label));
     if (res.status === "filled" && (res.decision.kind === "profile" || res.decision.kind === "answer" || res.decision.kind === "work")) {
       trackCorrection(doc, field);
     }
     rest.push(res);
+    // A fixed pause (the same every time) so the page's own scripts can react to the value: reliability, not disguise.
+    if (pause && index < remaining.length - 1 && (res.status === "filled" || res.status === "failed")) await sleep(pause);
   }
   const results = [...uploads, ...rest];
 
   report.fields = results;
+  const after = challengeNow();
+  if (after) return challengeReport(report, after.kind, after.detail);
   report.captcha = hasCaptcha(doc);
   const blocking = results.some(
     (r) => r.field.required && (r.status === "needs_user" || r.status === "failed"),
@@ -309,7 +351,7 @@ export async function submitForm(doc: Document, timeoutMs = 20000, beforeSubmit?
   const { adapter, root } = locate(doc);
   const report = baseReport(doc, adapter.platform, adapter.jobTitle(doc));
   if (!root) return report;
-  if (hasCaptcha(doc)) return { ...report, status: "needs_user", captcha: true };
+  if (hasCaptcha(doc)) return { ...report, status: "needs_user", captcha: true, challenge: "a CAPTCHA" };
   const action = adapter.action(root);
   if (!action) return { ...report, status: "needs_user", errors: ["Submit button not found"] };
   // Pressing "Next" is not submitting: the tracker must never record an application that was not sent.
@@ -330,7 +372,7 @@ export async function submitForm(doc: Document, timeoutMs = 20000, beforeSubmit?
     await sleep(500);
     const confirmation = detectConfirmation(doc);
     if (confirmation.confirmed) return { ...report, status: "submitted_confirmed", confirmationText: confirmation.text, submittedAt: new Date().toISOString() };
-    if (hasCaptcha(doc)) return { ...report, status: "needs_user", captcha: true };
+    if (hasCaptcha(doc)) return { ...report, status: "needs_user", captcha: true, challenge: "a CAPTCHA" };
     const errors = visibleErrors(doc).filter((e) => !before.has(e));
     if (errors.length) return { ...report, status: "needs_user", errors };
   }
@@ -417,7 +459,7 @@ export async function runOnce(doc: Document, ctx: AgentContext, beforeSubmit?: B
       await beforeSubmit?.(filled);
       return done({ ...filled, status: "submitted_confirmed", confirmationText: outcome.text, submittedAt: new Date().toISOString() });
     }
-    if (outcome.kind === "captcha") return done({ ...filled, status: "needs_user", captcha: true });
+    if (outcome.kind === "captcha") return done({ ...filled, status: "needs_user", captcha: true, challenge: "a CAPTCHA" });
     if (outcome.kind === "errors") return done({ ...filled, status: "needs_user", errors: outcome.errors });
     if (outcome.kind === "stuck") {
       return done({ ...filled, status: "needs_user", errors: ["The Next button didn't open a new step. Check the page, then press Fill again."] });

@@ -4,10 +4,12 @@ import type { Detection, Message, RunReport } from "../shared/types";
 import { loadAnswers, loadApplications, loadProfile, loadSettings } from "../shared/storage";
 import { generic, pickAdapter } from "./adapters";
 import { highlightField, runOnce, scanForm, submitForm } from "./agent";
-import { detectConfirmation, hasCaptcha } from "./detect";
+import { detectChallenge, detectConfirmation } from "./detect";
 import { findApplyControl, sensePage } from "./sense";
 import { isApplicationPage } from "./target";
 import { HANDS_OFF_MESSAGE, platformFor, shouldDetect } from "../shared/platforms";
+import { loadPacing } from "../shared/pacing";
+import { consentElement, listConsentBoxes, tickConsentBox } from "../shared/consent-review";
 
 declare global {
   interface Window {
@@ -119,6 +121,22 @@ async function startSilentDetection(): Promise<void> {
   detectObserver.observe(document.documentElement, { childList: true, subtree: true });
 }
 
+/** Scroll to one element and outline it briefly (the same look as "Show on page" for questions). */
+let outlineTimer: ReturnType<typeof setTimeout> | undefined;
+function showOnPage(el: HTMLElement): void {
+  const target = (el.closest("label, .field, li, div") as HTMLElement | null) ?? el;
+  if (outlineTimer !== undefined) clearTimeout(outlineTimer);
+  target.scrollIntoView?.({ behavior: "smooth", block: "center" });
+  const previous = { outline: target.style.outline, offset: target.style.outlineOffset };
+  target.style.outline = "3px solid #8b8cff";
+  target.style.outlineOffset = "4px";
+  outlineTimer = setTimeout(() => {
+    outlineTimer = undefined;
+    target.style.outline = previous.outline;
+    target.style.outlineOffset = previous.offset;
+  }, 2500);
+}
+
 /** One run at a time per page: a second Fill, Save-and-refill or Submit while one is under way would type into the
  * same fields twice, or press Submit twice. */
 let busy = false;
@@ -140,7 +158,7 @@ if (!window.__applyAgentLoaded) {
 
   if (typeof chrome !== "undefined" && chrome.runtime?.onMessage?.addListener) {
     chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse: (r: unknown) => void) => {
-    const acting = ["RUN", "SUBMIT", "SCAN", "HIGHLIGHT", "OPEN_APPLICATION"].includes(message.type);
+    const acting = ["RUN", "SUBMIT", "SCAN", "HIGHLIGHT", "OPEN_APPLICATION", "CONSENT_LIST", "CONSENT_SHOW", "CONSENT_TICK"].includes(message.type);
     if (acting && platform.policy === "hands_off") {
       // Answer once: from the top frame, or from the frame that holds the form when the page around it is not ours.
       if (window !== window.top && !formRoot()) return false;
@@ -172,6 +190,41 @@ if (!window.__applyAgentLoaded) {
       sendResponse(highlightField(document, message.label, message.key));
       return false;
     }
+    // Consent review: the boxes are listed for the user, and one box is ticked per click, only on the application.
+    if (message.type === "CONSENT_LIST" || message.type === "CONSENT_SHOW" || message.type === "CONSENT_TICK") {
+      const root = formRoot();
+      if (!root) return false;
+      if (!isApplicationPage(document)) {
+        sendResponse(message.type === "CONSENT_LIST" ? { boxes: [], frameUrl: location.href } : { ok: false, reason: "This page is not the application form." });
+        return false;
+      }
+      if (message.type === "CONSENT_LIST") {
+        sendResponse(listConsentBoxes(root, location.href));
+        return false;
+      }
+      if (message.type === "CONSENT_SHOW") {
+        const el = consentElement(root, message.id);
+        if (el) showOnPage(el);
+        sendResponse({ ok: !!el });
+        return false;
+      }
+      // CONSENT_TICK: never while a fill or a submit is under way, and only in the frame the user's list came from.
+      if (busy) {
+        sendResponse({ ok: false, reason: "ApplyAgent is working on this page. Wait for it to finish, then tick the box." });
+        return false;
+      }
+      if (message.frameUrl !== location.href) {
+        sendResponse({ ok: false, reason: "The page changed since the list was made. Nothing was ticked. Refresh the list." });
+        return false;
+      }
+      busy = true;
+      try {
+        sendResponse(tickConsentBox(root, message.id, message.label));
+      } finally {
+        busy = false;
+      }
+      return false;
+    }
     if (message.type === "SCAN") {
       if (!formRoot()) return false;
       if (!isApplicationPage(document)) {
@@ -190,10 +243,13 @@ if (!window.__applyAgentLoaded) {
     if ((message.type === "RUN" || message.type === "SUBMIT") && !hasApplicationForm() && window === window.top) {
       // A sign-in wall (Workday, Taleo…): say so plainly instead of "no form found". Passwords are the user's.
       const sense = sensePage(document, pageUrl());
-      if (hasCaptcha(document)) {
-        // The site shows a robot check instead of the form: the user solves it, then presses Fill again.
+      const challenge = detectChallenge(document);
+      if (challenge) {
+        // The site shows a robot check (or "too many requests") instead of the form: ApplyAgent stops. The user may solve
+        // it, then press Fill again; ApplyAgent never solves or bypasses it.
         sendResponse({
-          status: "needs_user", platform: sense.platform, url: location.href, jobTitle: sense.jobTitle, fields: [], captcha: true, errors: [],
+          status: "needs_user", platform: sense.platform, url: location.href, jobTitle: sense.jobTitle, fields: [],
+          captcha: challenge.kind === "captcha", challenge: challenge.detail, errors: [],
         } satisfies RunReport);
         return false;
       }
@@ -226,8 +282,12 @@ if (!window.__applyAgentLoaded) {
     (async () => {
       void working(true); // the toolbar icon animates while this tab is being filled
       try {
+        const pacing = await loadPacing().catch(() => undefined);
         const report = message.type === "RUN"
-          ? await runOnce(document, { profile: await loadProfile(), answers: await loadAnswers(), applications: await loadApplications(), mode: message.mode, understand }, markSubmitting)
+          ? await runOnce(document, {
+            profile: await loadProfile(), answers: await loadAnswers(), applications: await loadApplications(), mode: message.mode, understand,
+            pauseBetweenFieldsMs: pacing?.pauseBetweenFieldsMs, stopOnChallenge: pacing?.stopOnChallenge,
+          }, markSubmitting)
           : await submitForm(document, 20000, markSubmitting);
         sendResponse(report);
         chrome.runtime.sendMessage({ type: "RUN_RESULT", report } satisfies Message).catch(() => undefined);

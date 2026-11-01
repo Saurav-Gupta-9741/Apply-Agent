@@ -92,7 +92,10 @@ export interface Plan {
 }
 
 /** Which queued items to start now, and which to skip, given every limit. */
-export function planNext(queue: QueueItem[], applications: ApplicationRecord[], settings: Settings, now: Date): Plan {
+/** canStart: safe pacing's answer for an item (an item it holds back waits, and takes no slot this round). */
+export function planNext(
+  queue: QueueItem[], applications: ApplicationRecord[], settings: Settings, now: Date, canStart: (item: QueueItem) => boolean = () => true,
+): Plan {
   const plan: Plan = { start: [], skip: [] };
   const running = queue.filter((q) => q.status === "running");
   const open = queue.filter((q) => OPEN_STATUSES.has(q.status)).length;
@@ -116,6 +119,7 @@ export function planNext(queue: QueueItem[], applications: ApplicationRecord[], 
     }
     const host = hostOf(item.url);
     if ((perHost.get(host) ?? 0) >= settings.perHostMax) continue; // wait for a slot on this site
+    if (!canStart(item)) continue; // safe pacing: this one waits (limit, cooldown or a pause after a robot check)
     plan.start.push(item);
     perHost.set(host, (perHost.get(host) ?? 0) + 1);
     startedCompanies.add(key);

@@ -9,7 +9,7 @@ import { clearDetection, recordDetection, syncDetector } from "./detector";
 import { setWorking } from "./icon";
 import { modelFits, understand } from "./understand";
 import { isValidJobUrl } from "./queue";
-import { onTabClosed, onTabReport, pendingQuestions, pump, queueStatusFor, runInTab, updateQueue, working } from "./runner";
+import { backOff, onTabClosed, onTabReport, PACE_ALARM, pendingQuestions, pump, queueStatusFor, runInTab, updateQueue, working } from "./runner";
 import { PENDING_MS, pendingSubmission, type PendingSubmission } from "../shared/frames";
 import { currentLicense, remainingSubmissions } from "../shared/license";
 
@@ -84,6 +84,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "local" && changes.settings) resyncDetector();
 });
 chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === PACE_ALARM) return void pump(); // a pacing wait or a robot-check pause is over
   if (alarm.name !== PUMP_ALARM) return;
   void expireSubmissions();
   void pump();
@@ -332,7 +333,8 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse: (r
         // Auto mode submits: only while the plan allows another submission.
         const mode = (await loadSettings()).mode === "auto" && (await allowance()) > 0 ? "auto" : "review";
         const report = await working(item.id, () => runInTab(tab.id!, { type: "RUN", mode }));
-        const { status, note } = queueStatusFor(report);
+        let { status, note } = queueStatusFor(report);
+        if (report?.challenge) note = await backOff(report.url || item.url, report.challenge, note);
         await updateQueue((queue) => queue.map((q) => (q.id === item.id
           ? { ...q, status, note, questions: pendingQuestions(report), updatedAt: new Date().toISOString() } : q)));
         if (status === "applied") setTimeout(() => void chrome.tabs.remove(tab.id!).catch(() => undefined), 3000);

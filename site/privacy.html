@@ -8,7 +8,10 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<header class="top"><div class="wrap"><a class="brand" href="index.html"><img src="mark.svg" alt="" />ApplyAgent</a></div></header>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html"><img src="mark.svg" alt="" /><span>ApplyAgent</span></a>
+  <nav class="links" aria-label="Main"><a href="index.html#pricing">Pricing</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="refund.html">Refunds</a></nav>
+</div></header>
 <article class="legal">
   <h1>Privacy Policy</h1>
   <p class="updated">Last updated: {{DATE}}</p>
@@ -24,9 +27,10 @@
   <ul>
     <li><strong>To the job websites you allow:</strong> the information you choose to submit in their application
       forms, exactly as when you apply yourself.</li>
-    <li><strong>To our licence server (only if you buy a Pro pass):</strong> your licence key, to check that your pass
-      is active. Payments are processed by Razorpay; we receive the payment ID and status, not your card or UPI
-      details.</li>
+    <li><strong>To our licence server (only if you buy a pass):</strong> only your licence key, to check that your
+      Pro pass or Founder plan is active. Nothing from your profile, resume or applications is sent with it. Payments
+      are processed by Razorpay; we receive the payment ID and status, not your card or UPI details. There are no
+      accounts or logins.</li>
     <li><strong>Question understanding:</strong> a small language model shipped inside the extension reads what form
       questions mean. It runs on your computer, offline; question text and your answers are never sent anywhere for
       this.</li>
@@ -57,7 +61,7 @@
   <h2>Contact</h2>
   <p><a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a></p>
 </article>
-<footer><div class="wrap"><span>© {{YEAR}} ApplyAgent</span>
+<footer><div class="wrap"><span>© {{YEAR}} {{OPERATOR}}</span>
   <span><a href="terms.html">Terms</a> · <a href="refund.html">Refunds</a></span></div></footer>
 </body>
 </html>

@@ -41,6 +41,12 @@ ALSO
 • Tracker with proof of every confirmed submission.
 • Works on multi-step forms, forms inside frames, and forms in 7 languages.
 
+PRICING
+• Free: 20 submitted applications a month, every feature.
+• Pro: ₹149 for 30 days in India, $9 elsewhere. Unlimited applications.
+• Founder (limited time): ₹2999 in India, $49 elsewhere, valid for 10 years.
+• One-time payments only: nothing renews automatically. You get a licence key; no account needed.
+
 ## Single purpose (required field)
 Fill job application forms on company career sites with the user's own saved details, leaving sensitive questions
 and the final submission to the user.
