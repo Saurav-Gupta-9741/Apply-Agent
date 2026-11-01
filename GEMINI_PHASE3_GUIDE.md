@@ -82,6 +82,68 @@ Measure after every step: `npx vitest run test/automation-eval.test.ts test/valu
 - Rename `reports/gold-human.json` → `reports/gold-script.json` (it is script-generated) and update references.
 - `reports/BENCHMARK.md`: what each metric means, how to label, how long labelling takes.
 
-## 4. Final report (put it in `reports/PHASE3_REPORT.md` and paste it back)
+## 4. How to work optimally
+
+### 4.1 The loop for every change (small steps, always green)
+1. **Read before writing.** Open the files you will touch and their tests. Find the existing helper before writing a new one (`grep -rn "functionName" src test`). Most things you need already exist: `normalize`/`bestOption` (src/shared/text.ts), `matchOptionWithEngine` (src/shared/option-matcher.ts), `parseRequirement` (src/shared/requirements.ts), `TECH_TERMS` (src/shared/techterms.ts), `splitPhone` (src/content/phone.ts), `sensitiveTopic`/`isSecretField` (src/content/classify.ts), `exclusive()` (src/shared/storage.ts), `sendToApplication` (src/shared/frames.ts), `tryStart` (src/shared/pacing.ts).
+2. **Write the failing test first** with the exact expected value, run it, see it fail for the right reason.
+3. **Make the smallest change** that passes it. Prefer returning `undefined` (ask) over a clever guess.
+4. **Run the targeted tests** for that area (seconds), then the safety set: `npx vitest run test/automation-eval.test.ts test/value-truth.test.ts test/knockout.test.ts test/option-matcher-strict.test.ts test/sensitive-hardening.test.ts test/honeypot-hardening.test.ts`.
+5. **Full suite + typecheck** before each commit. Browser tests (`npx playwright test --workers=1`, ~10 min) once per task, not per edit.
+6. If a test you did not touch fails, **stop and find out why** — it is telling you about a regression. Never "fix" it by changing its expectation.
+
+### 4.2 Order and time-boxing
+- Do tasks in order 1 → 5. Each one is independently shippable; commit and push each to `origin phase3` when green.
+- Time-box: if a sub-step takes more than 2× its estimate, write what blocks it in the report and move on. A smaller honest result beats a big broken one.
+- Stop work and report if the full suite is red for more than one step in a row.
+
+### 4.3 Task-by-task approach
+
+**Task 1 (resume import)**
+- Split the text into sections first (headings like EDUCATION / EXPERIENCE / SKILLS / PROJECTS, any case, with or without colons), then parse each section. Section-first parsing is far more accurate than scanning the whole text.
+- Dates: support `Jan 2022 – Present`, `01/2022 - 03/2024`, `2019–2023`, `Present/Current/Now/Till date`. Compute experience only from work entries with both ends known; overlapping jobs must not double-count.
+- Two-column PDFs: pdf.js gives text items with x/y; group by y into lines, and if two clear x-clusters exist, read the left column fully then the right.
+- Confidence: high only for exact-pattern fields (email, phone, URLs, a labelled "Name:" or the first non-heading line that looks like a name). Everything else medium/low → unticked by default.
+- Keep pdf.js out of the content script; load it only in the side panel on demand (dynamic import) so the content bundle stays small.
+
+**Task 2 (automation)**
+- Work data-first: run `test/automation-eval.test.ts` once with a temporary dump of all ask-once questions grouped by intent and reason (delete the dump file afterwards). Pick the biggest safe group, fix it, re-measure. Don't guess what to fix.
+- Calibrate on `reports/oof.json` only (out-of-fold). Never tune thresholds on the same rows you report — report the held-out result per intent.
+- Every new fill path must name its source (profile key or saved answer) in the decision, so value tests can check it.
+- For answer reuse, write the "must NOT reuse" trap tests first (different company / number / negation / country / "If yes"), then implement until they pass.
+
+**Task 3 (tracker / fit / meter)**
+- Put each feature in its own module (`src/sidepanel/tracker.ts`, `fit-card.ts`, `usage-meter.ts`) and add only a one-line import + init call in `src/sidepanel/index.ts`. Do not grow index.ts.
+- Storage: add new keys; never change the shape of existing saved data without a migration and a test that loads an old record.
+- Fit card: reuse `src/content/fit.ts`; strip `nav, header, footer, [role=navigation], [aria-label*=cookie i], .cookie` before reading the JD.
+
+**Task 4 (ATS coverage)**
+- Start with Workday (largest share of Indian MNC hiring), then SuccessFactors, iCIMS, Oracle/Taleo, SmartRecruiters, then Darwinbox/Keka/Zoho/Freshteam.
+- For each ATS: save the fixture → write the expected extraction (labels, controls, options) by reading the HTML yourself → make extract/fill pass → snapshot. Do not snapshot first and accept whatever comes out.
+- Custom widgets: open → wait for the listbox (`MutationObserver` with timeout, as `pickFromList` does) → choose via the strict matcher → verify the shown value → otherwise report "could not set" and leave it to the user.
+- Shadow DOM: traverse `element.shadowRoot` when open; closed shadow roots are out of reach — report them, don't hack around them.
+
+**Task 5 (benchmark)**
+- Only real forms count. Check each corpus file's origin (git log / comment); anything synthetic is excluded and listed.
+- The labelling page must make the human's job fast: one field per screen, real options as buttons, keys 1–9 to pick, `A` = should ask, `S` = skip, autosave to localStorage, export button. Target ~6 s per field.
+- Keep the scoring code tiny and obvious; it must not import anything from `src/content` except `decide`/`decideWithMeaning`.
+
+### 4.4 Traps that got earlier work rejected — don't repeat them
+- Fake-human typing / pointer events → banned (rule 2).
+- Bulk consent ticking → banned (rule 5).
+- A "Levenshtein / typo" matching stage → picked Iraq for Iran, Nigeria for Niger. Matching must be exact, normalized, or whole-word with all guards.
+- "First candidate in bucket" fallbacks → picked Bachelor of Arts for B.Tech. Ambiguous = undefined.
+- Substring checks without word boundaries → "Male" matched "Female"/"Transgender man".
+- Expected values computed by the code under test, or `toBeDefined()`-style asserts → hollow tests.
+- Calling script-generated data "hand-labelled", calling 167 tests "1,000 agents", saying "retrained" without changed model files.
+- Lowering a guard to raise a number (honeypot depth limit, clip regex) → caught and reverted.
+
+### 4.5 Efficiency
+- Use targeted test runs while iterating; the full suite is ~2 min and Playwright ~10 min — run them at commit points only.
+- Read files in parts (`sed -n 'START,ENDp'`) instead of whole 2,000-line files.
+- Don't regenerate big JSON reports unless the task needs it; don't commit generated dumps nobody reads.
+- Keep each commit focused on one task so a bad one can be reverted alone.
+
+## 5. Final report (put it in `reports/PHASE3_REPORT.md` and paste it back)
 
 For each task: files changed, what it does, exact test counts (unit + e2e), numbers before/after (auto / ask / human-only / wrong), anything not done and why, any existing test you changed and why. Then the full-suite output lines: `Test Files … Tests …` and Playwright `… passed`. No marketing words — numbers only.
