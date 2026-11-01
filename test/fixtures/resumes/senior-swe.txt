@@ -1,0 +1,28 @@
+Rahul Verma
+Senior Software Engineer
+Bengaluru, Karnataka | rahul.verma@outlook.com | +91-99887-76655
+https://www.linkedin.com/in/rahulverma88 | https://rahulverma.dev
+
+SUMMARY
+Backend engineer with experience building payment systems at scale.
+
+PROFESSIONAL EXPERIENCE
+Senior Software Engineer | Razorpay | Bengaluru
+Mar 2021 – Present
+• Led the payouts platform team of 6 engineers.
+• Moved settlement jobs from cron to Kafka streams.
+
+Software Engineer | Amazon | Hyderabad
+Jul 2018 – Feb 2021
+• Built order tracking APIs in Java and Spring Boot on AWS.
+
+Associate Software Engineer | Infosys Limited | Pune
+Jun 2016 – Jun 2018
+• Maintained banking applications.
+
+EDUCATION
+National Institute of Technology, Trichy
+B.E., Electronics and Communication Engineering | 2012 – 2016 | CGPA: 7.9
+
+SKILLS
+Java, Go, Python, Kafka, PostgreSQL, Redis, Kubernetes, AWS, Microservices

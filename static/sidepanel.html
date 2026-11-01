@@ -232,9 +232,12 @@
 
       <div class="card">
         <div class="card-head"><h2>Resume</h2></div>
-        <label class="dropzone"><input type="file" id="resume" accept=".pdf,.doc,.docx" />
+        <label class="dropzone"><input type="file" id="resume" accept=".pdf,.doc,.docx,.txt" />
           <span data-icon="file" data-size="22"></span>
           <span id="resume-name">Upload your resume (PDF or DOCX, max 5 MB)</span></label>
+        <div class="button-row" style="margin-top: 8px;">
+          <button type="button" id="paste-resume-btn" class="btn btn-secondary btn-sm"><span data-icon="edit" data-size="16"></span><span>Paste resume text</span></button>
+        </div>
       </div>
       <div class="card">
         <div class="card-head"><h2>Backup &amp; move</h2></div>
@@ -250,6 +253,17 @@
   </main>
 
   <div id="toasts" class="toasts" aria-live="polite"></div>
+  <dialog id="resume-review-dialog" class="dialog" style="max-width: 600px; width: 95vw;"></dialog>
+  <dialog id="paste-resume-dialog" class="dialog" style="max-width: 500px; width: 90vw;">
+    <div class="dialog-head"><strong>Paste resume text</strong><button id="paste-resume-close" class="icon-btn" aria-label="Close">✕</button></div>
+    <div class="dialog-body stack" style="padding: 16px;">
+      <textarea id="paste-resume-text" class="input" style="height: 180px; width: 100%; font-family: monospace; font-size: 12px;" placeholder="Paste the full text of your resume here..."></textarea>
+      <div class="button-row" style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px;">
+        <button type="button" id="paste-resume-cancel" class="btn btn-ghost btn-sm">Cancel</button>
+        <button type="button" id="paste-resume-parse" class="btn btn-primary btn-sm">Parse resume</button>
+      </div>
+    </div>
+  </dialog>
   <dialog id="proof-dialog" class="dialog">
     <div class="dialog-head"><strong>Confirmation screenshot</strong><button id="proof-close" class="icon-btn" aria-label="Close"><span data-icon="close"></span></button></div>
     <img id="proof" alt="Confirmation page screenshot" />

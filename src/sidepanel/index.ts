@@ -26,6 +26,8 @@ import { findSuggestedCorrection } from "../shared/corrections";
 import { buildDiagnostic } from "../shared/diagnostic";
 import { clockTime, loadPacing, loadPacingState, PACING_BOUNDS, savePacing, statusLine, type PacingSettings } from "../shared/pacing";
 import type { ConsentBox, ConsentList, TickResult } from "../shared/consent-review";
+import { parseResumeFromBuffer, createResumeReviewElement } from "./resume-import";
+import { parseResume } from "../shared/resume-parse";
 
 let cachedCorrections: UserCorrection[] = [];
 void loadCorrections().then((c) => { cachedCorrections = c; });
@@ -1225,7 +1227,81 @@ $("resume").addEventListener("change", async (event) => {
   for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
   profile.resume = { name: file.name, type: file.type || "application/octet-stream", dataBase64: btoa(binary) };
   showResume(`${file.name} · not saved yet`, true);
+
+  try {
+    toast("Parsing resume...", "ok");
+    const parsed = await parseResumeFromBuffer(file.name, bytes);
+    if (parsed.suggestions.length > 0 || parsed.questions.length > 0) {
+      const reviewDialog = $("resume-review-dialog") as HTMLDialogElement | null;
+      if (reviewDialog) {
+        reviewDialog.replaceChildren();
+        reviewDialog.append(
+          createResumeReviewElement(
+            parsed,
+            profile,
+            async (updated) => {
+              profile = updated;
+              await saveProfile(profile);
+              await renderProfile();
+              reviewDialog.close();
+              toast("Profile updated from resume", "ok");
+            },
+            () => reviewDialog.close()
+          )
+        );
+        reviewDialog.showModal();
+      }
+    }
+  } catch (err) {
+    console.error("Resume parse error:", err);
+    toast("Could not extract details from resume", "warn");
+  }
 });
+
+const pasteDialog = $("paste-resume-dialog") as HTMLDialogElement | null;
+const pasteBtn = $("paste-resume-btn");
+if (pasteBtn && pasteDialog) {
+  pasteBtn.addEventListener("click", () => {
+    const ta = $("paste-resume-text") as HTMLTextAreaElement | null;
+    if (ta) ta.value = "";
+    pasteDialog.showModal();
+  });
+  $("paste-resume-close")?.addEventListener("click", () => pasteDialog.close());
+  $("paste-resume-cancel")?.addEventListener("click", () => pasteDialog.close());
+  $("paste-resume-parse")?.addEventListener("click", async () => {
+    const raw = ($("paste-resume-text") as HTMLTextAreaElement)?.value?.trim() ?? "";
+    if (!raw) {
+      toast("Please paste resume text first", "warn");
+      return;
+    }
+    pasteDialog.close();
+    try {
+      const parsed = parseResume(raw);
+      const reviewDialog = $("resume-review-dialog") as HTMLDialogElement | null;
+      if (reviewDialog) {
+        reviewDialog.replaceChildren();
+        reviewDialog.append(
+          createResumeReviewElement(
+            parsed,
+            profile,
+            async (updated) => {
+              profile = updated;
+              await saveProfile(profile);
+              await renderProfile();
+              reviewDialog.close();
+              toast("Profile updated from resume", "ok");
+            },
+            () => reviewDialog.close()
+          )
+        );
+        reviewDialog.showModal();
+      }
+    } catch (err) {
+      console.error("Resume parse error:", err);
+      toast("Could not parse resume text", "warn");
+    }
+  });
+}
 
 $("save-profile").addEventListener("click", async () => {
   for (const key of PROFILE_KEYS) {

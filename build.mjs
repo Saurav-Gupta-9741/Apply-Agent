@@ -35,6 +35,7 @@ cpSync(`${MODEL}/onnx/model_quantized.onnx`, `${outdir}/intent/model_quantized.o
 cpSync(`${MODEL}/tokenizer.json`, `${outdir}/intent/tokenizer.json`);
 mkdirSync(`${outdir}/ort`, { recursive: true });
 for (const f of ["ort-wasm-simd-threaded.wasm", "ort-wasm-simd-threaded.mjs"]) cpSync(`node_modules/onnxruntime-web/dist/${f}`, `${outdir}/ort/${f}`);
+if (existsSync("node_modules/pdfjs-dist/build/pdf.worker.min.mjs")) cpSync("node_modules/pdfjs-dist/build/pdf.worker.min.mjs", `${outdir}/pdf.worker.mjs`);
 if (testBuild) {
   const manifest = JSON.parse(readFileSync(`${outdir}/manifest.json`, "utf8"));
   manifest.host_permissions = TEST_ORIGINS;

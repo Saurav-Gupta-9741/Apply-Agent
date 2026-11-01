@@ -1,0 +1,24 @@
+Lukas Müller
+Berlin, Germany · +49 30 12345678 · lukas.mueller@posteo.de · https://lukasmueller.eu
+
+WORK EXPERIENCE
+Backend Developer at Zalando SE
+04/2022 – heute
+• Services in Kotlin and Scala on Kubernetes.
+
+Werkstudent Software Engineering at SAP SE, Walldorf
+10/2019 – 03/2022
+• Built test tools in Java.
+
+EDUCATION
+Technical University of Munich
+Master of Science in Informatics, 2022
+Bachelor of Science in Informatics, 2019
+
+SKILLS
+Kotlin, Scala, Java, Kubernetes, PostgreSQL
+
+LANGUAGES
+German – Native
+English – C1
+French – Basic
