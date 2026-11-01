@@ -10,6 +10,7 @@ import { isApplicationPage } from "./target";
 import { HANDS_OFF_MESSAGE, platformFor, shouldDetect } from "../shared/platforms";
 import { loadPacing } from "../shared/pacing";
 import { consentElement, listConsentBoxes, tickConsentBox } from "../shared/consent-review";
+import { extractJobDescriptionText } from "./fit";
 
 declare global {
   interface Window {
@@ -155,6 +156,10 @@ if (!window.__applyAgentLoaded) {
     const sense = sensePage(document, pageUrl());
     return { score: sense.score, kind: sense.kind, form: !!formRoot(), handsOff: platform.policy === "hands_off" };
   };
+  // --- fit card: the job description's text, read-only (never on hands-off platforms) ---
+  (globalThis as { __applyAgentJobText?: () => string | null }).__applyAgentJobText = () =>
+    platform.policy === "hands_off" ? null : extractJobDescriptionText(document).slice(0, 30_000);
+  // --- end fit card ---
 
   if (typeof chrome !== "undefined" && chrome.runtime?.onMessage?.addListener) {
     chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse: (r: unknown) => void) => {

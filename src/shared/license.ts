@@ -11,6 +11,8 @@ export interface LicensePayload {
   exp: number;
   lifetime?: boolean;
   email?: string;
+  /** The one-time 7-day trial (local, unsigned): never a paid licence. */
+  trial?: boolean;
 }
 
 const ECDSA = { name: "ECDSA", namedCurve: "P-256" } as const;
@@ -58,11 +60,27 @@ export async function verifyLicense(token: string, publicJwk: JsonWebKey | null,
   }
 }
 
+/** The application an address belongs to: host and path, without the query, hash or trailing slash, so a rerun of
+ * the same application (a reload, a tracking parameter, a second Fill) is the same application. */
+export function applicationKey(url: string): string {
+  try {
+    const u = new URL(url);
+    return `${u.hostname.toLowerCase().replace(/^www\./, "")}${u.pathname.replace(/\/+$/, "").toLowerCase()}`;
+  } catch {
+    return url.trim().toLowerCase();
+  }
+}
+
+/** Submissions this month, each application once: submitting the same application again (a rerun, a retry after a
+ * site error) never uses a second free fill. */
 export function submittedThisMonth(applications: ApplicationRecord[], now: Date): number {
-  return applications.filter((a) => {
+  const seen = new Set<string>();
+  for (const a of applications) {
     const d = new Date(a.createdAt);
-    return a.status !== "in_progress" && d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
-  }).length;
+    if (a.status === "in_progress" || d.getFullYear() !== now.getFullYear() || d.getMonth() !== now.getMonth()) continue;
+    seen.add(applicationKey(a.url) || a.id);
+  }
+  return seen.size;
 }
 
 /** Submissions still allowed this month: unlimited with a valid Pro licence. */
@@ -71,10 +89,69 @@ export function remainingSubmissions(pro: LicensePayload | null, applications: A
   return Math.max(0, FREE_MONTHLY_SUBMISSIONS - submittedThisMonth(applications, now));
 }
 
+// --- free usage & the one-time Pro trial ---------------------------------------------------------------
+/** Upgrade prompts appear at these counts of free fills used this month. */
+export const UPGRADE_NUDGE_AT = 15;
+export const TRIAL_DAYS = 7;
+/** Saving this many answers unlocks the one-time trial (the user has invested in ApplyAgent). */
+export const TRIAL_UNLOCK_ANSWERS = 10;
+
+/** The one-time trial, stored only in this browser. Limitation: removing and reinstalling the extension clears
+ * chrome.storage.local, so the trial could be unlocked again; there is deliberately no server or ID to stop that. */
+export interface ProTrial {
+  startedAt: string;
+  endsAt: string;
+}
+
+export function trialActive(trial: ProTrial | null | undefined, now: Date): boolean {
+  return !!trial && Date.parse(trial.endsAt) > now.getTime();
+}
+
+/** The trial to start, if this many saved answers unlocks it and it was never used. Null otherwise. */
+export function trialToUnlock(existing: ProTrial | null | undefined, answerCount: number, now: Date): ProTrial | null {
+  if (existing || answerCount < TRIAL_UNLOCK_ANSWERS) return null;
+  return { startedAt: now.toISOString(), endsAt: new Date(now.getTime() + TRIAL_DAYS * 86_400_000).toISOString() };
+}
+
+export type UsageLevel = "ok" | "nudge" | "limit";
+
+export interface UsageState {
+  used: number;
+  limit: number;
+  level: UsageLevel;
+}
+
+export function usageState(applications: ApplicationRecord[], now: Date): UsageState {
+  const used = Math.min(FREE_MONTHLY_SUBMISSIONS, submittedThisMonth(applications, now));
+  const level: UsageLevel = used >= FREE_MONTHLY_SUBMISSIONS ? "limit" : used >= UPGRADE_NUDGE_AT ? "nudge" : "ok";
+  return { used, limit: FREE_MONTHLY_SUBMISSIONS, level };
+}
+
+export async function loadTrial(): Promise<ProTrial | null> {
+  const { proTrial } = await chrome.storage.local.get("proTrial");
+  const t = proTrial as ProTrial | undefined;
+  return t && typeof t.endsAt === "string" && typeof t.startedAt === "string" ? t : null;
+}
+
+/** Start the trial once the user saved enough answers (never twice). Returns the trial when it just started. */
+export async function maybeUnlockTrial(now = new Date()): Promise<ProTrial | null> {
+  const [existing, { answers }] = await Promise.all([loadTrial(), chrome.storage.local.get("answers")]);
+  const trial = trialToUnlock(existing, Array.isArray(answers) ? answers.length : 0, now);
+  if (trial) await chrome.storage.local.set({ proTrial: trial });
+  return trial;
+}
+
 // --- storage & server -------------------------------------------------------------------------------
 export async function currentLicense(now = new Date()): Promise<LicensePayload | null> {
-  const { license } = await chrome.storage.local.get("license");
-  return typeof license === "string" ? verifyLicense(license, LICENSE_PUBLIC_JWK, now) : null;
+  const { license, proTrial } = await chrome.storage.local.get(["license", "proTrial"]);
+  const paid = typeof license === "string" ? await verifyLicense(license, LICENSE_PUBLIC_JWK, now) : null;
+  if (paid) return paid;
+  // The one-time 7-day trial counts as Pro while it lasts.
+  const trial = proTrial as ProTrial | undefined;
+  if (trial && typeof trial.endsAt === "string" && trialActive(trial, now)) {
+    return { key: "TRIAL", plan: "pro", exp: Math.floor(Date.parse(trial.endsAt) / 1000), trial: true };
+  }
+  return null;
 }
 
 export function licensingConfigured(): boolean {
@@ -82,7 +159,7 @@ export function licensingConfigured(): boolean {
 }
 
 export function isLifetimeLicense(license: LicensePayload | null): boolean {
-  if (!license) return false;
+  if (!license || license.trial) return false;
   return license.lifetime === true || license.plan === "founder" || (license.exp - Date.now() / 1000) > 365 * 86_400 * 3;
 }
 

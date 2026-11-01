@@ -1,6 +1,6 @@
 /** Everything is stored locally in the browser (chrome.storage.local). Nothing is sent to a server. */
 
-import type { AnswerEntry, ApplicationRecord, CandidateProfile, Profile, ProfilePersona, QueueItem, Settings, UserCorrection } from "./types";
+import type { AnswerEntry, ApplicationRecord, CandidateProfile, Profile, ProfilePersona, QueueItem, SavedJob, Settings, UserCorrection } from "./types";
 import { clampSettings } from "../background/queue";
 import { isNeverRemembered } from "../content/classify";
 
@@ -327,4 +327,22 @@ export async function enforceStorageQuota(): Promise<{
     await chrome.storage.local.set({ [KEYS.applications]: pruned });
   }
   return { bytesInUse, prunedScreenshots: 0, prunedApplications };
+}
+
+// --- saved jobs (tracker CRM) ----------------------------------------------------------------------------
+/** Jobs saved from any page ("Save this job"), kept apart from submitted applications. */
+export const MAX_SAVED_JOBS = 1000;
+
+export async function loadSavedJobs(): Promise<SavedJob[]> {
+  const data = await chrome.storage.local.get("savedJobs");
+  const list = data.savedJobs as SavedJob[] | undefined;
+  return Array.isArray(list) ? list : [];
+}
+
+export async function saveSavedJobs(jobs: SavedJob[]): Promise<void> {
+  await chrome.storage.local.set({ savedJobs: jobs.slice(0, MAX_SAVED_JOBS) });
+}
+
+export function updateSavedJobs(change: (jobs: SavedJob[]) => SavedJob[]): Promise<void> {
+  return exclusive("savedJobs", async () => saveSavedJobs(change(await loadSavedJobs())));
 }

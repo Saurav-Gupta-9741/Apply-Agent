@@ -28,6 +28,9 @@ import { clockTime, loadPacing, loadPacingState, PACING_BOUNDS, savePacing, stat
 import type { ConsentBox, ConsentList, TickResult } from "../shared/consent-review";
 import { parseResumeFromBuffer, createResumeReviewElement } from "./resume-import";
 import { parseResume } from "../shared/resume-parse";
+import { initTracker, renderTrackerCrm, type TrackerUi } from "./tracker";
+import { initUsageMeter, renderUsageMeter } from "./usage-meter";
+import { renderFitCard } from "./fit-card";
 
 let cachedCorrections: UserCorrection[] = [];
 void loadCorrections().then((c) => { cachedCorrections = c; });
@@ -257,6 +260,8 @@ async function refreshPage(): Promise<void> {
   $("permission-box").hidden = allowed || !pattern || handsOff;
   ($("run") as HTMLButtonElement).disabled = !canFill;
   ($("preview") as HTMLButtonElement).disabled = !canFill;
+  void renderUsageMeter({ toast: (m, t) => toast(m, t ?? ""), showPlan: () => showSection("profile") });
+  void renderFitCard(tab?.id, canFill, () => showSection("profile"));
   await renderDetection(tab, handsOff, embedded);
 }
 
@@ -1533,42 +1538,19 @@ const RECORD_CHIP: Record<ApplicationRecord["status"], [string, string]> = {
   applied_confirmed: ["Applied", "ok"], needs_check: ["Needs check", "warn"], in_progress: ["Submitting", "info"],
 };
 
+async function openProofModal(key: string): Promise<void> {
+  const data = await chrome.storage.local.get(key);
+  ($("proof") as HTMLImageElement).src = data[key] as string;
+  ($("proof-dialog") as HTMLDialogElement).showModal();
+}
+
+const trackerUi: TrackerUi = {
+  toast: (msg, tone) => toast(msg, tone ?? ""),
+  showProof: (key) => void openProofModal(key),
+};
+
 async function renderTracker(): Promise<void> {
-  const records = await loadApplications();
-  const now = new Date();
-  const applied = records.filter((r) => r.status === "applied_confirmed").length;
-  document.querySelector("[data-stat='applied']")!.textContent = String(applied);
-  document.querySelector("[data-stat='check']")!.textContent = String(records.filter((r) => r.status === "needs_check").length);
-  document.querySelector("[data-stat='month']")!.textContent = String(submittedThisMonth(records, now));
-  setCount("tracker", applied);
-  const list = $("tracker-list");
-  list.replaceChildren();
-  if (!records.length) {
-    list.append(empty("tracker", "No applications yet", "Every application appears here, marked Applied only when the employer's site confirms it."));
-    return;
-  }
-  for (const r of records) {
-    const [text, tone] = RECORD_CHIP[r.status];
-    const body = h("div", { class: "item-body" },
-      h("div", { class: "item-top" }, h("span", { class: "item-title" }, r.jobTitle || hostOf(r.url) || "Application"), chip(text, tone)),
-      h("div", { class: "item-sub" }, [hostOf(r.url), r.platform, relativeDate(r.createdAt)].filter(Boolean).join(" · ")));
-    if (r.confirmationText) body.append(h("div", { class: "item-quote" }, r.confirmationText));
-    const actions = h("div", { class: "item-actions" });
-    if (r.screenshotKey) {
-      const view = button("View proof", { variant: "ghost", icon: "image", size: "sm" });
-      view.addEventListener("click", async () => {
-        const data = await chrome.storage.local.get(r.screenshotKey!);
-        ($("proof") as HTMLImageElement).src = data[r.screenshotKey!] as string;
-        ($("proof-dialog") as HTMLDialogElement).showModal();
-      });
-      actions.append(view);
-    }
-    const open = button("Open", { variant: "ghost", icon: "external", size: "sm" });
-    open.addEventListener("click", () => void chrome.tabs.create({ url: r.url }));
-    actions.append(open);
-    body.append(actions);
-    list.append(h("li", { class: "item" }, body));
-  }
+  await renderTrackerCrm(trackerUi);
 }
 
 $("proof-close").addEventListener("click", () => ($("proof-dialog") as HTMLDialogElement).close());
@@ -2124,6 +2106,8 @@ void renderDetectionSetting();
 void loadShortcuts();
 void renderAnswers();
 void renderTracker();
+initTracker(trackerUi, () => void renderTrackerCrm(trackerUi));
+initUsageMeter({ toast: (m, t) => toast(m, t ?? ""), showPlan: () => showSection("profile") });
 void (async () => {
   const cached = await chrome.storage.local.get(["feedCache", "feedSource"]);
   if (cached.feedCache) {

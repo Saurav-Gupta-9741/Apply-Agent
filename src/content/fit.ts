@@ -122,6 +122,9 @@ function escapeRegex(str: string): string {
 const SECTION_REQUIRED = /\b(required|requirements|must[- ]have|qualifications|basic qualifications|minimum qualifications|what you(?:'ll)? need|what you bring)\b/i;
 const SECTION_PREFERRED = /\b(preferred|nice[- ]to[- ]have|bonus|preferred qualifications|good to have|plus|desired)\b/i;
 
+/** Technology names that are also everyday English words: matched only when written as a name (capitalised). */
+const COMMON_WORD_TERMS = new Set(["Less", "Express", "Go", "Swift", "Spring", "Rust", "Excel", "Make", "Chef", "Puppet", "Ant", "Sass", "Dart", "Elm", "Flask"]);
+
 /** Extracts technical and professional skills from job description text */
 export function extractSkillsFromText(text: string): ExtractedSkill[] {
   if (!text || !text.trim()) return [];
@@ -152,7 +155,10 @@ export function extractSkillsFromText(text: string): ExtractedSkill[] {
     for (const term of sortedVocab) {
       // Build boundary-aware pattern: preserve C++, C#, .NET, Node.js
       let pattern: RegExp;
-      if (/^[a-zA-Z0-9_ ]+$/.test(term)) {
+      if (COMMON_WORD_TERMS.has(term)) {
+        // "express yourself", "less than", "excel at": only the capitalised name is the technology.
+        pattern = new RegExp(`\\b${escapeRegex(term)}\\b`);
+      } else if (/^[a-zA-Z0-9_ ]+$/.test(term)) {
         pattern = new RegExp(`\\b${escapeRegex(term)}\\b`, "i");
       } else {
         pattern = new RegExp(`(?:^|[^a-zA-Z0-9_])${escapeRegex(term)}(?:$|[^a-zA-Z0-9_])`, "i");
@@ -243,10 +249,78 @@ export function extractCandidateSkills(profile: Profile): Map<string, { years?: 
   return candidateSkills;
 }
 
-/** Extract full text from job description element or document */
+/** Page parts that are never the job description: menus, footers, cookie and consent banners, dialogs, controls. */
+const NOISE_SELECTORS = [
+  "script", "style", "noscript", "template", "svg", "iframe", "canvas",
+  "nav", "footer", "aside", "[role='navigation']", "[role='contentinfo']", "[role='banner']", "[role='dialog']",
+  "[role='alertdialog']", "[aria-modal='true']", "button", "select", "option", "input", "textarea",
+  "body > header", "[role='main'] > header:not(:has(h1))",
+];
+/** Cookie / consent / newsletter boxes, found by their id or class (OneTrust, Cookiebot, TrustArc, …). */
+const NOISE_NAME = /cookie|consent|gdpr|onetrust|optanon|cookiebot|truste|cc-(banner|window)|privacy-(banner|notice)|newsletter|breadcrumb|site-?header|site-?footer|global-?nav|skip-?link/i;
+/** Words that mark a job description's own sections. */
+const JD_MARKER = /\b(responsibilities|requirements|qualifications|about (the|this) (role|job|position)|what you('ll| will) do|what we('re| are) looking for|who you are|you have|you bring|skills)\b/i;
+const BLOCK_TAGS = new Set([
+  "ADDRESS", "ARTICLE", "BLOCKQUOTE", "BR", "DD", "DIV", "DL", "DT", "FIGCAPTION", "FIGURE", "H1", "H2", "H3", "H4", "H5", "H6",
+  "HR", "LI", "MAIN", "OL", "P", "PRE", "SECTION", "TABLE", "TD", "TH", "TR", "UL", "HEADER", "FORM", "FIELDSET", "LABEL",
+]);
+
+/** Text of an element with a line break after each block (paragraph, list item, heading), so the requirement and
+ * "nice to have" sections stay apart. Works without layout (innerText needs a rendered page). */
+function blockText(el: Element): string {
+  const out: string[] = [];
+  const walk = (node: Node): void => {
+    if (node.nodeType === 3) {
+      out.push((node as Text).data);
+      return;
+    }
+    if (node.nodeType !== 1) return;
+    const tag = (node as Element).tagName;
+    const block = BLOCK_TAGS.has(tag);
+    if (block) out.push("\n");
+    for (const child of Array.from(node.childNodes)) walk(child);
+    if (block) out.push("\n");
+  };
+  walk(el);
+  return out.join("").replace(/[ \t ]+/g, " ").replace(/ *\n[ \n]*/g, "\n").trim();
+}
+
+/** A copy of the page without navigation, footers, cookie banners, dialogs and form controls. The page itself is
+ * never changed. */
+function withoutNoise(root: Element): Element {
+  const copy = root.cloneNode(true) as Element;
+  for (const selector of NOISE_SELECTORS) {
+    let found: Element[] = [];
+    try {
+      found = Array.from(copy.querySelectorAll(selector));
+    } catch {
+      continue; // a selector this browser (or jsdom) does not know
+    }
+    found.forEach((el) => el.remove());
+  }
+  // The application form's questions ("Years of C++ experience?") are not the job's requirements. A page wrapped in
+  // one big form (ASP.NET sites) keeps the job text: only its questions go.
+  for (const form of Array.from(copy.querySelectorAll("form"))) {
+    if (!copy.contains(form)) continue;
+    const questions = Array.from(form.querySelectorAll("label, fieldset, legend, [role='group'], [role='radiogroup']"));
+    questions.forEach((q) => q.remove());
+    if (!JD_MARKER.test(form.textContent ?? "")) form.remove();
+  }
+  const total = (copy.textContent ?? "").length || 1;
+  for (const el of Array.from(copy.querySelectorAll("[id], [class]"))) {
+    if (!copy.contains(el)) continue; // inside a box already removed
+    const name = `${el.id} ${typeof el.className === "string" ? el.className : ""}`;
+    // Only small boxes: a page wrapper whose class happens to say "consent-layout" holds the job too.
+    if (NOISE_NAME.test(name) && (el.textContent ?? "").length < total * 0.4) el.remove();
+  }
+  return copy;
+}
+
+/** Extract the job description's text from a page (or one element), ignoring menus, footers and cookie banners. */
 export function extractJobDescriptionText(docOrEl: Document | Element): string {
   const root = "body" in docOrEl ? (docOrEl as Document).body : (docOrEl as Element);
   if (!root) return "";
+  const clean = withoutNoise(root);
 
   const containerSelectors = [
     "[data-automation-id='jobPostingDescription']",
@@ -254,21 +328,93 @@ export function extractJobDescriptionText(docOrEl: Document | Element): string {
     ".job-details",
     "#job-description",
     ".job-description",
+    "[class*='job-description']",
+    "[class*='jobDescription']",
+    "[data-testid*='description' i]",
     ".jobs-description-content",
     ".description__text",
+    "#content .content-intro",
     "article[class*='job']",
     "main article",
     "[role='main']",
+    "main",
   ];
 
   for (const selector of containerSelectors) {
-    const el = root.querySelector(selector);
+    let el: Element | null = null;
+    try {
+      el = clean.querySelector(selector);
+    } catch {
+      continue;
+    }
     if (el && el.textContent && el.textContent.trim().length > 100) {
-      return el.textContent.trim();
+      return blockText(el);
     }
   }
 
-  return root.textContent?.trim() ?? "";
+  return blockText(clean);
+}
+
+const WORD_NUMBERS: Record<string, number> = {
+  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, twelve: 12, fifteen: 15,
+};
+
+/** The years of experience a job description asks for ("3+ years of experience", "minimum 2 years", "2-4 yrs"),
+ * from the first line that talks about experience. Null when it does not say. */
+export function requiredYears(text: string): { min: number; max?: number } | null {
+  const num = String.raw`(\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten|twelve|fifteen)`;
+  const value = (v: string) => (/^\d+$/.test(v) ? Number(v) : WORD_NUMBERS[v.toLowerCase()] ?? NaN);
+  const range = new RegExp(String.raw`\b${num}\s*\+?\s*(?:-|–|—|to)\s*${num}\s*\+?\s*(?:years?|yrs?)\b`, "i");
+  const single = new RegExp(String.raw`(?:\b(?:at least|minimum(?: of)?|min\.?|over|more than)\s+)?\b${num}\s*(?:\+|plus)?\s*(?:or more\s+)?(?:years?|yrs?)\b`, "i");
+  for (const raw of text.split(/\n|(?<=[.;!?])\s+/)) {
+    const line = raw.trim();
+    if (!/\bexperience|\bexp\b|\bexperienced\b/i.test(line)) continue;
+    if (/\b(years? (?:old|ago)|founded|in business|anniversary)\b/i.test(line)) continue;
+    const r = range.exec(line);
+    if (r) {
+      const min = value(r[1]!);
+      const max = value(r[2]!);
+      if (Number.isFinite(min) && Number.isFinite(max) && min <= max && max <= 40) return { min, max };
+    }
+    const m = single.exec(line);
+    if (m) {
+      const min = value(m[1]!);
+      if (Number.isFinite(min) && min > 0 && min <= 30) return { min };
+    }
+  }
+  return null;
+}
+
+export interface FitSummary {
+  matched: number;
+  total: number;
+  /** Skills the job asks for that the profile lacks, required ones first. */
+  missing: string[];
+  experience?: { needs: number; max?: number; have?: number; ok?: boolean };
+  /** "Matches 7 of 10 skills · Missing: Kubernetes, Terraform · Experience: needs 3+ yrs, you have 2" */
+  line: string;
+}
+
+/** A short, read-only summary of how the profile fits a job description (shown on the Apply page). */
+export function fitSummary(jobText: string, profile: Profile): FitSummary {
+  const analysis = calculateJobFit(jobText, profile);
+  const total = analysis.matchedSkills.length + analysis.missingSkills.length;
+  const missing = [...new Set([...analysis.requiredMissing, ...analysis.missingSkills])];
+  const years = requiredYears(jobText);
+  const have = Number.parseFloat(profile.experienceYears);
+  const parts: string[] = [total ? `Matches ${analysis.matchedSkills.length} of ${total} skills` : "No specific skills listed"];
+  if (missing.length) parts.push(`Missing: ${missing.slice(0, 3).join(", ")}${missing.length > 3 ? ` +${missing.length - 3} more` : ""}`);
+  let experience: FitSummary["experience"];
+  if (years) {
+    const needs = years.max !== undefined ? `${years.min}–${years.max}` : `${years.min}+`;
+    experience = { needs: years.min, max: years.max };
+    if (Number.isFinite(have)) {
+      experience.have = have;
+      experience.ok = have >= years.min;
+      parts.push(`Experience: needs ${needs} yrs, you have ${have}`);
+    } else parts.push(`Experience: needs ${needs} yrs`);
+  }
+  return { matched: analysis.matchedSkills.length, total, missing, experience, line: parts.join(" · ") };
 }
 
 /** Score keyword alignment between job text and a candidate's skills list */
