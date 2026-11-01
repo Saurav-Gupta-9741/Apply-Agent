@@ -19,7 +19,7 @@ export interface ExtractedField {
 }
 
 const SKIP_INPUT_TYPES = new Set(["hidden", "submit", "button", "reset", "image", "search", "password"]);
-export const DROPDOWN = "button[aria-haspopup='listbox'], [role='combobox']:not(input):not(select), [role='listbox'][tabindex='0']:not(select)";
+export const DROPDOWN = "button[aria-haspopup='listbox'], [role='combobox']:not(input):not(select), [role='listbox'][tabindex='0']:not(select), mat-select, oj-select-single, oj-combobox-one, .zp_field_select, .zp_select";
 export const DROPZONE = "[data-dropzone], [data-testid*='dropzone' i], [data-ui*='dropzone' i], [class*='dropzone' i], [class*='drop-zone' i], [class*='file-drop' i], [class*='fileDrop' i]";
 
 export function isDropzone(el: Element): boolean {
@@ -30,7 +30,7 @@ export function isDropzone(el: Element): boolean {
   return true;
 }
 const CONTROLS = `input, textarea, select, ${DROPDOWN}, ${DROPZONE}`;
-const LABELISH = "legend, label, .label, [class*='label'], [class*='Label'], [class*='question-title'], [class*='questionTitle'], [role='heading'], h3, h4";
+const LABELISH = "legend, label, .label, [class*='label'], [class*='Label'], [class*='question-title'], [class*='questionTitle'], [role='heading'], h3, h4, [data-automation-id*='label' i], mat-label, oj-label, .sapMLabel";
 const GENERIC_LABEL = /^(attach|attach file|upload|upload file|browse|choose( a)? file|select( a)? file|drop (your )?files?( here)?|enter manually|type your response|your answer|answer|select|choose|select an option|please select|optional)\W*$/i;
 
 let computedStyleCache = new WeakMap<Element, CSSStyleDeclaration>();
@@ -117,7 +117,7 @@ function styleTrap(s: StyleLike, isField: boolean, far: (v: string) => boolean):
   return false;
 }
 
-function isHoneypot(el: FieldElement, labelsByFor?: Map<string, HTMLLabelElement>): boolean {
+function isHoneypot(el: FieldElement, labelsByFor?: Map<string, HTMLElement>): boolean {
   const textLike = el instanceof HTMLTextAreaElement
     || el instanceof HTMLInputElement && !["radio", "checkbox", "file"].includes(el.type) && el.getAttribute("role") !== "combobox" && !el.hasAttribute("aria-autocomplete");
   if (!textLike) return false;
@@ -277,11 +277,11 @@ const NOT_A_QUESTION = /^(no file (selected|chosen)|choose file|drag (and|&) dro
 /** Raw question text (with its "*" markers) for one control. */
 const MACHINE_NAME = /^[a-z0-9]+([-_][a-z0-9]+)+$/;
 
-function rawLabel(el: FieldElement, root: ParentNode, labelsByFor?: Map<string, HTMLLabelElement>): string {
+function rawLabel(el: FieldElement, root: ParentNode, labelsByFor?: Map<string, HTMLElement>): string {
   const isChoice = el instanceof HTMLInputElement && (el.type === "radio" || el.type === "checkbox");
   // label[for] resolves in the element's own tree (document or shadow root), like the browser does.
   const forLabel = el.id
-    ? (labelsByFor?.get(el.id) ?? scopeOf(el).querySelector(`label[for="${cssAttr(el.id)}"]`) ?? root.querySelector(`label[for="${cssAttr(el.id)}"]`))
+    ? (labelsByFor?.get(el.id) ?? scopeOf(el).querySelector(`label[for="${cssAttr(el.id)}"], oj-label[for="${cssAttr(el.id)}"], mat-label[for="${cssAttr(el.id)}"]`) ?? root.querySelector(`label[for="${cssAttr(el.id)}"], oj-label[for="${cssAttr(el.id)}"], mat-label[for="${cssAttr(el.id)}"]`))
     : null;
   const candidates: Array<() => string> = [
     () => labelledBy(el),
@@ -316,13 +316,13 @@ function rawLabel(el: FieldElement, root: ParentNode, labelsByFor?: Map<string, 
   return "";
 }
 
-export function labelFor(el: FieldElement, root: ParentNode, labelsByFor?: Map<string, HTMLLabelElement>): string {
+export function labelFor(el: FieldElement, root: ParentNode, labelsByFor?: Map<string, HTMLElement>): string {
   return cleanLabel(rawLabel(el, root, labelsByFor));
 }
 
 function optionsForCustomDropdown(el: HTMLElement, root: ParentNode): string[] {
   const container = el.closest("[role='listitem'], [role='group'], fieldset, .field, form") ?? el.parentElement ?? root;
-  const opts = Array.from(container.querySelectorAll<HTMLElement>("[role='option']"))
+  const opts = Array.from(container.querySelectorAll<HTMLElement>("[role='option'], mat-option, oj-option, .sapMSelectListItem, .zp_select_option, [data-automation-id='promptOption']"))
     .map((o) => cleanLabel(o.textContent ?? ""))
     .filter((o) => o && !/^(select|choose|--|please select)/i.test(o));
   if (opts.length > 0) return opts;
@@ -330,7 +330,7 @@ function optionsForCustomDropdown(el: HTMLElement, root: ParentNode): string[] {
   if (listId) {
     const list = el.ownerDocument.getElementById(listId);
     if (list) {
-      return Array.from(list.querySelectorAll<HTMLElement>("[role='option']"))
+      return Array.from(list.querySelectorAll<HTMLElement>("[role='option'], mat-option, oj-option, .sapMSelectListItem, .zp_select_option, [data-automation-id='promptOption']"))
         .map((o) => cleanLabel(o.textContent ?? ""))
         .filter((o) => o && !/^(select|choose|--|please select)/i.test(o));
     }
@@ -357,7 +357,7 @@ function isRequired(els: FieldElement[], raw: string): boolean {
     || e.closest("[role='group'], [role='radiogroup']")?.getAttribute("aria-required") === "true") || REQUIRED_MARK.test(raw);
 }
 
-function groupRaw(group: HTMLInputElement[], root: ParentNode, labelsByFor?: Map<string, HTMLLabelElement>): string {
+function groupRaw(group: HTMLInputElement[], root: ParentNode, labelsByFor?: Map<string, HTMLElement>): string {
   const first = group[0]!;
   const legend = first.closest("fieldset")?.querySelector("legend");
   return visibleText(legend)
@@ -384,15 +384,23 @@ function labelAfter(el: Element): string {
 
 export function extractFields(root: ParentNode): ExtractedField[] {
   clearExtractCaches();
+  let all = deepQueryAll<FieldElement>(root, CONTROLS);
+  if (!all.length && "querySelector" in root) {
+    const iframe = (root as ParentNode).querySelector<HTMLIFrameElement>("iframe#icims_iframe, iframe.icims-iframe, iframe[title*='iCIMS' i]");
+    try {
+      if (iframe?.contentDocument?.body) {
+        return extractFields(iframe.contentDocument.body);
+      }
+    } catch {}
+  }
   const out: ExtractedField[] = [];
   const groups = new Map<string, HTMLInputElement[]>();
   let counter = 0;
-  const all = deepQueryAll<FieldElement>(root, CONTROLS);
   const position = new Map(all.map((el, i) => [el as Element, i]));
 
-  const labelsByFor = new Map<string, HTMLLabelElement>();
-  for (const l of deepQueryAll<HTMLLabelElement>(root, "label[for]")) {
-    const targetId = l.htmlFor || l.getAttribute("for");
+  const labelsByFor = new Map<string, HTMLElement>();
+  for (const l of deepQueryAll<HTMLElement>(root, "label[for], oj-label[for], mat-label[for]")) {
+    const targetId = (l as any).htmlFor || l.getAttribute("for");
     if (targetId && !labelsByFor.has(targetId)) {
       labelsByFor.set(targetId, l);
     }

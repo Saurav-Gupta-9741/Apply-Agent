@@ -35,11 +35,11 @@ const ATS: Array<[RegExp, string]> = [
   [/(^|\.)workable\.com$/, "Workable"],
   [/(^|\.)smartrecruiters\.com$/, "SmartRecruiters"],
   [/(^|\.)recruitee\.com$/, "Recruitee"],
-  [/(^|\.)myworkdayjobs\.com$|(^|\.)workday\.com$/, "Workday"],
+  [/(^|\.)(wd\d+\.)?myworkdayjobs\.com$|(^|\.)(wd\d+\.)?workday\.com$/, "Workday"],
   [/(^|\.)icims\.com$/, "iCIMS"],
   [/(^|\.)taleo\.net$/, "Taleo"],
   [/(^|\.)successfactors\.(com|eu)$/, "SuccessFactors"],
-  [/(^|\.)oraclecloud\.com$/, "Oracle Recruiting"],
+  [/(^|\.)oraclecloud\.com$/, "Oracle Recruiting Cloud"],
   [/(^|\.)bamboohr\.com$/, "BambooHR"],
   [/(^|\.)jobvite\.com$/, "Jobvite"],
   [/(^|\.)breezy\.hr$/, "Breezy"],
@@ -49,6 +49,7 @@ const ATS: Array<[RegExp, string]> = [
   [/(^|\.)darwinbox\.(in|com)$/, "Darwinbox"],
   [/(^|\.)zohorecruit\.(com|in|eu)$/, "Zoho Recruit"],
   [/(^|\.)freshteam\.com$/, "Freshteam"],
+  [/(^|\.)(applytojob\.com|jazzhr\.com)$/, "JazzHR"],
 ];
 
 /** A URL's host as the platform lists expect it: lower case, without the trailing dot browsers accept
@@ -103,9 +104,13 @@ export function shouldDetect(detection: "off" | "job_sites" | "allowed_sites", h
 export const JOB_SITE_MATCHES = [
   "https://docs.google.com/forms/*",
   "https://*.greenhouse.io/*", "https://*.lever.co/*", "https://*.ashbyhq.com/*", "https://*.workable.com/*",
-  "https://*.smartrecruiters.com/*", "https://*.recruitee.com/*", "https://*.myworkdayjobs.com/*", "https://*.icims.com/*",
-  "https://*.taleo.net/*", "https://*.bamboohr.com/*", "https://*.jobvite.com/*", "https://*.breezy.hr/*",
-  "https://*.teamtailor.com/*", "https://*.keka.com/*", "https://*.darwinbox.in/*", "https://*.zohorecruit.com/*",
+  "https://*.smartrecruiters.com/*", "https://*.recruitee.com/*", "https://*.myworkdayjobs.com/*", "https://*.workday.com/*",
+  "https://*.icims.com/*", "https://*.taleo.net/*", "https://*.successfactors.com/*", "https://*.successfactors.eu/*",
+  "https://*.oraclecloud.com/*", "https://*.bamboohr.com/*", "https://*.jobvite.com/*", "https://*.breezy.hr/*",
+  "https://*.teamtailor.com/*", "https://*.personio.de/*", "https://*.personio.com/*",
+  "https://*.keka.com/*", "https://*.darwinbox.in/*", "https://*.darwinbox.com/*",
+  "https://*.zohorecruit.com/*", "https://*.zohorecruit.in/*", "https://*.zohorecruit.eu/*",
+  "https://*.freshteam.com/*", "https://*.applytojob.com/*", "https://*.jazzhr.com/*",
 ];
 
 /** Match patterns for the detector's registration: never on hands-off platforms. */
