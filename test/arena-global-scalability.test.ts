@@ -20,7 +20,6 @@ import {
 } from "../src/content/corrections";
 import {
   MAX_APPLICATIONS,
-  MAX_SCREENSHOTS,
   MAX_ANSWERS,
   MAX_CORRECTIONS,
   MAX_QUEUE,
@@ -203,8 +202,7 @@ describe("High-Throughput DOM Extraction & Classification Benchmarks", () => {
 });
 
 describe("Storage Ring-Buffer & Quota Boundary Scaling", () => {
-  it("enforces MAX_APPLICATIONS (1,000) ring buffer and MAX_SCREENSHOTS (25) cap on 1,200 applications", async () => {
-    // Generate 1,200 applications over multiple months
+  it("enforces MAX_APPLICATIONS (1,000) and never deletes proof-of-submission screenshots", async () => {
     const records: ApplicationRecord[] = [];
     for (let i = 1; i <= 1200; i++) {
       records.push({
@@ -219,26 +217,18 @@ describe("Storage Ring-Buffer & Quota Boundary Scaling", () => {
       });
     }
 
-    // Direct prune test
     const { pruned, evictedScreenshotKeys } = pruneApplications(records);
-    expect(pruned.length).toBe(MAX_APPLICATIONS); // 1,000 kept
-    expect(pruned[0]!.id).toBe("app_201"); // oldest 200 dropped
+    expect(pruned.length).toBe(MAX_APPLICATIONS);
     expect(pruned[pruned.length - 1]!.id).toBe("app_1200");
+    // Every proof survives; only old records without a screenshot are dropped.
+    expect(pruned.filter((r) => !!r.screenshotKey).length).toBe(120);
+    expect(evictedScreenshotKeys).toEqual([]);
+    expect(pruned.some((r) => r.id === "app_10")).toBe(true);
 
-    // Screenshot ring-buffer verification: only newest 25 retain screenshotKey
-    const keptScreenshots = pruned.filter((r) => !!r.screenshotKey);
-    expect(keptScreenshots.length).toBe(MAX_SCREENSHOTS); // exactly 25
-    expect(evictedScreenshotKeys.length).toBeGreaterThan(0);
-
-    // Save through storage API
     await saveApplications(records);
     const loaded = await loadApplications();
     expect(loaded.length).toBe(MAX_APPLICATIONS);
-
-    // Verify storage calls: chrome.storage.local.remove was called to clear evicted screenshots
-    expect(storageRemovals.length).toBeGreaterThan(0);
-    const flattenedRemovals = storageRemovals.flat();
-    expect(flattenedRemovals).toContain("proof:app_10"); // Old evicted screenshot removed
+    expect(storageRemovals.flat().filter((k) => String(k).startsWith("proof:"))).toEqual([]);
   });
 
   it("enforces MAX_ANSWERS (1,000) cap on high-volume screening answer cache", async () => {
@@ -304,7 +294,7 @@ describe("Storage Ring-Buffer & Quota Boundary Scaling", () => {
     expect(loadedQueue.some((q) => q.status === "queued")).toBe(true);
   });
 
-  it("enforceStorageQuota aggressively prevents quota exhaustion when near limits", async () => {
+  it("enforceStorageQuota keeps every record and proof when storage is large", async () => {
     // Populate storage with 1,000 records
     const records: ApplicationRecord[] = [];
     for (let i = 1; i <= 1000; i++) {
@@ -326,13 +316,13 @@ describe("Storage Ring-Buffer & Quota Boundary Scaling", () => {
 
     const result = await enforceStorageQuota();
     expect(result.bytesInUse).toBe(9 * 1024 * 1024);
-    expect(result.prunedApplications).toBeGreaterThan(0);
-    expect(result.prunedScreenshots).toBeGreaterThan(0);
+    expect(result.prunedApplications).toBe(0); // unlimitedStorage: history is not thrown away
+    expect(result.prunedScreenshots).toBe(0);
 
     const after = await loadApplications();
-    expect(after.length).toBeLessThanOrEqual(500); // reduced to safe threshold
+    expect(after.length).toBe(1000);
     const shotsAfter = after.filter((r) => !!r.screenshotKey);
-    expect(shotsAfter.length).toBeLessThanOrEqual(5); // kept at most 5 screenshots
+    expect(shotsAfter.length).toBe(25); // proof of submission is never deleted
   });
 });
 

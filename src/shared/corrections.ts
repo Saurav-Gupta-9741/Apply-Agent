@@ -7,7 +7,16 @@
  * - NEVER learn passwords, numbers, legal declarations, or someone else's details.
  */
 
-import type { AnswerEntry, UserCorrection } from "./types";
+import type { AnswerEntry, Message, SensitiveTopic, UserCorrection } from "./types";
+import { questionTopic } from "../content/classify";
+
+/** The correction message, with the field's control type when the content script sends it. */
+export type CorrectionMessage = Extract<Message, { type: "RECORD_CORRECTION" }>;
+
+/** Sensitive topics a correction may still teach: only the notice period (a fact about the user's current job).
+ * Salary, visa, sponsorship, work authorization, gender, race, veteran, disability, age, pronouns, relocation,
+ * identity numbers, secrets and signatures are answered by the user, never learned from an edit. */
+const LEARNABLE_TOPICS: ReadonlySet<SensitiveTopic> = new Set<SensitiveTopic>(["notice_period"]);
 
 /** Patterns that must NEVER be learned as user corrections. */
 const FORBIDDEN_PATTERNS: RegExp[] = [
@@ -29,7 +38,8 @@ export function isLearnableCorrection(question: string, control?: string): boole
   for (const pattern of FORBIDDEN_PATTERNS) {
     if (pattern.test(q)) return false;
   }
-  return true;
+  const topic = questionTopic(q);
+  return !topic || LEARNABLE_TOPICS.has(topic);
 }
 
 export interface CorrectionResult {

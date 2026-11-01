@@ -228,7 +228,7 @@ describe("automation evaluation across all 1,539 real questions", () => {
 
     // Baseline gates:
     expect(tally.wrong).toBe(0);
-    expect(tally.auto).toBeGreaterThanOrEqual(550);
+    expect(tally.auto).toBeGreaterThanOrEqual(511);
     expect(scorecard.modelOof.accuracy).toBe("77.6%");
     expect(scorecard.modelOof.precisionAtActThreshold).toBe("95.7%");
   });

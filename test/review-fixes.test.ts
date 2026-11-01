@@ -114,7 +114,7 @@ describe("corrections: only a real edit by the user counts", () => {
     trackCorrection(document, f);
     radios[1]!.checked = true;
     radios[1]!.dispatchEvent(new Event("change"));
-    expect(messages).toEqual([{ type: "RECORD_CORRECTION", question: "Do you enjoy remote work?", answer: "No" }]);
+    expect(messages).toEqual([{ type: "RECORD_CORRECTION", question: "Do you enjoy remote work?", answer: "No", control: "radio" }]);
     wrap.remove();
   });
 });

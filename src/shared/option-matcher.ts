@@ -49,6 +49,8 @@ export enum PronounBucket {
 }
 
 export enum GenderBucket {
+  /** Transgender / "Male to female" options: never the answer for a plain "Male" or "Female". */
+  TRANSGENDER = "TRANSGENDER",
   MALE = "MALE",
   FEMALE = "FEMALE",
   NON_BINARY = "NON_BINARY",
@@ -107,21 +109,22 @@ export enum SeniorityBucket {
 const DEGREE_PATTERNS: Record<DegreeBucket, RegExp[]> = {
   [DegreeBucket.BACHELOR]: [
     /\b(bachelor|bachelors|baccalaureat|licenciatura|bacc|undergraduate)\b/i,
-    /\b(bs|ba|bsc|bba|btech|be|beng|bca|bfa|b s|b a|b tech)\b/i,
+    // Two-letter codes (BS, BA, BE, …) are matched separately, as whole tokens only (see SHORT_DEGREE_CODES).
+    /\b(bsc|bba|btech|beng|bca|bfa|b tech|b sc)\b/i,
     /\b4 year (college )?degree\b/i,
     /\bfour year (college )?degree\b/i,
   ],
   [DegreeBucket.MASTER]: [
     /\b(master|masters|magister|postgraduate|graduate degree)\b/i,
-    /\b(ms|ma|msc|mtech|mba|meng|mca|mfa|m s|m a|m tech)\b/i,
+    /\b(msc|mtech|mba|meng|mca|mfa|m tech|m sc)\b/i,
   ],
   [DegreeBucket.DOCTORATE]: [
     /\b(doctorate|doctoral|doctor of philosophy|terminal degree|postdoc)\b/i,
-    /\b(phd|ph d|dphil|dr rer nat|dr ing|dba|ed d|jd|md)\b/i,
+    /\b(phd|ph d|dphil|dr rer nat|dr ing|dba|ed d)\b/i,
   ],
   [DegreeBucket.ASSOCIATE]: [
     /\b(associate|associates)\b/i,
-    /\b(aa|as|aas|a a|a s)\b/i,
+    /\b(aas)\b/i,
     /\b2 year (college )?degree\b/i,
     /\btwo year (college )?degree\b/i,
   ],
@@ -198,6 +201,10 @@ const PRONOUN_PATTERNS: Record<PronounBucket, RegExp[]> = {
 };
 
 const GENDER_PATTERNS: Record<GenderBucket, RegExp[]> = {
+  // Checked first: "Transgender man" / "Male to female" must not land in the MALE bucket.
+  [GenderBucket.TRANSGENDER]: [
+    /\b(trans|transgender|transsexual|male to female|female to male|mtf|ftm)\b/i,
+  ],
   [GenderBucket.MALE]: [
     /\b(male|man|cisgender male|cis male|cis man)\b/i,
   ],
@@ -289,11 +296,15 @@ const FLUENCY_PATTERNS: Record<FluencyBucket, RegExp[]> = {
 
 const POLARITY_PATTERNS: Record<PolarityBucket, RegExp[]> = {
   [PolarityBucket.YES]: [
-    /^(yes|y|true|agree|i agree|accept|i accept|authorized|eligible|citizen|permanent resident|ja|oui|si|sim)\b/i,
+    // A bare "y" / "n" only counts when it is the WHOLE text: "N/A" is not "No".
+    /^(yes|true|agree|i agree|accept|i accept|authorized|eligible|citizen|permanent resident|ja|oui|si|sim)\b/i,
+    /^y$/i,
     /\b(yes i am authorized|yes i agree|yes definitely|affirmative)\b/i,
   ],
   [PolarityBucket.NO]: [
-    /^(no|n|false|disagree|i disagree|not authorized|require sponsorship|will require sponsorship|need sponsorship|nein|non|nao|nee)\b/i,
+    // "Require sponsorship" is NOT a "No": it is the opposite answer to "Do you NOT need sponsorship?".
+    /^(no|false|disagree|i disagree|not authorized|nein|non|nao|nee)\b/i,
+    /^n$/i,
     /\b(no i do not agree|i do not agree|do not agree|not agree|negative)\b/i,
   ],
   [PolarityBucket.DECLINE]: [
@@ -454,6 +465,53 @@ export interface ClassifiedDomain {
   country?: CountryInfo;
 }
 
+/** Two-letter degree codes. They are ordinary English words too ("as", "be", "ma"), so they only count when the
+ * WHOLE text is the code ("BS", "b.s.") or the code is written in capitals as its own token ("MS Computer Science",
+ * "Bachelor of Science (B.S.)"). "Same as above" is not an Associate degree. */
+const SHORT_DEGREE_CODES: [string, DegreeBucket][] = [
+  ["bs", DegreeBucket.BACHELOR], ["ba", DegreeBucket.BACHELOR], ["be", DegreeBucket.BACHELOR],
+  ["ms", DegreeBucket.MASTER], ["ma", DegreeBucket.MASTER],
+  ["md", DegreeBucket.DOCTORATE], ["jd", DegreeBucket.DOCTORATE],
+  ["aa", DegreeBucket.ASSOCIATE], ["as", DegreeBucket.ASSOCIATE],
+];
+
+function hasShortCode(raw: string, norm: string, code: string): boolean {
+  if (norm.replace(/ /g, "") === code) return true;
+  const [a, b] = [code[0]!.toUpperCase(), code[1]!.toUpperCase()];
+  return new RegExp(`(?:^|[\\s(\\[/,])${a}\\.?${b}\\.?(?=$|[\\s)\\]/,:;-])`).test(raw);
+}
+
+function shortDegreeBucket(raw: string, norm: string): DegreeBucket | undefined {
+  for (const [code, bucket] of SHORT_DEGREE_CODES) if (hasShortCode(raw, norm, code)) return bucket;
+  return undefined;
+}
+
+/** Specialisation of a degree ("tech", "science", …) so B.Tech never becomes "Bachelor of Arts" and PhD never
+ * becomes an MD/JD. undefined = a generic degree ("Bachelor's Degree"). */
+function degreeSpec(raw: string): string | undefined {
+  const n = normalize(raw);
+  const code = (...codes: string[]) => codes.some((c) => hasShortCode(raw, n, c));
+  if (/\b(btech|mtech|b tech|m tech|technology)\b/.test(n)) return "tech";
+  if (/\b(bba|mba|dba|business)\b/.test(n)) return "business";
+  if (/\b(bca|mca|computer applications?)\b/.test(n)) return "computer_applications";
+  if (/\b(bfa|mfa|fine arts?)\b/.test(n)) return "fine_arts";
+  if (/\b(bsc|msc|b sc|m sc|science|sciences)\b/.test(n) || code("bs", "ms")) return "science";
+  if (/\b(beng|meng|b eng|m eng|engineering)\b/.test(n) || code("be", "me")) return "engineering";
+  if (/\barts?\b/.test(n) || code("ba", "ma")) return "arts";
+  if (/\b(phd|ph d|dphil|philosophy)\b/.test(n)) return "philosophy";
+  if (/\b(medicine|mbbs)\b/.test(n) || code("md")) return "medicine";
+  if (/\b(juris|law|llb|llm)\b/.test(n) || code("jd")) return "law";
+  if (/\b(ed d|edd|education)\b/.test(n)) return "education";
+  return undefined;
+}
+
+/** "Less than 30 days", "More than 3 months", "Up to 2 weeks": a tier qualified by a bound, not the value itself. */
+const QUALIFIED_TIER = /\b(less than|more than|fewer than|greater than|over|under|up to|within|at least|or more|or less|plus|beyond)\b/;
+
+/** Two-letter country codes that are unambiguous enough to map without a field context. "IT", "CA", "IN", "DE" are
+ * also a department, a US state, a preposition and a German state, so they never map on their own. */
+const SAFE_TWO_LETTER_COUNTRY = new Set(["us", "uk"]);
+
 export function classifyText(text: string): ClassifiedDomain {
   const norm = normalize(text);
   const res: ClassifiedDomain = {};
@@ -465,9 +523,13 @@ export function classifyText(text: string): ClassifiedDomain {
       break;
     }
   }
+  if (!res.degree) res.degree = shortDegreeBucket(text.trim(), norm);
 
-  // Availability / Notice
+  // Availability / Notice. A qualified tier ("Less than 30 days") is NOT the 30-day tier; only the explicit
+  // "more than 3 months" bucket may classify it.
+  const qualifiedTier = QUALIFIED_TIER.test(norm) || /[<>]|\d\s*\+/.test(text);
   for (const [bucket, patterns] of Object.entries(AVAILABILITY_PATTERNS) as [AvailabilityBucket, RegExp[]][]) {
+    if (qualifiedTier && bucket !== AvailabilityBucket.MORE_THAN_THREE_MONTHS) continue;
     if (patterns.some((p) => p.test(norm))) {
       res.availability = bucket;
       break;
@@ -557,7 +619,11 @@ export function classifyText(text: string): ClassifiedDomain {
 
   // Country
   const trimmed = norm.trim();
-  const directCountry = COUNTRY_BY_ALIAS.get(trimmed) || COUNTRY_BY_CODE.get(trimmed);
+  const twoLetter = trimmed.replace(/ /g, "").length <= 2;
+  const directCountry =
+    twoLetter && !SAFE_TWO_LETTER_COUNTRY.has(trimmed.replace(/ /g, ""))
+      ? undefined
+      : COUNTRY_BY_ALIAS.get(trimmed) || COUNTRY_BY_CODE.get(trimmed);
   if (directCountry) {
     res.country = directCountry;
   } else {
@@ -644,11 +710,155 @@ function isPromptInjection(text: string): boolean {
 
 // --- Main Matching Algorithm ---
 
+/** A negation word on only ONE side means the two texts say opposite things: "Sponsorship required" vs
+ * "… is not required", "I am authorized" vs "I am not authorized". */
+const NEGATION = /\b(not|no|never|without|cannot|dont|doesnt|didnt|cant|wont|isnt|arent|wasnt|werent|havent|hasnt|hadnt|shouldnt|wouldnt|couldnt|neither|nor)\b/;
+
+function negationConflict(wantedNorm: string, wantedDomain: ClassifiedDomain, c: ParsedCandidate): boolean {
+  if (NEGATION.test(wantedNorm) === NEGATION.test(c.normalized)) return false;
+  // "No" vs "I disagree": both already carry the same explicit polarity, so the missing "not" is fine.
+  if (wantedDomain.polarity && wantedDomain.polarity === c.classified.polarity) return false;
+  // "Decline" vs "I prefer not to disclose": the "not" belongs to the opt-out phrase, not to a statement.
+  if (DECLINE_PHRASE.test(wantedNorm) && DECLINE_PHRASE.test(c.normalized)) return false;
+  return true;
+}
+
+const DECLINE_PHRASE = /\b(decline|prefer not|not to (say|disclose|answer|specify|self identify)|do not wish|dont wish|opt out|rather not)\b/;
+
+/** Tokens that make two otherwise alike labels different things: levels ("Software Engineer I" vs "II"), numbers,
+ * seniority, and the qualifiers of place names ("West Virginia", "Equatorial Guinea"). When one side has such a token
+ * the other lacks, a fuzzy or containment match is refused. */
+const DISTINGUISHING = /^(\d+|i|ii|iii|iv|v|vi|vii|viii|ix|x|senior|sr|junior|jr|lead|principal|staff|chief|head|intern|associate|assistant|trainee|director|manager|vp|west|east|north|south|new|equatorial|northern|southern|upper|lower|greater)$/;
+
+function wordSet(norm: string): Set<string> {
+  return new Set(norm.split(" ").filter(Boolean));
+}
+
+function distinguishingDiff(a: string, b: string): boolean {
+  const x = wordSet(a);
+  const y = wordSet(b);
+  for (const t of x) if (!y.has(t) && DISTINGUISHING.test(t)) return true;
+  for (const t of y) if (!x.has(t) && DISTINGUISHING.test(t)) return true;
+  return false;
+}
+
+/** Splits of `raw` at a clear separator: "No, I do not" → {prefix:"no", rest:"i do not"}; "India (+91)" → "india". */
+function separatorSplits(raw: string): { prefix: string; rest: string }[] {
+  const out: { prefix: string; rest: string }[] = [];
+  const re = /\s*[,;:(\[]|\s+[-–—|\/&]\s+/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(raw))) {
+    if (m.index > 0) out.push({ prefix: normalize(raw.slice(0, m.index)), rest: normalize(raw.slice(m.index)) });
+  }
+  return out;
+}
+
+/** Words that turn "Yes, …" into a different, qualified answer ("Yes, but I will need sponsorship"). */
+const YES_QUALIFIER = /\b(but|however|except|unless|although|though|need|require|requires|sponsorship|not|dont|never)\b/;
+const NO_QUALIFIER = /\b(but|however|except|unless|although|though)\b/;
+
+function unique<T>(list: T[]): T | undefined {
+  return list.length === 1 ? list[0] : undefined;
+}
+
+// --- Experience brackets ---
+
+interface ExperienceQuantity {
+  years: number;
+  fromMonths: boolean;
+}
+
+/** A PURE experience quantity: "3", "2.5", "5+", "3 years", "18 months", "less than 1 year". "Bachelor 2019" is not. */
+function parseExperienceQuantity(wanted: string): ExperienceQuantity | undefined {
+  const t = wanted.trim().toLowerCase().replace(/\s+/g, " ");
+  if (/^(less than|under|<) ?(1|one|a) ?(year|yr)s?$/.test(t)) return { years: 0.5, fromMonths: false };
+  const m = /^(\d+(?:\.\d+)?) ?\+? ?(years?|yrs?|months?|mos?)?( of experience)?$/.exec(t);
+  if (!m) return undefined;
+  const n = parseFloat(m[1]!);
+  if (!Number.isFinite(n)) return undefined;
+  const months = !!m[2] && /^mo/.test(m[2]);
+  return { years: months ? n / 12 : n, fromMonths: months };
+}
+
+type Bracket =
+  | { kind: "single"; value: number }
+  | { kind: "range"; min: number; max: number }
+  | { kind: "less"; max: number }
+  | { kind: "plus"; min: number; exclusive: boolean };
+
+function parseYearBracket(text: string): Bracket | undefined {
+  const t = text.trim().toLowerCase().replace(/\s+/g, " ");
+  const num = "(\\d+(?:\\.\\d+)?)";
+  const unit = "(?:years?|yrs?)";
+  let m = new RegExp(`^(?:less than|under|fewer than|<) ?(\\d+(?:\\.\\d+)?|one|a) ?${unit}\\b`).exec(t);
+  if (m) return { kind: "less", max: /^\d/.test(m[1]!) ? parseFloat(m[1]!) : 1 };
+  m = new RegExp(`^(?:more than|over|greater than|>) ?${num} ?${unit}\\b`).exec(t);
+  if (m) return { kind: "plus", min: parseFloat(m[1]!), exclusive: true };
+  m = new RegExp(`^${num} ?(?:-|–|—|to) ?${num} ?\\+? ?${unit}\\b`).exec(t);
+  if (m) return { kind: "range", min: parseFloat(m[1]!), max: parseFloat(m[2]!) };
+  m = new RegExp(`^${num} ?\\+ ?(?:${unit})?`).exec(t) ?? new RegExp(`^${num} ?${unit} ?(?:\\+|or more|and above|or above|plus)`).exec(t);
+  if (m) return { kind: "plus", min: parseFloat(m[1]!), exclusive: false };
+  m = new RegExp(`^${num} ?${unit}$`).exec(t);
+  if (m) return { kind: "single", value: parseFloat(m[1]!) };
+  return undefined;
+}
+
+/** Year-bracket choice. Returns `null` when the field IS a year-bracket question but no option is certain. */
+function matchYearBracket(candidates: ParsedCandidate[], q: ExperienceQuantity): ParsedCandidate | null {
+  const parsed = candidates.map((c) => ({ c, b: parseYearBracket(c.trimmed) }));
+  const t = q.years;
+  const single = parsed.filter((p) => p.b?.kind === "single" && p.b.value === t);
+  if (single.length) return single[0]!.c;
+  const contained = parsed.filter((p) => {
+    const b = p.b;
+    if (!b) return false;
+    if (b.kind === "range") return t >= b.min && t <= b.max;
+    if (b.kind === "less") return t < b.max;
+    return false;
+  });
+  if (contained.length === 1) return contained[0]!.c;
+  if (contained.length > 1) {
+    // Overlapping brackets ("1-2" / "2-4" for 2): the ATS convention is "a bracket starts at its lower bound", but
+    // only for a whole number of years the user typed; a converted "24 months" stays for the user.
+    if (!q.fromMonths && Number.isInteger(t)) {
+      const starting = contained.filter((p) => p.b!.kind === "range" && (p.b as { min: number }).min === t);
+      if (starting.length === 1) return starting[0]!.c;
+    }
+    return null;
+  }
+  // Open-ended "N+ years": the highest threshold the value satisfies ("6" → "5+", never "1+").
+  let best: { c: ParsedCandidate; min: number } | undefined;
+  let tie = false;
+  for (const p of parsed) {
+    const b = p.b;
+    if (!b || b.kind !== "plus") continue;
+    if (b.exclusive ? t > b.min : t >= b.min) {
+      if (!best || b.min > best.min) {
+        best = { c: p.c, min: b.min };
+        tie = false;
+      } else if (b.min === best.min) tie = true;
+    }
+  }
+  return best && !tie ? best.c : null;
+}
+
+// --- Notice tiers ---
+
+function parseDays(text: string): number | undefined {
+  const m = /^(\d+(?:\.\d+)?) ?(days?|weeks?|months?)$/.exec(normalize(text).replace(/(\d) (\d)/g, "$1.$2"));
+  if (!m) return undefined;
+  const n = parseFloat(m[1]!);
+  return /^day/.test(m[2]!) ? n : /^week/.test(m[2]!) ? n * 7 : n * 30;
+}
+
+function isQualifiedTier(c: ParsedCandidate): boolean {
+  return QUALIFIED_TIER.test(c.normalized) || /[<>]|\d\s*\+/.test(c.trimmed);
+}
+
 export function matchOptionWithEngine(options: string[], wanted: string, minScore = 0.6): MatchResult | undefined {
   if (!options || !options.length || !wanted) return undefined;
   if (isPromptInjection(wanted)) return undefined;
 
-  const wantedRaw = wanted;
   const wantedTrimmed = wanted.trim();
   const wantedNorm = normalize(wantedTrimmed);
   if (!wantedNorm) return undefined;
@@ -659,8 +869,21 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
 
   const candidates: ParsedCandidate[] = options.map(parseCandidate);
 
+  // STAGE 1: Exact match first: an option that IS the wanted value always beats a tier, bracket or bucket
+  // ("30 days" beats "Less than 30 days", "3 years" beats "1 year").
+  const rawExact = candidates.find((c) => c.trimmed.toLowerCase() === wantedTrimmed.toLowerCase());
+  if (rawExact) return { option: rawExact.raw, stage: "exact", confidence: 1.0 };
+  const normExact = candidates.find((c) => c.normalized === wantedNorm);
+  if (normExact) return { option: normExact.raw, stage: "exact", confidence: 1.0 };
+  // Same text apart from spaces/punctuation ("JavaScript" / "Java Script", "nodejs" / "Node.js"). This is the ONLY
+  // spelling tolerance: no edit-distance matching (Iran ≠ Iraq, Niger ≠ Nigeria, Austria ≠ Australia).
+  const wantedCompact = wantedNorm.replace(/ /g, "");
+  if (wantedCompact.length >= 4) {
+    const compact = unique(candidates.filter((c) => c.normalized.replace(/ /g, "") === wantedCompact));
+    if (compact) return { option: compact.raw, stage: "exact", confidence: 0.99 };
+  }
+
   // STAGE 0: Contextual ATS Domain Specializations
-  // Detect if options belong to a known standardized ATS question set
 
   // 0a. EEO Protected Veteran Context
   const isVeteranContext = candidates.some((c) => /\bveteran\b/i.test(c.normalized));
@@ -670,11 +893,15 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
       if (match) return { option: match.raw, stage: "contextual_domain", confidence: 0.99 };
     }
     if (wantedClassified.polarity === PolarityBucket.NO || wantedNorm === "not a veteran" || wantedNorm === "no") {
-      const match = candidates.find((c) => c.classified.veteran === VeteranBucket.NOT_VETERAN);
+      // "I identify as a veteran, just not a protected veteran" and "I am not a veteran" are both "not protected";
+      // a plain "No" means the plain one.
+      const nots = candidates.filter((c) => c.classified.veteran === VeteranBucket.NOT_VETERAN);
+      const match = unique(nots) ?? unique(nots.filter((c) => !/\b(protected|identify as a veteran)\b/.test(c.normalized)));
       if (match) return { option: match.raw, stage: "contextual_domain", confidence: 0.99 };
+      if (nots.length > 1) return undefined;
     }
     if (wantedClassified.polarity === PolarityBucket.YES || wantedNorm === "protected veteran" || wantedNorm === "yes") {
-      const match = candidates.find((c) => c.classified.veteran === VeteranBucket.PROTECTED_VETERAN);
+      const match = unique(candidates.filter((c) => c.classified.veteran === VeteranBucket.PROTECTED_VETERAN));
       if (match) return { option: match.raw, stage: "contextual_domain", confidence: 0.99 };
     }
   }
@@ -713,96 +940,60 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
     }
   }
 
-  // 0d. Agreement / Terms Context (e.g. "I agree to the terms" vs "I do not agree")
+  // 0d. Agreement / Terms Context ("I agree to the terms" vs "I do not agree"). Two DIFFERENT agreements
+  // ("… marketing texts" / "… the terms") are ambiguous for a bare "Yes".
   const isAgreementContext = candidates.some((c) => /\b(agree|disagree|terms)\b/i.test(c.normalized));
-  if (isAgreementContext) {
-    if (wantedClassified.polarity === PolarityBucket.YES) {
-      const match = candidates.find((c) => c.classified.polarity === PolarityBucket.YES);
-      if (match) return { option: match.raw, stage: "contextual_domain", confidence: 0.98 };
-    }
-    if (wantedClassified.polarity === PolarityBucket.NO) {
-      const match = candidates.find((c) => c.classified.polarity === PolarityBucket.NO);
-      if (match) return { option: match.raw, stage: "contextual_domain", confidence: 0.98 };
-    }
+  if (isAgreementContext && (wantedClassified.polarity === PolarityBucket.YES || wantedClassified.polarity === PolarityBucket.NO)) {
+    const same = candidates.filter((c) => c.classified.polarity === wantedClassified.polarity);
+    const match = unique(same);
+    if (match) return { option: match.raw, stage: "contextual_domain", confidence: 0.98 };
+    if (same.length > 1) return undefined;
   }
 
-  // 0e. Workday / ATS Years of Experience Bracket Matching
-  const isYearBracketContext = candidates.some((c) => /\b(years?|less than 1 year)\b/i.test(c.normalized) && /\d/.test(c.normalized));
-  if (isYearBracketContext) {
-    const isLessThanOne = /less than 1|^0\b|months?\b/i.test(wantedTrimmed);
-    const numMatch = isLessThanOne ? null : /(\d+)/.exec(wantedTrimmed);
-    if (isLessThanOne || numMatch) {
-      const targetYears = isLessThanOne ? 0 : parseInt(numMatch![1]!, 10);
-      // 0. If target is 0 / less than 1 year
-      if (targetYears === 0) {
-        for (const c of candidates) {
-          if (/less than 1/i.test(c.normalized)) {
-            return { option: c.raw, stage: "contextual_domain", confidence: 0.98 };
-          }
-        }
-      }
-      // 1. Prioritize bracket starting with targetYears (e.g. 3 -> "3 - 5 years", 5 -> "5 - 7 years")
-      for (const c of candidates) {
-        const startBracketMatch = /^(\d+)\s*[-–—to\s]+\s*(\d+)\s*years?/i.exec(c.trimmed);
-        if (startBracketMatch && parseInt(startBracketMatch[1]!, 10) === targetYears) {
-          return { option: c.raw, stage: "contextual_domain", confidence: 0.98 };
-        }
-      }
-      // 2. Match bracket where target falls into [min, max] or top bracket
-      for (const c of candidates) {
-        const startBracketMatch = /^(\d+)\s*[-–—to\s]+\s*(\d+)\s*years?/i.exec(c.trimmed);
-        if (startBracketMatch) {
-          const minYears = parseInt(startBracketMatch[1]!, 10);
-          const maxYears = parseInt(startBracketMatch[2]!, 10);
-          if (targetYears >= minYears && targetYears <= maxYears) {
-            return { option: c.raw, stage: "contextual_domain", confidence: 0.98 };
-          }
-        }
-        // Top bracket like "8+ years"
-        const topBracketMatch = /^(\d+)\+?\s*years?/i.exec(c.trimmed);
-        if (topBracketMatch && targetYears >= parseInt(topBracketMatch[1]!, 10)) {
-          return { option: c.raw, stage: "contextual_domain", confidence: 0.98 };
-        }
-      }
-    }
+  // 0e. Years-of-experience brackets: only for a PURE quantity ("3", "2.5 years", "18 months").
+  const experience = parseExperienceQuantity(wantedTrimmed);
+  if (experience && candidates.some((c) => parseYearBracket(c.trimmed))) {
+    const match = matchYearBracket(candidates, experience);
+    return match ? { option: match.raw, stage: "contextual_domain", confidence: 0.98 } : undefined;
   }
 
-  // 0f. Notice Period Tiers (0, 15, 30, 60, 90 days)
+  // 0f. Notice Period Tiers (0, 15, 30, 60, 90 days). A qualified tier ("Less than 30 days") is never the 30-day tier.
   const isNoticeContext = candidates.some((c) => /\b(immediately|days|months|notice|weeks)\b/i.test(c.normalized));
   if (isNoticeContext) {
+    const tiers = candidates.filter((c) => !isQualifiedTier(c));
     if (wantedNorm === "0 days" || wantedClassified.availability === AvailabilityBucket.IMMEDIATE) {
-      const imm = candidates.find((c) => c.classified.availability === AvailabilityBucket.IMMEDIATE);
+      const imm = tiers.find((c) => c.classified.availability === AvailabilityBucket.IMMEDIATE);
       if (imm) return { option: imm.raw, stage: "contextual_domain", confidence: 0.98 };
     }
     if (wantedNorm === "15 days" || wantedNorm === "15" || wantedNorm === "2 weeks" || wantedClassified.availability === AvailabilityBucket.TWO_WEEKS) {
-      const match15 = candidates.find((c) => /\b(15 days?|2 weeks?|two weeks?)\b/i.test(c.normalizedCore) || /^15\s+to\s+30\s+days/i.test(c.normalizedCore));
+      const match15 = tiers.find((c) => /\b(15 days?|2 weeks?|two weeks?)\b/i.test(c.normalizedCore) || /^15\s+to\s+30\s+days/i.test(c.normalizedCore));
       if (match15) return { option: match15.raw, stage: "contextual_domain", confidence: 0.98 };
     }
     if (wantedNorm === "30 days" || wantedNorm === "1 month" || wantedNorm === "30" || wantedClassified.availability === AvailabilityBucket.ONE_MONTH) {
-      const match30 = candidates.find((c) => /\b(1 month|30 days)\b/i.test(c.normalizedCore) && !c.normalizedCore.startsWith("15 to"));
+      const match30 = tiers.find((c) => /\b(1 month|30 days)\b/i.test(c.normalizedCore) && !c.normalizedCore.startsWith("15 to"));
       if (match30) return { option: match30.raw, stage: "contextual_domain", confidence: 0.98 };
     }
     if (wantedNorm === "60 days" || wantedNorm === "2 months" || wantedNorm === "60" || wantedClassified.availability === AvailabilityBucket.TWO_MONTHS) {
-      const match60 = candidates.find((c) => /\b(2 months|60 days)\b/i.test(c.normalizedCore));
+      const match60 = tiers.find((c) => /\b(2 months|60 days)\b/i.test(c.normalizedCore));
       if (match60) return { option: match60.raw, stage: "contextual_domain", confidence: 0.98 };
     }
     if (wantedNorm === "90 days" || wantedNorm === "3 months" || wantedNorm === "90" || wantedClassified.availability === AvailabilityBucket.THREE_MONTHS) {
-      const match90 = candidates.find((c) => /\b(3 months|90 days)\b/i.test(c.normalizedCore));
+      const match90 = tiers.find((c) => /\b(3 months|90 days)\b/i.test(c.normalizedCore));
       if (match90) return { option: match90.raw, stage: "contextual_domain", confidence: 0.98 };
     }
-  }
-
-  // STAGE 1: Exact Match (Preserving raw whitespace padding)
-  // 1a. Raw exact match
-  const rawExact = candidates.find((c) => c.trimmed.toLowerCase() === wantedTrimmed.toLowerCase());
-  if (rawExact) {
-    return { option: rawExact.raw, stage: "exact", confidence: 1.0 };
-  }
-
-  // 1b. Normalized exact match
-  const normExact = candidates.find((c) => c.normalized === wantedNorm);
-  if (normExact) {
-    return { option: normExact.raw, stage: "exact", confidence: 1.0 };
+    // An in-between value ("45 days") never snaps to a neighbouring tier; a value beyond the top tier may take an
+    // explicit "More than N" tier.
+    const wantedDays = parseDays(wantedTrimmed);
+    if (wantedDays !== undefined) {
+      let best: { c: ParsedCandidate; days: number } | undefined;
+      for (const c of candidates) {
+        const m = /^(?:more than|over|greater than|beyond) (\d+) (days?|weeks?|months?)$/.exec(c.normalized);
+        if (!m) continue;
+        const days = parseDays(`${m[1]} ${m[2]}`)!;
+        if (wantedDays > days && (!best || days > best.days)) best = { c, days };
+      }
+      if (best) return { option: best.c.raw, stage: "contextual_domain", confidence: 0.95 };
+    }
   }
 
   // 1c. Code exact match (e.g. "MBA" matches "(MBA)", "BS" matches "(B.S.)", "UK" matches "(UK)")
@@ -827,39 +1018,43 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
     return { option: subpartExact.raw, stage: "code_stripped", confidence: 0.98 };
   }
 
-  // Filter out any candidates with semantic or polarity conflicts
-  const validCandidates = candidates.filter((c) => !hasSemanticConflict(wantedClassified, c.classified));
+  // 1f. A pure number / percentage ("25%", "0%") that appears in exactly ONE option ("Occasional travel (up to 25%)").
+  const pureNumber = /^(\d+(?:\.\d+)?)\s*(%?)$/.exec(wantedTrimmed);
+  if (pureNumber) {
+    const [, value, pct] = pureNumber;
+    const numRe = new RegExp(`(^|[^\\d.])${value!.replace(".", "\\.")}${pct ? "\\s*%" : "(?![\\d.])"}`);
+    const match = unique(candidates.filter((c) => numRe.test(c.trimmed)));
+    if (match) return { option: match.raw, stage: "code_stripped", confidence: 0.95 };
+  }
 
-  // STAGE 2: Degree Disambiguation & Preference
+  // Filter out any candidates with semantic, polarity or negation conflicts
+  const validCandidates = candidates.filter(
+    (c) => !hasSemanticConflict(wantedClassified, c.classified) && !negationConflict(wantedNorm, wantedClassified, c),
+  );
+
+  // STAGE 2: Degrees. Same level AND same specialisation (B.Tech → "Bachelor of Technology", never "Bachelor of
+  // Arts"); a generic option ("Bachelor's Degree") is fine for any specialisation. Anything else stays empty.
   if (wantedClassified.degree) {
     const targetDegree = wantedClassified.degree;
     const degreeCandidates = validCandidates.filter((c) => c.classified.degree === targetDegree);
-    if (degreeCandidates.length > 0) {
-      // Check if user specified a specific subfield like "Science" or "Arts"
-      const wantsScience = /\b(science|bs|bsc)\b/i.test(wantedNorm);
-      const wantsArts = /\b(arts|ba)\b/i.test(wantedNorm);
-      const wantsBusiness = /\b(business|mba|bba)\b/i.test(wantedNorm);
-
-      if (wantsScience) {
-        const sci = degreeCandidates.find((c) => /\b(science|bs)\b/i.test(c.normalized));
-        if (sci) return { option: sci.raw, stage: "contextual_domain", confidence: 0.96 };
-      }
-      if (wantsArts) {
-        const art = degreeCandidates.find((c) => /\b(arts|ba)\b/i.test(c.normalized));
-        if (art) return { option: art.raw, stage: "contextual_domain", confidence: 0.96 };
-      }
-      if (wantsBusiness) {
-        const bus = degreeCandidates.find((c) => /\b(business|mba)\b/i.test(c.normalized));
-        if (bus) return { option: bus.raw, stage: "contextual_domain", confidence: 0.96 };
-      }
-
-      // If user wants generic degree (e.g. "Bachelors", "Bachelor", "B.Tech"), prefer generic degree option
-      const genericDegree = degreeCandidates.find((c) => /\b(degree|4 year|college)\b/i.test(c.normalized) && !/\b(science|arts|business)\b/i.test(c.normalized));
-      if (genericDegree) {
-        return { option: genericDegree.raw, stage: "contextual_domain", confidence: 0.95 };
-      }
+    const wantedSpec = degreeSpec(wantedTrimmed);
+    const generic = degreeCandidates.filter((c) => !degreeSpec(c.trimmed));
+    if (wantedSpec) {
+      const same = degreeCandidates.filter((c) => degreeSpec(c.trimmed) === wantedSpec);
+      const match = unique(same);
+      if (match) return { option: match.raw, stage: "contextual_domain", confidence: 0.96 };
+      if (same.length > 1) return undefined;
+    }
+    if (generic.length) {
+      const preferred = generic.find((c) => /\b(degree|4 year|college)\b/i.test(c.normalized)) ?? generic[0]!;
+      return { option: preferred.raw, stage: "contextual_domain", confidence: 0.95 };
+    }
+    // A generic wanted degree ("Doctorate", "Bachelor") with exactly ONE option at that level.
+    if (!wantedSpec && degreeCandidates.length === 1) {
       return { option: degreeCandidates[0]!.raw, stage: "contextual_domain", confidence: 0.92 };
     }
+    // The options are degrees but none is certainly the wanted one.
+    if (candidates.some((c) => c.classified.degree)) return undefined;
   }
 
   // STAGE 3: Canonical Taxonomy Domain Fallbacks
@@ -877,7 +1072,7 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
     }
   }
 
-  // 3b. Availability mapping
+  // 3b. Availability mapping (qualified tiers never stand in for the value itself)
   if (wantedClassified.availability) {
     const targetAvail = wantedClassified.availability;
     const availMatch = validCandidates.find((c) => c.classified.availability === targetAvail);
@@ -904,7 +1099,7 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
     }
   }
 
-  // 3e. Gender mapping
+  // 3e. Gender mapping (transgender options are their own bucket, so "Male" → "Man", never "Transgender man")
   if (wantedClassified.gender) {
     const targetGender = wantedClassified.gender;
     const genderMatch = validCandidates.find((c) => c.classified.gender === targetGender);
@@ -922,87 +1117,89 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
     }
   }
 
-  // 3g. Polarity mapping
+  // 3g. Polarity mapping: exactly one unqualified option of that polarity, else it stays for the user.
   if (wantedClassified.polarity) {
     const targetPol = wantedClassified.polarity;
-    const polMatch = validCandidates.find((c) => c.classified.polarity === targetPol);
+    const qualifier = targetPol === PolarityBucket.YES ? YES_QUALIFIER : NO_QUALIFIER;
+    const same = validCandidates.filter((c) => c.classified.polarity === targetPol);
+    const unqualified = same.filter((c) => {
+      const rest = c.normalized.replace(/^(yes|y|no|n|true|false|i agree|agree|i disagree|disagree)\b/, "");
+      return !qualifier.test(rest);
+    });
+    const polMatch = unique(unqualified);
     if (polMatch) {
       return { option: polMatch.raw, stage: "contextual_domain", confidence: 0.95 };
     }
+    if (same.length) return undefined;
   }
 
-  // STAGE 4: Boundary Prefix & Suffix Match with Anti-Conflict Guards
-  const boundaryMatch = validCandidates.find((c) => {
-    const on = c.normalized;
-    const coreOn = c.normalizedCore;
-    const wn = wantedNorm;
-
-    // Reject false positive "No" -> "None", "Yes" -> "Yesterday"
-    if (wn === "no" && !on.startsWith("no ") && on !== "no") return false;
-    if (wn === "yes" && !on.startsWith("yes ") && on !== "yes") return false;
-
-    if (on.startsWith(wn + " ") || (on.length >= 3 && wn.startsWith(on + " "))) return true;
-    if (coreOn.startsWith(wn + " ") || (coreOn.length >= 3 && wn.startsWith(coreOn + " "))) return true;
-    if (on.endsWith(" " + wn) || coreOn.endsWith(" " + wn)) return true;
+  // STAGE 4: Prefix at a clear separator ("No" → "No, I do not"; "India (+91)" → "India"). Never a suffix
+  // ("Guinea" is not "Equatorial Guinea", "Virginia" is not "West Virginia") and never a bare word prefix
+  // ("Software Engineer" is not "Software Engineer II", "No" is not "None").
+  const yesNoWord = /^(yes|no)$/.test(wantedNorm);
+  const prefixHits = validCandidates.filter((c) => {
+    const splits = separatorSplits(c.trimmed);
+    if (yesNoWord && c.normalized.startsWith(wantedNorm + " ")) splits.push({ prefix: wantedNorm, rest: c.normalized.slice(wantedNorm.length) });
+    // A quantity followed by its unit's context ("3 days" → "3 days per week"), but never a bounded tier.
+    if (/^\d/.test(wantedNorm) && c.normalized.startsWith(wantedNorm + " ") && !isQualifiedTier(c) && !distinguishingDiff(wantedNorm, c.normalized)) {
+      splits.push({ prefix: wantedNorm, rest: c.normalized.slice(wantedNorm.length) });
+    }
+    for (const { prefix, rest } of splits) {
+      if (prefix !== wantedNorm) continue;
+      if (wantedNorm === "yes" && YES_QUALIFIER.test(rest)) return false;
+      if (wantedNorm === "no" && NO_QUALIFIER.test(rest)) return false;
+      return true;
+    }
+    if (c.normalized.length >= 3 && separatorSplits(wantedTrimmed).some((s) => s.prefix === c.normalized)) return true;
     return false;
   });
+  const boundaryMatch = unique(prefixHits);
   if (boundaryMatch) {
     return { option: boundaryMatch.raw, stage: "boundary_prefix", confidence: 0.90 };
   }
+  if (prefixHits.length > 1) return undefined;
 
-  // STAGE 5: Stem-Based Token Containment with Highest Overlap Selection
-  if (wantedStems.size > 0) {
-    let bestContainment: { opt: string; score: number } | undefined;
+  // STAGE 5: Containment: every wanted word (2+ words) is in the option, nothing distinguishing differs, and one
+  // option is strictly the best. An option that is only PART of the wanted value ("Engineer" for "Junior Engineer")
+  // is never taken.
+  if (wantedStems.size >= 2) {
+    let best: { c: ParsedCandidate; score: number } | undefined;
+    let tie = false;
     for (const c of validCandidates) {
       if (!c.stems.size) continue;
-      // Reject "No" -> "None" or single-letter matches
-      if (wantedStems.size === 1 && [...wantedStems][0]!.length <= 2) {
-        if (!c.stems.has([...wantedStems][0]!)) continue;
-      }
-
+      if (![...wantedStems].every((s) => c.stems.has(s))) continue;
+      if (distinguishingDiff(wantedNorm, c.normalized)) continue;
       let shared = 0;
       for (const s of wantedStems) if (c.stems.has(s)) shared++;
       const score = shared / (wantedStems.size + c.stems.size - shared);
-
-      const wantedInOption = [...wantedStems].every((s) => c.stems.has(s));
-      const optionInWanted = [...c.stems].every((s) => wantedStems.has(s));
-
-      if (wantedInOption || optionInWanted) {
-        if (!bestContainment || score > bestContainment.score) {
-          bestContainment = { opt: c.raw, score };
-        }
-      }
+      if (!best || score > best.score) {
+        best = { c, score };
+        tie = false;
+      } else if (score === best.score && c.normalized !== best.c.normalized) tie = true;
     }
-    if (bestContainment && bestContainment.score >= 0.4) {
-      return { option: bestContainment.opt, stage: "token_containment", confidence: 0.85 };
+    if (best && !tie && best.score >= 0.5) {
+      return { option: best.c.raw, stage: "token_containment", confidence: 0.85 };
     }
   }
 
-  // STAGE 6: Weighted Fuzzy Jaccard & Levenshtein
-  // Anti-overfitting guard: Do NOT fuzzy match single short tokens like "No", "Yes", "Male", "Female"
+  // STAGE 6: Word-overlap (Jaccard) only. No edit-distance / typo matching: one changed letter is a different
+  // country, city or level (Iran/Iraq, Mumbai/Dubai, Rest/Rust).
   if (wantedNorm.length >= 4) {
-    let bestFuzzy: { opt: string; score: number } | undefined;
+    let best: { c: ParsedCandidate; score: number } | undefined;
+    let tie = false;
     for (const c of validCandidates) {
+      if (distinguishingDiff(wantedNorm, c.normalized)) continue;
       let shared = 0;
       for (const s of wantedStems) if (c.stems.has(s)) shared++;
-      const jaccard = (wantedStems.size || c.stems.size)
-        ? shared / (wantedStems.size + c.stems.size - shared)
-        : 0;
-
-      const maxLen = Math.max(wantedNorm.length, c.normalized.length);
-      const dist = levenshteinDistance(wantedNorm, c.normalized);
-      const levSim = maxLen > 0 ? 1 - dist / maxLen : 0;
-
-      const typoMatch = (!wantedNorm.includes(" ") && !c.normalized.includes(" ") && dist <= 2 && wantedNorm.length >= 5);
-      const score = Math.max(jaccard, levSim * (typoMatch ? 0.95 : 0.8));
-
-      if (score > (bestFuzzy?.score ?? 0)) {
-        bestFuzzy = { opt: c.raw, score };
-      }
+      const denom = wantedStems.size + c.stems.size - shared;
+      const score = denom ? shared / denom : 0;
+      if (!best || score > best.score) {
+        best = { c, score };
+        tie = false;
+      } else if (score === best.score && c.normalized !== best.c.normalized) tie = true;
     }
-
-    if (bestFuzzy && bestFuzzy.score >= minScore) {
-      return { option: bestFuzzy.opt, stage: "fuzzy", confidence: bestFuzzy.score };
+    if (best && !tie && best.score >= minScore) {
+      return { option: best.c.raw, stage: "fuzzy", confidence: best.score };
     }
   }
 

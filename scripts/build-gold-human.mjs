@@ -137,7 +137,7 @@ function labelGroundTruth(q) {
     a = { answer: "411001", reachable: true };
     b = { answer: "560100", reachable: true };
     c = { answer: "400020", reachable: true };
-  } else if (/state|province/i.test(label) && !/united states/i.test(label)) {
+  } else if (/state|province/i.test(label) && !/united states|u\.s\. state|canadian province|following states/i.test(label)) {
     a = { answer: "Maharashtra", reachable: true };
     b = { answer: "Karnataka", reachable: true };
     c = { answer: "Maharashtra", reachable: true };

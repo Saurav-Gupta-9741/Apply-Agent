@@ -31,6 +31,7 @@ function flush(state: Tracked): void {
       type: "RECORD_CORRECTION",
       question: state.question,
       answer: current,
+      control: state.field.descriptor.control,
     } satisfies Message).catch?.(() => undefined);
   }
 }

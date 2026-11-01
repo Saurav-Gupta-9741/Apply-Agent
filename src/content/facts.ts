@@ -93,8 +93,20 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
     return undefined;
   }
   let places = countriesIn(field.label);
-  if (!places.length && /country (of residence|where you (currently )?(live|reside))|where you (currently )?(live|reside)|your (current )?country/.test(q)) {
+  // "…in the country you currently reside in?", "Your authorization to work in the country where you live. Please
+  // choose…": the country of residence is the profile's country (read on the whole label: the asked sentence may be
+  // the instruction after it).
+  const whole = normalize(field.label);
+  const RESIDENCE = /country (of (your )?(current )?residence|(where|that|which|in which) you (currently )?(live|reside)|you (currently )?(live|reside) in)|where you (currently )?(live|reside)|your (current |home )?country(?! of application)/;
+  if (!places.length && (RESIDENCE.test(q) || RESIDENCE.test(whole))) {
     places = countriesIn(profile.country);
+    if (!places.length) return undefined; // where the user lives is not known
+  }
+  // "…in your country of application?", "…the country for which you applied?": the job's country, and only a yes when
+  // that is known and one the user may work in (a no could be about another country than the page shows).
+  if (!places.length && /country (of application|for which you (have )?appl|you (are )?apply|you (have )?applied)/.test(whole)) {
+    const job = page?.jobCountries ?? [];
+    if (!job.length || !job.every((c) => canWorkIn(c, allowed))) return undefined;
   }
   // No country in the question ("…require sponsorship to work at Cloudflare?"): it is about this job, so the job's own
   // country decides, when the page names exactly that. A choice made earlier on the form is the user's to recall.
@@ -238,12 +250,12 @@ function diversityAnswer(field: FieldDescriptor, facts: QuickFacts, topic: Sensi
     && !/another country|foreign|other countr/.test(q)) {
     const v = choice(field, facts.veteran, {
       Yes: /^(?!.*\b(not|decline|don ?t|prefer)\b).*(veteran|^yes\b)/, No: /\b(not a|am not|non) ?(protected )?veteran|^no\b/, Decline: DECLINE,
-    }, { Yes: "I identify as", No: "I am not", Decline: "I don't wish" });
+    }, {}); // a list whose choices are not known: "I am not" is a fragment, not an answer
     return v ? answer(v, "veteran status") : undefined;
   }
   if (topic === "disability" && facts.disability) {
     const v = choice(field, facts.disability, { Yes: /^yes\b|^i have a disability/, No: /^no\b|do not have a disability|don ?t have a disability/, Decline: DECLINE },
-      { Yes: "Yes", No: "No", Decline: "I do not want" });
+      { Yes: "Yes", No: "No" }); // "I do not want" is a fragment, not an answer
     return v ? answer(v, "disability") : undefined;
   }
   if (topic === "race" && facts.race) {
@@ -278,12 +290,57 @@ export function companyDomain(url: string): string {
   }
 }
 
-/** Check if the tracker has a confirmed application to the same company domain. */
-export function hasConfirmedApplication(page?: PageFacts): boolean {
+/** The job posting a URL is for, without the apply step or query ("…/jobs/123/application?src=x" → "…/jobs/123"). */
+function jobKey(url: string): string {
+  try {
+    const u = new URL(url);
+    const path = u.pathname.replace(/\/(apply|application|applications|submit|thank[-_]?you|confirmation)(\/.*)?$/i, "").replace(/\/+$/, "");
+    return `${u.hostname.replace(/^www\./i, "").toLowerCase()}${path.toLowerCase()}`;
+  } catch {
+    return "";
+  }
+}
+
+/** "…in the past 12 months?", "…within the last year?": the window in days, when the question names one. */
+function askedWindowDays(q: string): number | undefined {
+  const m = /\b(?:past|last|previous|within)\s+(?:the\s+)?(?:(\d+|one|two|three|six|twelve|eighteen|twenty four)\s+)?(days?|weeks?|months?|years?)\b/.exec(q);
+  if (!m) return undefined;
+  const words: Record<string, number> = { one: 1, two: 2, three: 3, six: 6, twelve: 12, eighteen: 18, "twenty four": 24 };
+  const n = m[1] ? (words[m[1]] ?? Number(m[1])) : 1;
+  const unit = m[2]!.replace(/s$/, "");
+  return n * (unit === "year" ? 365 : unit === "month" ? 31 : unit === "week" ? 7 : 1);
+}
+
+/** Check if the tracker has a confirmed application that answers this question: to the same company; for "this
+ * position/role/job" to the same posting; for "in the past 12 months" one submitted inside that window. A question
+ * naming another company ("…applied to Amazon…?" on another company's page) is not answered from the tracker. */
+export function hasConfirmedApplication(page?: PageFacts, label?: string): boolean {
   if (!page?.url || !page?.applications?.length) return false;
   const current = companyDomain(page.url);
   if (!current) return false;
-  return page.applications.some((app) => app.status === "applied_confirmed" && companyDomain(app.url) === current);
+  let matches = page.applications.filter((app) => app.status === "applied_confirmed" && companyDomain(app.url) === current);
+  if (!matches.length || label === undefined) return matches.length > 0;
+  const q = normalize(label);
+  // A company named in the question must be this one.
+  const named = /\bappl(?:ied|y)\s+(?:to|with|at|for)\s+([A-Z][\w&.-]*(?:\s+[A-Z][\w&.-]*)*)/.exec(label)?.[1];
+  if (named && !/^(This|The|Our|Us|Any|A|An)$/.test(named.split(/\s+/)[0]!)) {
+    const slug = named.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const host = current.replace(/[^a-z0-9]/g, "");
+    if (!slug || !(host === slug || host.startsWith(slug))) return false;
+  }
+  if (/\b(this|the same|that) (position|role|job|opening|posting|vacancy|requisition|opportunity)\b/.test(q)) {
+    const key = jobKey(page.url);
+    matches = matches.filter((app) => key && jobKey(app.url) === key);
+  }
+  const days = askedWindowDays(q);
+  if (days !== undefined) {
+    const now = Date.now();
+    matches = matches.filter((app) => {
+      const at = app.submittedAt ? Date.parse(app.submittedAt) : NaN;
+      return Number.isFinite(at) && now - at <= days * 86_400_000;
+    });
+  }
+  return matches.length > 0;
 }
 
 /** Recognises "Can you start immediately?" in its affirmative yes/no wordings. */
@@ -408,8 +465,37 @@ export function isAppliedBeforeQuestion(label: string): boolean {
     || /^(have you|did you)\s+.*appl(ied|y)\b.*\b(before|previously|in the past|prior)\b/.test(q);
 }
 
+/** "Zip Code (Non-U.S. based candidates, please enter "00000")": the form tells candidates outside the US what to
+ * type. It is never ignored: a candidate outside the US gets the form's value in a postal code box (anything else is
+ * asked); where the user lives is not known: asked; a US candidate: the normal rules. */
+export function nonUsInstruction(field: FieldDescriptor, profile: Profile): Decision | undefined {
+  const m = /\b(?:non[-\s]?(?:u\.?s\.?|united states|us)(?:[-\s]based)?|outside (?:of )?(?:the )?(?:u\.?s\.?a?|united states))\b[^"“”']*["“']([^"“”']{1,20})["”']/i.exec(field.label);
+  if (!m) return undefined;
+  const home = countriesIn(profile.country);
+  if (home.includes("United States")) return undefined;
+  if (!home.length) return { kind: "ask", reason: "unknown" };
+  const value = m[1]!.trim();
+  if (/\b(zip|postal|post code|postcode|pin ?code)\b/i.test(field.label) && value) return { kind: "profile", key: "postalCode", value };
+  return { kind: "ask", reason: "unknown" };
+}
+
+/** "Which U.S. State or Canadian Province do you reside in?": a state of another country than the user's is not an
+ * answer ("Maharashtra" is not a U.S. state). Asked, unless the user lives in one of the countries named. */
+export function foreignSubdivision(field: FieldDescriptor, profile: Profile): Decision | undefined {
+  const m = /\b(u\.?s\.?a?|united states|american|canadian|canada|australian|uk|british)\s+(states?|provinces?|territor(?:y|ies)|count(?:y|ies)|zip)\b/i.exec(field.label);
+  if (!m) return undefined;
+  const named = countriesIn(field.label.replace(/\bcanadian\b/gi, "Canada").replace(/\baustralian\b/gi, "Australia").replace(/\bbritish\b/gi, "United Kingdom"));
+  const home = countriesIn(profile.country);
+  if (home.length && named.some((c) => home.includes(c))) return undefined;
+  return { kind: "ask", reason: "unknown" };
+}
+
 /** The quick answer for this question, if the user gave one and the question clearly is that question. */
 export function factDecision(field: FieldDescriptor, profile: Profile, topic: SensitiveTopic | undefined, page?: PageFacts): Decision | undefined {
+  if (!topic) {
+    const instructed = nonUsInstruction(field, profile) ?? foreignSubdivision(field, profile);
+    if (instructed) return instructed;
+  }
   const facts = profile.facts;
   if (!facts) return undefined;
   const q = normalize(field.label);
@@ -464,6 +550,9 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     // A date ("Start date", a DD/MM/YYYY mask in the label or placeholder) needs a date, not "30 days".
     const shape = normalize(`${field.label} ${field.placeholder}`);
     if (/\b(dd|mm|yyyy|jjjj|aaaa)\b/.test(shape) || /\b(month|year)\b$/.test(q) || /last (working )?day/.test(q)) return undefined;
+    // "Start date", "Date Available", "Availability date": a date, and a notice period ("30 days") is not one.
+    const savedIsDate = /\b(19|20)\d{2}\b|\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\b|\d{1,2}[\/.-]\d{1,2}/.test(notice.toLowerCase());
+    if (/\b(date|datum|fecha|data)\b/.test(q) && !savedIsDate) return undefined;
     const candidateDays = parseNoticeDays(notice);
     const rawUnit = /\b(days?|weeks?|months?|tage?n?|wochen?|monate?n?|jours?|semaines?|mois|dias?|semanas?|meses?|giorni|settimane|mesi|weken?|maanden?)\b/.exec(shape)?.[1]?.toLowerCase();
     const unit = rawUnit ? (/^(month|monat|mois|mes|mese|maand)/.test(rawUnit) ? "month" : /^(week|woche|semaine|semana|settimana|wek)/.test(rawUnit) ? "week" : "day") : undefined;
@@ -588,14 +677,33 @@ export function isPreviousEmployeeQuestion(field: FieldDescriptor): boolean {
   if (/\b(visa|sponsorship|right to work|authori[sz]|permit)\b/.test(q)) return false;
   if (/\b(subsidiaries, affiliates, or acquired companies)\b/i.test(field.label)) return false;
   if (/\bworked (on|with)\b/.test(q)) return false;
-  
+  // "Have you been rejected for this role at Samsara…?" is about past applications, not past employment.
+  if (/\b(rejected|declined|turned down|not selected)\b/.test(q)) return false;
+
   return /^(have you (ever |previously )?been employed|have you (ever |previously )?worked (for|at)|are you currently a\b|are you a (current or )?former|do you now or have you in the past worked|history with|voce trabalha atualmente|are you (currently|now) or have you (ever|previously) (worked|been employed)|have you ever or are you currently working at|are you a current employee (with|of)|are you currently or have you previously worked for)/.test(q)
-    || (/\b(employed|worked (for|at))\b/.test(q) && /\b(before|in the past|previously)\b/.test(q) && /^(have you|were you|did you)\b/.test(q))
-    || /\brejected for this role\b/.test(q);
+    || (/\b(employed|worked (for|at))\b/.test(q) && /\b(before|in the past|previously)\b/.test(q) && /^(have you|were you|did you)\b/.test(q));
 }
+
+/** "…or one of its clients?": the user's history cannot tell who the company's clients, partners or affiliates are. */
+/** Capitalised words that are not a company's name. */
+const NOT_A_NAME = /^(i|you|your|us|we|our|the|this|that|a|an|any|company|companies|organi[sz]ations?|firm|employer|employee|employees|business|group|team|inc|llc|ltd|have|has|are|were|did|do|history|with|for|at|by|of|or|and|in|the past|yes|no|previous|current|former|intern|contractor)$/i;
+
+/** The question names the company in its own words ("…employed by Stripe?", "HISTORY WITH ANDURIL", "Are you a
+ * current Twitch employee?"): a capitalised word that is not a sentence's first word and not one of the words above. */
+function namesACompany(label: string): boolean {
+  const asked = label.replace(/\([^)]*\)/g, " ");
+  for (const sentence of asked.split(/(?<=[.?!:])\s+/)) {
+    const words = sentence.split(/\s+/).map((w) => w.replace(/^[^\w]+|[^\w&]+$/g, "")).filter(Boolean);
+    if (words.slice(1).some((w) => /^[A-Z]/.test(w) && !NOT_A_NAME.test(w))) return true;
+  }
+  return false;
+}
+
+const ITS_RELATIONS = /\b(clients?|customers?|partners?|vendors?|suppliers?|affiliates?|affiliated|subsidiar\w*|parent company|sister compan\w*|competitors?|portfolio compan\w*)\b/;
 
 export function previousEmployerAnswer(field: FieldDescriptor, profile: Profile, page?: PageFacts): Decision | undefined {
   if (!yesNoField(field)) return undefined;
+  if (ITS_RELATIONS.test(normalize(field.label))) return undefined;
 
   const currentHost = page?.url ? companyDomain(page.url) : "";
   const label = field.label;
@@ -626,7 +734,10 @@ export function previousEmployerAnswer(field: FieldDescriptor, profile: Profile,
     return match ? answer(match, "previous employer") : undefined;
   }
 
-  // If not matched, only answer "No" if candidate explicitly confirmed history is complete:
+  // If not matched, only answer "No" if candidate explicitly confirmed history is complete, and the question names
+  // the company in its own words: "Have you worked for us?" knows the company only from the page address, whose
+  // slug ("acme-corp-careers") need not read like the employer's name in the history.
+  if (!namesACompany(label)) return undefined;
   if (profile.workHistoryComplete) {
     const val = "No";
     const match = field.options.length ? (yesNoOption(field.options, val) ?? bestOption(field.options, val)) : val;
@@ -645,28 +756,58 @@ export function isWorkModeQuestion(field: FieldDescriptor): boolean {
   return /\b(onsite|hybrid|hybride|inoffice|inperson|commute|commuting distance|office attendance|\bwork from (the|our)?\s*office\b|\bjoin us in the office\b|\bdays (in|from) the office\b|\bdays (a|per) week\b|come to office|office based|work arrangement|sur place)\b/i.test(q);
 }
 
+const US_STATES = /\b(alabama|alaska|arizona|arkansas|california|colorado|connecticut|delaware|florida|georgia|hawaii|idaho|illinois|indiana|iowa|kansas|kentucky|louisiana|maine|maryland|massachusetts|michigan|minnesota|mississippi|missouri|montana|nebraska|nevada|new hampshire|new jersey|new mexico|north carolina|north dakota|ohio|oklahoma|oregon|pennsylvania|rhode island|south carolina|south dakota|tennessee|texas|utah|vermont|virginia|west virginia|wisconsin|wyoming)\b/;
+/** Capitalised words after "in/at/to" that are not a place. */
+const NOT_A_PLACE = /^(our|the|this|that|your|a|an|any|all|least|person|office|offices|onsite|on|hybrid|remote|order|addition|accordance|english|monday|tuesday|wednesday|thursday|friday|saturday|sunday|ist|est|pst|cet|gmt|utc)$/i;
+const PLACE_SUFFIX = /\s+(office|offices|headquarters|hq|campus|hub|site|location|branch|studio|lab|labs|centre|center)$/i;
+
+/** The question names a place the rules cannot compare with the user's: a postcode, a US state, "City, ST", or a
+ * capitalised name after "in/at/to/near" that is not a city the rules know ("commute to Alameda", "in Wayzata"). */
+export function namesUnknownPlace(label: string): boolean {
+  if (/\b[A-Z]{1,2}\d[A-Z\d]?\s+\d[A-Z]{2}\b/.test(label)) return true; // UK postcode
+  if (/\b\d{5}(?:-\d{4})?\b/.test(label) || /\b\d{6}\b/.test(label)) return true; // ZIP / PIN code
+  if (US_STATES.test(normalize(label)) || /\b[A-Z][a-z]+,\s*(?:[A-Z]{2})\b/.test(label)) return true;
+  const after = /\b(?:in|at|to|near|around|from)\s+(?:the\s+)?([A-Z][A-Za-z.'-]*(?:\s+[A-Z][A-Za-z.'-]*)*)/g;
+  for (const m of label.matchAll(after)) {
+    let phrase = m[1]!.trim();
+    while (PLACE_SUFFIX.test(phrase)) phrase = phrase.replace(PLACE_SUFFIX, "");
+    const words = phrase.split(/\s+/).filter((w) => !NOT_A_PLACE.test(w));
+    if (!words.length) continue;
+    if (extractPlacesInText(words.join(" ")).length) continue; // a place the rules know: compared by the caller
+    return true;
+  }
+  return false;
+}
+
 export function workModeAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
   const facts = profile.facts;
   if (!facts?.workMode || !yesNoField(field)) return undefined;
 
   const q = normalize(field.label);
 
-  // Check if a specific city/place is named in the question:
+  // The place the question is about. Yes only where it is the user's own city or one they prefer; a place the rules do
+  // not know ("Alameda", "Wayzata, Minnesota", a postcode such as "PO15 5TT") or another place: the user decides.
+  const userLocs = normalize(`${profile.location} ${profile.preferredLocations || ""}`);
   const places = extractPlacesInText(field.label);
-  if (places.length > 0) {
-    const userLocs = `${profile.location} ${profile.preferredLocations || ""}`.toLowerCase();
-    const matched = places.some((place) => new RegExp(`\\b${place}\\b`, "i").test(userLocs));
-    if (!matched) {
-      return undefined; // Role requires a specific place the candidate is not in / did not prefer -> ASK
-    }
+  const unknownPlace = namesUnknownPlace(field.label);
+  const placeMatched = places.length > 0 && places.some((place) => new RegExp(`\\b${escapeRegex(normalize(place))}\\b`).test(userLocs))
+    && places.every((place) => new RegExp(`\\b${escapeRegex(normalize(place))}\\b`).test(`${userLocs} ${normalize(profile.country)}`));
+  if (unknownPlace) return undefined;
+  if (places.length > 0 && !placeMatched) return undefined;
+  // "Are you local / within commuting distance to this job?", "…able to commute daily to …?": a fact about where the
+  // user lives, answerable only against a named place that is theirs.
+  if (/\b(commut\w*|local|nearby|within \d+ (miles?|km|kilometers?|kilometres?)|live within|based within|located within|reside within|proximity)\b/.test(q) && !placeMatched) {
+    return undefined;
   }
 
   // Check required office days per week via shared requirements parser:
   const req = parseRequirement(field.label);
   const requiredDays = req?.unit === "days" ? req.min : undefined;
-  const maxDays = facts.maxOfficeDays !== undefined && facts.maxOfficeDays !== ""
-    ? Number(facts.maxOfficeDays)
-    : (facts.workMode === "remote" ? 0 : facts.workMode === "onsite" ? 5 : 3);
+  // Without a saved maximum: remote takes no office days, onsite or "any" every day; hybrid fewer than five (a fourth
+  // day is not known).
+  const savedMax = facts.maxOfficeDays !== undefined && facts.maxOfficeDays !== "" ? Number(facts.maxOfficeDays) : undefined;
+  const maxDays = savedMax ?? (facts.workMode === "remote" ? 0 : facts.workMode === "hybrid" ? 3 : 5);
+  if (savedMax === undefined && facts.workMode === "hybrid" && requiredDays === 4) return undefined;
 
   if (requiredDays !== undefined && requiredDays > maxDays) {
     const match = field.options.length ? (yesNoOption(field.options, "No") ?? "No") : "No";
@@ -807,6 +948,29 @@ export function languageAnswer(field: FieldDescriptor, profile: Profile): Decisi
   return answer(entry.proficiency, "language");
 }
 
+/** Words around a skill that leave it the same skill ("strong SQL skills", "experience with Python"). */
+const SKILL_LEFT_OK = /^(with|in|using|use|of|on|and|or|the|a|an|your|any|about|experience|experienced|knowledge|strong|solid|good|advanced|basic|working|hands|expert|expertise|proficient|proficiency|familiar|familiarity|writing|write|used|built|build|building|e g|eg|as|like|including|for|to|at|have|has|do|you|microsoft|ms|is|are|g|primary|main)$/;
+const SKILL_RIGHT_OK = /^(databases?|queries|query|programming|language|languages|development|skills?|scripting|scripts?|experience|and|or|for|in|with|to|at|on|e g|eg|etc|knowledge|proficiency|as)$/;
+
+/** The question uses an inventory skill inside a narrower one: "Distributed SQL Databases", "generative AI",
+ * "AI agents", "AI-powered content creation". Knowing SQL or AI does not say the user has that experience. */
+export function narrowerSkill(label: string, skill: string, others: string[] = []): boolean {
+  const term = skill.trim();
+  if (!term) return false;
+  // Short acronyms that are also words ("AI", "ML", "R", "C") count only as written in capitals, as in mentions().
+  const exactCase = /^(ai|ml|r|c)$/i.test(term);
+  const re = new RegExp(`(?<![A-Za-z0-9+#])${escapeRegex(term)}(?![A-Za-z0-9+#])`, exactCase ? "g" : "gi");
+  for (const m of label.matchAll(re)) {
+    const left = normalize(label.slice(0, m.index)).split(" ").filter(Boolean).pop() ?? "";
+    const rest = label.slice(m.index! + m[0].length);
+    const right = /^\s*([,.;:?!)/]|$)/.test(rest) ? "" : normalize(rest).split(" ").filter(Boolean)[0] ?? "";
+    // A neighbour that is part of another skill the user has ("B2B SaaS Product Design") is two skills, not a narrower one.
+    const ownWord = (w: string) => others.some((o) => normalize(o).split(" ").includes(w));
+    if ((left && !SKILL_LEFT_OK.test(left) && !ownWord(left)) || (right && !SKILL_RIGHT_OK.test(right) && !ownWord(right))) return true;
+  }
+  return false;
+}
+
 export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
   if (!answerableLength(field.label)) return undefined;
   const q = normalize(field.label);
@@ -827,6 +991,9 @@ export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile)
   if (/\b(english|french|german|spanish|twitch)\b/i.test(q)) return undefined;
 
   const inv = profile.skillsInventory ?? [];
+  // A skill named only inside a narrower one ("Distributed SQL Databases" for a user who knows SQL): the user decides.
+  const named = inv.filter((s) => mentions(field.label, s.name)).map((s) => s.name);
+  if (named.some((s) => narrowerSkill(field.label, s, named.filter((o) => o !== s)))) return undefined;
   const req = parseRequirement(field.label);
   const threshold = req?.unit === "years" ? req.min : undefined;
 

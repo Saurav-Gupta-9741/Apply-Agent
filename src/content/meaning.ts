@@ -9,7 +9,7 @@
 
 import type { Decision, FieldDescriptor, Profile, ProfileKey, SensitiveTopic } from "../shared/types";
 import { decide, notAProfileFact, profileValue } from "./classify";
-import { factDecision, YES_NO_QUESTION, type PageFacts } from "./facts";
+import { factDecision, foreignSubdivision, nonUsInstruction, YES_NO_QUESTION, type PageFacts } from "./facts";
 import { normalize } from "../shared/text";
 
 /** What the model read in a question. */
@@ -20,10 +20,11 @@ export interface Meaning {
 
 /** Act on the model's reading from this confidence (98.6% right on real questions it had never seen). */
 export const ACT_CONFIDENCE = 0.85;
-/** Safe profile facts where wrong is impossible or harmless: names, email, phone, links, location. */
+/** Pure identity facts (name, email, phone): the question's own words must still say so (see EVIDENCE). Links are not
+ * here: a link box can ask for many links, and the wrong one is a wrong value. */
 export const SAFE_ACT_CONFIDENCE = 0.80;
 export const SAFE_PROFILE_INTENTS = new Set<string>([
-  "firstName", "lastName", "fullName", "email", "phone", "linkedin", "github", "portfolio", "resumeUrl",
+  "firstName", "lastName", "fullName", "email", "phone",
 ]);
 
 /** Required confidence to act on a model reading. */
@@ -61,7 +62,8 @@ const EVIDENCE: Record<string, RegExp> = {
   linkedin: /linked ?in/,
   github: /git ?hub|git ?lab|bitbucket|\bcode\b|repositor/,
   portfolio: /portfolio|website|web site|personal (site|page)|\burl\b|\blink\b|behance|dribbble/,
-  resumeUrl: /resume|cv|curriculum\s*vitae|drive|link|url/,
+  // A resume link: the question must say resume or CV ("Google Drive link" or "URL" alone could be any link).
+  resumeUrl: /\bresume\b|\bcv\b|curriculum\s*vitae|lebenslauf|curriculo/,
   currentCompany: /compan|employer|organi[sz]ation|\bfirm\b|where do you (currently )?work/,
   currentTitle: /title|\brole\b|position|designation|\bjob\b/,
   school: /school|universit|college|institut|alma mater|stud(y|ied)|educat/,
@@ -104,7 +106,8 @@ function yesNoChoices(field: FieldDescriptor): boolean {
 
 /** The meaning a rule decision acted on, to compare with the model's reading. */
 function actedMeaning(d: Decision): string | undefined {
-  if (d.kind === "profile") return d.key;
+  // The model names some meanings in snake case ("postal_code" for the profile's postalCode).
+  if (d.kind === "profile") return ({ postalCode: "postal_code", educationLevel: "education_level" } as Record<string, string>)[d.key] ?? d.key;
   if (d.kind === "resume") return "resume";
   return undefined;
 }
@@ -151,6 +154,9 @@ export function decideWithMeaning(field: FieldDescriptor, profile: Profile, answ
   }
 
   // Gaps: the rules did not know the question; the model does, confidently.
+  // The form's own words decided ("Non-U.S. candidates enter 00000", "Which U.S. State…?" for a user in India): the
+  // model's reading of the same question cannot overrule them.
+  if (nonUsInstruction(field, profile) || foreignSubdivision(field, profile)) return rule;
   const ruleGaveUp = rule.kind === "ask" && rule.reason !== "sensitive" || rule.kind === "skip" && /not in profile|optional choice/.test(rule.reason)
     || rule.kind === "ask" && rule.reason === "sensitive" && !rule.topic;
   const sensitiveGap = rule.kind === "ask" && rule.reason === "sensitive" && rule.topic && TOPIC_OF[meaning.intent] === rule.topic;

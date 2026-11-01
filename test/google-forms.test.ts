@@ -251,7 +251,7 @@ describe("Google Forms support", () => {
 
     const testProfile: Profile = {
       ...PROFILE,
-      resumeUrl: "https://drive.google.com/file/d/1_L5NAIAgNgMUZYuyqM25RNu02NELLGwp/view?usp=drive_link",
+      resumeUrl: "https://drive.google.com/file/d/TEST-FIXTURE-RESUME/view",
     };
 
     // Q1 -> fullName
@@ -271,7 +271,7 @@ describe("Google Forms support", () => {
     expect(d4).toEqual({
       kind: "profile",
       key: "resumeUrl",
-      value: "https://drive.google.com/file/d/1_L5NAIAgNgMUZYuyqM25RNu02NELLGwp/view?usp=drive_link",
+      value: "https://drive.google.com/file/d/TEST-FIXTURE-RESUME/view",
     });
 
     // Q5 -> sensitive answer (work authorization: Yes)

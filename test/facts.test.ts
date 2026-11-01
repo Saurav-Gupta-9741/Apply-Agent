@@ -97,7 +97,7 @@ describe("diversity questions: only into a clearly matching choice", () => {
 
   it("search-as-you-type lists get the words that find the choice", () => {
     expect(value(decide(field("Gender", "combobox", []), ME, []))).toBe("Male");
-    expect(value(decide(field("Veteran Status", "combobox", []), ME, []))).toBe("I am not");
+    expect(value(decide(field("Veteran Status", "combobox", []), ME, []))).toBe("ask"); // no options to check the words against: ask
   });
 
   it("never as free text, never for a different question, never when no choice clearly matches", () => {

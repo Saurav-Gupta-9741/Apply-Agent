@@ -8,6 +8,22 @@ import { bestOption, normalize, sameQuestionScore, yesNoOption } from "../shared
 import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion } from "../shared/screening";
 import { factDecision, hasConfirmedApplication, HEARD_ABOUT, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, type PageFacts } from "./facts";
 
+/** Secrets and one-time codes: payment cards, passwords, PINs, one-time codes, security questions, captchas and
+ * Indian/US/UK identity numbers the main list misses. Checked on the normalized label and name (apostrophes and
+ * dots dropped: "Driver's" is "drivers", "S.S.N." is "s s n"). "Pin code" / "Zip / PIN" is a postal code, not a PIN. */
+const SECRETS = /\b(?:credit|debit|payment|bank) card\b|\bcard ?(?:number|no|num|expir\w*|exp|verification|security|validity|valid thru|cvv|cvc)\b|(?<!\bgreen )\bcard ?holder\b|\bname on (?:the )?card\b|\b(?:cvv|cvc|cvn)\d?\b|\bexpir\w* (?:date )?(?:of )?(?:your |the )?card\b|\botp\b|\bone ?time (?:pass ?(?:word|code)|code|pin|token)\b|\b(?:verification|confirmation|security|auth(?:entication|enticator)?|access) code\b|\b(?:2fa|mfa)\b|\btwo (?:factor|step) (?:auth\w*|verification|code)\b|\bpass ?(?:word|phrase|code)s?\b|\bpwd\b|(?<!\b(?:zip|postal|post) )\bpin\b(?! ?code)|\bmaiden name\b|\b(?:security|secret) (?:question|answer)s?\b|\b(?:re)?captcha\b|\bs s n\b|\bvoters? (?:id|card|number|no|registration)\b|\bepic (?:number|no|card)\b|\buan\b|\buniversal account number\b|\b(?:e?pf|provident fund)(?: account)? (?:number|no|id)\b|\besic? (?:number|no)\b|\b(?:drivers?|driver s|driving) licen[cs]e (?:number|no|num|id)\b|\bdl (?:number|no)\b/;
+/** A field that IS the licence ("Driver's license", "Driving licence details"), not a yes/no question about having one. */
+const LICENCE_FIELD = /^(?:your |valid )?(?:drivers?|driver s|driving) licen[cs]e(?: details)?$/;
+/** Autocomplete tokens for payment cards and credentials: secrets whatever the label says ("Name" with cc-name). */
+const SECRET_AUTOCOMPLETE = /^(?:cc-[a-z-]+|one-time-code|current-password|new-password)$/;
+
+/** Payment cards, passwords, one-time codes and similar secrets: never filled, never remembered, whatever the label. */
+export function isSecretField(field: Pick<FieldDescriptor, "label" | "name"> & Partial<Pick<FieldDescriptor, "autocomplete">>): boolean {
+  if ((field.autocomplete ?? "").toLowerCase().split(/\s+/).some((t) => SECRET_AUTOCOMPLETE.test(t))) return true;
+  const label = normalize(field.label ?? "");
+  return SECRETS.test(normalize(`${field.label ?? ""} ${(field.name ?? "").replace(/([a-z])([A-Z])/g, "$1 $2")}`)) || LICENCE_FIELD.test(label);
+}
+
 const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   // Checked first: identity numbers and signatures are never filled or remembered by the agent.
   ["identity", /personalausweis|ausweisnummer|steuer ?id|steueridentifikationsnummer|steuerliche identifikationsnummer|sozialversicherungsnummer|rentenversicherungsnummer|\biban\b|securite sociale|assurance sociale|\bnir\b|\bdni\b|\bnie\b|\bnif\b|\bcif\b|documento (nacional )?de identidad|tarjeta de residencia|\bcpf\b|cadastro de pessoas fisicas|\brg\b( (numero|no))?|registro geral|carteira de identidade|\bpis\b|\bpasep\b|codice fiscale|\bbsn\b|burgerservicenummer|aadhaa?r|\buidai\b|\bpan\b( card| number| no)?|permanent account number|passport (number|no)|social security|\bssn\b|social insurance|\bsin\b( (number|no|code|#))?|\bcanadian sin\b|\bnas\b( canadien)?|national (id|insurance)|\bni\b( (number|no))?|\bnino\b|bank account|\bifsc\b|account number|routing number|tax (id|identification|number|no)|driver'?s? licen[cs]e (number|no)|マイナンバー|個人番号|my ?number|\b(tfn|tax file number|medicare)\b|\b(curp|rfc)\b|\b(nric|fin)\b|\b(emirates id|civil id|iqama)\b|\b(rrn|resident registration number)\b/],
@@ -101,6 +117,7 @@ const ANSWER_MATCH_THRESHOLD = 0.75;
 const PURPOSE_DISCLOSURE = /\b(?:used (?:solely )?for|for (?:compensation|employment|compliance|tax|reporting|record|administrative) purposes)\b/i;
 
 export function sensitiveTopic(field: FieldDescriptor): SensitiveTopic | undefined {
+  if (isSecretField(field)) return "identity";
   const labelWithoutPurpose = field.label
     .split(/(?<=[.?!])\s+/)
     .filter((s) => !PURPOSE_DISCLOSURE.test(s))
@@ -110,6 +127,18 @@ export function sensitiveTopic(field: FieldDescriptor): SensitiveTopic | undefin
     if (pattern.test(text)) return topic;
   }
   return undefined;
+}
+
+/** The sensitive topic of a saved question (answer bank entries and corrections carry only the question text). */
+export function questionTopic(question: string): SensitiveTopic | undefined {
+  return sensitiveTopic({ label: question, name: "", control: "text", required: false, options: [], autocomplete: "", placeholder: "", key: "" });
+}
+
+/** Secrets, identity numbers and signatures: never stored in the answer bank and never filled from it. */
+export function isNeverRemembered(question: string, topic?: SensitiveTopic): boolean {
+  if (topic && NEVER_REMEMBER.has(topic)) return true;
+  const asked = questionTopic(question);
+  return !!asked && NEVER_REMEMBER.has(asked);
 }
 
 /** Questions asked in many wordings whose answer does not depend on the job: answered once, reused everywhere.
@@ -144,7 +173,10 @@ export function findAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic
   let bestScore = 0;
   for (const entry of (answers ?? [])) {
     // A sensitive answer is only reused for a question about the same topic.
-    const entryTopic = entry.topic ?? sensitiveTopic({ label: entry.question, name: "", control: "text", required: false, options: [], autocomplete: "", placeholder: "", key: "" });
+    const asked = questionTopic(entry.question);
+    const entryTopic = entry.topic ?? asked;
+    // Secrets, identity numbers and signatures are never filled from the answer bank, even if one was stored somehow.
+    if ((entry.topic && NEVER_REMEMBER.has(entry.topic)) || (asked && NEVER_REMEMBER.has(asked))) continue;
     if (topic && entryTopic !== topic) continue;
 
     // Strict polarity: a saved answer is reused only for a question with the same polarity.
@@ -327,6 +359,12 @@ export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" |
 }
 
 export function decide(field: FieldDescriptor, profile: Profile, answers: AnswerEntry[], page?: PageFacts): Decision {
+  const topic = sensitiveTopic(field);
+  // Identity numbers, secrets and signatures: the user types them on the page; optional ones stay blank. Checked
+  // before anything reads the answer bank, so a stored answer can never be filled into one.
+  if (topic && NEVER_REMEMBER.has(topic)) {
+    return field.required ? { kind: "ask", reason: "sensitive", topic } : { kind: "skip", reason: `${topic}: entered by you only` };
+  }
   if (isStartImmediatelyQuestion(field.label)) {
     // An answer the user saved for this kind of question (never a notice period such as "30 days"), else the quick answer.
     const entry = findAnswer(field, answers, "notice_period");
@@ -346,7 +384,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
     return quick ?? { kind: "ask", reason: "sensitive", topic: "notice_period" };
   }
   if (isAppliedBeforeQuestion(field.label)) {
-    if (hasConfirmedApplication(page)) {
+    if (hasConfirmedApplication(page, field.label)) {
       let val = "Yes";
       if (field.options.length) {
         const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
@@ -357,11 +395,6 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
     return { kind: "ask", reason: "unknown" };
   }
 
-  const topic = sensitiveTopic(field);
-  // Identity numbers and signatures: the user types them on the page; optional ones stay blank.
-  if (topic && NEVER_REMEMBER.has(topic)) {
-    return field.required ? { kind: "ask", reason: "sensitive", topic } : { kind: "skip", reason: `${topic}: entered by you only` };
-  }
   if (topic) {
     const entry = findAnswer(field, answers, topic);
     if (entry) {

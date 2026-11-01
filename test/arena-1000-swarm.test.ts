@@ -4,12 +4,6 @@ import { decide } from "../src/content/classify";
 import { decideWithMeaning } from "../src/content/meaning";
 import { extractFields } from "../src/content/extract";
 import { bestOption } from "../src/shared/text";
-import {
-  hashPassword,
-  verifyPassword,
-  signAccountToken,
-  verifyAccountToken,
-} from "../server/src/core";
 import type { FieldDescriptor, Profile } from "../src/shared/types";
 import { mount, PROFILE } from "./fixtures";
 
@@ -192,45 +186,6 @@ describe("1,000-Agent Autonomous Swarm Testing Arena", () => {
       });
     }
 
-    // 100 Cryptographic & Anti-Tampering Swarm Agents (#151 - #250)
-    it("[Agents #0151 - #0250] validates 100 cryptographic token signing, salt uniqueness & anti-tamper verifications", async () => {
-      const secret = "swarm_crypto_verification_key_alpha_omega_999";
-      const nowSec = Math.floor(Date.now() / 1000);
-
-      // 50 Token tamper & authenticity validations
-      for (let t = 1; t <= 50; t++) {
-        const email = `candidate_${t}@enterprise-swarm.org`;
-        const payload = { email, tier: t % 2 === 0 ? "paid" : "free", exp: nowSec + 3600 };
-        const token = await signAccountToken(payload, secret);
-
-        // Genuine verification
-        const verified = await verifyAccountToken(token, secret, nowSec);
-        expect(verified).not.toBeNull();
-        expect(verified?.email).toBe(email);
-
-        // Malicious bit-flip or tampering attempt
-        const parts = token.split(".");
-        const tamperedSig = parts[1]!.split("").reverse().join("");
-        const tamperedToken = `${parts[0]}.${tamperedSig}`;
-        const badResult = await verifyAccountToken(tamperedToken, secret, nowSec);
-        expect(badResult).toBeNull();
-      }
-
-      // 50 Password salted hash validations
-      for (let p = 1; p <= 50; p++) {
-        const password = `SwarmPassword_${p}_!#$Secure`;
-        const saltA = `salt_alpha_${p}_${Math.random()}`;
-        const saltB = `salt_beta_${p}_${Math.random()}`;
-
-        const hashA = await hashPassword(password, saltA);
-        const hashB = await hashPassword(password, saltB);
-
-        // Salt uniqueness ensures different hashes
-        expect(hashA).not.toBe(hashB);
-        expect(await verifyPassword(password, saltA, hashA)).toBe(true);
-        expect(await verifyPassword("WrongGuessPassword", saltA, hashA)).toBe(false);
-      }
-    });
   });
 
   // =========================================================================

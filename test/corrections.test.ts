@@ -130,6 +130,7 @@ describe("content script correction tracking (trackCorrection)", () => {
       type: "RECORD_CORRECTION",
       question: "Preferred IDE",
       answer: "Emacs",
+      control: "text",
     });
 
     // Blurring again with same value does not repeat

@@ -519,16 +519,16 @@
     "options": [],
     "intent": "state",
     "personaA": {
-      "answer": "Maharashtra",
-      "reachable": true
+      "answer": "ASK",
+      "reachable": false
     },
     "personaB": {
-      "answer": "Karnataka",
-      "reachable": true
+      "answer": "ASK",
+      "reachable": false
     },
     "personaC": {
-      "answer": "Maharashtra",
-      "reachable": true
+      "answer": "ASK",
+      "reachable": false
     }
   },
   {
@@ -2248,16 +2248,16 @@
     "options": [],
     "intent": "other",
     "personaA": {
-      "answer": "Maharashtra",
-      "reachable": true
+      "answer": "ASK",
+      "reachable": false
     },
     "personaB": {
-      "answer": "Karnataka",
-      "reachable": true
+      "answer": "ASK",
+      "reachable": false
     },
     "personaC": {
-      "answer": "Maharashtra",
-      "reachable": true
+      "answer": "ASK",
+      "reachable": false
     }
   },
   {

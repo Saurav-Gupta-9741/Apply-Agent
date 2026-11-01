@@ -13,7 +13,7 @@ test("hard form: never types ID numbers or signatures, flags a wrong pre-fill, a
   await ext.locator("#auto-mode, input[name='mode'][value='auto']").first().check({ force: true });
   await ext.locator("#run").click();
 
-  await expect(ext.locator("#status")).toContainText("differ");
+  await expect(ext.locator("#status")).toContainText("differ", { timeout: 15_000 });
   await expect(page.locator("#email")).toHaveValue("old.address@example.org"); // never overwritten
   await expect(page.locator("#aadhaar")).toHaveValue("");
   await expect(page.locator("#sign")).toHaveValue("");

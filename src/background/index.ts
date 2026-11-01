@@ -3,7 +3,7 @@
 
 import type { ApplicationRecord, ApplicationStatus, Message, RunReport } from "../shared/types";
 import { loadApplications, loadQueue, loadSettings, setQueueRunning, updateApplications as updateStoredApplications, updateCorrections, updateAnswers, upsertAnswer } from "../shared/storage";
-import { applyCorrection, isLearnableCorrection } from "../shared/corrections";
+import { applyCorrection, isLearnableCorrection, type CorrectionMessage } from "../shared/corrections";
 import { isHandsOff } from "../shared/platforms";
 import { clearDetection, recordDetection, syncDetector } from "./detector";
 import { setWorking } from "./icon";
@@ -220,7 +220,8 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse: (r
   switch (message.type) {
     case "RECORD_CORRECTION": {
       (async () => {
-        if (!isLearnableCorrection(message.question)) {
+        // The control type (password, file) is checked here too when the content script sends it.
+        if (!isLearnableCorrection(message.question, (message as CorrectionMessage).control)) {
           sendResponse({ recorded: false, reason: "not_learnable" });
           return;
         }

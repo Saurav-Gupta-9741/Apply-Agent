@@ -23,6 +23,11 @@ describe("Value evaluation across Persona A, B, and C against human gold labels"
   const goldQuestions: GoldHumanRecord[] = JSON.parse(
     readFileSync("reports/gold-human.json", "utf8")
   );
+  // The local model's reading of each question (out-of-fold), as the extension would have it.
+  const oof = new Map(
+    (JSON.parse(readFileSync("reports/oof.json", "utf8")) as Array<{ text: string; guess: string; confidence: number }>)
+      .map((o) => [o.text, { intent: o.guess, confidence: o.confidence }]),
+  );
 
   const personas = [
     { name: "Persona A (Fresher DA, Pune)", profile: PERSONA_A, key: "personaA" as const },
@@ -56,7 +61,8 @@ describe("Value evaluation across Persona A, B, and C against human gold labels"
 
         // Test with decide and decideWithMeaning
         const dDecide = decide(field, profile, [], page as any);
-        const dMeaning = decideWithMeaning(field, profile, [], undefined, page as any);
+        // decideWithMeaning(field, profile, answers, page, meaning): the page facts, then the model's reading.
+        const dMeaning = decideWithMeaning(field, profile, [], page as any, oof.get(q.label));
 
         // Both decide engines must be safe:
         for (const [engineName, d] of [["decide", dDecide], ["decideWithMeaning", dMeaning]] as const) {

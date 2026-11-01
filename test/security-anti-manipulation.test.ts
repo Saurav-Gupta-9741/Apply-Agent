@@ -3,12 +3,6 @@ import { describe, expect, it } from "vitest";
 import { decide } from "../src/content/classify";
 import { extractFields } from "../src/content/extract";
 import { bestOption } from "../src/shared/text";
-import {
-  hashPassword,
-  verifyPassword,
-  signAccountToken,
-  verifyAccountToken,
-} from "../server/src/core";
 import type { FieldDescriptor } from "../src/shared/types";
 import { mount, PROFILE } from "./fixtures";
 
@@ -136,65 +130,6 @@ describe("High-Tech Security & Anti-Manipulation Defense Arena", () => {
 
       const decision = decide(signField, PROFILE, []);
       expect(decision.kind).toBe("ask");
-    });
-  });
-
-  // =========================================================================
-  // 4. Cryptographic Anti-Tampering & Auth Security
-  // =========================================================================
-  describe("4. Cryptographic Anti-Tampering & Authentication Security", () => {
-    const SECRET = "secret_anti_tamper_key_999";
-
-    it("securely hashes passwords with unique salts (PBKDF2/SHA256)", async () => {
-      const pass = "SuperSecurePassword#2026!";
-      const salt1 = "salt_1_abcdef123456";
-      const salt2 = "salt_2_fedcba654321";
-      const hash1 = await hashPassword(pass, salt1);
-      const hash2 = await hashPassword(pass, salt2);
-
-      // Hashes must be unique due to different salts
-      expect(hash1).not.toBe(hash2);
-      expect(await verifyPassword(pass, salt1, hash1)).toBe(true);
-      expect(await verifyPassword(pass, salt2, hash2)).toBe(true);
-      expect(await verifyPassword("WrongPassword", salt1, hash1)).toBe(false);
-    });
-
-    it("signs tokens with HMAC and verifies authentic tokens", async () => {
-      const nowSec = Math.floor(Date.now() / 1000);
-      const payload = { email: "alex@example.com", tier: "paid", exp: nowSec + 3600 };
-      const token = await signAccountToken(payload, SECRET);
-
-      const verified = await verifyAccountToken(token, SECRET, nowSec);
-      expect(verified).not.toBeNull();
-      expect(verified?.email).toBe("alex@example.com");
-      expect(verified?.tier).toBe("paid");
-    });
-
-    it("detects and rejects tampered token payloads (e.g. escalating free to paid)", async () => {
-      const nowSec = Math.floor(Date.now() / 1000);
-      const freePayload = { email: "attacker@example.com", tier: "free", exp: nowSec + 3600 };
-      const token = await signAccountToken(freePayload, SECRET);
-
-      // Malicious actor tampers payload from free to paid
-      const parts = token.split(".");
-      const decodedJson = atob(parts[0]!.replace(/-/g, "+").replace(/_/g, "/"));
-      const parsed = JSON.parse(decodedJson);
-      parsed.tier = "paid"; // TAMPERING ATTEMPT
-      const tamperedBase64 = btoa(JSON.stringify(parsed)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-      const tamperedToken = `${tamperedBase64}.${parts[1]}`;
-
-      // Cryptographic verification MUST fail
-      const result = await verifyAccountToken(tamperedToken, SECRET, nowSec);
-      expect(result).toBeNull();
-    });
-
-    it("rejects expired session tokens", async () => {
-      const nowSec = Math.floor(Date.now() / 1000);
-      const expiredPayload = { email: "user@example.com", tier: "paid", exp: nowSec - 60 };
-      const token = await signAccountToken(expiredPayload, SECRET);
-
-      const verified = await verifyAccountToken(token, SECRET, nowSec);
-      expect(verified).toBeNull();
     });
   });
 });

@@ -78,6 +78,45 @@ function styleHidden(el: Element): boolean {
  * radios, checkboxes, files and comboboxes, never plain text boxes, so they are not affected. */
 const HONEYPOT_WORDS = /honey ?pot|leave (this |it )?(field |box )?(blank|empty)(?!\s*(if|unless|when|for|or)\b)|(should|must) be left (blank|empty)|do not (fill|type|enter)( anything)? (in )?(this|here)|if you are (a )?human|bot[-_ ]?(field|check|trap)|anti[-_ ]?spam|^hp[-_]|[-_]hp|leer lassen|bitte freilassen|nicht ausf[uü]llen|laisser (ce champ )?vide|ne pas remplir|dejar (este campo )?en blanco|dejar vac[ií]o|no (llenar|rellenar)|deix[ae]r? (este campo )?em branco|n[aã]o preencher/i;
 
+/** Ancestors deeper than this are not walked: a field buried that deep is treated as hidden. Real application forms
+ * stay far below it (the whole walk goes to the root, so a hidden ancestor high up is always seen). */
+const MAX_DEPTH = 1024;
+
+/** "rect(0 0 0 0)", "rect(0px, 0px, 0px, 0px)", "rect(1px, 1px, 1px, 1px)": clipped to nothing. */
+const CLIP_NOTHING = /rect\(\s*[01](px)?(?:\s*,\s*|\s+)[01](px)?(?:\s*,\s*|\s+)[01](px)?(?:(?:\s*,\s*|\s+)[01](px)?)?\s*\)/;
+const ONE_PX = /^(0|[01](\.\d+)?px)$/;
+
+/** clip-path: inset(50%), inset(100%), inset(0 50%), inset(60% 0 40% 0 round 4px)… cuts the box down to nothing. */
+function clipsAway(clipPath: string): boolean {
+  if (/circle\(\s*0(px|%)?\s*[)a]/.test(clipPath) || /ellipse\(\s*0(px|%)?\s/.test(clipPath)) return true;
+  const m = /inset\(([^)]*)\)/.exec(clipPath);
+  if (!m) return false;
+  const parts = m[1]!.split(/\s+round\s+/)[0]!.trim().split(/\s+/).slice(0, 4);
+  const v = parts.map((p) => (/^-?\d+(\.\d+)?%$/.test(p) ? parseFloat(p) : 0));
+  if (!v.length) return false;
+  const top = v[0]!;
+  const right = v[1] ?? top;
+  const bottom = v[2] ?? top;
+  const left = v[3] ?? right;
+  return top + bottom >= 100 || left + right >= 100;
+}
+
+interface StyleLike { opacity: string; position: string; left: string; top: string; transform: string; clip: string;
+  clipPath: string; width: string; height: string; overflow: string; overflowX: string; overflowY: string }
+
+function styleTrap(s: StyleLike, isField: boolean, far: (v: string) => boolean): boolean {
+  if (s.opacity !== "" && parseFloat(s.opacity) < 0.1) return true;
+  if ((s.position === "absolute" || s.position === "fixed") && (far(s.left) || far(s.top))) return true;
+  if (/translate[xy3d]*\(\s*-\d{3,}/i.test(s.transform)) return true;
+  if (CLIP_NOTHING.test(s.clip) || clipsAway(s.clipPath ?? "")) return true;
+  if (isField && (ONE_PX.test(s.width) || ONE_PX.test(s.height))) return true;
+  // A box of a pixel or less that hides what overflows it hides the field inside.
+  const hidesOverflow = s.overflow === "hidden" || s.overflow === "clip" || s.overflowX === "hidden" || s.overflowY === "hidden"
+    || /\b(hidden|clip)\b/.test(s.overflow);
+  if (!isField && hidesOverflow && (ONE_PX.test(s.width) || ONE_PX.test(s.height))) return true;
+  return false;
+}
+
 function isHoneypot(el: FieldElement, labelsByFor?: Map<string, HTMLLabelElement>): boolean {
   const textLike = el instanceof HTMLTextAreaElement
     || el instanceof HTMLInputElement && !["radio", "checkbox", "file"].includes(el.type) && el.getAttribute("role") !== "combobox" && !el.hasAttribute("aria-autocomplete");
@@ -86,60 +125,68 @@ function isHoneypot(el: FieldElement, labelsByFor?: Map<string, HTMLLabelElement
   const describedAs = [el.getAttribute("name"), el.id, el.getAttribute("placeholder"), el.getAttribute("aria-label"),
     labelledBy(el), labelText].join(" ");
   if (HONEYPOT_WORDS.test(describedAs)) return true;
-  // Where the browser has laid the page out: a box of a pixel or less, or placed far outside the page, is not for people.
-  const rect = el.getBoundingClientRect();
-  const laidOut = el.ownerDocument.documentElement.getBoundingClientRect().width > 0;
-  if (laidOut && el.getClientRects().length && (rect.width <= 1 || rect.height <= 1 || rect.right < -100 || rect.bottom < -100)) return true;
+  // Not for people: inert, hidden from assistive technology, or folded away in a closed <details> (its <summary> shows).
+  if (el.closest("[inert]") || el.closest("[aria-hidden='true']")) return true;
+  const details = el.closest("details");
+  if (details && !details.open && !el.closest("summary")) return true;
+  // Where the browser has laid the page out: a box of a pixel or less, or placed outside the page on the left or top.
+  const doc = el.ownerDocument;
+  const laidOut = doc.documentElement.getBoundingClientRect().width > 0;
+  if (laidOut && el.getClientRects().length) {
+    const rect = el.getBoundingClientRect();
+    const view = doc.defaultView;
+    const scrollX = view?.scrollX ?? 0;
+    const scrollY = view?.scrollY ?? 0;
+    if (rect.width <= 1 || rect.height <= 1 || rect.right + scrollX < 0 || rect.bottom + scrollY < 0) return true;
+  }
+  // Chrome's own answer (see-through, invisible or not rendered); jsdom has no checkVisibility.
+  const check = (el as Element & { checkVisibility?: (o?: Record<string, boolean>) => boolean }).checkVisibility;
+  if (laidOut && typeof check === "function" && !check.call(el, { opacityProperty: true, visibilityProperty: true, contentVisibilityAuto: true })) return true;
   // The same from the styles (also where nothing is laid out yet): see-through, moved off-screen, clipped, or 1 px.
   const far = (v: string) => {
     const m = /^(-\d+(?:\.\d+)?)(px|em|rem)$/.exec(v);
     return !!m && parseFloat(m[1]!) * (m[2] === "px" ? 1 : 16) <= -500;
   };
-  const hasSheets = !!el.ownerDocument.styleSheets?.length;
-  for (let node: Element | null = el, d = 0; node && d < 8; node = node.parentElement, d++) {
+  const hasSheets = !!doc.styleSheets?.length;
+  let d = 0;
+  for (let node: Element | null = el; node; node = node.parentElement, d++) {
+    if (d > MAX_DEPTH) return true;
     if (!hasSheets) {
-      if (node instanceof HTMLElement) {
-        const s = node.style;
-        if (s.opacity !== "" && parseFloat(s.opacity) === 0) return true;
-        if ((s.position === "absolute" || s.position === "fixed") && (far(s.left) || far(s.top))) return true;
-        if (/translate[xy3d]*\(\s*-\d{3,}/i.test(s.transform)) return true;
-        if (/rect\(\s*0(px)?[ ,]+0(px)?[ ,]+0(px)?\s*\)/.test(s.clip) || /inset\(\s*50%|circle\(\s*0/.test(s.clipPath)) return true;
-        if (node === el && (/^[01](\.\d+)?px$/.test(s.width) || /^[01](\.\d+)?px$/.test(s.height))) return true;
-      }
+      if (node instanceof HTMLElement && styleTrap(node.style, node === el, far)) return true;
+      // The raw attribute too: some parsers drop the space-separated "clip: rect(0 0 0 0)".
+      if (CLIP_NOTHING.test(node.getAttribute("style") ?? "")) return true;
       continue;
     }
     const style = getStyle(node);
-    if (!style) continue;
-    if (style.opacity !== "" && parseFloat(style.opacity) === 0) return true;
-    if ((style.position === "absolute" || style.position === "fixed") && (far(style.left) || far(style.top))) return true;
-    if (/translate[xy3d]*\(\s*-\d{3,}/i.test(style.transform)) return true;
-    if (/rect\(\s*0(px)?[ ,]+0(px)?[ ,]+0(px)?\s*\)/.test(style.clip) || /inset\(\s*50%|circle\(\s*0/.test(style.clipPath)) return true;
-    if (node === el && (/^[01](\.\d+)?px$/.test(style.width) || /^[01](\.\d+)?px$/.test(style.height))) return true;
+    if (style && styleTrap(style, node === el, far)) return true;
   }
   return false;
 }
 
-function isHidden(el: Element, depth = 0): boolean {
-  if (depth > 32) return false;
-  const cached = isHiddenCache.get(el);
-  if (cached !== undefined) return cached;
-  if (el.hasAttribute("hidden") || el.getAttribute("aria-hidden") === "true") {
-    isHiddenCache.set(el, true);
-    return true;
-  }
-  if (styleHidden(el)) {
-    isHiddenCache.set(el, true);
-    return true;
-  }
-  const parent = el.parentElement;
-  if (parent && parent.nodeType === Node.ELEMENT_NODE && parent !== el.ownerDocument.documentElement) {
-    if (isHidden(parent, depth + 1)) {
-      isHiddenCache.set(el, true);
-      return true;
+function isHidden(el: Element): boolean {
+  // Walk up to the root (or the first answer already known), then record the answer for every element on the way.
+  const chain: Element[] = [];
+  let hidden = false;
+  const root = el.ownerDocument.documentElement;
+  for (let node: Element | null = el; node && node !== root; node = node.parentElement) {
+    const cached = isHiddenCache.get(node);
+    if (cached !== undefined) {
+      hidden = cached;
+      break;
+    }
+    chain.push(node);
+    if (chain.length > MAX_DEPTH) {
+      hidden = true;
+      break;
+    }
+    if (node.hasAttribute("hidden") || node.getAttribute("aria-hidden") === "true" || styleHidden(node)) {
+      hidden = true;
+      break;
     }
   }
-  isHiddenCache.set(el, false);
-  return false;
+  // Everything below a hidden element is hidden; above it nothing was decided, so only the elements below are cached.
+  for (const node of chain) isHiddenCache.set(node, hidden);
+  return hidden;
 }
 
 /** Text a person can see: skips hidden status messages, option lists and nested controls. */

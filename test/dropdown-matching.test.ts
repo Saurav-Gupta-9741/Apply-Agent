@@ -424,8 +424,10 @@ describe("Dropdown Matching Engine: 100+ Real-World ATS Scenarios", () => {
       "No, not willing to relocate at this time",
     ];
 
-    it("matches 'Yes' to positive relocation", () => {
-      expect(bestOption(relocateOptions, "Yes")).toBe(relocateOptions[0]);
+    // Two DIFFERENT "Yes, …" answers (immediately vs with company assistance): a bare "Yes" is ambiguous, so the
+    // field is left for the user rather than picking the first same-polarity option.
+    it("leaves 'Yes' for the user when two different positive relocation answers exist", () => {
+      expect(bestOption(relocateOptions, "Yes")).toBeUndefined();
     });
 
     it("matches 'No' to not willing to relocate", () => {

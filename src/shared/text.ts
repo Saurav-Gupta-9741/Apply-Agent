@@ -35,13 +35,15 @@ const NORMALIZE_CACHE_MAX = 2048;
 const normalizeCache = new Map<string, string>();
 
 /** Lower-case words without accents ("Prénom" → "prenom", "Straße" → "strasse"). Letters of every script are kept,
- * so a Hindi or Japanese label is not reduced to nothing. */
+ * so a Hindi or Japanese label is not reduced to nothing. Zero-width characters are DELETED (never turned into a word
+ * break), so "Fe\u200Bmale" is "female", not "fe male". */
 export function normalize(text: string): string {
   if (!text) return "";
   const cached = normalizeCache.get(text);
   if (cached !== undefined) return cached;
 
   const result = text
+    .replace(/[\u200B-\u200D\u2060\uFEFF]/g, "")
     .toLowerCase()
     .normalize("NFKD")
     .replace(/(\p{Script=Latin})\p{M}+/gu, "$1") // accents (Latin only: in Hindi and other scripts the marks are letters' vowels)
@@ -109,17 +111,40 @@ export function bestOption(options: string[], wanted: string, minScore = 0.6): s
   return matchBestOption(options, wanted, minScore);
 }
 
-/** Match a Yes or No answer to choice options (e.g. ["Yes", "No"], ["Yes, I do", "No, I do not"], ["I agree", "I disagree"]). */
+const YES_START = /^(yes|true|agree|i agree|ja|oui|si|sim)\b/;
+const NO_START = /^(no|false|disagree|i disagree|nein|nao|nee)\b/;
+/** Words that turn "Yes, …" into a different, qualified answer ("Yes, but I will need sponsorship"). */
+const YES_QUALIFIER = /\b(but|however|except|unless|although|though|need|require|requires|sponsorship|not|dont|never)\b/;
+const NO_QUALIFIER = /\b(but|however|except|unless|although|though)\b/;
+
+/** Match a Yes or No answer to choice options (e.g. ["Yes", "No"], ["Yes, I do", "No, I do not"], ["I agree", "I disagree"]).
+ * The fallback only fires when exactly ONE option has the wanted polarity: two different "I agree …" options are
+ * ambiguous and stay for the user. "N/A" is never "No" and "Yes, but …" is never a plain "Yes". */
 export function yesNoOption(options: string[], wanted: string): string | undefined {
   const match = bestOption(options, wanted);
   if (match) return match;
-  const isYes = /^(yes|y|true|agree|ja|oui|si|sim)\b/i.test(wanted.trim());
-  const isNo = /^(no|n|false|disagree|nein|non|nao|nee)\b/i.test(wanted.trim());
+  const w = normalize(wanted);
+  const isYes = w === "y" || /^(yes|true|agree|ja|oui|si|sim)\b/.test(w);
+  const isNo = w === "n" || /^(no|false|disagree|nein|non|nao|nee)\b/.test(w);
+  const unique = (list: string[]): string | undefined => (list.length === 1 ? list[0] : undefined);
   if (isYes) {
-    return options.find((o) => /^(yes|y|true|agree|i agree|ja|oui|si|sim)\b/i.test(normalize(o)));
+    return unique(
+      options.filter((o) => {
+        const n = normalize(o);
+        if (n === "y") return true;
+        if (!YES_START.test(n)) return false;
+        return !YES_QUALIFIER.test(n.replace(YES_START, ""));
+      }),
+    );
   }
   if (isNo) {
-    return options.find((o) => /^(no|n|false|disagree|i disagree|nein|non|nao|nee)\b/i.test(normalize(o)));
+    return unique(
+      options.filter((o) => {
+        const n = normalize(o);
+        if (n === "n") return true;
+        return NO_START.test(n) && !NO_QUALIFIER.test(n);
+      }),
+    );
   }
   return undefined;
 }

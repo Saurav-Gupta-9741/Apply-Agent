@@ -1,11 +1,9 @@
-/** Arena Feature Supremacy & Anti-Detection Test Suite
+/** Arena Feature Supremacy Test Suite
  *
  * Verifies:
- * 1. Humanized Keystroke & Event Emulation:
- *    - Strict event chains (pointerdown, mousedown, focus, keydown, input, keyup, change, blur).
- *    - React synthetic events and _valueTracker synchronization.
- *    - Synthetic pacing delays with character-by-character typing.
- *    - Evasion of modern anti-bot detection heuristics (DataDome, Cloudflare Turnstile, PerimeterX).
+ * 1. Plain value filling:
+ *    - The value is set through the native setter, then input and change events fire (no synthetic typing).
+ *    - React _valueTracker synchronization.
  *
  * 2. Multi-Profile Readiness & Persona Isolation:
  *    - Storage, retrieval, and switching across candidate personas (Fullstack Engineer, Data Scientist, Product Manager).
@@ -28,12 +26,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  fillField,
-  fillFieldHumanized,
   fillText,
-  fillTextHumanized,
-  fireEvent,
-  setNativeValue,
 } from "../src/content/fill";
 import {
   extractSkillsFromText,
@@ -58,7 +51,6 @@ import type {
   Profile,
   RunReport,
 } from "../src/shared/types";
-import type { ExtractedField } from "../src/content/extract";
 import { mount, PROFILE } from "./fixtures";
 import { PERSONA_A } from "./personas/A";
 import { PERSONA_B } from "./personas/B";
@@ -94,62 +86,26 @@ function setupMockStorage() {
   (globalThis as any).chrome = fakeChrome;
 }
 
-describe("Arena Feature Supremacy: Anti-Detection & Event Emulation", () => {
+describe("Arena Feature Supremacy: plain value filling", () => {
   beforeEach(() => {
     document.body.innerHTML = "";
   });
 
-  it("fires the complete realistic human event chain in order on inputs", () => {
+  it("sets the value and fires input then change, with no synthetic pointer or keyboard events", () => {
     const input = document.createElement("input");
     input.type = "text";
     input.id = "applicant-name";
     document.body.appendChild(input);
 
     const eventLog: string[] = [];
-    const watchedEvents = [
-      "pointerdown",
-      "mousedown",
-      "focusin",
-      "focus",
-      "keydown",
-      "input",
-      "keyup",
-      "change",
-      "focusout",
-      "blur",
-    ];
-
-    for (const evt of watchedEvents) {
+    for (const evt of ["pointerdown", "mousedown", "keydown", "keyup", "input", "change"]) {
       input.addEventListener(evt, () => eventLog.push(evt));
     }
 
     const outcome = fillText(input, "Asha Verma");
     expect(outcome.ok).toBe(true);
     expect(input.value).toBe("Asha Verma");
-
-    // Verify all required anti-bot events fired
-    expect(eventLog).toContain("pointerdown");
-    expect(eventLog).toContain("mousedown");
-    expect(eventLog).toContain("focus");
-    expect(eventLog).toContain("keydown");
-    expect(eventLog).toContain("input");
-    expect(eventLog).toContain("keyup");
-    expect(eventLog).toContain("change");
-    expect(eventLog).toContain("blur");
-
-    // Verify event ordering: pointerdown -> focus -> keydown -> input -> change -> blur
-    const pointerdownIdx = eventLog.indexOf("pointerdown");
-    const focusIdx = eventLog.indexOf("focus");
-    const keydownIdx = eventLog.indexOf("keydown");
-    const inputIdx = eventLog.indexOf("input");
-    const changeIdx = eventLog.indexOf("change");
-    const blurIdx = eventLog.indexOf("blur");
-
-    expect(pointerdownIdx).toBeLessThan(focusIdx);
-    expect(focusIdx).toBeLessThan(keydownIdx);
-    expect(keydownIdx).toBeLessThan(inputIdx);
-    expect(inputIdx).toBeLessThan(changeIdx);
-    expect(changeIdx).toBeLessThan(blurIdx);
+    expect(eventLog).toEqual(["input", "change"]);
   });
 
   it("succeeds on strict React synthetic event inputs with valueTracker", () => {
@@ -186,58 +142,6 @@ describe("Arena Feature Supremacy: Anti-Detection & Event Emulation", () => {
     expect(outcome.ok).toBe(true);
     expect(reactChangeEventFired).toBe(true);
     expect(reactTrackedValue).toBe("Senior Fullstack Engineer");
-  });
-
-  it("supports character-by-character humanized typing with synthetic pacing delays", async () => {
-    const input = document.createElement("input");
-    input.type = "text";
-    document.body.appendChild(input);
-
-    const typedChars: string[] = [];
-    input.addEventListener("input", (e: any) => {
-      if (e.data) typedChars.push(e.data);
-    });
-
-    const start = Date.now();
-    const outcome = await fillTextHumanized(input, "Cloud", "", { keystrokeDelayMs: 15 });
-    const elapsed = Date.now() - start;
-
-    expect(outcome.ok).toBe(true);
-    expect(input.value).toBe("Cloud");
-    expect(typedChars).toEqual(["C", "l", "o", "u", "d"]);
-    // 5 characters with 15ms delays should take at least ~50-60ms
-    expect(elapsed).toBeGreaterThanOrEqual(45);
-  });
-
-  it("fillField delegates to humanized event chain and maintains anti-bot integrity", () => {
-    const input = document.createElement("input");
-    input.type = "email";
-    document.body.appendChild(input);
-
-    const field: ExtractedField = {
-      descriptor: {
-        key: "k1",
-        label: "Email Address",
-        control: "email",
-        required: true,
-        options: [],
-        name: "email",
-        autocomplete: "email",
-        placeholder: "you@example.com",
-      },
-      elements: [input],
-    };
-
-    let pointerFired = false;
-    let keyFired = false;
-    input.addEventListener("pointerdown", () => { pointerFired = true; });
-    input.addEventListener("keydown", () => { keyFired = true; });
-
-    const outcome = fillField(field, "candidate@domain.com");
-    expect(outcome.ok).toBe(true);
-    expect(input.value).toBe("candidate@domain.com");
-    expect(pointerFired).toBe(true);
-    expect(keyFired).toBe(true);
   });
 });
 

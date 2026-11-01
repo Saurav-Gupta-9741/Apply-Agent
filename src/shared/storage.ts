@@ -2,6 +2,7 @@
 
 import type { AnswerEntry, ApplicationRecord, CandidateProfile, Profile, ProfilePersona, QueueItem, Settings, UserCorrection } from "./types";
 import { clampSettings } from "../background/queue";
+import { isNeverRemembered } from "../content/classify";
 
 export const EMPTY_PROFILE: Profile = {
   firstName: "",
@@ -13,7 +14,7 @@ export const EMPTY_PROFILE: Profile = {
   linkedin: "",
   github: "",
   portfolio: "",
-  resumeUrl: "https://drive.google.com/file/d/1_L5NAIAgNgMUZYuyqM25RNu02NELLGwp/view?usp=drive_link",
+  resumeUrl: "",
   currentCompany: "",
   currentTitle: "",
   school: "",
@@ -37,7 +38,8 @@ export const EMPTY_PROFILE: Profile = {
 };
 
 export const MAX_APPLICATIONS = 1000;
-export const MAX_SCREENSHOTS = 25;
+/** @deprecated Screenshots are proof of submission and are never evicted (the extension has unlimitedStorage). */
+export const MAX_SCREENSHOTS = Number.POSITIVE_INFINITY;
 export const MAX_ANSWERS = 1000;
 export const MAX_CORRECTIONS = 500;
 export const MAX_QUEUE = 1000;
@@ -223,6 +225,8 @@ export async function loadAnswers(): Promise<AnswerEntry[]> {
 
 /** Add or replace the answer to a question (matched by exact question text). */
 export function upsertAnswer(answers: AnswerEntry[], entry: AnswerEntry): AnswerEntry[] {
+  // Secrets, identity numbers and signatures are never stored, whoever saves them (side panel, inbox, corrections).
+  if (isNeverRemembered(entry.question, entry.topic)) return answers;
   const rest = answers.filter((a) => a.question.trim().toLowerCase() !== entry.question.trim().toLowerCase());
   return pruneAnswers([...rest, entry]);
 }
@@ -241,35 +245,23 @@ export function updateApplications(change: (records: ApplicationRecord[]) => App
   return exclusive("applications", async () => saveApplications(change(await loadApplications())));
 }
 
-/** Prune applications to ring buffer size (MAX_APPLICATIONS) and cap retained screenshots (MAX_SCREENSHOTS). */
+/** Prune applications to ring buffer size (MAX_APPLICATIONS). Proof-of-submission screenshots are never deleted:
+ * the extension has unlimitedStorage, and a record that carries a screenshot is kept even past the cap (only the
+ * oldest records without one make room). */
 export function pruneApplications(records: ApplicationRecord[]): {
   pruned: ApplicationRecord[];
   evictedScreenshotKeys: string[];
 } {
-  let kept = records.length > MAX_APPLICATIONS ? records.slice(-MAX_APPLICATIONS) : [...records];
-  const evictedScreenshotKeys: string[] = [];
-
-  if (records.length > MAX_APPLICATIONS) {
-    const dropped = records.slice(0, records.length - MAX_APPLICATIONS);
-    for (const r of dropped) {
-      if (r.screenshotKey) evictedScreenshotKeys.push(r.screenshotKey);
+  if (records.length <= MAX_APPLICATIONS) return { pruned: [...records], evictedScreenshotKeys: [] };
+  let excess = records.length - MAX_APPLICATIONS;
+  const pruned = records.filter((r) => {
+    if (excess > 0 && !r.screenshotKey) {
+      excess--;
+      return false;
     }
-  }
-
-  const withScreenshots = kept.filter((r) => !!r.screenshotKey);
-  if (withScreenshots.length > MAX_SCREENSHOTS) {
-    const excessCount = withScreenshots.length - MAX_SCREENSHOTS;
-    const toClear = new Set(withScreenshots.slice(0, excessCount).map((r) => r.id));
-    kept = kept.map((r) => {
-      if (toClear.has(r.id) && r.screenshotKey) {
-        evictedScreenshotKeys.push(r.screenshotKey);
-        return { ...r, screenshotKey: undefined };
-      }
-      return r;
-    });
-  }
-
-  return { pruned: kept, evictedScreenshotKeys };
+    return true;
+  });
+  return { pruned, evictedScreenshotKeys: [] };
 }
 
 export async function loadApplications(): Promise<ApplicationRecord[]> {
@@ -304,7 +296,8 @@ export function updateCorrections(change: (corrections: UserCorrection[]) => Use
   return exclusive("corrections", async () => saveCorrections(change(await loadCorrections())));
 }
 
-/** Check storage quota usage and prune aggressively if nearing the 10MB quota. */
+/** Check storage usage. The extension has unlimitedStorage, so nothing is deleted for space: proof-of-submission
+ * screenshots are kept, and only the application cap (records without a screenshot) applies. */
 export async function enforceStorageQuota(): Promise<{
   bytesInUse?: number;
   prunedScreenshots: number;
@@ -319,33 +312,12 @@ export async function enforceStorageQuota(): Promise<{
       bytesInUse = await chrome.storage.local.getBytesInUse(null);
     } catch {}
   }
-  const isNearQuota = bytesInUse !== undefined && bytesInUse > 8 * 1024 * 1024;
   const apps = await loadApplications();
-  let prunedScreenshots = 0;
   let prunedApplications = 0;
-  if (isNearQuota || apps.length > MAX_APPLICATIONS) {
-    const targetApps = isNearQuota ? Math.min(500, MAX_APPLICATIONS) : MAX_APPLICATIONS;
-    const targetScreenshots = isNearQuota ? 5 : MAX_SCREENSHOTS;
-    let kept = apps.slice(-targetApps);
-    prunedApplications = apps.length - kept.length;
-    const withShots = kept.filter((r) => !!r.screenshotKey);
-    const toRemoveKeys: string[] = [];
-    if (withShots.length > targetScreenshots) {
-      const excess = withShots.length - targetScreenshots;
-      prunedScreenshots = excess;
-      const toClear = new Set(withShots.slice(0, excess).map((r) => r.id));
-      kept = kept.map((r) => {
-        if (toClear.has(r.id) && r.screenshotKey) {
-          toRemoveKeys.push(r.screenshotKey);
-          return { ...r, screenshotKey: undefined };
-        }
-        return r;
-      });
-    }
-    if (toRemoveKeys.length && chrome.storage.local.remove) {
-      await chrome.storage.local.remove(toRemoveKeys).catch(() => undefined);
-    }
-    await chrome.storage.local.set({ [KEYS.applications]: kept });
+  if (apps.length > MAX_APPLICATIONS) {
+    const { pruned } = pruneApplications(apps);
+    prunedApplications = apps.length - pruned.length;
+    await chrome.storage.local.set({ [KEYS.applications]: pruned });
   }
-  return { bytesInUse, prunedScreenshots, prunedApplications };
+  return { bytesInUse, prunedScreenshots: 0, prunedApplications };
 }

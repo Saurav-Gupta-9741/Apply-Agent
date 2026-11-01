@@ -22,7 +22,6 @@ import { isAppliedBeforeQuestion } from "../content/facts";
 import { HANDS_OFF_MESSAGE, isHandsOff, platformFor } from "../shared/platforms";
 import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shared/backup";
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
-import { isPrivacyConsentCheckbox } from "../shared/consent";
 import { findSuggestedCorrection } from "../shared/corrections";
 import { buildDiagnostic } from "../shared/diagnostic";
 
@@ -630,25 +629,6 @@ function renderQuestions(report: RunReport): void {
   box.append(h("p", { class: "section-label" }, `Needs your answer · ${pending.length}`));
   const corrections = cachedCorrections;
 
-  const hasConsent = pending.some((f) => f.field.control === "checkbox" && isPrivacyConsentCheckbox(f.field.label));
-  if (hasConsent) {
-    const consentBtn = button("Tick the privacy/data-processing consent boxes on this page", {
-      variant: "secondary",
-      icon: "check",
-    });
-    consentBtn.id = "tick-consent";
-    consentBtn.style.marginBottom = "8px";
-    consentBtn.style.width = "100%";
-    consentBtn.addEventListener("click", async () => {
-      busy(consentBtn, true);
-      const res = (await send({ type: "TICK_CONSENT" })) as { count?: number } | undefined;
-      const count = res?.count ?? 0;
-      toast(count > 0 ? `Ticked ${count} privacy consent box${count === 1 ? "" : "es"}` : "No privacy consent boxes found to tick");
-      await run();
-      busy(consentBtn, false);
-    });
-    box.append(consentBtn);
-  }
   const job = { title: report.jobTitle, company: companyFromUrl(report.url) };
   for (const r of pending) {
     box.append(questionCard(r, {
@@ -1858,24 +1838,17 @@ async function renderPlan(): Promise<void> {
   const pill = $("plan-pill");
   const badge = $("plan-badge");
   const meter = $("plan-meter");
-  const { accountEmail } = await chrome.storage.local.get("accountEmail");
-  const accStatus = document.getElementById("account-status");
 
   if (license) {
     const isLife = isLifetimeLicense(license);
     const until = new Date(license.exp * 1000).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
-    $("plan-status").textContent = isLife ? "Founder · Lifetime Pass active" : `Pro · unlimited applications until ${until}`;
+    $("plan-status").textContent = isLife ? `Founder · unlimited applications until ${until}` : `Pro · unlimited applications until ${until}`;
     pill.textContent = isLife ? "Founder" : "Pro";
     pill.className = "plan-pill pro";
     badge.textContent = isLife ? "Founder" : "Pro";
     badge.className = "chip accent";
     meter.style.width = "100%";
     meter.parentElement!.classList.remove("low");
-    if (accStatus) {
-      accStatus.textContent = typeof accountEmail === "string" && accountEmail
-        ? `Account: ${accountEmail} (${isLife ? "Founder Pass" : "Pro Plan"})`
-        : `Account: ${isLife ? "Founder Pass Active" : "Pro Active"}`;
-    }
   } else {
     $("plan-status").textContent = `Free · ${left} of ${FREE_MONTHLY_SUBMISSIONS} applications left this month`;
     pill.textContent = `Free · ${left} left`;
@@ -1884,11 +1857,6 @@ async function renderPlan(): Promise<void> {
     badge.className = `chip ${left ? "" : "warn"}`;
     meter.style.width = `${(left / FREE_MONTHLY_SUBMISSIONS) * 100}%`;
     meter.parentElement!.classList.toggle("low", left <= 5);
-    if (accStatus) {
-      accStatus.textContent = typeof accountEmail === "string" && accountEmail
-        ? `Account: ${accountEmail} (Free Plan)`
-        : "Account: Guest (Community Free)";
-    }
   }
   $("buy-row").hidden = !licensingConfigured();
   const { licenseKey } = await chrome.storage.local.get("licenseKey");
@@ -1903,9 +1871,6 @@ async function openBuy(currency: "INR" | "USD", tier: "monthly" | "lifetime" = "
 $("buy-inr").addEventListener("click", () => void openBuy("INR", "monthly"));
 $("buy-usd").addEventListener("click", () => void openBuy("USD", "monthly"));
 $("buy-founder")?.addEventListener("click", () => void openBuy("USD", "lifetime"));
-$("account-portal-btn")?.addEventListener("click", () => {
-  void chrome.tabs.create({ url: "https://saurav-gupta-9741.github.io/Apply-Agent/login.html" });
-});
 $("activate").addEventListener("click", async () => {
   busy($("activate"), true);
   const error = await activate(($("license-key") as HTMLInputElement).value);

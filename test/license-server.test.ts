@@ -147,16 +147,6 @@ describe("worker end to end (fake KV, no network)", () => {
     expect((await post("AAAAA-BBBBB-CCCCC-DDDDD")).status).toBe(404);
   });
 
-  it("serves plans and pricing endpoint with free, pro, and founder tiers", async () => {
-    const { env } = await makeEnv();
-    const res = await worker.fetch(new Request("https://lic.example.com/plans"), env);
-    expect(res.status).toBe(200);
-    const data = (await res.json()) as { tiers: Array<{ id: string; name: string; price: { usd: string; inr: string } }> };
-    expect(data.tiers).toHaveLength(3);
-    expect(data.tiers.map((t) => t.id)).toEqual(["free", "pro", "founder"]);
-    expect(data.tiers[0]!.price.usd).toBe("$0");
-  });
-
   it("handles lifetime founder passes and isLifetimeLicense recognition", async () => {
     const { env, publicJwk, store } = await makeEnv();
     // Simulate payment fulfilment for lifetime tier

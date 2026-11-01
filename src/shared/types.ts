@@ -375,8 +375,7 @@ export type Message =
   /** Scroll to a field and outline it, so the user can answer it on the page. */
   | { type: "HIGHLIGHT"; label: string; key?: string }
   | { type: "SUBMIT" }
-  | { type: "TICK_CONSENT" }
-  | { type: "RECORD_CORRECTION"; question: string; answer: string }
+  | { type: "RECORD_CORRECTION"; question: string; answer: string; control?: string }
   | { type: "RUN_RESULT"; report: RunReport }
   /** Sent by the content script right before it clicks Submit, so the tracker can expect a confirmation. */
   | { type: "MARK_SUBMITTING"; url: string; jobTitle: string; platform: string }
