@@ -19,9 +19,9 @@ interface GoldHumanRecord {
   personaC: { answer: string; reachable: boolean };
 }
 
-describe("Value evaluation across Persona A, B, and C against human gold labels", () => {
+describe("Value evaluation across Persona A, B, and C against script-generated gold labels", () => {
   const goldQuestions: GoldHumanRecord[] = JSON.parse(
-    readFileSync("reports/gold-human.json", "utf8")
+    readFileSync("reports/gold-script.json", "utf8")
   );
   // The local model's reading of each question (out-of-fold), as the extension would have it.
   const oof = new Map(

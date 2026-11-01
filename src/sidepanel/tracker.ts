@@ -355,6 +355,11 @@ export async function renderTrackerCrm(ui: TrackerUi, now = new Date()): Promise
     navDue.textContent = due.length ? `${due.length} due` : "";
     navDue.hidden = !due.length;
   }
+  const countBadge = document.querySelector<HTMLElement>("[data-count='tracker']");
+  if (countBadge) {
+    const applied = records.filter((r) => r.status === "applied_confirmed").length;
+    countBadge.textContent = applied > 0 ? String(applied) : "";
+  }
 
   const list = document.getElementById("tracker-list");
   if (!list) return due.length;

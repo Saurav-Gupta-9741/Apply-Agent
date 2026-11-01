@@ -1550,6 +1550,9 @@ const trackerUi: TrackerUi = {
 };
 
 async function renderTracker(): Promise<void> {
+  const records = await loadApplications();
+  const applied = records.filter((r) => r.status === "applied_confirmed").length;
+  setCount("tracker", applied);
   await renderTrackerCrm(trackerUi);
 }
 

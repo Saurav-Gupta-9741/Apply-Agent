@@ -1,0 +1,408 @@
+{
+ "format": "applyagent-personas/1",
+ "note": "Frozen personas from test/personas/*.ts. Label the value THIS person would truthfully give.",
+ "personas": {
+  "A": {
+   "name": "Persona A",
+   "summary": "Fresher data analyst, Pune, India. Works only in India. Lists NOT complete. Salary in INR (LPA).",
+   "profile": {
+    "firstName": "Asha",
+    "lastName": "Verma",
+    "email": "asha@example.com",
+    "phone": "+91 90000 00000",
+    "location": "Pune",
+    "country": "India",
+    "linkedin": "",
+    "github": "",
+    "portfolio": "",
+    "resumeUrl": "",
+    "currentCompany": "",
+    "currentTitle": "",
+    "school": "Pune University",
+    "degree": "Bachelor of Technology",
+    "discipline": "Computer Science",
+    "graduationYear": "2024",
+    "experienceYears": "2",
+    "targetRoles": "",
+    "preferredLocations": "Pune, Bangalore, Remote",
+    "skills": "Python, SQL, Excel, Power BI",
+    "address": "12 MG Road, Pune 411001",
+    "addressLine1": "12 MG Road",
+    "addressLine2": "",
+    "postalCode": "411001",
+    "state": "Maharashtra",
+    "educationLevel": "Bachelor's Degree",
+    "timezone": "",
+    "skillsComplete": false,
+    "languagesComplete": false,
+    "workHistoryComplete": false,
+    "skillsInventory": [
+     {
+      "name": "Python",
+      "years": 2,
+      "level": "Intermediate"
+     },
+     {
+      "name": "SQL",
+      "years": 2,
+      "level": "Intermediate"
+     },
+     {
+      "name": "Excel",
+      "years": 2,
+      "level": "Advanced"
+     },
+     {
+      "name": "Power BI",
+      "years": 1,
+      "level": "Intermediate"
+     }
+    ],
+    "languages": [
+     {
+      "language": "English",
+      "proficiency": "Fluent"
+     },
+     {
+      "language": "Hindi",
+      "proficiency": "Native"
+     }
+    ],
+    "workHistory": [],
+    "facts": {
+     "workCountries": "India",
+     "noticePeriod": "Immediate",
+     "currentCtc": "",
+     "expectedCtc": "8 LPA",
+     "relocate": "No",
+     "heardFrom": "LinkedIn",
+     "gender": "Female",
+     "hispanic": "No",
+     "race": "Asian",
+     "veteran": "No",
+     "disability": "No",
+     "workMode": "hybrid",
+     "maxOfficeDays": 3,
+     "travel": "Yes",
+     "travelPercent": "10%",
+     "needsAccommodation": "No",
+     "pronouns": "She/Her",
+     "over18": "Yes",
+     "age": "22"
+    }
+   }
+  },
+  "B": {
+   "name": "Persona B",
+   "summary": "Senior software engineer, Bangalore, India. Remote only. Salary in INR (LPA).",
+   "profile": {
+    "firstName": "Rohan",
+    "lastName": "Sharma",
+    "email": "rohan@example.com",
+    "phone": "+91 98888 88888",
+    "location": "Bangalore",
+    "country": "India",
+    "linkedin": "",
+    "github": "",
+    "portfolio": "",
+    "resumeUrl": "",
+    "currentCompany": "Flipkart",
+    "currentTitle": "Senior Software Engineer",
+    "school": "IISc Bangalore",
+    "degree": "Master of Technology",
+    "discipline": "Computer Science",
+    "graduationYear": "2019",
+    "experienceYears": "5",
+    "targetRoles": "",
+    "preferredLocations": "Bangalore, Remote",
+    "skills": "Java, Go, React",
+    "address": "456 Tech Park Road, Whitefield",
+    "addressLine1": "456 Tech Park Road",
+    "addressLine2": "Tower B, Apt 304",
+    "postalCode": "560100",
+    "state": "Karnataka",
+    "educationLevel": "Master's Degree",
+    "timezone": "",
+    "skillsComplete": false,
+    "languagesComplete": false,
+    "workHistoryComplete": true,
+    "skillsInventory": [
+     {
+      "name": "Java",
+      "years": 5,
+      "level": "Advanced"
+     },
+     {
+      "name": "Go",
+      "years": 3,
+      "level": "Advanced"
+     },
+     {
+      "name": "React",
+      "years": 2,
+      "level": "Intermediate"
+     }
+    ],
+    "languages": [
+     {
+      "language": "English",
+      "proficiency": "Fluent"
+     },
+     {
+      "language": "Kannada",
+      "proficiency": "Native"
+     }
+    ],
+    "workHistory": [
+     {
+      "title": "Senior Software Engineer",
+      "company": "Flipkart",
+      "location": "Bangalore",
+      "start": "2023-01",
+      "end": "Present",
+      "current": true,
+      "summary": "Distributed backend systems in Go and Java."
+     },
+     {
+      "title": "Software Engineer",
+      "company": "Infosys",
+      "location": "Bangalore",
+      "start": "2019-07",
+      "end": "2022-12",
+      "current": false,
+      "summary": "Full stack web development with Java and React."
+     }
+    ],
+    "facts": {
+     "workCountries": "India",
+     "noticePeriod": "30 days",
+     "currentCtc": "25 LPA",
+     "expectedCtc": "35 LPA",
+     "relocate": "Yes",
+     "heardFrom": "LinkedIn",
+     "gender": "Male",
+     "hispanic": "No",
+     "race": "Asian",
+     "veteran": "No",
+     "disability": "No",
+     "workMode": "remote",
+     "maxOfficeDays": 0,
+     "travel": "No",
+     "travelPercent": "0%",
+     "needsAccommodation": "No",
+     "pronouns": "He/Him",
+     "over18": "Yes",
+     "age": "27"
+    }
+   }
+  },
+  "C": {
+   "name": "Persona C",
+   "summary": "Marketing manager, Mumbai, India. Onsite, 50% travel. All lists complete. Salary in INR (LPA).",
+   "profile": {
+    "firstName": "Priya",
+    "lastName": "Nair",
+    "email": "priya@example.com",
+    "phone": "+91 97777 77777",
+    "location": "Mumbai",
+    "country": "India",
+    "linkedin": "",
+    "github": "",
+    "portfolio": "",
+    "resumeUrl": "",
+    "currentCompany": "Acme Media",
+    "currentTitle": "Marketing Manager",
+    "school": "Mumbai University",
+    "degree": "Bachelor of Arts",
+    "discipline": "Mass Communication",
+    "graduationYear": "2016",
+    "experienceYears": "8",
+    "targetRoles": "",
+    "preferredLocations": "Mumbai",
+    "skills": "Marketing, SEO, Content Strategy",
+    "address": "78 Marine Drive, Churchgate",
+    "addressLine1": "78 Marine Drive",
+    "addressLine2": "",
+    "postalCode": "400020",
+    "state": "Maharashtra",
+    "educationLevel": "Bachelor's Degree",
+    "timezone": "",
+    "skillsComplete": true,
+    "languagesComplete": true,
+    "workHistoryComplete": true,
+    "skillsInventory": [
+     {
+      "name": "Marketing",
+      "years": 8,
+      "level": "Expert"
+     },
+     {
+      "name": "SEO",
+      "years": 6,
+      "level": "Advanced"
+     },
+     {
+      "name": "Content Strategy",
+      "years": 5,
+      "level": "Advanced"
+     }
+    ],
+    "languages": [
+     {
+      "language": "English",
+      "proficiency": "Fluent"
+     }
+    ],
+    "workHistory": [
+     {
+      "title": "Marketing Manager",
+      "company": "Acme Media",
+      "location": "Mumbai",
+      "start": "2018-04",
+      "end": "Present",
+      "current": true,
+      "summary": "Brand campaigns, SEO, and content marketing."
+     }
+    ],
+    "facts": {
+     "workCountries": "India",
+     "noticePeriod": "60 days",
+     "currentCtc": "18 LPA",
+     "expectedCtc": "24 LPA",
+     "relocate": "No",
+     "heardFrom": "Company website",
+     "gender": "Female",
+     "hispanic": "No",
+     "race": "Asian",
+     "veteran": "No",
+     "disability": "No",
+     "workMode": "onsite",
+     "maxOfficeDays": 5,
+     "travel": "Yes",
+     "travelPercent": "50%",
+     "needsAccommodation": "No",
+     "pronouns": "She/Her",
+     "over18": "Yes",
+     "age": "30"
+    }
+   }
+  },
+  "D": {
+   "name": "Persona D",
+   "summary": "US citizen, product designer, Austin TX. Hybrid. Salary in USD. Declines race, disability, orientation.",
+   "profile": {
+    "firstName": "Jordan",
+    "lastName": "Miller",
+    "email": "jordan.miller@example.com",
+    "phone": "+1 512 555 0142",
+    "location": "Austin, TX",
+    "country": "United States",
+    "linkedin": "https://www.linkedin.com/in/jordan-miller-design",
+    "github": "",
+    "portfolio": "https://jordanmiller.design",
+    "resumeUrl": "",
+    "currentCompany": "Lone Star Health",
+    "currentTitle": "Senior Product Designer",
+    "school": "University of Texas at Austin",
+    "degree": "Bachelor of Fine Arts",
+    "discipline": "Design",
+    "graduationYear": "2018",
+    "experienceYears": "6",
+    "targetRoles": "Product Designer, UX Designer",
+    "preferredLocations": "Austin, Remote",
+    "skills": "Figma, User Research, Prototyping, HTML, CSS",
+    "address": "500 Congress Ave, Apt 12, Austin, TX 78701",
+    "addressLine1": "500 Congress Ave",
+    "addressLine2": "Apt 12",
+    "postalCode": "78701",
+    "state": "Texas",
+    "educationLevel": "Bachelor's Degree",
+    "timezone": "CST",
+    "skillsComplete": true,
+    "languagesComplete": true,
+    "workHistoryComplete": true,
+    "skillsInventory": [
+     {
+      "name": "Figma",
+      "years": 6,
+      "level": "Expert"
+     },
+     {
+      "name": "User Research",
+      "years": 5,
+      "level": "Advanced"
+     },
+     {
+      "name": "Prototyping",
+      "years": 6,
+      "level": "Advanced"
+     },
+     {
+      "name": "HTML",
+      "years": 3,
+      "level": "Intermediate"
+     },
+     {
+      "name": "CSS",
+      "years": 3,
+      "level": "Intermediate"
+     }
+    ],
+    "languages": [
+     {
+      "language": "English",
+      "proficiency": "Native"
+     },
+     {
+      "language": "Spanish",
+      "proficiency": "Conversational"
+     }
+    ],
+    "workHistory": [
+     {
+      "title": "Senior Product Designer",
+      "company": "Lone Star Health",
+      "location": "Austin, TX",
+      "start": "2021-06",
+      "end": "Present",
+      "current": true,
+      "summary": "Design system and patient app."
+     },
+     {
+      "title": "Product Designer",
+      "company": "Bluebonnet Labs",
+      "location": "Austin, TX",
+      "start": "2018-07",
+      "end": "2021-05",
+      "current": false,
+      "summary": "B2B dashboards."
+     }
+    ],
+    "facts": {
+     "workCountries": "United States",
+     "needsFutureSponsorship": "No",
+     "noticePeriod": "2 weeks",
+     "currentCtc": "USD 135,000",
+     "expectedCtc": "USD 150,000",
+     "relocate": "No",
+     "heardFrom": "LinkedIn",
+     "gender": "Male",
+     "hispanic": "No",
+     "race": "Decline",
+     "veteran": "No",
+     "disability": "Decline",
+     "workMode": "hybrid",
+     "maxOfficeDays": 2,
+     "travel": "Yes",
+     "travelPercent": "10%",
+     "needsAccommodation": "No",
+     "pronouns": "He/Him",
+     "sexualOrientation": "Decline",
+     "transgender": "No",
+     "over18": "Yes",
+     "age": "30"
+    }
+   }
+  }
+ }
+}

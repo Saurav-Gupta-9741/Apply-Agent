@@ -78,7 +78,7 @@ It is never registered on hands-off platforms.
   tested, not yet shown in the panel
 - **Submission time**: every confirmed submission records when it was confirmed
 - **Automation scorecard**: `npm run eval` measures the auto-fill share over the labelled real questions and writes
-  `reports/scorecard.json`. The value set `reports/gold-human.json` is script-generated gold
+  `reports/scorecard.json`. The value set `reports/gold-script.json` is script-generated gold
   (`scripts/build-gold-human.mjs`), not hand-labelled
 - Values are set through the native setter with plain `input`/`change` events (React's value tracker is reset first);
   there is no simulated typing, pointer or keyboard sequence
