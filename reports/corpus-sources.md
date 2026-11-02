@@ -138,7 +138,10 @@ These 73 files represent real live application forms saved directly from public 
 
 ---
 
-## 4. Audited Login-Wall & Challenge-Protected Portals
+## 4. Crowdsourced Structure Export Provenance
+Structure files in `test/corpus/real-structure/` are explicitly marked as `*.synthetic.structure.json` with `"synthetic": true`, hand-written from public documentation to test schema compatibility. Real captured enterprise structures will be supplied by the owner via the Workday capture kit.
+
+## 5. Audited Login-Wall & Challenge-Protected Portals
 Per Step 5 instructions, real company applications behind candidate authentication walls or anti-bot challenge walls were verified and documented rather than inventing synthetic forms:
 
 1. **Workday**:

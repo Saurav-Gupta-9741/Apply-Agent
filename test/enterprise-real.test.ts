@@ -231,18 +231,26 @@ describe("Save Form Structure (Crowdsourced Structure Export)", () => {
     expect(filename).toContain("applyagent-structure-jobs.example.com");
   });
 
-  it("generates and saves corpus real-structure fixtures", () => {
+  it("generates and saves corpus synthetic-structure fixtures", () => {
     mkdirSync("test/corpus/real-structure", { recursive: true });
 
     const wdHtml = readFileSync("test/corpus/workday-salesforce.html", "utf8");
     mount(wdHtml);
-    const wdStruct = extractFormStructure(document, "https://salesforce.wd12.myworkdayjobs.com/Careers/job/Lead-Software-Engineer");
-    writeFileSync("test/corpus/real-structure/workday-salesforce.structure.json", exportFormStructureAsJson(wdStruct));
+    const wdStruct = {
+      ...extractFormStructure(document, "https://salesforce.wd12.myworkdayjobs.com/Careers/job/Lead-Software-Engineer"),
+      synthetic: true,
+      note: "hand-written from public documentation; to be replaced by owner captures",
+    };
+    writeFileSync("test/corpus/real-structure/workday-salesforce.synthetic.structure.json", JSON.stringify(wdStruct, null, 2) + "\n");
 
     const srHtml = readFileSync("test/corpus/smartrecruiters-ikea.html", "utf8");
     mount(srHtml);
-    const srStruct = extractFormStructure(document, "https://jobs.smartrecruiters.com/IKEA/12345-supply-chain-data-scientist");
-    writeFileSync("test/corpus/real-structure/smartrecruiters-ikea.structure.json", exportFormStructureAsJson(srStruct));
+    const srStruct = {
+      ...extractFormStructure(document, "https://jobs.smartrecruiters.com/IKEA/12345-supply-chain-data-scientist"),
+      synthetic: true,
+      note: "hand-written from public documentation; to be replaced by owner captures",
+    };
+    writeFileSync("test/corpus/real-structure/smartrecruiters-ikea.synthetic.structure.json", JSON.stringify(srStruct, null, 2) + "\n");
 
     expect(wdStruct.fieldCount).toBeGreaterThan(0);
     expect(srStruct.fieldCount).toBeGreaterThan(0);

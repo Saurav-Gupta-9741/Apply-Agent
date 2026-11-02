@@ -1,5 +1,7 @@
 {
   "version": 1,
+  "synthetic": true,
+  "note": "hand-written from public documentation; to be replaced by owner captures",
   "savedAt": "2026-11-02T19:26:35.704Z",
   "platform": "workday",
   "domain": "salesforce.wd12.myworkdayjobs.com",
