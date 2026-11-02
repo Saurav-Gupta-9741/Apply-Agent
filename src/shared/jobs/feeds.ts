@@ -1,0 +1,274 @@
+import type { JobPosting, SupportedATS } from "./types";
+import { FeedRateLimiter, defaultLimiter } from "./rate-limiter";
+
+/** Construct the public feed URL for a given ATS and company slug */
+export function getFeedUrl(ats: SupportedATS, slug: string): string {
+  switch (ats) {
+    case "greenhouse":
+      return `https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(slug)}/jobs?content=true`;
+    case "lever":
+      return `https://api.lever.co/v0/postings/${encodeURIComponent(slug)}?mode=json`;
+    case "ashby":
+      return `https://api.ashbyhq.com/posting-api/job-board/${encodeURIComponent(slug)}`;
+    case "smartrecruiters":
+      return `https://api.smartrecruiters.com/v1/companies/${encodeURIComponent(slug)}/postings`;
+    case "recruitee":
+      return `https://${encodeURIComponent(slug)}.recruitee.com/api/offers`;
+    case "personio":
+      return `https://${encodeURIComponent(slug)}.jobs.personio.de/xml`;
+    case "workable":
+      return `https://apply.workable.com/api/v1/widget/accounts/${encodeURIComponent(slug)}`;
+    default:
+      throw new Error(`Unsupported ATS feed: ${ats}`);
+  }
+}
+
+/** Check if a location string indicates remote work */
+export function isRemoteLocation(loc: string, title?: string): boolean {
+  const norm = `${loc} ${title ?? ""}`.toLowerCase();
+  return /\b(remote|anywhere|telecommute|wfh|work from home|home-based|distributed)\b/i.test(norm);
+}
+
+/** Parse Greenhouse JSON response */
+export function parseGreenhouseFeed(json: any, slug: string, companyName: string): JobPosting[] {
+  const jobs = json?.jobs;
+  if (!Array.isArray(jobs)) return [];
+
+  return jobs.map((j: any) => {
+    const locName = j.location?.name ?? "";
+    const isRemote = isRemoteLocation(locName, j.title);
+    return {
+      id: `gh-${j.id}`,
+      companySlug: slug,
+      companyName,
+      ats: "greenhouse",
+      title: j.title || "Untitled Role",
+      location: locName,
+      isRemote,
+      department: j.departments?.[0]?.name,
+      url: j.absolute_url || `https://boards.greenhouse.io/${slug}/jobs/${j.id}`,
+      publishedAt: j.updated_at,
+      descriptionSnippet: j.content ? j.content.replace(/<[^>]+>/g, " ").slice(0, 300).trim() : undefined,
+    };
+  });
+}
+
+/** Parse Lever JSON response */
+export function parseLeverFeed(json: any, slug: string, companyName: string): JobPosting[] {
+  if (!Array.isArray(json)) return [];
+
+  return json.map((j: any) => {
+    const locName = j.categories?.location ?? "";
+    const workplaceType = j.workplaceType || "";
+    const isRemote = workplaceType.toLowerCase() === "remote" || isRemoteLocation(locName, j.text);
+    return {
+      id: `lever-${j.id}`,
+      companySlug: slug,
+      companyName,
+      ats: "lever",
+      title: j.text || "Untitled Role",
+      location: locName,
+      isRemote,
+      department: j.categories?.department || j.categories?.team,
+      url: j.hostedUrl || `https://jobs.lever.co/${slug}/${j.id}`,
+      publishedAt: j.createdAt ? new Date(j.createdAt).toISOString() : undefined,
+      descriptionSnippet: j.descriptionPlain ? j.descriptionPlain.slice(0, 300).trim() : undefined,
+      salary: j.salaryRange
+        ? {
+            currency: j.salaryRange.currency,
+            min: j.salaryRange.min,
+            max: j.salaryRange.max,
+            period: j.salaryRange.interval === "per-year-salary" ? "year" : undefined,
+          }
+        : undefined,
+    };
+  });
+}
+
+/** Parse Ashby JSON response */
+export function parseAshbyFeed(json: any, slug: string, companyName: string): JobPosting[] {
+  const jobs = json?.jobs;
+  if (!Array.isArray(jobs)) return [];
+
+  return jobs.map((j: any) => {
+    const locName = j.location || j.address?.postalAddress?.addressLocality || "";
+    const isRemote = j.isRemote || isRemoteLocation(locName, j.title);
+    return {
+      id: `ashby-${j.id}`,
+      companySlug: slug,
+      companyName,
+      ats: "ashby",
+      title: j.title || "Untitled Role",
+      location: locName,
+      isRemote,
+      department: j.department,
+      url: j.jobUrl || `https://jobs.ashbyhq.com/${slug}/${j.id}`,
+      publishedAt: j.publishedAt,
+      descriptionSnippet: j.descriptionPlain ? j.descriptionPlain.slice(0, 300).trim() : undefined,
+      salary: j.compensationTier
+        ? {
+            currency: j.compensationTier.currencyCode,
+            min: j.compensationTier.min,
+            max: j.compensationTier.max,
+            period: "year",
+          }
+        : undefined,
+    };
+  });
+}
+
+/** Parse SmartRecruiters JSON response */
+export function parseSmartRecruitersFeed(json: any, slug: string, companyName: string): JobPosting[] {
+  const content = json?.content;
+  if (!Array.isArray(content)) return [];
+
+  return content.map((j: any) => {
+    const city = j.location?.city || "";
+    const country = j.location?.country || "";
+    const locName = city && country ? `${city}, ${country}` : city || country || "";
+    const isRemote = j.location?.remote || isRemoteLocation(locName, j.name);
+    return {
+      id: `sr-${j.id}`,
+      companySlug: slug,
+      companyName,
+      ats: "smartrecruiters",
+      title: j.name || "Untitled Role",
+      location: locName,
+      country: j.location?.country,
+      isRemote,
+      department: j.department?.label,
+      url: `https://jobs.smartrecruiters.com/${slug}/${j.id}`,
+      publishedAt: j.releasedDate,
+    };
+  });
+}
+
+/** Parse Recruitee JSON response */
+export function parseRecruiteeFeed(json: any, slug: string, companyName: string): JobPosting[] {
+  const offers = json?.offers;
+  if (!Array.isArray(offers)) return [];
+
+  return offers.map((j: any) => {
+    const locName = j.location || (j.city ? `${j.city}, ${j.country}` : "");
+    const isRemote = j.remote || isRemoteLocation(locName, j.title);
+    return {
+      id: `recruitee-${j.id}`,
+      companySlug: slug,
+      companyName,
+      ats: "recruitee",
+      title: j.title || "Untitled Role",
+      location: locName,
+      country: j.country,
+      isRemote,
+      department: j.department,
+      url: j.careers_url || `https://${slug}.recruitee.com/o/${j.slug}`,
+      publishedAt: j.created_at,
+      descriptionSnippet: j.description ? j.description.replace(/<[^>]+>/g, " ").slice(0, 300).trim() : undefined,
+    };
+  });
+}
+
+/** Parse Workable JSON response */
+export function parseWorkableFeed(json: any, slug: string, companyName: string): JobPosting[] {
+  const jobs = json?.jobs;
+  if (!Array.isArray(jobs)) return [];
+
+  return jobs.map((j: any) => {
+    const city = j.city || "";
+    const country = j.country || "";
+    const locName = city && country ? `${city}, ${country}` : city || country;
+    const isRemote = j.telecommuting || isRemoteLocation(locName, j.title);
+    return {
+      id: `workable-${j.shortcode || j.id}`,
+      companySlug: slug,
+      companyName,
+      ats: "workable",
+      title: j.title || "Untitled Role",
+      location: locName,
+      country: j.country,
+      isRemote,
+      department: j.department,
+      url: j.url || `https://apply.workable.com/${slug}/j/${j.shortcode}/`,
+      publishedAt: j.published_on,
+    };
+  });
+}
+
+/** Parse Personio XML string */
+export function parsePersonioXml(xmlText: string, slug: string, companyName: string): JobPosting[] {
+  const postings: JobPosting[] = [];
+  const positionMatches = xmlText.matchAll(/<position>([\s\S]*?)<\/position>/gi);
+
+  for (const match of positionMatches) {
+    const block = match[1] ?? "";
+    const id = block.match(/<id>([\s\S]*?)<\/id>/i)?.[1]?.trim() ?? Math.random().toString(36).slice(2);
+    const name = block.match(/<name>([\s\S]*?)<\/name>/i)?.[1]?.trim() ?? "Untitled Role";
+    const office = block.match(/<office>([\s\S]*?)<\/office>/i)?.[1]?.trim() ?? "";
+    const dept = block.match(/<department>([\s\S]*?)<\/department>/i)?.[1]?.trim();
+    const isRemote = isRemoteLocation(office, name);
+
+    postings.push({
+      id: `personio-${id}`,
+      companySlug: slug,
+      companyName,
+      ats: "personio",
+      title: name,
+      location: office,
+      isRemote,
+      department: dept,
+      url: `https://${slug}.jobs.personio.de/job/${id}`,
+    });
+  }
+
+  return postings;
+}
+
+/** Fetch and parse an ATS feed with rate-limiting and caching */
+export async function fetchATSFeed(
+  ats: SupportedATS,
+  slug: string,
+  companyName: string,
+  fetchFn: (url: string) => Promise<{ ok: boolean; status: number; text: () => Promise<string>; json: () => Promise<any> }> = fetch as any,
+  limiter: FeedRateLimiter = defaultLimiter
+): Promise<JobPosting[]> {
+  const feedUrl = getFeedUrl(ats, slug);
+  const cached = limiter.getCached<JobPosting[]>(feedUrl);
+  if (cached) return cached;
+
+  await limiter.acquire(feedUrl);
+  const res = await fetchFn(feedUrl);
+  if (!res.ok) {
+    throw new Error(`Feed fetch failed for ${ats}/${slug}: HTTP ${res.status}`);
+  }
+
+  let postings: JobPosting[] = [];
+  if (ats === "personio") {
+    const xml = await res.text();
+    postings = parsePersonioXml(xml, slug, companyName);
+  } else {
+    const json = await res.json();
+    switch (ats) {
+      case "greenhouse":
+        postings = parseGreenhouseFeed(json, slug, companyName);
+        break;
+      case "lever":
+        postings = parseLeverFeed(json, slug, companyName);
+        break;
+      case "ashby":
+        postings = parseAshbyFeed(json, slug, companyName);
+        break;
+      case "smartrecruiters":
+        postings = parseSmartRecruitersFeed(json, slug, companyName);
+        break;
+      case "recruitee":
+        postings = parseRecruiteeFeed(json, slug, companyName);
+        break;
+      case "workable":
+        postings = parseWorkableFeed(json, slug, companyName);
+        break;
+    }
+  }
+
+  limiter.setCached(feedUrl, postings);
+  return postings;
+}
