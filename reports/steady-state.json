@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-02T22:22:23.012Z",
+  "generatedAt": "2026-11-02T23:16:06.046Z",
   "draws": 20,
   "formsPoolSize": 256,
   "checkpoints": [
@@ -13,7 +13,7 @@
       "name": "Persona A (Fresher DA, Pune)",
       "application1": {
         "meanAutoFilled": 9.1,
-        "meanAutoShare": "51.4%",
+        "meanAutoShare": "51.6%",
         "minAutoShare": "22.7%",
         "maxAutoShare": "75.0%",
         "meanReused": 0.4,
@@ -84,7 +84,7 @@
       "name": "Persona B (Senior SWE, Bangalore)",
       "application1": {
         "meanAutoFilled": 9.3,
-        "meanAutoShare": "52.9%",
+        "meanAutoShare": "53.1%",
         "minAutoShare": "22.7%",
         "maxAutoShare": "75.0%",
         "meanReused": 0.3,
@@ -155,12 +155,12 @@
       "name": "Persona C (Marketing Mgr, Mumbai)",
       "application1": {
         "meanAutoFilled": 9.4,
-        "meanAutoShare": "53.4%",
+        "meanAutoShare": "53.6%",
         "minAutoShare": "25.0%",
         "maxAutoShare": "75.0%",
         "meanReused": 0.3,
         "meanAssisted": 0.7,
-        "meanAsk": 8.3,
+        "meanAsk": 8.2,
         "meanHumanOnly": 0.8,
         "wrong": {
           "kind1HumanOnly": 0,
@@ -226,12 +226,12 @@
       "name": "Persona D (Product Designer, Austin)",
       "application1": {
         "meanAutoFilled": 10.1,
-        "meanAutoShare": "56.3%",
+        "meanAutoShare": "56.4%",
         "minAutoShare": "25.0%",
         "maxAutoShare": "75.0%",
         "meanReused": 0.3,
         "meanAssisted": 0.6,
-        "meanAsk": 7.6,
+        "meanAsk": 7.5,
         "meanHumanOnly": 0.8,
         "wrong": {
           "kind1HumanOnly": 0,
@@ -295,7 +295,7 @@
     }
   },
   "summary": {
-    "firstApplicationMeanShare": "53.5%",
+    "firstApplicationMeanShare": "53.7%",
     "application5MeanShare": "60.2%",
     "application10SteadyStateMeanShare": "64.2%",
     "application20MeanShare": "64.9%",
