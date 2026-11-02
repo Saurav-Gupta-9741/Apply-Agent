@@ -95,7 +95,20 @@ words, with buttons, so they become automatic from the FIRST application:
 - "Experience with X / N+ years of X / proficient in X / how many years of X": answer from `skillsInventory`
   (filled by resume import + Quick Answers), compare numbers with `parseRequirement`. JD only to disambiguate.
 - Unknown skill + `skillsComplete` false → ask (and add the answer to the inventory for next time).
-- Measure. **End of Day 1: commit the numbers table (first-application %, steady-state %, wrong).**
+- Measure.
+
+### Step 4b — Non-English forms (German, French, Spanish, Dutch, Portuguese, Hindi-in-English) · 2 h
+Our model is English-only; Personio (DE) and Recruitee (NL) forms are already in the corpus. Competitors guess here.
+- `src/shared/i18n-labels.ts`: a reviewed dictionary of the ~80 most common form labels/options per language →
+  English (Vorname→First name, Nachname, E-Mail, Telefon, Lebenslauf→Resume, Anschreiben→Cover letter,
+  Gehaltsvorstellung→Expected salary, Kündigungsfrist→Notice period, Eintrittsdatum→Start date, Ja/Nein, Prénom,
+  Nom, Courriel, Nombre, Apellidos, Voornaam, Achternaam, Sim/Não, etc.). Translate the label BEFORE classify;
+  keep the original text in the fill report. Exact whole-label or whole-word matches only — no fuzzy matching.
+- Detect the page language from `<html lang>` + the labels; unknown language → ask for everything except
+  name/email/phone matched by input `type`/`autocomplete`.
+- Tests: the Personio/Recruitee real fixtures get the expected English intents; 40 translated-label tests;
+  10 traps (false friends: German "Gehalt" monthly vs annual, "Ja, ich stimme zu" consent → never auto-ticked).
+- Measure (wrong must stay 0). **End of Day 1: commit the numbers table (first-application %, steady-state %, wrong).**
 
 ---
 
