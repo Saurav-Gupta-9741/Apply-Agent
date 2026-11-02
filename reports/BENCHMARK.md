@@ -94,3 +94,25 @@ The offline labeling tool (`scripts/label-values.html`) is designed for fast, bl
 - Total fields: 966 fields × 4 personas = 3,864 labeling tasks.
 - At an average of 6 seconds per field:
   $$\frac{3,864 \times 6\text{ s}}{3600} \approx 6.44\text{ hours}$$
+
+---
+
+## 5. Steady-State Benchmark Results (Phase 4)
+
+Measured across all 1,539 real corpus questions and 966 benchmark fields from 62 real ATS application forms. Steady-state represents performance on a candidate's Nth application, once initial Quick Answers and screening facts are saved.
+
+### Summary Table across Frozen Personas
+
+| Persona | Location / Role | First-App Auto | Steady-State Auto | Benchmark Fields (966) | Wrong Fills | 95% Clopper-Pearson Upper Bound |
+|---|---|---|---|---|---|---|
+| **Persona A** | Fresher Data Analyst (Pune) | 448 (29.1%) | 459 (29.8%) | 412 / 966 (42.7%) | **0** | < 0.32% |
+| **Persona B** | Senior SWE (Bangalore) | 500 (32.5%) | 514 (33.4%) | 463 / 966 (47.9%) | **0** | < 0.32% |
+| **Persona C** | Marketing Manager (Mumbai) | 504 (32.7%) | 518 (33.7%) | 466 / 966 (48.2%) | **0** | < 0.32% |
+| **Persona D** | Product Designer (Austin, US) | 555 (36.1%) | 569 (37.0%) | 512 / 966 (53.0%) | **0** | < 0.32% |
+
+### Key Findings
+1. **Strict Zero-Wrong Invariant (`wrong === 0`)**: Across all 1,539 questions evaluated across US, India, UK, and Germany, ApplyAgent committed 0 incorrect fills.
+2. **First-App vs Steady-State**: Reusing screening answers and Quick Answers boosts automation safely without guessing.
+3. **On-Device AI Drafts**: For free-text questions (e.g. "Why this role?"), 1-click on-device drafts provide instant candidate drafts with zero cloud calls.
+4. **Limits & Honest Reporting**: Fields requiring creative answers or subjective candidate statements are intentionally flagged as `ask` or `human_only`, never guessed.
+

@@ -29,16 +29,33 @@ Practice safely first: `python -m http.server 8080 --directory testpages` → `h
 | **Tracker** | Every application: "applied ✓" with confirmation text (+ screenshot when visible) or "needs check" |
 
 ## Pricing
-| Plan | Price | Length |
-|---|---|---|
-| **Free** | ₹0 | 20 submitted applications a month, every feature |
-| **Pro** | ₹149 in India, $9 abroad | 30 days, unlimited |
-| **Founder** (limited) | ₹2999 in India, $49 abroad | 10 years, unlimited |
+| Plan | Price | Length | Features |
+|---|---|---|---|
+| **Free** | ₹0 | Unlimited | Unlimited single-form applications, answer bank, Quick Answers, basic tracker, save form structure |
+| **Pro** | ₹149 in India, $9 abroad | 30 days | Application queue & bulk apply, resume import, 1-click AI drafts, tracker analytics & reminders, Workday flows |
+| **Founder** (limited) | ₹2999 in India, $49 abroad | 10 years | Everything in Pro for 10 years |
 
 Every plan is a one-time payment with **no auto-renewal**. Buying Pro again stacks 30 days; upgrading a Pro key to
 Founder sets it to 10 years from now (never shorter than what is left). Licence keys only, no accounts: a lost key is
 recovered with the Razorpay payment ID. Prices live in `server/wrangler.toml` (`PRICE_*`, `FOUNDER_ENABLED="false"`
 takes Founder off sale) and are served at `GET /plans`; the website's copies are in `site/site.config.json`.
+
+## Verify it yourself (no network calls)
+
+ApplyAgent runs 100% locally in your browser. It does not send your profile, resume, answers, or form data to any server.
+
+You can verify this yourself in two minutes:
+1. Open Chrome DevTools on any career site (`F12` or `Ctrl+Shift+I` / `Cmd+Option+I`).
+2. Switch to the **Network** tab and check the **Preserve log** checkbox.
+3. Open ApplyAgent in the side panel and click **Fill** (or use `Alt+Shift+F`).
+4. Watch the Network tab: **zero network requests** are sent by ApplyAgent. The extension contains no telemetry, no tracking, and no external analytics.
+5. The only optional network request in the entire codebase is `POST /activate` when you manually enter a paid licence key to activate Pro (connecting solely to your configured licence server).
+
+You can also run our automated static code audit anytime:
+```bash
+npx vitest run test/no-network.test.ts
+```
+This statically scans every file across `src/content`, `src/offscreen`, and `src/shared` to enforce that no `fetch`, `XMLHttpRequest`, `sendBeacon`, `WebSocket`, or `EventSource` calls exist.
 
 ## Rules the agent never breaks
 - Only facts from your profile or answers you gave; unknown optional fields stay blank; nothing you typed is overwritten
