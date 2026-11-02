@@ -492,6 +492,9 @@ function renderFields(report: RunReport): void {
     else if (r.status === "needs_user" || r.status === "failed") counts.needs++;
     else counts.blank++;
     const label = h("span", { class: "label" }, r.field.label || "(unlabelled field)");
+    if (r.tag === "reused" || (r.decision.kind === "answer" && r.decision.reused)) {
+      label.append(h("span", { class: "tag reused", style: "margin-left: 6px; font-size: 10px; color: var(--info); background: var(--info-soft);" }, "reused"));
+    }
     const note = fieldNote(r);
     if (note) label.append(h("span", { class: "detail" }, note));
     list.append(h("li", { class: "field-row" }, label, chip(text, tone)));

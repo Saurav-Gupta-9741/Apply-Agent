@@ -210,6 +210,30 @@ export function findAnswer(
     // Strict polarity: a saved answer is reused only for a question with the same polarity.
     if (questionPolarity(entry.question) !== labelPolarity) continue;
 
+    // Follow-up / condition trap: never reuse general answers for conditional follow-up fields
+    const CONDITIONAL_OR_FOLLOWUP = /\bif\s+(?:yes|no|so|applicable|other|any|true|false)\b|\bwhich\s+one\b|\bplease\s+(?:explain|specify|describe|elaborate)\b/i;
+    if (CONDITIONAL_OR_FOLLOWUP.test(label) !== CONDITIONAL_OR_FOLLOWUP.test(entry.question)) continue;
+
+    // Time scope: now / currently vs future vs past / previously
+    const hasFutureEntry = /\b(?:in\s+the\s+)?future\b|\blater\b/i.test(entry.question);
+    const hasFutureLabel = /\b(?:in\s+the\s+)?future\b|\blater\b/i.test(label);
+    if (hasFutureEntry !== hasFutureLabel) continue;
+
+    const hasPastEntry = /\b(?:previously|formerly|in\s+the\s+past|past|prior|ever)\b/i.test(entry.question);
+    const hasPastLabel = /\b(?:previously|formerly|in\s+the\s+past|past|prior|ever)\b/i.test(label);
+    if (hasPastEntry !== hasPastLabel) continue;
+
+    const hasCurrentEntry = /\b(?:currently|presently|at\s+present|current)\b/i.test(entry.question);
+    const hasCurrentLabel = /\b(?:currently|presently|at\s+present|current)\b/i.test(label);
+    if (hasCurrentEntry !== hasCurrentLabel && (hasPastEntry || hasPastLabel || hasFutureEntry || hasFutureLabel)) continue;
+
+    // Restrictions check: "with restrictions" vs "without restrictions"
+    const RESTRICTION_PATTERN = /\b(?:without|with)\s+(?:any\s+)?restrictions?\b/i;
+    const restrEntry = RESTRICTION_PATTERN.exec(entry.question)?.[0]?.toLowerCase();
+    const restrLabel = RESTRICTION_PATTERN.exec(label)?.[0]?.toLowerCase();
+    if (restrEntry && restrLabel && restrEntry !== restrLabel) continue;
+    if ((restrEntry && !restrLabel) || (!restrEntry && restrLabel)) continue;
+
     // 1. Company trap: never reuse across different companies
     const entryCo = entry.company?.toLowerCase() || extractCompany(entry.question);
     const labelCo = page?.company?.toLowerCase() || extractCompany(label);
@@ -218,31 +242,44 @@ export function findAnswer(
       if (entry.company && page?.company && entry.company.toLowerCase() !== page.company.toLowerCase()) continue;
     }
 
-    // 2. Number trap: match numbers/years
+    // 2. Number trap: match numbers/years/hours
     const reqEntry = parseRequirement(entry.question);
     const reqLabel = parseRequirement(label);
     if (reqEntry && reqLabel) {
       if (reqEntry.unit !== reqLabel.unit || reqEntry.min !== reqLabel.min || reqEntry.max !== reqLabel.max) continue;
+    } else if ((reqEntry && !reqLabel) || (!reqEntry && reqLabel)) {
+      continue;
     } else {
       const numsEntry = (entry.question.match(/\b\d+\b/g) || []).join(",");
       const numsLabel = (label.match(/\b\d+\b/g) || []).join(",");
       if (numsEntry && numsLabel && numsEntry !== numsLabel) continue;
     }
 
+    // Degree level check (Bachelor's vs Master's vs PhD / Doctorate vs GED)
+    const DEGREE_LEVEL = /\b(bachelor|undergraduate|master|postgraduate|doctorate|phd|associate|ged|high school)\b/i;
+    const degEntry = entry.question.match(DEGREE_LEVEL)?.[0]?.toLowerCase();
+    const degLabel = label.match(DEGREE_LEVEL)?.[0]?.toLowerCase();
+    if (degEntry && degLabel) {
+      const normDeg = (d: string) => d.includes("bachelor") || d.includes("undergrad") ? "bachelor"
+        : d.includes("master") || d.includes("postgrad") ? "master"
+        : d.includes("doctor") || d.includes("phd") ? "phd"
+        : d.includes("ged") || d.includes("high school") ? "ged"
+        : d;
+      if (normDeg(degEntry) !== normDeg(degLabel)) continue;
+    }
+
     // 3. Country trap: never reuse across different countries
     const countryEntry = extractCountry(entry.question);
     const countryLabel = extractCountry(label);
     if (countryEntry && countryLabel && countryEntry !== countryLabel) continue;
+    if (countryEntry !== countryLabel && (topic === "work_authorization" || entryTopic === "work_authorization" || topic === "relocation" || entryTopic === "relocation")) {
+      continue;
+    }
 
     // 4. Negation / Sponsorship trap
     const isSponsorReq = SPONSOR_REQUIRE_PATTERN.test(label) && !AUTH_WITHOUT_PATTERN.test(label);
     const entrySponsorReq = SPONSOR_REQUIRE_PATTERN.test(entry.question) && !AUTH_WITHOUT_PATTERN.test(entry.question);
     if (isSponsorReq !== entrySponsorReq && (topic === "sponsorship" || topic === "work_authorization" || entryTopic === "sponsorship" || entryTopic === "work_authorization")) {
-      continue;
-    }
-    const hasFutureEntry = /\bfuture\b/i.test(entry.question);
-    const hasFutureLabel = /\bfuture\b/i.test(label);
-    if (hasFutureEntry !== hasFutureLabel && (topic === "sponsorship" || entryTopic === "sponsorship")) {
       continue;
     }
 
@@ -268,8 +305,9 @@ export function findAnswer(
       best = entry;
     }
   }
-  if (bestScore >= ANSWER_MATCH_THRESHOLD) return best;
-  return topic ? sameFactAnswer(field, answers, topic) : undefined;
+  if (bestScore >= ANSWER_MATCH_THRESHOLD && best) return { ...best, reused: true };
+  const factAns = topic ? sameFactAnswer(field, answers, topic) : undefined;
+  return factAns ? { ...factAns, reused: true } : undefined;
 }
 
 /** Facts about the person that do not depend on the job, asked in many wordings ("Gender" / "What is your gender
@@ -445,7 +483,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
           val = yesNoOption(field.options, entry.answer) ?? bestOption(field.options, entry.answer);
         }
       }
-      if (val) return { kind: "answer", value: val, question: entry.question };
+      if (val) return { kind: "answer", value: val, question: entry.question, reused: true };
     }
     const quick = factDecision(field, profile, "notice_period", page);
     return quick ?? { kind: "ask", reason: "sensitive", topic: "notice_period" };
@@ -472,7 +510,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
         if (match) val = match;
         else return { kind: "ask", reason: "unknown" };
       }
-      return { kind: "answer", value: val, question: entry.question };
+      return { kind: "answer", value: val, question: entry.question, reused: true };
     }
     // The user's quick answers, only where the question clearly is that question (see facts.ts).
     const someoneElse = OTHER_PERSON.test(normalize(field.label)) || SOMEONE_ELSES.test(field.label)
@@ -525,7 +563,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
       const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
       if (match) val = match;
     }
-    return { kind: "answer", value: val, question: remembered.question };
+    return { kind: "answer", value: val, question: remembered.question, reused: true };
   }
   const quick = factDecision(field, profile, undefined);
   if (quick) return quick;

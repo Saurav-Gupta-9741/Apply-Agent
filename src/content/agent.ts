@@ -1,7 +1,7 @@
 /** The agent: reads the form, decides every field, fills and verifies, and submits only when everything
  * required is filled, no CAPTCHA is waiting, and (in review mode) the user has pressed Submit. */
 
-import type { AnswerEntry, ApplicationRecord, Decision, FieldResult, Mode, Profile, RunReport } from "../shared/types";
+import type { AnswerEntry, ApplicationRecord, Decision, FieldResult, FillTag, Mode, Profile, RunReport } from "../shared/types";
 import { generic, isGoogleForms, pickAdapter } from "./adapters";
 import { workEntries } from "./classify";
 import { codeOptionFor, dialCodePickerFor, isDialCodePicker, JUST_A_DIAL_CODE, phoneBoxFor, selectedCode, splitPhone } from "./phone";
@@ -218,6 +218,14 @@ function phoneFor(box: Element, ctx: AgentContext): { value: string } | { proble
   return { problem: shown ? `The country code shows +${shown}, your number is +${code}: set the code, then the number` : `Choose the country code +${code}, then the number` };
 }
 
+function fillTagFor(d: Decision): FillTag | undefined {
+  if (d.kind === "answer") return d.reused ? "reused" : "auto";
+  if (d.kind === "profile" || d.kind === "work" || d.kind === "resume") return "auto";
+  if (d.kind === "draft") return "drafted";
+  if (d.kind === "ask") return "asked";
+  return undefined;
+}
+
 async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meaning): Promise<FieldResult> {
   const first = field.elements[0];
   const box = first && isDialCodePicker(first) ? phoneBoxFor(first) : undefined;
@@ -232,12 +240,13 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
     return {
       field: field.descriptor, decision, status: "already_filled", review: differs || undefined,
       detail: differs ? `The site filled "${existing}"; your profile says "${decision.value}"` : existing,
+      tag: fillTagFor(decision),
     };
   }
   if (decision.kind === "skip") return { field: field.descriptor, decision, status: "skipped", detail: decision.reason };
   const guarded = consentGuard(field.descriptor, decision);
   if (guarded) return { field: field.descriptor, decision: guarded, status: field.descriptor.required ? "needs_user" : "skipped", detail: CONSENT_DETAIL };
-  if (decision.kind === "ask") return { field: field.descriptor, decision, status: "needs_user" };
+  if (decision.kind === "ask") return { field: field.descriptor, decision, status: "needs_user", tag: "asked" };
   const el = field.elements[0]!;
   let value = decision.kind === "resume" ? ctx.profile.resume?.name ?? "" : decision.value;
   if (phone) {
@@ -248,7 +257,10 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
   const outcome = field.descriptor.control === "combobox" ? await fillCombobox(el as HTMLInputElement, value)
     : field.descriptor.control === "dropdown" || el.matches(DROPDOWN) ? await fillDropdown(el, value)
     : fillField(field, value, ctx.profile.resume);
-  return { field: field.descriptor, decision, status: outcome.ok ? "filled" : "failed", detail: outcome.detail };
+  return {
+    field: field.descriptor, decision, status: outcome.ok ? "filled" : "failed", detail: outcome.detail,
+    tag: fillTagFor(decision),
+  };
 }
 
 /** Fill everything the agent is allowed to fill. Never overwrites a value already present. */

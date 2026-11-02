@@ -3,7 +3,7 @@ import { decide, findAnswer } from "../src/content/classify";
 import { EMPTY_PROFILE } from "../src/shared/storage";
 import type { AnswerEntry, FieldDescriptor } from "../src/shared/types";
 
-describe("Saved-Answer Reuse Safety Traps (30 Traps + 5 Reuses)", () => {
+describe("Saved-Answer Reuse Safety Traps (42 Traps + 8 Reuses = 50 Tests)", () => {
   const makeField = (
     label: string,
     options: string[] = ["Yes", "No"],
@@ -340,5 +340,152 @@ describe("Saved-Answer Reuse Safety Traps (30 Traps + 5 Reuses)", () => {
     const d = decide(field, EMPTY_PROFILE, answers);
     expect(d.kind).toBe("answer");
     if (d.kind === "answer") expect(d.value).toBe("Yes");
+  });
+
+  // 36. Trap 31: Follow-up Condition Trap (If yes, please explain)
+  it("Trap 31: never reuses a general answer for 'If yes, please explain' follow-up", () => {
+    const field = makeField("If yes, please explain your certifications", [], "text");
+    const answers = makeAnswer("Do you have any certifications?", "Yes");
+    expect(findAnswer(field, answers)).toBeUndefined();
+    expect(decide(field, EMPTY_PROFILE, answers).kind).toBe("ask");
+  });
+
+  // 37. Trap 32: Follow-up Condition Trap (If applicable, describe)
+  it("Trap 32: never reuses a general answer for 'If applicable, describe' follow-up", () => {
+    const field = makeField("If applicable, please describe your experience with AWS", [], "text");
+    const answers = makeAnswer("Do you have experience with AWS?", "Yes");
+    expect(findAnswer(field, answers)).toBeUndefined();
+    expect(decide(field, EMPTY_PROFILE, answers).kind).toBe("ask");
+  });
+
+  // 38. Trap 33: Time Scope Trap (Currently authorized vs future sponsorship requirement)
+  it("Trap 33: never reuses current work authorization answer for future visa sponsorship requirement", () => {
+    const field = makeField("Will you in the future require visa sponsorship to work in the United States?");
+    const answers = makeAnswer("Are you currently authorized to work in the United States?", "Yes", {
+      topic: "work_authorization",
+    });
+    expect(findAnswer(field, answers, "sponsorship")).toBeUndefined();
+    expect(decide(field, EMPTY_PROFILE, answers).kind).toBe("ask");
+  });
+
+  // 39. Trap 34: Time Scope Trap (Previously employed vs currently employed)
+  it("Trap 34: never reuses previously employed answer for currently employed question", () => {
+    const field = makeField("Are you currently employed at Google?");
+    const answers = makeAnswer("Were you previously employed at Google?", "Yes");
+    expect(findAnswer(field, answers)).toBeUndefined();
+    expect(decide(field, EMPTY_PROFILE, answers).kind).toBe("ask");
+  });
+
+  // 40. Trap 35: Negation Trap (Willing to work overtime vs unwilling)
+  it("Trap 35: never reuses willing to work overtime answer for unwilling to work overtime", () => {
+    const field = makeField("Are you unwilling to work overtime?");
+    const answers = makeAnswer("Are you willing to work overtime?", "Yes");
+    expect(findAnswer(field, answers)).toBeUndefined();
+    expect(decide(field, EMPTY_PROFILE, answers).kind).toBe("ask");
+  });
+
+  // 41. Trap 36: Negation Trap (Work without restrictions vs having restrictions)
+  it("Trap 36: never reuses authorized without restrictions for having restrictions on work authorization", () => {
+    const field = makeField("Do you have any restrictions on your work authorization?");
+    const answers = makeAnswer("Are you authorized to work without restrictions?", "Yes");
+    expect(findAnswer(field, answers)).toBeUndefined();
+    expect(decide(field, EMPTY_PROFILE, answers).kind).toBe("ask");
+  });
+
+  // 42. Trap 37: Country Trap (Germany vs France)
+  it("Trap 37: never reuses German work authorization for France", () => {
+    const field = makeField("Are you authorized to work in France?");
+    const answers = makeAnswer("Are you authorized to work in Germany?", "Yes", {
+      topic: "work_authorization",
+    });
+    expect(findAnswer(field, answers, "work_authorization")).toBeUndefined();
+    expect(decide(field, EMPTY_PROFILE, answers).kind).toBe("ask");
+  });
+
+  // 43. Trap 38: Country Trap (Australia vs Singapore)
+  it("Trap 38: never reuses located in Australia answer for Singapore", () => {
+    const field = makeField("Are you located in Singapore?");
+    const answers = makeAnswer("Are you located in Australia?", "Yes", {
+      topic: "relocation",
+    });
+    expect(findAnswer(field, answers, "relocation")).toBeUndefined();
+    expect(decide(field, EMPTY_PROFILE, answers).kind).toBe("ask");
+  });
+
+  // 44. Trap 39: Company Trap (Amazon vs Apple)
+  it("Trap 39: never reuses worked at Amazon for worked at Apple", () => {
+    const field = makeField("Have you ever worked at Apple?");
+    const answers = makeAnswer("Have you ever worked at Amazon?", "Yes");
+    expect(findAnswer(field, answers)).toBeUndefined();
+    expect(decide(field, EMPTY_PROFILE, answers).kind).toBe("ask");
+  });
+
+  // 45. Trap 40: Hours/Commitment Trap (40 hours vs 20 hours per week)
+  it("Trap 40: never reuses 40 hours per week commitment for 20 hours per week", () => {
+    const field = makeField("Can you commit to 20 hours per week?");
+    const answers = makeAnswer("Can you commit to 40 hours per week?", "Yes");
+    expect(findAnswer(field, answers)).toBeUndefined();
+    expect(decide(field, EMPTY_PROFILE, answers).kind).toBe("ask");
+  });
+
+  // 46. Trap 41: Degree Level Trap (Master's vs PhD / Doctorate)
+  it("Trap 41: never reuses Master's degree answer for PhD or Doctorate requirement", () => {
+    const field = makeField("Do you hold a PhD or Doctoral degree?");
+    const answers = makeAnswer("Do you hold a Master's degree?", "Yes");
+    expect(findAnswer(field, answers)).toBeUndefined();
+    expect(decide(field, EMPTY_PROFILE, answers).kind).toBe("ask");
+  });
+
+  // 47. Trap 42: Tech Stack Trap (Kubernetes vs Docker)
+  it("Trap 42: never reuses Kubernetes experience answer for Docker experience question", () => {
+    const field = makeField("Do you have experience with Docker?");
+    const answers = makeAnswer("Do you have experience with Kubernetes?", "Yes");
+    expect(findAnswer(field, answers)).toBeUndefined();
+    expect(decide(field, EMPTY_PROFILE, answers).kind).toBe("ask");
+  });
+
+  // 48. Reuse 6: Driver's license paraphrase
+  it("Reuse 6: reuses driver's license answer for 'Do you possess a current, valid driver's license?'", () => {
+    const field = makeField("Do you possess a current, valid driver's license?");
+    const answers = makeAnswer("Do you have a valid driver's license?", "Yes");
+    const match = findAnswer(field, answers);
+    expect(match).toBeDefined();
+    expect(match?.answer).toBe("Yes");
+    const d = decide(field, EMPTY_PROFILE, answers);
+    expect(d.kind).toBe("answer");
+    if (d.kind === "answer") {
+      expect(d.value).toBe("Yes");
+      expect(d.reused).toBe(true);
+    }
+  });
+
+  // 49. Reuse 7: Background check paraphrase
+  it("Reuse 7: reuses background check answer for 'Are you willing to submit to a pre-employment background check?'", () => {
+    const field = makeField("Are you willing to submit to a pre-employment background check?");
+    const answers = makeAnswer("Are you willing to undergo a background check?", "Yes");
+    const match = findAnswer(field, answers);
+    expect(match).toBeDefined();
+    expect(match?.answer).toBe("Yes");
+    const d = decide(field, EMPTY_PROFILE, answers);
+    expect(d.kind).toBe("answer");
+    if (d.kind === "answer") {
+      expect(d.value).toBe("Yes");
+      expect(d.reused).toBe(true);
+    }
+  });
+
+  // 50. Reuse 8: Source / heard-about paraphrase
+  it("Reuse 8: reuses heard-about answer for 'Where did you hear about this job?'", () => {
+    const field = makeField("Where did you hear about this job?", [], "text");
+    const answers = makeAnswer("How did you hear about this opportunity?", "LinkedIn");
+    const match = findAnswer(field, answers);
+    expect(match).toBeDefined();
+    expect(match?.answer).toBe("LinkedIn");
+    const d = decide(field, EMPTY_PROFILE, answers);
+    expect(d.kind).toBe("answer");
+    if (d.kind === "answer") {
+      expect(d.value).toBe("LinkedIn");
+      expect(d.reused).toBe(true);
+    }
   });
 });

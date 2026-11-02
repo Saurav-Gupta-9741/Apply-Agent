@@ -169,6 +169,8 @@ export interface AnswerEntry {
   updatedAt: string;
   company?: string;
   country?: string;
+  reused?: boolean;
+  intent?: string;
 }
 
 export interface UserCorrection {
@@ -219,13 +221,17 @@ export const NEVER_REMEMBER: ReadonlySet<SensitiveTopic> = new Set<SensitiveTopi
 
 export type Decision =
   | { kind: "profile"; key: ProfileKey | "fullName"; value: string }
-  | { kind: "answer"; value: string; question: string }
+  | { kind: "answer"; value: string; question: string; reused?: boolean }
   /** A value from the user's work history, for a field in the n-th job block. */
   | { kind: "work"; index: number; part: keyof WorkEntry; value: string }
   | { kind: "resume" }
   | { kind: "draft"; value: string; question: string }
   | { kind: "ask"; reason: "sensitive" | "unknown" | "missing_profile_value"; topic?: SensitiveTopic }
   | { kind: "skip"; reason: string };
+
+// >>> L1 tags
+export type FillTag = "auto" | "asked" | "reused" | "drafted";
+// <<< L1
 
 export type FieldStatus = "filled" | "already_filled" | "failed" | "needs_user" | "skipped";
 
@@ -236,6 +242,7 @@ export interface FieldResult {
   detail?: string;
   /** The site pre-filled a value that differs from the user's profile: the user should check it. */
   review?: boolean;
+  tag?: FillTag;
 }
 
 export type RunStatus =

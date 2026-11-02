@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-02T14:13:38.500Z",
+  "generatedAt": "2026-11-02T15:00:08.946Z",
   "questionCount": 1539,
   "benchmarkFieldCount": 966,
   "personas": {
@@ -13,10 +13,10 @@
         "wrong": 0
       },
       "steadyState": {
-        "autoFilled": 460,
-        "autoShare": "29.9%",
+        "autoFilled": 459,
+        "autoShare": "29.8%",
         "reusedFromBank": 0,
-        "ask": 1079,
+        "ask": 1080,
         "humanOnly": 143,
         "wrong": 0
       },
@@ -43,10 +43,10 @@
         "wrong": 0
       },
       "steadyState": {
-        "autoFilled": 515,
-        "autoShare": "33.5%",
+        "autoFilled": 514,
+        "autoShare": "33.4%",
         "reusedFromBank": 0,
-        "ask": 1024,
+        "ask": 1025,
         "humanOnly": 143,
         "wrong": 0
       },
@@ -73,10 +73,10 @@
         "wrong": 0
       },
       "steadyState": {
-        "autoFilled": 560,
-        "autoShare": "36.4%",
+        "autoFilled": 559,
+        "autoShare": "36.3%",
         "reusedFromBank": 0,
-        "ask": 979,
+        "ask": 980,
         "humanOnly": 143,
         "wrong": 0
       },
@@ -127,7 +127,7 @@
   "summary": {
     "totalEvaluations": 6156,
     "firstApplicationAutoShare": "32.8%",
-    "steadyStateAutoShare": "34.0%",
+    "steadyStateAutoShare": "33.9%",
     "wrong": 0
   }
 }
