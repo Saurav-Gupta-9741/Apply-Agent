@@ -6,7 +6,7 @@ import {
   isQueueRunning, loadApplications, loadQueue, loadSettings, saveQueue, setQueueRunning,
 } from "../shared/storage";
 import { applicationUrl, planNext, reconcileQueue, submittedToday } from "./queue";
-import { currentLicense, remainingSubmissions } from "../shared/license";
+import { canUseFeature, currentLicense, remainingSubmissions } from "../shared/license";
 import { pendingSubmission, sendToApplication } from "../shared/frames";
 import {
   checkStart, clockTime, loadPacing, loadPacingState, prune, recordChallenge, siteKey, tryStart, waitNote, type PaceDecision,
@@ -287,15 +287,16 @@ export async function pump(): Promise<void> {
       const decision = checkStart(state, pacing, siteKey(applicationUrl(q.url)), now.getTime());
       if (!decision.ok) waits.set(q.id, decision);
     }
-    // Free plan: the monthly allowance caps today's budget too.
+    // Free plan: queue is blocked without Pro
+    if (!canUseFeature(license, "queue") && queue.some((q) => q.status === "queued")) {
+      const note = "Bulk apply and background queue require Pro. Upgrade to Pro in Profile & plan.";
+      await updateQueue((q) => q.map((x) => (x.status === "queued" && x.note !== note ? { ...x, note } : x)));
+      await setQueueRunning(false);
+      return;
+    }
     const left = remainingSubmissions(license, applications, now);
     const effectiveCap = Math.min(settings.dailyCap, submittedToday(applications, now) + left);
     const plan = planNext(queue, applications, { ...settings, dailyCap: effectiveCap }, now, (q) => !waits.has(q.id));
-    if (left === 0 && queue.some((q) => q.status === "queued")) {
-      const note = "Free plan limit reached (20 applications this month). Upgrade to Pro or wait until next month.";
-      await updateQueue((q) => q.map((x) => (x.status === "queued" && x.note !== note ? { ...x, note } : x)));
-      return;
-    }
     if (!plan.start.length && !plan.skip.length && !queue.some((q) => q.status === "queued" || q.status === "running")) {
       await setQueueRunning(false); // nothing left to do
       return;

@@ -13,7 +13,7 @@ import { pendingSubmission, sendToApplication } from "../shared/frames";
 import { isValidJobUrl, parseJobList } from "../background/queue";
 import { GOOD_MATCH, parseFeed, rankFeed } from "../shared/fit";
 import { aiStatus, checkDraft, draftAnswer } from "../shared/ai";
-import { activate, buyUrl, currentLicense, isLifetimeLicense, licensingConfigured, remainingSubmissions, submittedThisMonth } from "../shared/license";
+import { activate, buyUrl, canUseFeature, currentLicense, isLifetimeLicense, licensingConfigured, remainingSubmissions, submittedThisMonth } from "../shared/license";
 import { FREE_MONTHLY_SUBMISSIONS, SUPPORT_EMAIL } from "../shared/config";
 import { hydrateIcons, icon } from "./icons";
 import { NEVER_REMEMBER, type PendingQuestion } from "../shared/types";
@@ -1870,7 +1870,15 @@ setInterval(() => {
   if (!$("sec-queue").hidden) void renderPacing();
 }, 30_000);
 
-$("queue-start").addEventListener("click", () => void queueMessage({ type: "QUEUE_START" }));
+$("queue-start").addEventListener("click", async () => {
+  const lic = await currentLicense();
+  if (!canUseFeature(lic, "queue")) {
+    setStatus("Bulk apply and background queue require Pro. Upgrade to Pro in Profile & plan.", "warn");
+    showSection("profile");
+    return;
+  }
+  void queueMessage({ type: "QUEUE_START" });
+});
 $("queue-pause").addEventListener("click", () => void queueMessage({ type: "QUEUE_PAUSE" }));
 $("queue-clear").addEventListener("click", () => void queueMessage({ type: "QUEUE_CLEAR_FINISHED" }));
 
@@ -2161,11 +2169,9 @@ $("activate").addEventListener("click", async () => {
   }
 });
 
-/** Free-plan guard before any submission started from the panel. */
+/** Free-plan guard before any submission started from the panel (unlimited on single forms). */
 async function canSubmit(): Promise<boolean> {
-  if ((await remaining()) > 0) return true;
-  setStatus(`You've used all ${FREE_MONTHLY_SUBMISSIONS} free applications this month. Upgrade to Pro in Profile & plan.`, "warn");
-  return false;
+  return true;
 }
 
 // --- start ----------------------------------------------------------------------------------------------

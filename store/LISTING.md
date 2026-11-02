@@ -42,8 +42,8 @@ ALSO
 • Works on multi-step forms, forms inside frames, and forms in 7 languages.
 
 PRICING
-• Free: 20 submitted applications a month, every feature.
-• Pro: ₹149 for 30 days in India, $9 elsewhere. Unlimited applications.
+• Free: unlimited single-form applications, answer bank, Quick Answers, basic tracker, save form structure.
+• Pro: ₹149 for 30 days in India, $9 elsewhere. Queue & bulk apply, resume import, AI drafts, tracker analytics & reminders, enterprise multi-step flows.
 • Founder (limited time): ₹2999 in India, $49 elsewhere, valid for 10 years.
 • One-time payments only: nothing renews automatically. You get a licence key; no account needed.
 

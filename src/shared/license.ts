@@ -15,6 +15,41 @@ export interface LicensePayload {
   trial?: boolean;
 }
 
+export type Feature =
+  | "single_fill"
+  | "answer_bank"
+  | "quick_answers"
+  | "basic_tracker"
+  | "save_form_structure"
+  | "queue"
+  | "resume_import"
+  | "ai_drafts"
+  | "tracker_analytics"
+  | "enterprise_multistep";
+
+export function isPro(license: LicensePayload | null): boolean {
+  if (!license) return false;
+  return license.plan === "pro" || license.plan === "founder" || license.trial === true;
+}
+
+/** Check if a feature is available on the current license (Free vs Pro). */
+export function canUseFeature(license: LicensePayload | null, feature: Feature): boolean {
+  switch (feature) {
+    case "single_fill":
+    case "answer_bank":
+    case "quick_answers":
+    case "basic_tracker":
+    case "save_form_structure":
+      return true;
+    case "queue":
+    case "resume_import":
+    case "ai_drafts":
+    case "tracker_analytics":
+    case "enterprise_multistep":
+      return isPro(license);
+  }
+}
+
 const ECDSA = { name: "ECDSA", namedCurve: "P-256" } as const;
 const SIGN = { name: "ECDSA", hash: "SHA-256" } as const;
 
@@ -83,10 +118,9 @@ export function submittedThisMonth(applications: ApplicationRecord[], now: Date)
   return seen.size;
 }
 
-/** Submissions still allowed this month: unlimited with a valid Pro licence. */
-export function remainingSubmissions(pro: LicensePayload | null, applications: ApplicationRecord[], now: Date): number {
-  if (pro) return Number.POSITIVE_INFINITY;
-  return Math.max(0, FREE_MONTHLY_SUBMISSIONS - submittedThisMonth(applications, now));
+/** Submissions still allowed this month: unlimited on single forms for all users (Free and Pro). */
+export function remainingSubmissions(_pro: LicensePayload | null, _applications: ApplicationRecord[], _now: Date): number {
+  return Number.POSITIVE_INFINITY;
 }
 
 // --- free usage & the one-time Pro trial ---------------------------------------------------------------

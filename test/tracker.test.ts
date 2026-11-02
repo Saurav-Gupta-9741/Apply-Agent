@@ -269,9 +269,9 @@ describe("Free Tier Usage Meter & Pro Trial", () => {
 
     const view = meterView(null, apps, null, 5, now);
     expect(view.hidden).toBe(false);
-    expect(view.text).toBe("15 of 20 free fills used this month");
-    expect(view.level).toBe("nudge");
-    expect(view.prompt).toContain("Only 5 free fills left this month");
+    expect(view.text).toContain("Unlimited single-form autofill");
+    expect(view.level).toBe("ok");
+    expect(view.prompt).toContain("Pro is ₹149 for 30 days");
     expect(view.trialHint).toBe("Save 5 more answers to unlock a free 7-day Pro trial (once).");
   });
 });

@@ -11,7 +11,7 @@ import { modelFits, understand } from "./understand";
 import { isValidJobUrl } from "./queue";
 import { backOff, onTabClosed, onTabReport, PACE_ALARM, pendingQuestions, pump, queueStatusFor, runInTab, updateQueue, working } from "./runner";
 import { PENDING_MS, pendingSubmission, type PendingSubmission } from "../shared/frames";
-import { currentLicense, remainingSubmissions } from "../shared/license";
+import { canUseFeature, currentLicense, remainingSubmissions } from "../shared/license";
 
 const PUMP_ALARM = "queue-pump";
 
@@ -284,6 +284,14 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse: (r
       return true;
     case "QUEUE_START":
       (async () => {
+        const lic = await currentLicense();
+        if (!canUseFeature(lic, "queue")) {
+          const note = "Bulk apply and background queue require Pro. Upgrade to Pro in Profile & plan.";
+          await updateQueue((q) => q.map((x) => (x.status === "queued" && x.note !== note ? { ...x, note } : x)));
+          await setQueueRunning(false);
+          sendResponse(false);
+          return;
+        }
         await setQueueRunning(true);
         await chrome.alarms.create(PUMP_ALARM, { periodInMinutes: 1 });
         await pump();

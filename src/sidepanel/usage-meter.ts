@@ -33,21 +33,15 @@ export function meterView(license: LicensePayload | null, applications: Applicat
   if (license?.trial || trialActive(trial, now)) {
     const ends = trial ? Date.parse(trial.endsAt) : license!.exp * 1000;
     const days = Math.max(1, Math.ceil((ends - now.getTime()) / 86_400_000));
-    return { hidden: false, text: `Pro trial · ${days} day${days === 1 ? "" : "s"} left · unlimited fills`, percent: 0, level: "trial" };
+    return { hidden: false, text: `Pro trial · ${days} day${days === 1 ? "" : "s"} left · all Pro features unlocked`, percent: 0, level: "trial" };
   }
-  const usage = usageState(applications, now);
-  const left = usage.limit - usage.used;
   const view: MeterView = {
     hidden: false,
-    text: `${usage.used} of ${usage.limit} free fills used this month`,
-    percent: Math.round((usage.used / usage.limit) * 100),
-    level: usage.level,
+    text: "Free plan · Unlimited single-form autofill",
+    percent: 100,
+    level: "ok",
+    prompt: `Want queue apply, resume import, and 1-click AI drafts? Pro is ${PRO_PRICE_LINE}.`,
   };
-  if (usage.level === "nudge") {
-    view.prompt = `Only ${left} free fill${left === 1 ? "" : "s"} left this month. Going strong? Pro is ${PRO_PRICE_LINE}, unlimited fills.`;
-  } else if (usage.level === "limit") {
-    view.prompt = `You've used all ${usage.limit} free fills this month (they come back on ${firstOfNextMonth(now)}). Pro is ${PRO_PRICE_LINE}, unlimited fills.`;
-  }
   if (!trial) {
     view.trialHint = answerCount >= TRIAL_UNLOCK_ANSWERS
       ? `Your free ${TRIAL_DAYS}-day Pro trial is ready.`

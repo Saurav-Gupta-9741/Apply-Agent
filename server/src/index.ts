@@ -51,10 +51,13 @@ export interface Plan {
 /** Only features the extension really has. */
 const PERKS = [
   "Unlimited fills",
-  "Application queue",
+  "Application queue & bulk apply",
   "Screening answers saved once and reused",
   "On-device question model (works offline)",
-  "Every supported careers site and ATS",
+  "Every supported careers site and ATS (including Workday)",
+  "Resume import (PDF, Word, LinkedIn, Naukri)",
+  "1-click on-device AI drafts for free text",
+  "Tracker analytics & reminders",
 ];
 
 const founderEnabled = (env: Env) => env.FOUNDER_ENABLED === "true";
