@@ -43,8 +43,8 @@ const field = (label: string, control: FieldDescriptor["control"] = "text", opti
 });
 
 describe("QUICK_QUESTIONS schema catalog", () => {
-  it("contains 28 questions with distinct ids and non-empty prompt and why explanations", () => {
-    expect(QUICK_QUESTIONS.length).toBe(28);
+  it("contains 29 questions with distinct ids and non-empty prompt and why explanations", () => {
+    expect(QUICK_QUESTIONS.length).toBe(29);
     const ids = new Set<string>();
     for (const q of QUICK_QUESTIONS) {
       expect(ids.has(q.id), `duplicate id ${q.id}`).toBe(false);

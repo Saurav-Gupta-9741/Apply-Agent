@@ -4,6 +4,7 @@
  * on the first application and throughout steady-state.
  */
 
+import quickAnswerStats from "./quick-answer-stats.json";
 import type { LanguageEntry, Profile, QuickFacts, SkillEntry } from "./types";
 
 export interface QuickQuestion {
@@ -17,12 +18,15 @@ export interface QuickQuestion {
   placeholder?: string;
 }
 
+const stats = (quickAnswerStats.stats || {}) as Record<string, { why: string; percent: number }>;
+const statWhy = (id: string, fallback: string): string => stats[id]?.why ?? fallback;
+
 export const QUICK_QUESTIONS: QuickQuestion[] = [
   {
     id: "workCountries",
     factKey: "facts.workCountries",
     prompt: "In which countries can you work without employer sponsorship?",
-    why: "Forms ask work authorization in 92% of applications",
+    why: statWhy("workCountries", "Forms ask work authorization on many applications"),
     kind: "multi",
     options: ["India", "United States", "United Kingdom", "Germany", "Canada", "European Union"],
     defaultAnswer: "India",
@@ -36,10 +40,19 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     defaultAnswer: "",
   },
   {
+    id: "unauthorizedCountries",
+    factKey: "facts.unauthorizedCountries",
+    prompt: "Countries where you are NOT authorized to work at all (optional):",
+    why: "Prevents auto-filling authorization questions for countries where you cannot work",
+    kind: "multi",
+    options: ["United States", "United Kingdom", "Germany", "Canada", "European Union", "India", "Australia"],
+    defaultAnswer: "",
+  },
+  {
     id: "needsFutureSponsorship",
     factKey: "facts.needsFutureSponsorship",
     prompt: "Will you require visa sponsorship now or in the future?",
-    why: "Asked in 89% of technical applications",
+    why: statWhy("needsFutureSponsorship", "Asked in technical applications"),
     kind: "choice",
     options: ["No", "Yes", "Decline"],
     defaultAnswer: "No",
@@ -65,7 +78,7 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     id: "noticePeriod",
     factKey: "facts.noticePeriod",
     prompt: "What is your official notice period?",
-    why: "Asked in 85% of Indian and European applications",
+    why: statWhy("noticePeriod", "Asked on application forms"),
     kind: "choice",
     options: ["Immediate", "15 days", "30 days", "60 days", "90 days"],
     defaultAnswer: "30 days",
@@ -82,7 +95,7 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     id: "expectedCtc",
     factKey: "facts.expectedCtc",
     prompt: "Expected annual compensation (e.g. 15 LPA or $120,000):",
-    why: "Ensures truthful salary expectations without misquoting",
+    why: statWhy("expectedCtc", "Ensures truthful salary expectations without misquoting"),
     kind: "text",
     defaultAnswer: "",
   },
@@ -118,14 +131,14 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     prompt: "Maximum travel percentage willing to undertake:",
     why: "Ensures travel scope matches job specification",
     kind: "choice",
-    options: ["0%", "10%", "25%", "50%", "75%+"],
-    defaultAnswer: "10%",
+    options: [...quickAnswerStats.travelPercentOptions],
+    defaultAnswer: quickAnswerStats.travelPercentOptions[1]!,
   },
   {
     id: "over18",
     factKey: "facts.over18",
     prompt: "Are you at least 18 years of age or older?",
-    why: "Legal minimum age requirement asked on 86% of forms",
+    why: statWhy("over18", "Legal minimum age requirement asked on many forms"),
     kind: "choice",
     options: ["Yes", "No"],
     defaultAnswer: "Yes",
@@ -221,7 +234,7 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     id: "heardFrom",
     factKey: "facts.heardFrom",
     prompt: "How did you hear about this opportunity?",
-    why: "Asked in 88% of application forms",
+    why: statWhy("heardFrom", "Asked in application forms"),
     kind: "text",
     defaultAnswer: "Job board / company website",
   },
@@ -253,7 +266,7 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     id: "topSkills",
     factKey: "skillsInventory",
     prompt: "What are your core technical and professional skills?",
-    why: "Forms ask about specific tools, languages and skills in 45% of applications",
+    why: statWhy("topSkills", "Forms ask about specific tools, languages and skills"),
     kind: "text",
     placeholder: "e.g. Python (4 yrs), React (3 yrs), SQL (4 yrs), AWS (2 yrs)",
     defaultAnswer: "",
@@ -303,6 +316,7 @@ export function applyQuickAnswers(profile: Profile, answers: Record<string, stri
 
   if ("workCountries" in answers) next.facts!.workCountries = getStr("workCountries");
   if ("temporaryWorkCountries" in answers) next.facts!.temporaryWorkCountries = getStr("temporaryWorkCountries");
+  if ("unauthorizedCountries" in answers) next.facts!.unauthorizedCountries = getStr("unauthorizedCountries");
   if ("needsFutureSponsorship" in answers) {
     const v = getStr("needsFutureSponsorship");
     next.facts!.needsFutureSponsorship = (v === "Yes" || v === "No" || v === "Decline") ? v : "";

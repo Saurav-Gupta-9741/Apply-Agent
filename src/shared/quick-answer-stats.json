@@ -1,0 +1,440 @@
+{
+  "totalForms": 286,
+  "generatedAt": "2026-11-02T20:23:28.131Z",
+  "travelPercentOptions": [
+    "0%",
+    "10%",
+    "25%",
+    "50%",
+    "75%+"
+  ],
+  "byIntent": {
+    "firstName": {
+      "count": 147,
+      "percent": 51,
+      "share": 0.513986013986014
+    },
+    "lastName": {
+      "count": 138,
+      "percent": 48,
+      "share": 0.4825174825174825
+    },
+    "email": {
+      "count": 239,
+      "percent": 84,
+      "share": 0.8356643356643356
+    },
+    "country": {
+      "count": 77,
+      "percent": 27,
+      "share": 0.2692307692307692
+    },
+    "phone": {
+      "count": 217,
+      "percent": 76,
+      "share": 0.7587412587412588
+    },
+    "location": {
+      "count": 141,
+      "percent": 49,
+      "share": 0.493006993006993
+    },
+    "resume": {
+      "count": 244,
+      "percent": 85,
+      "share": 0.8531468531468531
+    },
+    "cover_letter": {
+      "count": 127,
+      "percent": 44,
+      "share": 0.44405594405594406
+    },
+    "linkedin": {
+      "count": 143,
+      "percent": 50,
+      "share": 0.5
+    },
+    "portfolio": {
+      "count": 81,
+      "percent": 28,
+      "share": 0.28321678321678323
+    },
+    "work_authorization": {
+      "count": 80,
+      "percent": 28,
+      "share": 0.27972027972027974
+    },
+    "sponsorship": {
+      "count": 72,
+      "percent": 25,
+      "share": 0.2517482517482518
+    },
+    "heard_about": {
+      "count": 57,
+      "percent": 20,
+      "share": 0.1993006993006993
+    },
+    "open_question": {
+      "count": 94,
+      "percent": 33,
+      "share": 0.32867132867132864
+    },
+    "consent": {
+      "count": 66,
+      "percent": 23,
+      "share": 0.23076923076923078
+    },
+    "onsite": {
+      "count": 32,
+      "percent": 11,
+      "share": 0.11188811188811189
+    },
+    "salary_expected": {
+      "count": 93,
+      "percent": 33,
+      "share": 0.32517482517482516
+    },
+    "other_document": {
+      "count": 28,
+      "percent": 10,
+      "share": 0.0979020979020979
+    },
+    "gender": {
+      "count": 63,
+      "percent": 22,
+      "share": 0.2202797202797203
+    },
+    "hispanic": {
+      "count": 37,
+      "percent": 13,
+      "share": 0.12937062937062938
+    },
+    "veteran": {
+      "count": 60,
+      "percent": 21,
+      "share": 0.2097902097902098
+    },
+    "previous_employee": {
+      "count": 29,
+      "percent": 10,
+      "share": 0.10139860139860139
+    },
+    "accommodation": {
+      "count": 10,
+      "percent": 3,
+      "share": 0.03496503496503497
+    },
+    "race": {
+      "count": 33,
+      "percent": 12,
+      "share": 0.11538461538461539
+    },
+    "sexual_orientation": {
+      "count": 13,
+      "percent": 5,
+      "share": 0.045454545454545456
+    },
+    "transgender": {
+      "count": 10,
+      "percent": 3,
+      "share": 0.03496503496503497
+    },
+    "disability": {
+      "count": 23,
+      "percent": 8,
+      "share": 0.08041958041958042
+    },
+    "github": {
+      "count": 41,
+      "percent": 14,
+      "share": 0.14335664335664336
+    },
+    "other_links": {
+      "count": 27,
+      "percent": 9,
+      "share": 0.0944055944055944
+    },
+    "legal_declaration": {
+      "count": 28,
+      "percent": 10,
+      "share": 0.0979020979020979
+    },
+    "fullName": {
+      "count": 107,
+      "percent": 37,
+      "share": 0.3741258741258741
+    },
+    "relocation": {
+      "count": 18,
+      "percent": 6,
+      "share": 0.06293706293706294
+    },
+    "currentCompany": {
+      "count": 50,
+      "percent": 17,
+      "share": 0.17482517482517482
+    },
+    "notice_period": {
+      "count": 69,
+      "percent": 24,
+      "share": 0.24125874125874125
+    },
+    "currentTitle": {
+      "count": 7,
+      "percent": 2,
+      "share": 0.024475524475524476
+    },
+    "work_dates": {
+      "count": 10,
+      "percent": 3,
+      "share": 0.03496503496503497
+    },
+    "other": {
+      "count": 105,
+      "percent": 37,
+      "share": 0.36713286713286714
+    },
+    "identity": {
+      "count": 3,
+      "percent": 1,
+      "share": 0.01048951048951049
+    },
+    "other_person": {
+      "count": 33,
+      "percent": 12,
+      "share": 0.11538461538461539
+    },
+    "language_proficiency": {
+      "count": 9,
+      "percent": 3,
+      "share": 0.03146853146853147
+    },
+    "education_level": {
+      "count": 8,
+      "percent": 3,
+      "share": 0.027972027972027972
+    },
+    "discipline": {
+      "count": 12,
+      "percent": 4,
+      "share": 0.04195804195804196
+    },
+    "salary_current": {
+      "count": 12,
+      "percent": 4,
+      "share": 0.04195804195804196
+    },
+    "skills_experience": {
+      "count": 40,
+      "percent": 14,
+      "share": 0.13986013986013987
+    },
+    "experienceYears": {
+      "count": 8,
+      "percent": 3,
+      "share": 0.027972027972027972
+    },
+    "address": {
+      "count": 66,
+      "percent": 23,
+      "share": 0.23076923076923078
+    },
+    "pronouns": {
+      "count": 23,
+      "percent": 8,
+      "share": 0.08041958041958042
+    },
+    "travel": {
+      "count": 4,
+      "percent": 1,
+      "share": 0.013986013986013986
+    },
+    "state": {
+      "count": 14,
+      "percent": 5,
+      "share": 0.04895104895104895
+    },
+    "school": {
+      "count": 24,
+      "percent": 8,
+      "share": 0.08391608391608392
+    },
+    "degree": {
+      "count": 16,
+      "percent": 6,
+      "share": 0.055944055944055944
+    },
+    "postal_code": {
+      "count": 31,
+      "percent": 11,
+      "share": 0.10839160839160839
+    },
+    "age": {
+      "count": 11,
+      "percent": 4,
+      "share": 0.038461538461538464
+    },
+    "graduationYear": {
+      "count": 3,
+      "percent": 1,
+      "share": 0.01048951048951049
+    },
+    "timezone": {
+      "count": 1,
+      "percent": 0,
+      "share": 0.0034965034965034965
+    }
+  },
+  "stats": {
+    "workCountries": {
+      "intent": "work_authorization",
+      "count": 80,
+      "percent": 28,
+      "why": "Asked on 28% of 286 real forms we checked"
+    },
+    "needsFutureSponsorship": {
+      "intent": "sponsorship",
+      "count": 72,
+      "percent": 25,
+      "why": "Asked on 25% of 286 real forms we checked"
+    },
+    "noticePeriod": {
+      "intent": "notice_period",
+      "count": 69,
+      "percent": 24,
+      "why": "Asked on 24% of 286 real forms we checked"
+    },
+    "expectedCtc": {
+      "intent": "salary_expected",
+      "count": 93,
+      "percent": 33,
+      "why": "Asked on 33% of 286 real forms we checked"
+    },
+    "over18": {
+      "intent": "age",
+      "count": 11,
+      "percent": 4,
+      "why": "Asked on 4% of 286 real forms we checked"
+    },
+    "heardFrom": {
+      "intent": "heard_about",
+      "count": 57,
+      "percent": 20,
+      "why": "Asked on 20% of 286 real forms we checked"
+    },
+    "topSkills": {
+      "intent": "skills_experience",
+      "count": 40,
+      "percent": 14,
+      "why": "Asked on 14% of 286 real forms we checked"
+    },
+    "linkedin": {
+      "intent": "linkedin",
+      "count": 143,
+      "percent": 50,
+      "why": "Asked on 50% of 286 real forms we checked"
+    },
+    "portfolio": {
+      "intent": "portfolio",
+      "count": 81,
+      "percent": 28,
+      "why": "Asked on 28% of 286 real forms we checked"
+    },
+    "github": {
+      "intent": "github",
+      "count": 41,
+      "percent": 14,
+      "why": "Asked on 14% of 286 real forms we checked"
+    },
+    "gender": {
+      "intent": "gender",
+      "count": 63,
+      "percent": 22,
+      "why": "Asked on 22% of 286 real forms we checked"
+    },
+    "veteran": {
+      "intent": "veteran",
+      "count": 60,
+      "percent": 21,
+      "why": "Asked on 21% of 286 real forms we checked"
+    },
+    "hispanic": {
+      "intent": "hispanic",
+      "count": 37,
+      "percent": 13,
+      "why": "Asked on 13% of 286 real forms we checked"
+    },
+    "race": {
+      "intent": "race",
+      "count": 33,
+      "percent": 12,
+      "why": "Asked on 12% of 286 real forms we checked"
+    },
+    "disability": {
+      "intent": "disability",
+      "count": 23,
+      "percent": 8,
+      "why": "Asked on 8% of 286 real forms we checked"
+    },
+    "pronouns": {
+      "intent": "pronouns",
+      "count": 23,
+      "percent": 8,
+      "why": "Asked on 8% of 286 real forms we checked"
+    },
+    "relocate": {
+      "intent": "relocation",
+      "count": 18,
+      "percent": 6,
+      "why": "Asked on 6% of 286 real forms we checked"
+    },
+    "preferredLocations": {
+      "intent": "location",
+      "count": 141,
+      "percent": 49,
+      "why": "Asked on 49% of 286 real forms we checked"
+    },
+    "workMode": {
+      "intent": "onsite",
+      "count": 32,
+      "percent": 11,
+      "why": "Asked on 11% of 286 real forms we checked"
+    },
+    "travel": {
+      "intent": "travel",
+      "count": 4,
+      "percent": 1,
+      "why": "Asked on 1% of 286 real forms we checked"
+    },
+    "highestDegree": {
+      "intent": "education_level",
+      "count": 8,
+      "percent": 3,
+      "why": "Asked on 3% of 286 real forms we checked"
+    },
+    "graduationYear": {
+      "intent": "graduationYear",
+      "count": 3,
+      "percent": 1,
+      "why": "Asked on 1% of 286 real forms we checked"
+    },
+    "experienceYears": {
+      "intent": "experienceYears",
+      "count": 8,
+      "percent": 3,
+      "why": "Asked on 3% of 286 real forms we checked"
+    },
+    "languages": {
+      "intent": "language_proficiency",
+      "count": 9,
+      "percent": 3,
+      "why": "Asked on 3% of 286 real forms we checked"
+    },
+    "currentCtc": {
+      "intent": "salary_current",
+      "count": 12,
+      "percent": 4,
+      "why": "Asked on 4% of 286 real forms we checked"
+    }
+  }
+}
