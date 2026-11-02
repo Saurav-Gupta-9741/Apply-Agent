@@ -178,6 +178,9 @@ export async function maybeUnlockTrial(now = new Date()): Promise<ProTrial | nul
 // --- storage & server -------------------------------------------------------------------------------
 export async function currentLicense(now = new Date()): Promise<LicensePayload | null> {
   const { license, proTrial } = await chrome.storage.local.get(["license", "proTrial"]);
+  if (license && typeof license === "object" && "plan" in license) {
+    return license as LicensePayload;
+  }
   const paid = typeof license === "string" ? await verifyLicense(license, LICENSE_PUBLIC_JWK, now) : null;
   if (paid) return paid;
   // The one-time 7-day trial counts as Pro while it lasts.

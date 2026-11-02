@@ -6,7 +6,7 @@ import {
 } from "../shared/types";
 import { bestOption, normalize, sameQuestionScore, yesNoOption } from "../shared/text";
 import { parseRequirement } from "../shared/requirements";
-import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion } from "../shared/screening";
+import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion, screeningKey } from "../shared/screening";
 import { factDecision, hasConfirmedApplication, HEARD_ABOUT, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, type PageFacts } from "./facts";
 
 /** Secrets and one-time codes: payment cards, passwords, PINs, one-time codes, security questions, captchas and
@@ -44,7 +44,7 @@ const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   ["veteran", /veteran|military|armed forces/],
   ["accommodation", /\baccommodat|ajustements?|adjustments? (to|during|for)|recursos ou adaptacoes|necessidade de acessibilidade/],
   ["disability", /disabilit|behinderung|schwerbehindert|handicap|discapacidad|deficiencia|disabile/],
-  ["age", /geburtsdatum|\balter\b|date de naissance|fecha de nacim(i)?ento|\bedad\b|data de nascimento|\bidade\b|data di nascita|geboortedatum|date of birth|\bdob\b|\bage\b|birth ?date|18 years of age|18 years old|over the age of 18|current age|how old are you|what is your age/],
+  ["age", /geburtsdatum|\balter\b|date de naissance|fecha de nacim(i)?ento|\bedad\b|data de nascimento|\bidade\b|data di nascita|geboortedatum|date of birth|\bdob\b|\bage\b|birth ?date|18 years of age|18 years old|over the age of 18|18 or older|current age|how old are you|what is your age/],
   ["criminal", /vorstrafe|fuhrungszeugnis|casier judiciaire|antecedentes penales|antecedentes criminais|casellario|convict|criminal|felony|background check/],
   ["consent", /datenschutz|einwilligung|ich (stimme|akzeptiere|bestatige|willige)|\bj accepte\b|je (certifie|consens|confirme)|confidentialite|\bacepto\b|consiento|privacidad|\baceito\b|\bconcordo\b|privacidade|\bacconsento\b|ik ga akkoord|\brgpd\b|\bdsgvo\b|\bi (certify|agree|acknowledge|consent|confirm|understand)\b|privacy (policy|notice)|terms (of|and)|data processing|gdpr/],
 ];
@@ -243,16 +243,19 @@ export function findAnswer(
     }
 
     // 2. Number trap: match numbers/years/hours
-    const reqEntry = parseRequirement(entry.question);
-    const reqLabel = parseRequirement(label);
-    if (reqEntry && reqLabel) {
-      if (reqEntry.unit !== reqLabel.unit || reqEntry.min !== reqLabel.min || reqEntry.max !== reqLabel.max) continue;
-    } else if ((reqEntry && !reqLabel) || (!reqEntry && reqLabel)) {
-      continue;
-    } else {
-      const numsEntry = (entry.question.match(/\b\d+\b/g) || []).join(",");
-      const numsLabel = (label.match(/\b\d+\b/g) || []).join(",");
-      if (numsEntry && numsLabel && numsEntry !== numsLabel) continue;
+    const isAgeQuestion = screeningKey(entry.question) === "age_18" && screeningKey(label) === "age_18";
+    if (!isAgeQuestion) {
+      const reqEntry = parseRequirement(entry.question);
+      const reqLabel = parseRequirement(label);
+      if (reqEntry && reqLabel) {
+        if (reqEntry.unit !== reqLabel.unit || reqEntry.min !== reqLabel.min || reqEntry.max !== reqLabel.max) continue;
+      } else if ((reqEntry && !reqLabel) || (!reqEntry && reqLabel)) {
+        continue;
+      } else {
+        const numsEntry = (entry.question.match(/\b\d+\b/g) || []).join(",");
+        const numsLabel = (label.match(/\b\d+\b/g) || []).join(",");
+        if (numsEntry && numsLabel && numsEntry !== numsLabel) continue;
+      }
     }
 
     // Degree level check (Bachelor's vs Master's vs PhD / Doctorate vs GED)
@@ -471,6 +474,9 @@ export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" |
 }
 
 export function decide(field: FieldDescriptor, profile: Profile, answers: AnswerEntry[], page?: PageFacts): Decision {
+  if (field.translatedLabel) {
+    field = { ...field, label: field.translatedLabel, originalLabel: field.label };
+  }
   const topic = sensitiveTopic(field);
   // Identity numbers, secrets and signatures: the user types them on the page; optional ones stay blank. Checked
   // before anything reads the answer bank, so a stored answer can never be filled into one.
@@ -490,7 +496,12 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
           val = yesNoOption(field.options, entry.answer) ?? bestOption(field.options, entry.answer);
         }
       }
-      if (val) return { kind: "answer", value: val, question: entry.question, reused: true };
+      if (val) {
+        const isExact = normalize(entry.question) === normalize(field.label);
+        return isExact
+          ? { kind: "answer", value: val, question: entry.question }
+          : { kind: "answer", value: val, question: entry.question, reused: true };
+      }
     }
     const quick = factDecision(field, profile, "notice_period", page);
     return quick ?? { kind: "ask", reason: "sensitive", topic: "notice_period" };
@@ -517,7 +528,10 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
         if (match) val = match;
         else return { kind: "ask", reason: "unknown" };
       }
-      return { kind: "answer", value: val, question: entry.question, reused: true };
+      const isExact = normalize(entry.question) === normalize(field.label);
+      return isExact
+        ? { kind: "answer", value: val, question: entry.question }
+        : { kind: "answer", value: val, question: entry.question, reused: true };
     }
     // The user's quick answers, only where the question clearly is that question (see facts.ts).
     const someoneElse = OTHER_PERSON.test(normalize(field.label)) || SOMEONE_ELSES.test(field.label)

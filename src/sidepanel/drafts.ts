@@ -83,7 +83,7 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
   const draftBtn = document.createElement("button");
   draftBtn.type = "button";
   draftBtn.className = "btn btn-ghost btn-sm draft-trigger";
-  draftBtn.innerHTML = `<span>Draft answer with Chrome AI</span>`;
+  draftBtn.textContent = "Draft answer with Chrome AI";
   container.append(draftBtn);
 
   const previewBox = document.createElement("div");

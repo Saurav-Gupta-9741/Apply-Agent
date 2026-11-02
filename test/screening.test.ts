@@ -158,6 +158,7 @@ describe("screening pre-answers: yes/no choice field getting exact option", () =
       kind: "answer",
       value: "Yes, I hold a valid driver's license",
       question: "Do you have a valid driver's license?",
+      reused: true,
     });
   });
 
@@ -181,6 +182,7 @@ describe("screening pre-answers: yes/no choice field getting exact option", () =
       kind: "answer",
       value: "No, I am not subject to any non-compete",
       question: "Are you bound by a non-compete agreement?",
+      reused: true,
     });
   });
 

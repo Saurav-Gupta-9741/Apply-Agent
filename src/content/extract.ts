@@ -575,10 +575,7 @@ function translateExtractedFields(fields: ExtractedField[], root: ParentNode): v
     const inspected = inspectAndTranslateField(field.descriptor.label, field.descriptor.options, detected);
     if (inspected.label !== field.descriptor.label) {
       field.descriptor.originalLabel = field.descriptor.label;
-      field.descriptor.label = inspected.label;
-    }
-    if (detected !== "unknown" && field.descriptor.options.length) {
-      field.descriptor.options = translateOptions(field.descriptor.options, detected);
+      field.descriptor.translatedLabel = inspected.label;
     }
   }
 }

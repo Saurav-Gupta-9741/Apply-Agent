@@ -60,18 +60,13 @@ test("a job that needs the user keeps its tab open with a clear note", async ({ 
   expect(context.pages().some((p) => p.url().includes("apply.html"))).toBe(true);
 });
 
-test("the free plan stops at 20 applications a month and says so", async ({ ext, context }) => {
+test("the free plan gates background queue behind Pro and says so", async ({ ext, context }) => {
   await setup(ext, ANSWERS);
-  const thisMonth = new Date().toISOString();
-  await setStorage(ext, {
-    applications: Array.from({ length: 20 }, (_, i) => ({
-      id: `old${i}`, url: `https://example${i}.com/job`, platform: "generic", jobTitle: "Old", status: "applied_confirmed", createdAt: thisMonth,
-    })),
-  });
+  await setStorage(ext, { license: null });
   await send(ext, { type: "QUEUE_ADD", jobs: [{ url: `${BASE}/apply.html`, title: "Backend Engineer", company: "Acme" }] });
   await send(ext, { type: "QUEUE_START" });
   await expect.poll(async () => (await getStorage<QueueItem[]>(ext, "queue"))?.[0]?.note ?? "", { timeout: 15_000 })
-    .toMatch(/free plan limit/i);
+    .toMatch(/require Pro/i);
   const [item] = await getStorage<QueueItem[]>(ext, "queue");
   expect(item?.status).toBe("queued");
   expect(context.pages().some((p) => p.url().includes("apply.html"))).toBe(false);

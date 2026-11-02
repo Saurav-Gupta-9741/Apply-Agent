@@ -535,8 +535,8 @@ interface CardContext {
 }
 
 const NEVER_TEXT: Record<string, string> = {
-  identity: "ID numbers: enter yourself on page.",
-  signature: "Signature: please sign on the page.",
+  identity: "never stores or types ID numbers",
+  signature: "never signs for you",
 };
 
 function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
@@ -547,7 +547,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   const appliedBefore = isAppliedBeforeQuestion(r.field.label);
   const onPageOnly = youOnly || upload || appliedBefore;
   const why = youOnly ? NEVER_TEXT[topic!]!
-    : upload ? "Attach this file on the page."
+    : upload ? "Attach this file yourself on page."
       : appliedBefore ? "Company-specific: answer on the page."
         : sensitive ? "Sensitive question: only you answer this."
           : r.decision.kind === "ask" && r.decision.reason === "missing_profile_value" ? "Missing from your saved profile."
@@ -2137,13 +2137,13 @@ async function renderPlan(): Promise<void> {
     meter.style.width = "100%";
     meter.parentElement!.classList.remove("low");
   } else {
-    $("plan-status").textContent = `Free · ${left} of ${FREE_MONTHLY_SUBMISSIONS} applications left this month`;
-    pill.textContent = `Free · ${left} left`;
+    $("plan-status").textContent = "Free · Unlimited single-form autofill";
+    pill.textContent = "Free";
     pill.className = "plan-pill";
-    badge.textContent = left ? "Free" : "Limit reached";
-    badge.className = `chip ${left ? "" : "warn"}`;
-    meter.style.width = `${(left / FREE_MONTHLY_SUBMISSIONS) * 100}%`;
-    meter.parentElement!.classList.toggle("low", left <= 5);
+    badge.textContent = "Free";
+    badge.className = "chip";
+    meter.style.width = "100%";
+    meter.parentElement!.classList.remove("low");
   }
   $("buy-row").hidden = !licensingConfigured();
   const { licenseKey } = await chrome.storage.local.get("licenseKey");

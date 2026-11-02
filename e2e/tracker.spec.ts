@@ -118,7 +118,7 @@ test("usage meter displays monthly allowance, upgrade nudge, and trial hint", as
 
   const meter = ext.locator("#usage-meter");
   await expect(meter).toBeVisible();
-  await expect(meter.locator("#usage-text")).toContainText("15 of 20 free fills used this month");
+  await expect(meter.locator("#usage-text")).toContainText("Free plan · Unlimited single-form autofill");
   await expect(meter.locator("#usage-prompt")).toBeVisible();
   await expect(meter.locator("#usage-upgrade")).toBeVisible();
 });

@@ -74,7 +74,7 @@ export async function mountQuickAnswers(
   }
 
   function render(): void {
-    container.innerHTML = "";
+    container.replaceChildren();
 
     const q = QUICK_QUESTIONS[currentIndex];
     if (!q) return;
@@ -132,7 +132,11 @@ export async function mountQuickAnswers(
     const whyEl = document.createElement("p");
     whyEl.className = "hint wizard-why";
     whyEl.style.cssText = "font-size: 12px; color: var(--text-2, #94a3b8); margin-bottom: 16px;";
-    whyEl.innerHTML = `<span class="badge" style="background: var(--surface-3, #2a2e39); padding: 2px 6px; border-radius: 4px; font-weight: 500; margin-right: 6px; color: var(--text, #f1f5f9);">Why we ask</span>${q.why}`;
+    const whyBadge = document.createElement("span");
+    whyBadge.className = "badge";
+    whyBadge.style.cssText = "background: var(--surface-3, #2a2e39); padding: 2px 6px; border-radius: 4px; font-weight: 500; margin-right: 6px; color: var(--text, #f1f5f9);";
+    whyBadge.textContent = "Why we ask";
+    whyEl.append(whyBadge, document.createTextNode(q.why));
 
     body.append(promptEl, whyEl);
 

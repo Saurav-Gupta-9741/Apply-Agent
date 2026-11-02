@@ -204,6 +204,8 @@ export interface FieldDescriptor {
   label: string;
   /** Original un-translated page label when translated by i18n-labels. */
   originalLabel?: string;
+  /** Translated English label when translated by i18n-labels. */
+  translatedLabel?: string;
   control: ControlType;
   required: boolean;
   options: string[];

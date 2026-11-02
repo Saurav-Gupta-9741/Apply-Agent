@@ -50,7 +50,7 @@ test("store images", async ({ ext, context }) => {
 
   // 2–4. Panel sections on their own. In front: a background tab never finishes the drawer's closing animation.
   await ext.bringToFront();
-  for (const section of ["queue", "answers", "tracker"]) {
+  for (const section of ["queue", "answers", "tracker", "profile"]) {
     await goTo(ext, section);
     await ext.waitForTimeout(900); // the drawer finishes closing
     await ext.screenshot({ path: `${OUT}/${section}.png` });

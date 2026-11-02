@@ -65,7 +65,7 @@ test("answers: page text is shown as text, never as markup (no script injection 
 
 test("plan: free allowance is shown", async ({ ext }) => {
   await goTo(ext, "profile");
-  await expect(ext.locator("#plan-status")).toContainText("Free · 20 of 20 applications left this month");
+  await expect(ext.locator("#plan-status")).toContainText("Free · Unlimited single-form autofill");
 });
 
 test("narrow side panel: the drawer slides in, is keyboard friendly, and closes with Esc", async ({ ext }) => {
@@ -102,6 +102,7 @@ test("apply flow through the panel's own buttons: fill, answer in the panel, sub
   await expect(ext.locator("#page-access")).toHaveText("Allowed");
 
   await ext.locator("#run").click();
+  await expect(ext.locator("#status")).not.toHaveText(/Reading the form/, { timeout: 30_000 });
   await expect(ext.locator("#status")).toContainText("Answer the questions below");
   const question = ext.locator(".question", { hasText: "Are you legally authorized to work in India?" });
   await expect(question).toContainText("Sensitive");

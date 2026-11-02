@@ -90,8 +90,6 @@ const DE_DICTIONARY: Record<string, string> = {
   "frühester eintrittstermin": "Start date",
   "fruhester eintrittstermin": "Start date",
   "startdatum": "Start date",
-  "verfügbar ab": "Start date",
-  "verfugbar ab": "Start date",
 
   // Address & Location
   "standort": "Location",

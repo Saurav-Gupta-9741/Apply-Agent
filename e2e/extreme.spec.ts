@@ -1,7 +1,7 @@
 /** Extreme cases in real Chromium, through the panel's own UI. */
 
 import type { QueueItem } from "../src/shared/types";
-import { ANSWERS, BASE, expect, getStorage, goTo, OTHER_SITE, PROFILE, setStorage, test } from "./fixtures";
+import { ANSWERS, BASE, expect, getStorage, goTo, OTHER_SITE, PROFILE, PRO_LICENSE, setStorage, test } from "./fixtures";
 
 test("hard form: never types ID numbers or signatures, flags a wrong pre-fill, and shows fields on the page", async ({ ext, context }) => {
   await setStorage(ext, { profile: PROFILE, answers: [] });
@@ -39,6 +39,7 @@ test("questions inbox: one question shared by two waiting jobs is answered once 
   await setStorage(ext, {
     profile: PROFILE,
     answers: ANSWERS.filter((a) => a.question !== missing),
+    license: PRO_LICENSE,
     settings: { mode: "auto", maxParallel: 2, perHostMax: 2, dailyCap: 25, cooldownDays: 30 },
   });
   await ext.evaluate((m) => chrome.runtime.sendMessage(m), {
