@@ -118,17 +118,22 @@ function styleTrap(s: StyleLike, isField: boolean, far: (v: string) => boolean):
 }
 
 function isHoneypot(el: FieldElement, labelsByFor?: Map<string, HTMLElement>): boolean {
+  const isFile = (el instanceof HTMLInputElement && el.type === "file") || isDropzone(el);
+  const isRadioOrCheckbox = el instanceof HTMLInputElement && (el.type === "radio" || el.type === "checkbox");
   const textLike = el instanceof HTMLTextAreaElement
-    || el instanceof HTMLInputElement && !["radio", "checkbox", "file"].includes(el.type) && el.getAttribute("role") !== "combobox" && !el.hasAttribute("aria-autocomplete");
-  if (!textLike) return false;
-  const labelText = (el.id && labelsByFor?.get(el.id)?.textContent) || el.closest("label")?.textContent || "";
-  const describedAs = [el.getAttribute("name"), el.id, el.getAttribute("placeholder"), el.getAttribute("aria-label"),
-    labelledBy(el), labelText].join(" ");
-  if (HONEYPOT_WORDS.test(describedAs)) return true;
+    || (el instanceof HTMLInputElement && !["radio", "checkbox", "file"].includes(el.type) && el.getAttribute("role") !== "combobox" && !el.hasAttribute("aria-autocomplete"));
+  if (textLike) {
+    const labelText = (el.id && labelsByFor?.get(el.id)?.textContent) || el.closest("label")?.textContent || "";
+    const describedAs = [el.getAttribute("name"), el.id, el.getAttribute("placeholder"), el.getAttribute("aria-label"),
+      labelledBy(el), labelText].join(" ");
+    if (HONEYPOT_WORDS.test(describedAs)) return true;
+  }
   // Not for people: inert, hidden from assistive technology, or folded away in a closed <details> (its <summary> shows).
   if (el.closest("[inert]") || el.closest("[aria-hidden='true']")) return true;
   const details = el.closest("details");
   if (details && !details.open && !el.closest("summary")) return true;
+  // File inputs frequently use visual-hiding styles (e.g. 0 opacity overlay on a button, 1px clip)
+  if (isFile) return false;
   // Where the browser has laid the page out: a box of a pixel or less, or placed outside the page on the left or top.
   const doc = el.ownerDocument;
   const laidOut = doc.documentElement.getBoundingClientRect().width > 0;
@@ -137,7 +142,7 @@ function isHoneypot(el: FieldElement, labelsByFor?: Map<string, HTMLElement>): b
     const view = doc.defaultView;
     const scrollX = view?.scrollX ?? 0;
     const scrollY = view?.scrollY ?? 0;
-    if (rect.width <= 1 || rect.height <= 1 || rect.right + scrollX < 0 || rect.bottom + scrollY < 0) return true;
+    if (!isRadioOrCheckbox && (rect.width <= 1 || rect.height <= 1 || rect.right + scrollX < 0 || rect.bottom + scrollY < 0)) return true;
   }
   // Chrome's own answer (see-through, invisible or not rendered); jsdom has no checkVisibility.
   const check = (el as Element & { checkVisibility?: (o?: Record<string, boolean>) => boolean }).checkVisibility;
@@ -151,14 +156,17 @@ function isHoneypot(el: FieldElement, labelsByFor?: Map<string, HTMLElement>): b
   let d = 0;
   for (let node: Element | null = el; node; node = node.parentElement, d++) {
     if (d > MAX_DEPTH) return true;
+    const isSelf = node === el;
+    // Native radios/checkboxes often have sr-only styles on the input itself, but not on their parent group/container
+    if (isSelf && isRadioOrCheckbox) continue;
     if (!hasSheets) {
-      if (node instanceof HTMLElement && styleTrap(node.style, node === el, far)) return true;
+      if (node instanceof HTMLElement && styleTrap(node.style, isSelf, far)) return true;
       // The raw attribute too: some parsers drop the space-separated "clip: rect(0 0 0 0)".
       if (CLIP_NOTHING.test(node.getAttribute("style") ?? "")) return true;
       continue;
     }
     const style = getStyle(node);
-    if (style && styleTrap(style, node === el, far)) return true;
+    if (style && styleTrap(style, isSelf, far)) return true;
   }
   return false;
 }

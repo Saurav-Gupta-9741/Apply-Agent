@@ -109,3 +109,110 @@ describe("background passes the control type to the correction check", () => {
     expect(src).toMatch(/isLearnableCorrection\(message\.question,\s*\(message as CorrectionMessage\)\.control\)/);
   });
 });
+
+describe("honeypot traps inside custom ATS widgets (Step 6)", () => {
+  it("skips mat-select inside aria-hidden='true' parent", () => {
+    mount(`
+      <form id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <div aria-hidden="true">
+          <mat-select placeholder="Mat Trap"></mat-select>
+        </div>
+      </form>
+    `);
+    expect(labels()).toEqual(["First name"]);
+  });
+
+  it("skips oj-select with opacity:0", () => {
+    mount(`
+      <form id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <oj-select-single style="opacity:0" label-hint="OJ Trap"></oj-select-single>
+      </form>
+    `);
+    expect(labels()).toEqual(["First name"]);
+  });
+
+  it("skips shadow-DOM input positioned off-screen", () => {
+    mount(`
+      <form id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <div id="host"></div>
+      </form>
+    `);
+    const host = document.getElementById("host")!;
+    const shadow = host.attachShadow({ mode: "open" });
+    shadow.innerHTML = `<label for="sh">Shadow Trap</label><input id="sh" style="position:absolute; left:-9999px" />`;
+    expect(labels()).toEqual(["First name"]);
+  });
+
+  it("skips Zoho dropdown inside closed <details>", () => {
+    mount(`
+      <form id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <details>
+          <summary>Additional Info</summary>
+          <div class="zp_field_select" data-zp-placeholder="Zoho Trap"></div>
+        </details>
+      </form>
+    `);
+    expect(labels()).toEqual(["First name"]);
+  });
+
+  it("skips Workday data-automation-id input with display:none parent", () => {
+    mount(`
+      <form id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <div style="display:none">
+          <label for="wd-trap">Workday Trap</label>
+          <input id="wd-trap" data-automation-id="legalFirstName" />
+        </div>
+      </form>
+    `);
+    expect(labels()).toEqual(["First name"]);
+  });
+
+  it("skips SAP UI5 combobox with clip-path: inset(100%)", () => {
+    mount(`
+      <form id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <div role="combobox" style="clip-path: inset(100%)" aria-label="SAP Trap"></div>
+      </form>
+    `);
+    expect(labels()).toEqual(["First name"]);
+  });
+
+  it("skips iCIMS iframe field with visibility:hidden", () => {
+    mount(`
+      <div id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <iframe id="icims_iframe" style="visibility:hidden"></iframe>
+      </div>
+    `);
+    const iframe = document.getElementById("icims_iframe") as HTMLIFrameElement;
+    iframe.contentDocument!.body.innerHTML = `<form><label for="icims-trap">iCIMS Trap</label><input id="icims-trap" /></form>`;
+    expect(labels()).toEqual(["First name"]);
+  });
+
+  it("skips 1px mat-radio group", () => {
+    mount(`
+      <form id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <mat-radio-group style="height: 1px; overflow: hidden">
+          <mat-radio-button value="trap">
+            <input type="radio" name="mat-trap" value="trap" /> Trap
+          </mat-radio-button>
+        </mat-radio-group>
+      </form>
+    `);
+    expect(labels()).toEqual(["First name"]);
+  });
+});
