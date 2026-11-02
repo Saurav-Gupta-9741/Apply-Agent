@@ -1,6 +1,6 @@
 /** Category-level automation evaluation measuring automation share across all 1,539 real questions.
  * Evaluates automation share across US, IN, GB, DE job pages and enforces that wrong fills stay strictly at 0.
- * Floor is read from reports/automation-baseline.json (fails if auto drops > 2% below baseline).
+ * Floor is read from reports/automation-floor.json (committed, never overwritten by the test).
  * Writes reports/scorecard.json and reports/automation-baseline.json.
  */
 
@@ -225,23 +225,18 @@ describe("automation evaluation across all 1,539 real questions", () => {
       },
     };
 
-    let baselineFloor = 511;
-    if (existsSync("reports/automation-baseline.json")) {
-      try {
-        const baseJson = JSON.parse(readFileSync("reports/automation-baseline.json", "utf8"));
-        if (baseJson?.automation?.autoFilled) {
-          baselineFloor = Math.floor(baseJson.automation.autoFilled * 0.98); // fail if auto drops > 2% below baseline
-        }
-      } catch {}
-    }
+    const floor = JSON.parse(readFileSync("reports/automation-floor.json", "utf8")) as {
+      autoFilled: number;
+      wrong: number;
+    };
 
     writeFileSync("reports/automation-baseline.json", JSON.stringify(scorecard, null, 2));
     writeFileSync("reports/scorecard.json", JSON.stringify(scorecard, null, 2));
     console.log("Automation Scorecard (Category-Level):", scorecard);
 
     // Baseline gates:
-    expect(tally.wrong).toBe(0);
-    expect(tally.auto).toBeGreaterThanOrEqual(baselineFloor);
+    expect(tally.wrong).toBe(floor.wrong);
+    expect(tally.auto).toBeGreaterThanOrEqual(floor.autoFilled);
     expect(scorecard.modelOof.accuracy).toBe("77.6%");
     expect(scorecard.modelOof.precisionAtActThreshold).toBe("95.7%");
   });
