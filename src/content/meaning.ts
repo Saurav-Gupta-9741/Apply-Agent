@@ -124,7 +124,7 @@ function yesNoChoices(field: FieldDescriptor): boolean {
 /** The meaning a rule decision acted on, to compare with the model's reading. */
 function actedMeaning(d: Decision): string | undefined {
   // The model names some meanings in snake case ("postal_code" for the profile's postalCode).
-  if (d.kind === "profile") return ({ postalCode: "postal_code", educationLevel: "education_level" } as Record<string, string>)[d.key] ?? d.key;
+  if (d.kind === "profile") return ({ postalCode: "postal_code", educationLevel: "education_level", addressLine1: "address", addressLine2: "address" } as Record<string, string>)[d.key] ?? d.key;
   if (d.kind === "resume") return "resume";
   return undefined;
 }
@@ -163,7 +163,8 @@ function hispanicHint(label: string, intent: string): string {
 
 export type DetailOwner = "self" | "another_person" | "company" | "legal";
 
-export const ANOTHER_PERSON_PATTERNS = /\b(references?|emergency contacts?|referees?|supervisors?|managers?|fathers?|mothers?|parents?|guardians?|spouses?|next of kin)\b/i;
+export const ANOTHER_PERSON_SECTION_PATTERNS = /\b(references?|emergency contacts?|referees?|supervisors?|managers?|parents?|guardians?|next of kin)\b/i;
+export const ANOTHER_PERSON_LABEL_PATTERNS = /\b(emergency contacts?|referees?|(?:reporting|previous|current)?\s*(?:supervisor|manager)['']?s?\s*(?:name|email|phone|contact)|father['']?s?|mother['']?s?|parent['']?s?\s*(?:name|email|phone)|guardian['']?s?|spouse['']?s?|next of kin)\b/i;
 export const LEGAL_PATTERNS = /\b(consents?|declarations?|agreements?|background checks?|signatures?|terms|privacy polic(y|ies)|attestations?|certif(y|ied)|acknowledg(e|ment)s?)\b/i;
 export const COMPANY_PATTERNS = /\b(company address(es)?|employer address(es)?|company phones?|office address(es)?|headquarters)\b/i;
 
@@ -173,10 +174,14 @@ export function whoseDetail(field: FieldDescriptor, meaning?: Meaning): DetailOw
   const normLabel = normalize(field.label);
   const normSection = field.section ? normalize(field.section) : "";
 
-  if (ANOTHER_PERSON_PATTERNS.test(normSection) || ANOTHER_PERSON_PATTERNS.test(normLabel) || meaning?.intent === "references" || meaning?.intent === "father_name") {
+  const isModelConfident = Boolean(meaning && meaning.confidence >= actThreshold(meaning.intent));
+
+  if (ANOTHER_PERSON_SECTION_PATTERNS.test(normSection) || ANOTHER_PERSON_LABEL_PATTERNS.test(normLabel) ||
+      (isModelConfident && (meaning?.intent === "references" || meaning?.intent === "father_name"))) {
     return "another_person";
   }
-  if (LEGAL_PATTERNS.test(normSection) || LEGAL_PATTERNS.test(normLabel) || meaning?.intent === "consent" || meaning?.intent === "legal_declaration") {
+  if (LEGAL_PATTERNS.test(normSection) || LEGAL_PATTERNS.test(normLabel) ||
+      (isModelConfident && (meaning?.intent === "consent" || meaning?.intent === "legal_declaration"))) {
     return "legal";
   }
   if (COMPANY_PATTERNS.test(normSection) || COMPANY_PATTERNS.test(normLabel)) {
@@ -197,13 +202,19 @@ export function contextInput(field: FieldDescriptor, nearestLabel?: string, help
 /** The decision for a field, with the model's reading of it when there is one. */
 export function decideWithMeaning(field: FieldDescriptor, profile: Profile, answers: Parameters<typeof decide>[2], page?: PageFacts,
   meaning?: Meaning): Decision {
+  const rule = decide(field, profile, answers, page);
+
+  // Two-step decision: if section or question context indicates another person,
+  // NEVER fill the candidate's own personal identity facts (name, email, phone).
   const owner = whoseDetail(field, meaning);
-  if (owner === "another_person" || owner === "legal") {
-    // Two-step decision: an "another person" or "legal" result always asks!
-    return field.required ? { kind: "ask", reason: "unknown" } : { kind: "skip", reason: `${owner.replace(/_/g, " ")}: entered by you only` };
+  if (owner === "another_person" && rule.kind === "profile" &&
+      (rule.key === "firstName" || rule.key === "lastName" || rule.key === "fullName" || rule.key === "email" || rule.key === "phone")) {
+    return field.required ? { kind: "ask", reason: "unknown" } : { kind: "skip", reason: "another person: entered by you only" };
+  }
+  if (owner === "legal" && (rule.kind === "profile" || rule.kind === "answer")) {
+    return field.required ? { kind: "ask", reason: "sensitive" } : { kind: "skip", reason: "legal: entered by you only" };
   }
 
-  const rule = decide(field, profile, answers, page);
   if (!meaning) return rule;
 
   // Doubt: the rules would fill a profile fact, but the model is very sure the question is about something else

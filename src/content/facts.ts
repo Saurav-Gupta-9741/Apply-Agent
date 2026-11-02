@@ -616,12 +616,10 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
       const unit = withinMatch[2]?.toLowerCase() ?? "day";
       const thresholdDays = /month|monat|mois|mes/i.test(unit) ? allowedNum * 30 : /week|woche|semaine|semana/i.test(unit) ? allowedNum * 7 : allowedNum;
       if (candidateDays !== undefined) {
-        if (candidateDays <= thresholdDays) {
-          const raw = "Yes";
-          const val = field.options.length ? (yesNoOption(field.options, raw) ?? bestOption(field.options, raw) ?? raw) : raw;
-          return answer(val, "notice period");
-        }
-        return undefined; // If notice exceeds threshold, ask the user: never auto-disqualify with "No"
+        const canJoin = candidateDays <= thresholdDays;
+        const raw = canJoin ? "Yes" : "No";
+        const val = field.options.length ? (yesNoOption(field.options, raw) ?? bestOption(field.options, raw) ?? raw) : raw;
+        return answer(val, "notice period");
       }
     }
 

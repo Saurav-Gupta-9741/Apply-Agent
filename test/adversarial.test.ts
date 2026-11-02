@@ -305,7 +305,7 @@ describe("e) notice period, start dates and yes/no availability", () => {
     ["Can you start immediately?", "select", { oneOf: ["No", null] }, { options: ["Yes", "No"] }],
     ["Are you currently serving your notice period?", "select", null, { options: ["Yes", "No"] }],
     ["Is your notice period negotiable?", "select", null, { options: ["Yes", "No"] }],
-    ["Can you join within 15 days?", "select", null, { options: ["Yes", "No"] }],
+    ["Can you join within 15 days?", "select", { oneOf: ["No", null] }, { options: ["Yes", "No"] }],
     ["How soon can you join us? (in days)", "number", { oneOf: ["30", null] }],
   ];
   for (const [label, control, want, extra] of cases) {

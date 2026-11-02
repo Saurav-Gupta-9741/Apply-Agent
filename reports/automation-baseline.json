@@ -7,34 +7,34 @@
     "actThreshold": 0.85
   },
   "automation": {
-    "autoFilled": 570,
-    "autoShare": "37.0%",
+    "autoFilled": 573,
+    "autoShare": "37.2%",
     "draft": 0,
-    "askOnce": 817,
+    "askOnce": 814,
     "humanOnly": 152,
     "wrong": 0,
     "wrongList": []
   },
   "perCountry": {
     "US": {
-      "auto": 570,
+      "auto": 573,
       "wrong": 0
     },
     "IN": {
-      "auto": 570,
+      "auto": 573,
       "wrong": 0
     },
     "GB": {
-      "auto": 570,
+      "auto": 573,
       "wrong": 0
     },
     "DE": {
-      "auto": 570,
+      "auto": 573,
       "wrong": 0
     }
   },
   "latency": {
-    "p50Ms": 0.124,
-    "p99Ms": 3.428
+    "p50Ms": 0.069,
+    "p99Ms": 2.014
   }
 }
