@@ -1,0 +1,133 @@
+{
+  "generatedAt": "2026-11-02T12:20:23.806Z",
+  "questionCount": 1539,
+  "benchmarkFieldCount": 966,
+  "personas": {
+    "A": {
+      "name": "Persona A (Fresher DA, Pune)",
+      "firstApplication": {
+        "autoFilled": 457,
+        "autoShare": "29.7%",
+        "ask": 1082,
+        "humanOnly": 143,
+        "wrong": 0
+      },
+      "steadyState": {
+        "autoFilled": 469,
+        "autoShare": "30.5%",
+        "reusedFromBank": 0,
+        "ask": 1070,
+        "humanOnly": 143,
+        "wrong": 0
+      },
+      "benchmarkFields": {
+        "total": 966,
+        "firstApplicationAuto": 418,
+        "firstApplicationShare": "43.3%",
+        "steadyStateAuto": 419,
+        "steadyStateShare": "43.4%"
+      },
+      "scriptGold": {
+        "evaluated": 150,
+        "matches": 33,
+        "wrong": 0
+      }
+    },
+    "B": {
+      "name": "Persona B (Senior SWE, Bangalore)",
+      "firstApplication": {
+        "autoFilled": 500,
+        "autoShare": "32.5%",
+        "ask": 1039,
+        "humanOnly": 143,
+        "wrong": 0
+      },
+      "steadyState": {
+        "autoFilled": 515,
+        "autoShare": "33.5%",
+        "reusedFromBank": 0,
+        "ask": 1024,
+        "humanOnly": 143,
+        "wrong": 0
+      },
+      "benchmarkFields": {
+        "total": 966,
+        "firstApplicationAuto": 432,
+        "firstApplicationShare": "44.7%",
+        "steadyStateAuto": 434,
+        "steadyStateShare": "44.9%"
+      },
+      "scriptGold": {
+        "evaluated": 150,
+        "matches": 50,
+        "wrong": 0
+      }
+    },
+    "C": {
+      "name": "Persona C (Marketing Mgr, Mumbai)",
+      "firstApplication": {
+        "autoFilled": 518,
+        "autoShare": "33.7%",
+        "ask": 1021,
+        "humanOnly": 143,
+        "wrong": 0
+      },
+      "steadyState": {
+        "autoFilled": 560,
+        "autoShare": "36.4%",
+        "reusedFromBank": 0,
+        "ask": 979,
+        "humanOnly": 143,
+        "wrong": 0
+      },
+      "benchmarkFields": {
+        "total": 966,
+        "firstApplicationAuto": 433,
+        "firstApplicationShare": "44.8%",
+        "steadyStateAuto": 442,
+        "steadyStateShare": "45.8%"
+      },
+      "scriptGold": {
+        "evaluated": 150,
+        "matches": 85,
+        "wrong": 0
+      }
+    },
+    "D": {
+      "name": "Persona D (Product Designer, Austin)",
+      "firstApplication": {
+        "autoFilled": 556,
+        "autoShare": "36.1%",
+        "ask": 983,
+        "humanOnly": 143,
+        "wrong": 0
+      },
+      "steadyState": {
+        "autoFilled": 556,
+        "autoShare": "36.1%",
+        "reusedFromBank": 0,
+        "ask": 983,
+        "humanOnly": 143,
+        "wrong": 0
+      },
+      "benchmarkFields": {
+        "total": 966,
+        "firstApplicationAuto": 487,
+        "firstApplicationShare": "50.4%",
+        "steadyStateAuto": 487,
+        "steadyStateShare": "50.4%"
+      },
+      "scriptGold": {
+        "evaluated": 0,
+        "matches": 0,
+        "wrong": 0
+      }
+    }
+  },
+  "summary": {
+    "totalEvaluations": 6156,
+    "firstApplicationAutoShare": "33.0%",
+    "steadyStateAutoShare": "34.1%",
+    "wrong": 0
+  }
+}
