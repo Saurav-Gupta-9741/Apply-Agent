@@ -21,7 +21,7 @@ const files = (() => {
 const OTHER_PERSON = /emergency|referee|referrer|reference|manager'?s|supervisor/i;
 
 describe("ApplyAgent 100-Form Global Arena Benchmark", () => {
-  it("contains at least 100 real application forms in offline corpus", () => {
+  it("contains at least 100 application forms (73 real, 38 synthetic — see reports/corpus-sources.md) in offline corpus", () => {
     expect(files.length).toBeGreaterThanOrEqual(100);
   });
 

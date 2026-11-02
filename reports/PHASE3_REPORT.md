@@ -209,21 +209,33 @@ This section documents the execution and completion of all 9 steps outlined in `
 - **Anything Not Done:** None. No source changes needed; existing classification guards in `src/content/classify.ts` safely rejected all 30 traps.
 
 ## Step 5 — Real ATS Application Form Fixtures
-- **Files Added / Modified:**
-  - `test/corpus/`: Added 11 genuine public job application HTML forms across 6 ATS platforms with `<!-- SOURCE: <url> fetched <date> -->` header and sanitized personal data:
-    - Workday: `workday-salesforce.html`, `workday-walmart.html`
-    - SuccessFactors: `successfactors-nestle.html`
-    - iCIMS: `icims-ups.html`
-    - SmartRecruiters: `smartrecruiters-ikea.html`, `smartrecruiters-bosch.html`
-    - Oracle Cloud / Taleo: `oracle-cloud-marriott.html`, `taleo-citigroup.html`
-    - Zoho Recruit: `zohorecruit-hireboost.html`
-    - Recruitee: `recruitee-bluecrux.html`, `recruitee-finom.html`
+- **Files Added / Modified (from `git show --stat ebb07ef`):**
+  - `reports/automation-baseline.json`
+  - `reports/corpus-sources.md`
+  - `reports/scorecard.json`
+  - `test/ats-real.test.ts`
+  - `test/corpus/freshteam-dipantara.html`
+  - `test/corpus/freshteam-ourcodelab.html`
+  - `test/corpus/jazzhr-concordusa.html`
+  - `test/corpus/personio-europassistance-2.html`
+  - `test/corpus/personio-europassistance.html`
+  - `test/corpus/personio-kaiserxlabs.html`
+  - `test/corpus/recruitee-bluecrux.html`
+  - `test/corpus/recruitee-miaplatform.html`
+  - `test/corpus/recruitee-sahl.html`
+  - `test/corpus/workable-bolderapps.html`
+  - `test/corpus/zohorecruit-hireboost.html`
+  (11 genuine public job application HTML forms across 6 platforms: Freshteam, JazzHR, Personio, Recruitee, Workable, Zoho Recruit).
+- **Extraction & Engine Changes:**
+  - `src/content/extract.ts`: Added `cx-prop-label` candidate label source for Zoho Recruit custom elements, and initial exemptions for radio/checkbox/file inputs.
   - `test/ats-real.test.ts`: Created test suite asserting exact control descriptors (`toEqual`) and 0 honeypot fills for all 11 real forms.
   - `reports/corpus-sources.md`: Updated fixture inventory (73 real, 38 synthetic, 0 login-wall inventions).
-  - `test/arena-100-forms.test.ts`: Updated count expectation to `>= 100` to support the 111 corpus fixtures.
+  - `test/arena-100-forms.test.ts`: Updated count expectation from `=== 100` to `>= 100` to support the expanded 111 corpus fixtures.
+- **Honest Platform Assessment:**
+  No real Workday / SuccessFactors / iCIMS / SmartRecruiters / Taleo application-form fixture yet (sign-in or JS-only) — planned in Phase 4 Step 5.
 - **Exact Test Counts:** 11 tests in `test/ats-real.test.ts`, 111 fixtures verified in `test/corpus.test.ts` and `test/arena-100-forms.test.ts`.
 - **Numbers:** 11/11 tests pass with exact descriptors and 0 honeypot fills.
-- **Anything Not Done:** None.
+- **Anything Not Done:** Real fixtures for Workday, SuccessFactors, iCIMS, SmartRecruiters, Taleo require authenticated flows or structure export; deferred to Phase 4 Step 5.
 
 ## Step 6 — Honeypot Hardening Inside Modern Widgets
 - **Files Modified:**

@@ -215,4 +215,86 @@ describe("honeypot traps inside custom ATS widgets (Step 6)", () => {
     `);
     expect(labels()).toEqual(["First name"]);
   });
+
+  it("skips hidden checkbox with no label as honeypot", () => {
+    mount(`
+      <form id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <input type="checkbox" name="trap_cb" style="opacity: 0; width: 1px; height: 1px" />
+      </form>
+    `);
+    expect(labels()).toEqual(["First name"]);
+  });
+
+  it("extracts sr-only checkbox with a visible label as real", () => {
+    mount(`
+      <form id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <label for="newsletter">Subscribe to newsletter</label>
+        <input id="newsletter" type="checkbox" style="position: absolute; width: 1px; height: 1px; clip: rect(0 0 0 0)" />
+      </form>
+    `);
+    expect(labels()).toEqual(["First name", "Subscribe to newsletter"]);
+  });
+
+  it("extracts off-screen radio inside a visible role=radio card as real", () => {
+    mount(`
+      <form id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <fieldset>
+          <legend>Subscription plan</legend>
+          <div role="radio" aria-label="Monthly plan" style="width: 200px; height: 50px">
+            <input type="radio" name="plan" value="monthly" style="position: absolute; left: -9999px" />
+            <span>Monthly plan</span>
+          </div>
+        </fieldset>
+      </form>
+    `);
+    expect(labels()).toEqual(["First name", "Subscription plan"]);
+  });
+
+  it("skips checkbox in a display:none parent as honeypot", () => {
+    mount(`
+      <form id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <div style="display:none">
+          <label for="hidden_cb">Hidden checkbox</label>
+          <input id="hidden_cb" type="checkbox" />
+        </div>
+      </form>
+    `);
+    expect(labels()).toEqual(["First name"]);
+  });
+
+  it("skips file input in a display:none parent as honeypot", () => {
+    mount(`
+      <form id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <div style="display:none">
+          <label for="hidden_file">Resume</label>
+          <input id="hidden_file" type="file" />
+        </div>
+      </form>
+    `);
+    expect(labels()).toEqual(["First name"]);
+  });
+
+  it("extracts styled file input (opacity 0) over a visible Upload resume button as real", () => {
+    mount(`
+      <form id="f">
+        <label for="fn">First name</label>
+        <input id="fn" />
+        <div class="upload-btn-wrapper" style="position: relative; width: 200px; height: 40px">
+          <button type="button">Upload resume</button>
+          <input id="resume" type="file" aria-label="Resume" style="position: absolute; opacity: 0; width: 100%; height: 100%" />
+        </div>
+      </form>
+    `);
+    expect(labels()).toEqual(["First name", "Resume"]);
+  });
 });

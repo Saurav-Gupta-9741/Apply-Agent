@@ -132,41 +132,108 @@ function isHoneypot(el: FieldElement, labelsByFor?: Map<string, HTMLElement>): b
   if (el.closest("[inert]") || el.closest("[aria-hidden='true']")) return true;
   const details = el.closest("details");
   if (details && !details.open && !el.closest("summary")) return true;
-  // File inputs frequently use visual-hiding styles (e.g. 0 opacity overlay on a button, 1px clip)
-  if (isFile) return false;
-  // Where the browser has laid the page out: a box of a pixel or less, or placed outside the page on the left or top.
+
   const doc = el.ownerDocument;
   const laidOut = doc.documentElement.getBoundingClientRect().width > 0;
-  if (laidOut && el.getClientRects().length) {
-    const rect = el.getBoundingClientRect();
-    const view = doc.defaultView;
-    const scrollX = view?.scrollX ?? 0;
-    const scrollY = view?.scrollY ?? 0;
-    if (!isRadioOrCheckbox && (rect.width <= 1 || rect.height <= 1 || rect.right + scrollX < 0 || rect.bottom + scrollY < 0)) return true;
-  }
-  // Chrome's own answer (see-through, invisible or not rendered); jsdom has no checkVisibility.
-  const check = (el as Element & { checkVisibility?: (o?: Record<string, boolean>) => boolean }).checkVisibility;
-  if (laidOut && typeof check === "function" && !check.call(el, { opacityProperty: true, visibilityProperty: true, contentVisibilityAuto: true })) return true;
-  // The same from the styles (also where nothing is laid out yet): see-through, moved off-screen, clipped, or 1 px.
   const far = (v: string) => {
     const m = /^(-\d+(?:\.\d+)?)(px|em|rem)$/.exec(v);
     return !!m && parseFloat(m[1]!) * (m[2] === "px" ? 1 : 16) <= -500;
   };
   const hasSheets = !!doc.styleSheets?.length;
-  let d = 0;
-  for (let node: Element | null = el; node; node = node.parentElement, d++) {
-    if (d > MAX_DEPTH) return true;
-    const isSelf = node === el;
-    // Native radios/checkboxes often have sr-only styles on the input itself, but not on their parent group/container
-    if (isSelf && isRadioOrCheckbox) continue;
+
+  function isVisibleElement(target: Element): boolean {
+    if (target.closest("[inert]") || target.closest("[aria-hidden='true']")) return false;
+    const d = target.closest("details");
+    if (d && !d.open && !target.closest("summary")) return false;
+
+    if (laidOut && target.getClientRects().length) {
+      const rect = target.getBoundingClientRect();
+      const view = doc.defaultView;
+      const scrollX = view?.scrollX ?? 0;
+      const scrollY = view?.scrollY ?? 0;
+      if (rect.width <= 1 || rect.height <= 1 || rect.right + scrollX < 0 || rect.bottom + scrollY < 0) return false;
+    }
+    const checkFn = (target as Element & { checkVisibility?: (o?: Record<string, boolean>) => boolean }).checkVisibility;
+    if (laidOut && typeof checkFn === "function" && !checkFn.call(target, { opacityProperty: true, visibilityProperty: true, contentVisibilityAuto: true })) {
+      return false;
+    }
+    let depth = 0;
+    for (let node: Element | null = target; node; node = node.parentElement, depth++) {
+      if (depth > MAX_DEPTH) return false;
+      const isTarget = node === target;
+      if (node.hasAttribute("hidden") || styleHidden(node)) return false;
+      if (!hasSheets) {
+        if (node instanceof HTMLElement && styleTrap(node.style, isTarget, far)) return false;
+        if (CLIP_NOTHING.test(node.getAttribute("style") ?? "")) return false;
+        continue;
+      }
+      const s = getStyle(node);
+      if (s && (s.display === "none" || s.visibility === "hidden" || styleTrap(s, isTarget, far))) return false;
+    }
+    return true;
+  }
+
+  // 1. Self box checks: for file inputs, skip checks on input ITSELF.
+  let selfHidden = false;
+  if (!isFile) {
+    if (laidOut && el.getClientRects().length) {
+      const rect = el.getBoundingClientRect();
+      const view = doc.defaultView;
+      const scrollX = view?.scrollX ?? 0;
+      const scrollY = view?.scrollY ?? 0;
+      if (rect.width <= 1 || rect.height <= 1 || rect.right + scrollX < 0 || rect.bottom + scrollY < 0) {
+        selfHidden = true;
+      }
+    }
+    const check = (el as Element & { checkVisibility?: (o?: Record<string, boolean>) => boolean }).checkVisibility;
+    if (laidOut && typeof check === "function" && !check.call(el, { opacityProperty: true, visibilityProperty: true, contentVisibilityAuto: true })) {
+      selfHidden = true;
+    }
     if (!hasSheets) {
-      if (node instanceof HTMLElement && styleTrap(node.style, isSelf, far)) return true;
-      // The raw attribute too: some parsers drop the space-separated "clip: rect(0 0 0 0)".
+      if (el instanceof HTMLElement && (styleHidden(el) || styleTrap(el.style, true, far))) selfHidden = true;
+      if (CLIP_NOTHING.test(el.getAttribute("style") ?? "")) selfHidden = true;
+    } else {
+      const style = getStyle(el);
+      if (style && (style.display === "none" || style.visibility === "hidden" || styleTrap(style, true, far))) selfHidden = true;
+    }
+  }
+
+  // If a text-like or select input is self-hidden, it is definitely a honeypot.
+  if (selfHidden && !isRadioOrCheckbox) return true;
+
+  // A radio/checkbox whose own box is hidden counts as real ONLY if it has a visible way for a person to choose it:
+  // a visible <label for=id>, a visible wrapping <label>, an element pointed to by aria-labelledby, or a visible ancestor with role="radio"|"checkbox" within 3 levels.
+  if (isRadioOrCheckbox && selfHidden) {
+    const forLabel = el.id ? (labelsByFor?.get(el.id) ?? (doc.querySelector(`label[for="${CSS.escape(el.id)}"]`) as HTMLElement | null)) : null;
+    const wrapLabel = el.closest("label");
+    const ariaLabelId = el.getAttribute("aria-labelledby");
+    const ariaLabelEl = ariaLabelId ? (doc.getElementById(ariaLabelId) as HTMLElement | null) : null;
+    let roleAncestor: HTMLElement | null = null;
+    let curr = el.parentElement;
+    for (let lvl = 1; lvl <= 3 && curr; lvl++, curr = curr.parentElement) {
+      const role = curr.getAttribute("role");
+      if (role === "radio" || role === "checkbox") {
+        roleAncestor = curr as HTMLElement;
+        break;
+      }
+    }
+    const choosers = [forLabel, wrapLabel, ariaLabelEl, roleAncestor].filter((c): c is HTMLElement => !!c && c !== el);
+    const hasVisibleChooser = choosers.some((c) => isVisibleElement(c));
+    if (!hasVisibleChooser) return true;
+  }
+
+  // 2. Ancestor walk: applies to ALL fields (including file inputs and radio/checkboxes).
+  let d = 0;
+  for (let node: Element | null = el.parentElement; node; node = node.parentElement, d++) {
+    if (d > MAX_DEPTH) return true;
+    if (node.hasAttribute("hidden") || node.getAttribute("aria-hidden") === "true" || styleHidden(node)) return true;
+    if (!hasSheets) {
+      if (node instanceof HTMLElement && styleTrap(node.style, false, far)) return true;
       if (CLIP_NOTHING.test(node.getAttribute("style") ?? "")) return true;
       continue;
     }
     const style = getStyle(node);
-    if (style && styleTrap(style, isSelf, far)) return true;
+    if (style && (style.display === "none" || style.visibility === "hidden" || styleTrap(style, false, far))) return true;
   }
   return false;
 }
@@ -422,7 +489,7 @@ export function extractFields(root: ParentNode): ExtractedField[] {
     if (("disabled" in el && (el as HTMLInputElement).disabled) || ((el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && el.readOnly)) continue;
     // File inputs are usually hidden behind a styled "Upload" button but still accept files.
     const isFile = (el instanceof HTMLInputElement && el.type === "file") || isDropzone(el);
-    if (!isFile && isHidden(el)) continue;
+    if (isFile ? (el.parentElement && isHidden(el.parentElement)) : isHidden(el)) continue;
     if (isHoneypot(el, labelsByFor)) continue;
     // Radios, and checkboxes sharing a name, are one question with several options.
     if (el instanceof HTMLInputElement && (el.type === "radio" || (el.type === "checkbox" && el.name))) {
