@@ -818,12 +818,7 @@ function matchYearBracket(candidates: ParsedCandidate[], q: ExperienceQuantity):
   });
   if (contained.length === 1) return contained[0]!.c;
   if (contained.length > 1) {
-    // Overlapping brackets ("1-2" / "2-4" for 2): the ATS convention is "a bracket starts at its lower bound", but
-    // only for a whole number of years the user typed; a converted "24 months" stays for the user.
-    if (!q.fromMonths && Number.isInteger(t)) {
-      const starting = contained.filter((p) => p.b!.kind === "range" && (p.b as { min: number }).min === t);
-      if (starting.length === 1) return starting[0]!.c;
-    }
+    // Overlapping ranges: ambiguous -> return null (ask!)
     return null;
   }
   // Open-ended "N+ years": the highest threshold the value satisfies ("6" → "5+", never "1+").
@@ -842,13 +837,154 @@ function matchYearBracket(candidates: ParsedCandidate[], q: ExperienceQuantity):
   return best && !tie ? best.c : null;
 }
 
-// --- Notice tiers ---
+// --- Notice tiers & Range Brackets ---
 
 function parseDays(text: string): number | undefined {
-  const m = /^(\d+(?:\.\d+)?) ?(days?|weeks?|months?)$/.exec(normalize(text).replace(/(\d) (\d)/g, "$1.$2"));
+  const norm = normalize(text).replace(/(\d) (\d)/g, "$1.$2").trim();
+  if (/^\d+$/.test(norm)) return parseFloat(norm);
+  const m = /^(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)$/.exec(norm);
   if (!m) return undefined;
   const n = parseFloat(m[1]!);
   return /^day/.test(m[2]!) ? n : /^week/.test(m[2]!) ? n * 7 : n * 30;
+}
+
+export interface NoticeBracket {
+  kind: "single" | "range" | "plus" | "less";
+  minDays: number;
+  maxDays?: number;
+  exclusive?: boolean;
+}
+
+export function parseNoticeBracket(text: string): NoticeBracket | undefined {
+  const norm = text.trim().toLowerCase().replace(/\s+/g, " ");
+
+  // Immediate
+  if (/^(immediate|immediately|available immediately|immediate start|available now|asap|now|0 days?)\b/i.test(norm)) {
+    return { kind: "single", minDays: 0, maxDays: 0 };
+  }
+
+  const toDays = (val: string, unit: string): number => {
+    const n = parseFloat(val);
+    const u = unit.toLowerCase();
+    if (u.startsWith("day")) return n;
+    if (u.startsWith("week")) return n * 7;
+    if (u.startsWith("month")) return n * 30;
+    return n;
+  };
+
+  // Range: "1 to 2 months", "1 - 2 months", "15 to 30 days", "30 - 60 days", "30-60 days", "31-60 days"
+  const rangeMatch = /^(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)?\s*(?:-|–|—|to)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(norm);
+  if (rangeMatch) {
+    const unit = rangeMatch[4]!;
+    const minVal = parseFloat(rangeMatch[1]!);
+    const maxDays = toDays(rangeMatch[3]!, unit);
+    const minDays = rangeMatch[2] ? toDays(rangeMatch[1]!, rangeMatch[2]) : (unit.startsWith("month") ? minVal * 30 : minVal);
+    return { kind: "range", minDays, maxDays };
+  }
+
+  // Plus / or more: "2+ months", "60+ days", "2 months or more", "at least 2 months"
+  const plusMatch = /^(\d+(?:\.\d+)?)\s*\+\s*(days?|weeks?|months?)\b/i.exec(norm)
+    ?? /^(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\s*(?:\+|or more|and above|or above|plus)\b/i.exec(norm)
+    ?? /^(?:at least)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(norm);
+  if (plusMatch) {
+    return { kind: "plus", minDays: toDays(plusMatch[1]!, plusMatch[2]!), exclusive: false };
+  }
+
+  const overMatch = /^(?:more than|over|greater than|>)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(norm);
+  if (overMatch) {
+    return { kind: "plus", minDays: toDays(overMatch[1]!, overMatch[2]!), exclusive: true };
+  }
+
+  // Less than: "less than 1 month", "under 30 days"
+  const lessMatch = /^(?:less than|under|fewer than|<)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(norm);
+  if (lessMatch) {
+    return { kind: "less", minDays: 0, maxDays: toDays(lessMatch[1]!, lessMatch[2]!) };
+  }
+
+  // Single value: "15 days", "30 days", "1 month", "2 months", "60 days"
+  const singleMatch = /^(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)$/i.exec(norm);
+  if (singleMatch) {
+    const days = toDays(singleMatch[1]!, singleMatch[2]!);
+    return { kind: "single", minDays: days, maxDays: days };
+  }
+
+  return undefined;
+}
+
+function matchNoticeBracket(candidates: ParsedCandidate[], wantedDays: number): { candidate: ParsedCandidate | null; isAmbiguous: boolean } {
+  const parsed = candidates.map((c) => ({ c, b: parseNoticeBracket(c.trimmed) }));
+
+  // 1. Single exact tier match
+  const single = parsed.filter((p) => p.b?.kind === "single" && p.b.minDays === wantedDays);
+  if (single.length === 1) return { candidate: single[0]!.c, isAmbiguous: false };
+
+  // 2. Contained in bounded range: minDays <= wantedDays <= maxDays
+  const contained = parsed.filter((p) => {
+    const b = p.b;
+    if (!b) return false;
+    if (b.kind === "range" && b.maxDays !== undefined) {
+      return wantedDays >= b.minDays && wantedDays <= b.maxDays;
+    }
+    if (b.kind === "less" && b.maxDays !== undefined) {
+      return wantedDays < b.maxDays;
+    }
+    return false;
+  });
+
+  if (contained.length === 1) return { candidate: contained[0]!.c, isAmbiguous: false };
+  if (contained.length > 1) {
+    // Overlapping ranges: ambiguous -> return null (ask!)
+    return { candidate: null, isAmbiguous: true };
+  }
+
+  // 3. Plus tier ("2+ months", "60+ days", ">30 days"): pick the highest satisfying threshold
+  let best: { c: ParsedCandidate; minDays: number } | undefined;
+  let tie = false;
+  for (const p of parsed) {
+    const b = p.b;
+    if (!b || b.kind !== "plus") continue;
+    const satisfies = b.exclusive ? wantedDays > b.minDays : wantedDays >= b.minDays;
+    if (satisfies) {
+      if (!best || b.minDays > best.minDays) {
+        best = { c: p.c, minDays: b.minDays };
+        tie = false;
+      } else if (best.minDays === b.minDays) {
+        tie = true;
+      }
+    }
+  }
+
+  if (best && !tie) return { candidate: best.c, isAmbiguous: false };
+  return { candidate: null, isAmbiguous: tie };
+}
+
+// --- Canonical City Synonym Clusters ---
+const CITY_SYNONYM_CLUSTERS: string[][] = [
+  ["bengaluru", "bangalore"],
+  ["gurugram", "gurgaon"],
+  ["mumbai", "bombay"],
+  ["kolkata", "calcutta"],
+  ["chennai", "madras"],
+  ["munchen", "munich", "muenchen"],
+  ["koln", "cologne", "koeln"],
+  ["wien", "vienna"],
+  ["roma", "rome"],
+  ["praha", "prague"],
+  ["warszawa", "warsaw"],
+  ["lisboa", "lisbon"],
+  ["kyiv", "kiev"],
+];
+
+const CITY_SYNONYM_MAP = new Map<string, Set<string>>();
+for (const cluster of CITY_SYNONYM_CLUSTERS) {
+  const set = new Set(cluster);
+  for (const city of cluster) {
+    CITY_SYNONYM_MAP.set(city, set);
+  }
+}
+
+export function isInProgressDegree(text: string): boolean {
+  return /\b(in progress|pursuing|currently enrolled|incomplete|not completed|expected graduation|expected completion)\b/i.test(text);
 }
 
 function isQualifiedTier(c: ParsedCandidate): boolean {
@@ -957,9 +1093,20 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
     return match ? { option: match.raw, stage: "contextual_domain", confidence: 0.98 } : undefined;
   }
 
-  // 0f. Notice Period Tiers (0, 15, 30, 60, 90 days). A qualified tier ("Less than 30 days") is never the 30-day tier.
+  // 0f. Notice Period Tiers & Range Brackets (0, 15, 30, 60, 90 days, "2+ months", "1 to 2 months")
   const isNoticeContext = candidates.some((c) => /\b(immediately|days|months|notice|weeks)\b/i.test(c.normalized));
   if (isNoticeContext) {
+    const wantedDays = parseDays(wantedTrimmed);
+    if (wantedDays !== undefined) {
+      const res = matchNoticeBracket(candidates, wantedDays);
+      if (res.candidate) {
+        return { option: res.candidate.raw, stage: "contextual_domain", confidence: 0.98 };
+      }
+      if (res.isAmbiguous) {
+        return undefined; // Ambiguous overlapping ranges -> ask!
+      }
+    }
+
     const tiers = candidates.filter((c) => !isQualifiedTier(c));
     if (wantedNorm === "0 days" || wantedClassified.availability === AvailabilityBucket.IMMEDIATE) {
       const imm = tiers.find((c) => c.classified.availability === AvailabilityBucket.IMMEDIATE);
@@ -981,18 +1128,25 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
       const match90 = tiers.find((c) => /\b(3 months|90 days)\b/i.test(c.normalizedCore));
       if (match90) return { option: match90.raw, stage: "contextual_domain", confidence: 0.98 };
     }
-    // An in-between value ("45 days") never snaps to a neighbouring tier; a value beyond the top tier may take an
-    // explicit "More than N" tier.
-    const wantedDays = parseDays(wantedTrimmed);
-    if (wantedDays !== undefined) {
-      let best: { c: ParsedCandidate; days: number } | undefined;
-      for (const c of candidates) {
-        const m = /^(?:more than|over|greater than|beyond) (\d+) (days?|weeks?|months?)$/.exec(c.normalized);
-        if (!m) continue;
-        const days = parseDays(`${m[1]} ${m[2]}`)!;
-        if (wantedDays > days && (!best || days > best.days)) best = { c, days };
-      }
-      if (best) return { option: best.c.raw, stage: "contextual_domain", confidence: 0.95 };
+  }
+
+  // 0g. City Synonyms (canonical bidirectional mappings)
+  const cityCluster = CITY_SYNONYM_MAP.get(wantedNorm);
+  if (cityCluster) {
+    const matchingCityOptions = candidates.filter((c) => {
+      const cNorm = c.normalizedCore;
+      if (cityCluster.has(cNorm)) return true;
+      const tokens = c.normalized.split(/[\s,/-]+/);
+      return [...cityCluster].some((syn) => tokens.includes(syn));
+    });
+    const uniqueCityMatch = unique(matchingCityOptions);
+    if (uniqueCityMatch) {
+      return { option: uniqueCityMatch.raw, stage: "contextual_domain", confidence: 0.98 };
+    }
+    if (matchingCityOptions.length > 1) {
+      const exactCity = matchingCityOptions.find((c) => c.normalizedCore === wantedNorm);
+      if (exactCity) return { option: exactCity.raw, stage: "exact", confidence: 1.0 };
+      return undefined;
     }
   }
 
@@ -1036,22 +1190,43 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
   // Arts"); a generic option ("Bachelor's Degree") is fine for any specialisation. Anything else stays empty.
   if (wantedClassified.degree) {
     const targetDegree = wantedClassified.degree;
-    const degreeCandidates = validCandidates.filter((c) => c.classified.degree === targetDegree);
+    const wantedInProgress = isInProgressDegree(wantedTrimmed);
+    const degreeCandidates = validCandidates.filter((c) => {
+      if (c.classified.degree !== targetDegree) return false;
+      const candidateInProgress = isInProgressDegree(c.trimmed);
+      if (wantedInProgress !== candidateInProgress) return false; // Trap: in-progress vs completed
+      return true;
+    });
     const wantedSpec = degreeSpec(wantedTrimmed);
-    const generic = degreeCandidates.filter((c) => !degreeSpec(c.trimmed));
     if (wantedSpec) {
       const same = degreeCandidates.filter((c) => degreeSpec(c.trimmed) === wantedSpec);
       const match = unique(same);
       if (match) return { option: match.raw, stage: "contextual_domain", confidence: 0.96 };
       if (same.length > 1) return undefined;
-    }
-    if (generic.length) {
-      const preferred = generic.find((c) => /\b(degree|4 year|college)\b/i.test(c.normalized)) ?? generic[0]!;
-      return { option: preferred.raw, stage: "contextual_domain", confidence: 0.95 };
-    }
-    // A generic wanted degree ("Doctorate", "Bachelor") with exactly ONE option at that level.
-    if (!wantedSpec && degreeCandidates.length === 1) {
-      return { option: degreeCandidates[0]!.raw, stage: "contextual_domain", confidence: 0.92 };
+
+      // Specialization conflict trap: e.g. MBA (business) vs Master of Engineering (engineering)
+      const conflicting = degreeCandidates.filter((c) => {
+        const spec = degreeSpec(c.trimmed);
+        return spec && spec !== wantedSpec;
+      });
+      const generic = degreeCandidates.filter((c) => !degreeSpec(c.trimmed));
+      if (conflicting.length > 0 && generic.length === 0) {
+        return undefined; // Must not guess different specialization
+      }
+      if (generic.length) {
+        const preferred = generic.find((c) => /\b(degree|4 year|college)\b/i.test(c.normalized)) ?? generic[0]!;
+        return { option: preferred.raw, stage: "contextual_domain", confidence: 0.95 };
+      }
+    } else {
+      const generic = degreeCandidates.filter((c) => !degreeSpec(c.trimmed));
+      if (generic.length) {
+        const preferred = generic.find((c) => /\b(degree|4 year|college)\b/i.test(c.normalized)) ?? generic[0]!;
+        return { option: preferred.raw, stage: "contextual_domain", confidence: 0.95 };
+      }
+      // A generic wanted degree ("Doctorate", "Bachelor") with exactly ONE option at that level.
+      if (degreeCandidates.length === 1) {
+        return { option: degreeCandidates[0]!.raw, stage: "contextual_domain", confidence: 0.92 };
+      }
     }
     // The options are degrees but none is certainly the wanted one.
     if (candidates.some((c) => c.classified.degree)) return undefined;
@@ -1131,6 +1306,15 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
       return { option: polMatch.raw, stage: "contextual_domain", confidence: 0.95 };
     }
     if (same.length) return undefined;
+  }
+
+  // 3h. Fluency mapping
+  if (wantedClassified.fluency) {
+    const targetFluency = wantedClassified.fluency;
+    const fluencyMatch = validCandidates.find((c) => c.classified.fluency === targetFluency);
+    if (fluencyMatch) {
+      return { option: fluencyMatch.raw, stage: "contextual_domain", confidence: 0.95 };
+    }
   }
 
   // STAGE 4: Prefix at a clear separator ("No" → "No, I do not"; "India (+91)" → "India"). Never a suffix

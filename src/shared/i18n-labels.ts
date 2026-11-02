@@ -407,7 +407,9 @@ const PT_DICTIONARY: Record<string, string> = {
 /** Hindi-in-English (Hinglish) form label dictionary */
 const HI_EN_DICTIONARY: Record<string, string> = {
   "pehla naam": "First name",
+  "aakhri naam": "Last name",
   "apka naam": "Full name",
+  "apka shubh naam": "Full name",
   "pura naam": "Full name",
   "naam": "Full name",
   "phone number": "Phone",
@@ -415,6 +417,9 @@ const HI_EN_DICTIONARY: Record<string, string> = {
   "sampark number": "Phone",
   "aapka shahar": "City",
   "kahan rehte hain": "City",
+  "expected ctc": "Expected salary",
+  "current ctc": "Current salary",
+  "notice period in days": "Notice period",
   "notice period kitna hai": "Notice period",
   "kitne din mein join kar sakte hain": "Notice period",
   "expected ctc kitna hai": "Expected salary",
@@ -433,7 +438,7 @@ const LANG_SIGNATURES: Record<SupportedLanguage, RegExp[]> = {
   es: [/\b(apellidos|correo electrónico|hoja de vida|expectativa salarial|preaviso)\b/i],
   nl: [/\b(voornaam|achternaam|motivatiebrief|salarisindicatie|opzegtermijn)\b/i],
   pt: [/\b(sobrenome|telemóvel|pretensão salarial|aviso prévio|anexar currículo)\b/i],
-  "hi-en": [/\b(pehla naam|pura naam|kitna|rehte hain|ctc kitna|shahar)\b/i],
+  "hi-en": [/\b(pehla naam|aakhri naam|pura naam|kitna|rehte hain|ctc kitna|shahar)\b/i],
 };
 
 const DICTIONARIES: Record<SupportedLanguage, Record<string, string>> = {
@@ -446,7 +451,7 @@ const DICTIONARIES: Record<SupportedLanguage, Record<string, string>> = {
 };
 
 /** False-friend traps: words that must NOT be auto-translated to regular fields */
-const TRAP_CONSENT = /\b(ich stimme.*zu|stimme.*zu|einwilligung|datenschutz\w*|j'accepte|consentement|acepto\b|concordo|termo de consentimento)\b/i;
+const TRAP_CONSENT = /\b(ich stimme.*zu|stimme.*zu|einwilligung|datenschutz\w*|j'accepte|consentement|acepto\b|concordo|termo de consentimento|akkoord|privacybeleid|toestemming)\b/i;
 const TRAP_ZEUGNIS = /\b(zeugnis|zeugnisse|arbeitszeugnis|arbeitszeugnisse)\b/i;
 const TRAP_BIRTHDAY = /\b(date de naissance|geburtsdatum|fecha de nacimiento|data de nascimento|geboortedatum)\b/i;
 
