@@ -200,7 +200,25 @@
           <option value="Withdrawn">Withdrawn</option>
         </select>
         <button type="button" id="tracker-export" class="btn btn-secondary btn-sm"><span data-icon="download"></span><span>Export CSV</span></button>
+        <!-- >>> L4 competitor import -->
+        <label for="tracker-import-file" class="btn btn-secondary btn-sm" style="cursor: pointer; margin: 0;">
+          <span data-icon="upload"></span><span>Import CSV</span>
+          <input type="file" id="tracker-import-file" accept=".csv" style="display: none;" />
+        </label>
+        <!-- <<< L4 -->
       </div>
+      <!-- >>> L4 competitor import card -->
+      <div id="competitor-import-card" class="card" style="margin-bottom: 12px; background: var(--bg-subtle, #f8fafc); border: 1px dashed var(--border, #cbd5e1); padding: 10px 12px;">
+        <div class="card-head" style="margin-bottom: 4px;">
+          <h3 style="margin: 0; font-size: 13px; font-weight: 600;">Coming from Simplify, Huntr, or Teal?</h3>
+        </div>
+        <p class="hint" style="margin: 0 0 8px 0; font-size: 12px; color: var(--text-muted, #64748b);">Switch in 2 minutes. Export your tracker CSV from Simplify, Huntr, or Teal and import your applications here.</p>
+        <label for="tracker-import-file-btn" class="btn btn-secondary btn-sm" style="cursor: pointer; display: inline-flex; width: fit-content;">
+          <span data-icon="upload"></span><span>Import from Simplify / Huntr / Teal</span>
+          <input type="file" id="tracker-import-file-btn" accept=".csv" style="display: none;" />
+        </label>
+      </div>
+      <!-- <<< L4 -->
       <div id="tracker-analytics" class="card" style="margin-bottom: 12px;"></div>
       <div id="tracker-stats" class="stats stats-3" hidden>
         <div class="stat"><span class="stat-value accent" data-stat="applied">0</span><span class="stat-label">Applied</span></div>

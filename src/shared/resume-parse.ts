@@ -148,12 +148,12 @@ type Kind = "education" | "experience" | "skills" | "languages" | "projects" | "
 
 const HEADINGS: Array<[Kind, RegExp]> = [
   ["education", /^(education( (and|&) (training|qualifications?))?|educational (background|qualifications?|details)|academic (background|qualifications?|details|profile|record)|academics|qualifications?|scholastic (record|profile)|ausbildung)$/],
-  ["experience", /^((work|professional|industry|relevant|industrial) experience|experience|work history|employment( history)?|career history|internships?( experience)?|experience (and|&) internships|professional background|berufserfahrung)$/],
-  ["skills", /^((technical|key|core|relevant|it|computer) skills|skills( (and|&) (tools|technologies|interests|expertise|abilities))?|technologies|tech stack|core competencies|competencies|technical expertise|expertise|tools( (and|&) technologies)?)$/],
+  ["experience", /^((work|professional|industry|relevant|industrial) experience|experience|work history|employment( history| details)?|career history|internships?( experience)?|experience (and|&) internships|professional background|berufserfahrung)$/],
+  ["skills", /^((technical|key|core|relevant|it|computer|top) skills|skills( (and|&) (tools|technologies|interests|expertise|abilities))?|technologies|tech stack|core competencies|competencies|technical expertise|expertise|tools( (and|&) technologies)?)$/],
   ["languages", /^(languages( known| spoken)?|language (proficiency|skills)|spoken languages|sprachen)$/],
   ["projects", /^((academic|personal|key|selected|major|technical) projects|projects)$/],
-  ["summary", /^(summary|professional summary|career summary|profile|professional profile|objective|career objective|about( me)?)$/],
-  ["contact", /^(contact|contact (details|information|info)|personal (details|information|info))$/],
+  ["summary", /^(summary|professional summary|career summary|profile|professional profile|objective|career objective|about( me)?|resume headline)$/],
+  ["contact", /^(contact|contact (details|information|info)|personal (details|information|info)|contact info)$/],
   ["references", /^(references|referees|professional references|personal references)$/],
   ["other", /^(certifications?|licenses (and|&) certifications|courses|coursework|relevant coursework|achievements|awards|honou?rs( (and|&) awards)?|awards (and|&) achievements|accomplishments|publications|interests|hobbies|extra ?curricular( activities)?|positions of responsibility|volunteer(ing| experience)?|declaration|activities|leadership|co ?curricular activities)$/],
 ];

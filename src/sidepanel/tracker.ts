@@ -8,6 +8,9 @@ import type { ApplicationRecord, SavedJob, TrackerStage } from "../shared/types"
 import { applicationKey } from "../shared/license";
 import { loadApplications, loadSavedJobs, updateApplications, updateSavedJobs } from "../shared/storage";
 import { icon } from "./icons";
+// >>> L4 competitor import
+import { importCompetitorCsv } from "../shared/import-competitors";
+// <<< L4
 
 export const STAGES: TrackerStage[] = ["Saved", "Applied", "Assessment", "Interview", "Offer", "Rejected", "Withdrawn"];
 /** The employer answered: these count towards the response rate. */
@@ -361,6 +364,13 @@ export async function renderTrackerCrm(ui: TrackerUi, now = new Date()): Promise
     countBadge.textContent = applied > 0 ? String(applied) : "";
   }
 
+  // >>> L4 competitor import card toggle
+  const importCard = document.getElementById("competitor-import-card");
+  if (importCard) {
+    importCard.hidden = records.length > 0;
+  }
+  // <<< L4
+
   const list = document.getElementById("tracker-list");
   if (!list) return due.length;
   list.replaceChildren();
@@ -403,6 +413,37 @@ export function initTracker(ui: TrackerUi, rerender: () => void): void {
     else ui.toast("No web page to save", "bad");
     rerender();
   });
+  // >>> L4 competitor import
+  const handleImportFile = async (file: File) => {
+    try {
+      const text = await file.text();
+      const imported = importCompetitorCsv(text);
+      if (!imported.length) {
+        ui.toast("No valid applications found in that CSV file", "warn");
+        return;
+      }
+      await updateApplications((existing) => [...imported, ...existing]);
+      ui.toast(`${imported.length} applications imported from CSV!`, "ok");
+      rerender();
+    } catch (e) {
+      ui.toast(`Failed to import CSV: ${String(e)}`, "bad");
+    }
+  };
+
+  const importInput = document.getElementById("tracker-import-file") as HTMLInputElement | null;
+  importInput?.addEventListener("change", async () => {
+    const file = importInput.files?.[0];
+    if (file) await handleImportFile(file);
+    importInput.value = "";
+  });
+
+  const importBtnInput = document.getElementById("tracker-import-file-btn") as HTMLInputElement | null;
+  importBtnInput?.addEventListener("change", async () => {
+    const file = importBtnInput.files?.[0];
+    if (file) await handleImportFile(file);
+    importBtnInput.value = "";
+  });
+  // <<< L4
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area === "local" && (changes.savedJobs || changes.applications)) rerender();
   });
