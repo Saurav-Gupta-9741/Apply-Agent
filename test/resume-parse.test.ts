@@ -551,4 +551,201 @@ describe("Resume Import & Parsing Engine", () => {
       expect(parsed.skills).toContain("Kubernetes");
     });
   });
+
+  describe("14. Phase 3B Resume Parsing Hardening", () => {
+    function makeDocx(xml: string): Uint8Array {
+      const enc = new TextEncoder();
+      const nb = enc.encode("word/document.xml");
+      const fb = enc.encode(xml);
+
+      const lh = new Uint8Array(30 + nb.length + fb.length);
+      const lv = new DataView(lh.buffer);
+      lv.setUint32(0, 0x04034b50, true);
+      lv.setUint16(4, 20, true);
+      lv.setUint16(8, 0, true);
+      lv.setUint32(18, fb.length, true);
+      lv.setUint32(22, fb.length, true);
+      lv.setUint16(26, nb.length, true);
+      lh.set(nb, 30);
+      lh.set(fb, 30 + nb.length);
+
+      const cd = new Uint8Array(46 + nb.length);
+      const cv = new DataView(cd.buffer);
+      cv.setUint32(0, 0x02014b50, true);
+      cv.setUint16(4, 20, true);
+      cv.setUint16(6, 20, true);
+      cv.setUint16(10, 0, true);
+      cv.setUint32(20, fb.length, true);
+      cv.setUint32(24, fb.length, true);
+      cv.setUint16(28, nb.length, true);
+      cv.setUint32(42, 0, true);
+      cd.set(nb, 46);
+
+      const eocd = new Uint8Array(22);
+      const ev = new DataView(eocd.buffer);
+      ev.setUint32(0, 0x06054b50, true);
+      ev.setUint16(8, 1, true);
+      ev.setUint16(10, 1, true);
+      ev.setUint32(12, cd.length, true);
+      ev.setUint32(16, lh.length, true);
+
+      const zip = new Uint8Array(lh.length + cd.length + eocd.length);
+      zip.set(lh, 0);
+      zip.set(cd, lh.length);
+      zip.set(eocd, lh.length + cd.length);
+      return zip;
+    }
+
+    it("isolates REFERENCES section: never takes referee name, email, or phone as candidate values", () => {
+      const resume = `
+Jane Doe
+jane.doe@example.com
++1 415-555-0100
+San Francisco, CA
+
+EXPERIENCE
+Software Engineer at Acme Corp | 2021 – Present
+• Built distributed systems.
+
+REFERENCES
+Dr. Robert Reference
+Email: robert.ref@mit.edu
+Phone: +1 617-555-9999
+      `;
+      const parsed = parseResume(resume);
+      expect(parsed.fullName).toBe("Jane Doe");
+      const byField = new Map(parsed.suggestions.map((s) => [s.field, s.value]));
+      expect(byField.get("firstName")).toBe("Jane");
+      expect(byField.get("lastName")).toBe("Doe");
+      expect(byField.get("email")).toBe("jane.doe@example.com");
+      expect(byField.get("phone")).toBe("+1 415-555-0100");
+
+      const allValues = parsed.suggestions.map((s) => s.value);
+      expect(allValues).not.toContain("Robert");
+      expect(allValues).not.toContain("robert.ref@mit.edu");
+      expect(allValues).not.toContain("+1 617-555-9999");
+    });
+
+    it("ignores manager's phone inside an experience bullet", () => {
+      const resume = `
+Alice Smith
+alice@example.com
+New York, NY
+
+EXPERIENCE
+Senior Developer at BigTech | 2022 – Present
+• Reported directly to VP Engineering Mark Vance (contact: +1 212-555-8844) on cloud migration.
+• Led team of 5 engineers delivering high throughput pipeline.
+      `;
+      const parsed = parseResume(resume);
+      const byField = new Map(parsed.suggestions.map((s) => [s.field, s.value]));
+      expect(byField.get("phone")).toBeUndefined();
+    });
+
+    it("extracts obfuscated email with medium confidence (unticked)", () => {
+      const resume = `
+Bob Brown
+bob.brown [at] gmail [dot] com
++1 555-432-1000
+Seattle, WA
+
+EXPERIENCE
+Frontend Engineer at WebCo | 2020 – Present
+      `;
+      const parsed = parseResume(resume);
+      const emailSuggestion = parsed.suggestions.find((s) => s.field === "email");
+      expect(emailSuggestion).toBeDefined();
+      expect(emailSuggestion!.value).toBe("bob.brown@gmail.com");
+      expect(emailSuggestion!.confidence).toBe("medium");
+    });
+
+    it("calculates overlapping jobs (2020–2023 and 2022–2024) as 4 years, not 5", () => {
+      const resume = `
+Dev User
+dev@example.com
+
+EXPERIENCE
+Software Engineer | Alpha Corp
+2020 – 2023
+• Full stack development.
+
+Contract Engineer | Beta LLC
+2022 – 2024
+• Systems programming.
+      `;
+      const parsed = parseResume(resume, new Date("2026-06-01"));
+      const byField = new Map(parsed.suggestions.map((s) => [s.field, s.value]));
+      expect(byField.get("experienceYears")).toBe("4");
+    });
+
+    it("parses Indian resume formats: Jan'22 – Present, B.E. (Computer Engg.), CGPA: 8.21/10, Percentage: 78%", () => {
+      const resume = `
+Rohit Sharma
+rohit.sharma@example.com
++91 98200 12345
+Mumbai, Maharashtra, India
+
+EDUCATION
+B.E. (Computer Engg.) | University of Mumbai | 2018 – 2022
+CGPA: 8.21/10 | Percentage: 78%
+
+EXPERIENCE
+Software Engineer | Tata Consultancy Services
+Jan'22 – Present
+• Developing enterprise microservices using Spring Boot.
+      `;
+      const parsed = parseResume(resume, new Date("2026-06-01"));
+      const byField = new Map(parsed.suggestions.map((s) => [s.field, s.value]));
+      expect(byField.get("degree")).toBe("B.E.");
+      expect(byField.get("discipline")).toBe("Computer Engg.");
+      expect(byField.get("educationLevel")).toBe("Bachelor's");
+
+      expect(parsed.education[0]?.degree).toBe("B.E.");
+      expect(parsed.education[0]?.discipline).toBe("Computer Engg.");
+      expect(parsed.education[0]?.score).toMatch(/8\.21\/10|78%/);
+
+      expect(parsed.work[0]?.start).toBe("2022-01");
+      expect(parsed.work[0]?.current).toBe(true);
+    });
+
+    it("extracts a real DOCX file built with zip of word/document.xml matching its text version output", async () => {
+      const docXml = `
+        <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+          <w:body>
+            <w:p><w:r><w:t>Kavita Patel</w:t></w:r></w:p>
+            <w:p><w:r><w:t>kavita.patel@example.com | +91 98765 11111 | Ahmedabad, Gujarat</w:t></w:r></w:p>
+            <w:p><w:r><w:t>EXPERIENCE</w:t></w:r></w:p>
+            <w:p><w:r><w:t>DevOps Engineer at CloudWorks | 2023 – Present</w:t></w:r></w:p>
+            <w:p><w:r><w:t>EDUCATION</w:t></w:r></w:p>
+            <w:p><w:r><w:t>Gujarat Technological University</w:t></w:r></w:p>
+            <w:p><w:r><w:t>B.Tech in Information Technology | 2023</w:t></w:r></w:p>
+            <w:p><w:r><w:t>SKILLS</w:t></w:r></w:p>
+            <w:p><w:r><w:t>Docker, Terraform, AWS, Linux</w:t></w:r></w:p>
+          </w:body>
+        </w:document>
+      `;
+      const docxBytes = makeDocx(docXml);
+      const textFromDocx = await docxToText(docxBytes);
+      expect(textFromDocx).toBeDefined();
+
+      const parsedFromDocx = parseResume(textFromDocx!, new Date("2026-06-01"));
+      const parsedDirectText = parseResume(textFromDocx!, new Date("2026-06-01"));
+
+      expect(parsedFromDocx.fullName).toBe("Kavita Patel");
+      expect(parsedFromDocx.fullName).toBe(parsedDirectText.fullName);
+      expect(parsedFromDocx.suggestions.length).toBe(parsedDirectText.suggestions.length);
+
+      const byField = new Map(parsedFromDocx.suggestions.map((s) => [s.field, s.value]));
+      expect(byField.get("firstName")).toBe("Kavita");
+      expect(byField.get("lastName")).toBe("Patel");
+      expect(byField.get("email")).toBe("kavita.patel@example.com");
+      expect(byField.get("phone")).toBe("+91 98765 11111");
+      expect(byField.get("location")).toBe("Ahmedabad");
+      expect(byField.get("country")).toBe("India");
+      expect(byField.get("degree")).toBe("B.Tech");
+      expect(byField.get("discipline")).toBe("Information Technology");
+      expect(parsedFromDocx.skills).toContain("Docker");
+      expect(parsedFromDocx.skills).toContain("Terraform");
+    });
+  });
 });

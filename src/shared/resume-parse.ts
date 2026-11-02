@@ -144,7 +144,7 @@ function prepare(text: string): Line[] {
 
 // --- sections ---------------------------------------------------------------------------------------------
 
-type Kind = "education" | "experience" | "skills" | "languages" | "projects" | "summary" | "contact" | "other";
+type Kind = "education" | "experience" | "skills" | "languages" | "projects" | "summary" | "contact" | "references" | "other";
 
 const HEADINGS: Array<[Kind, RegExp]> = [
   ["education", /^(education( (and|&) (training|qualifications?))?|educational (background|qualifications?|details)|academic (background|qualifications?|details|profile|record)|academics|qualifications?|scholastic (record|profile)|ausbildung)$/],
@@ -154,7 +154,8 @@ const HEADINGS: Array<[Kind, RegExp]> = [
   ["projects", /^((academic|personal|key|selected|major|technical) projects|projects)$/],
   ["summary", /^(summary|professional summary|career summary|profile|professional profile|objective|career objective|about( me)?)$/],
   ["contact", /^(contact|contact (details|information|info)|personal (details|information|info))$/],
-  ["other", /^(certifications?|licenses (and|&) certifications|courses|coursework|relevant coursework|achievements|awards|honou?rs( (and|&) awards)?|awards (and|&) achievements|accomplishments|publications|interests|hobbies|extra ?curricular( activities)?|positions of responsibility|volunteer(ing| experience)?|references|declaration|activities|leadership|co ?curricular activities)$/],
+  ["references", /^(references|referees|professional references|personal references)$/],
+  ["other", /^(certifications?|licenses (and|&) certifications|courses|coursework|relevant coursework|achievements|awards|honou?rs( (and|&) awards)?|awards (and|&) achievements|accomplishments|publications|interests|hobbies|extra ?curricular( activities)?|positions of responsibility|volunteer(ing| experience)?|declaration|activities|leadership|co ?curricular activities)$/],
 ];
 
 function headingKind(text: string): Kind | undefined {
@@ -245,6 +246,7 @@ const PHONE_LABEL = /\b(phone|mobile|mob|tel|telephone|cell|contact( no| number)
 function findPhone(header: Line[], all: Line[]): { value: string; source: string; confidence: Confidence } | undefined {
   const look = (lines: Line[], strict: boolean) => {
     for (const line of lines) {
+      if (line.bullet) continue;
       if (strict && !PHONE_LABEL.test(line.text) && !/\+\d/.test(line.text)) continue;
       const text = line.text.replace(EMAIL, " ").replace(URLISH, " ");
       for (const m of text.matchAll(PHONE)) {
@@ -320,7 +322,7 @@ function findPlace(lines: Line[]): Place | undefined {
 const DEGREE = /(?<![\p{L}])(Ph\.?\s?D\.?|Doctor of [A-Z][a-z]+|Integrated M\.?\s?Tech\.?|Dual Degree|M\.?\s?Tech\.?|B\.?\s?Tech\.?|M\.E\.|B\.E\.|\bBE\b|\bME\b|B\.?\s?Sc\.?|M\.?\s?Sc\.?|B\.S\.|M\.S\.|\bBS\b|\bMS\b|B\.A\.|M\.A\.|\bBCA\b|\bMCA\b|\bMBA\b|\bBBA\b|B\.?\s?Com\.?|M\.?\s?Com\.?|B\.?\s?Arch\.?|M\.?\s?Arch\.?|Bachelor(?:'s|’s)?(?: of (?:Business Administration|Computer Applications|Fine Arts|[A-Z][a-z]+))?(?: Degree)?|Master(?:'s|’s)?(?: of (?:Business Administration|Computer Applications|Fine Arts|[A-Z][a-z]+))?(?: Degree)?|Diploma|Associate(?:'s)? Degree|Class (?:XII|X|12(?:th)?|10(?:th)?)\b|(?:12|10)th\b|\bHSC\b|\bSSC\b|Senior Secondary|Higher Secondary|Secondary School Certificate|Abitur)/u;
 const INSTITUTION = /\b(universit\w*|institute|college|school|academy|polytechnic|vidyalaya|vidyapeeth|vidyapith|hochschule|[ée]cole|IIT|IIIT|NIT|BITS|IIM|IISc|MIT|UCLA|TU)\b/i;
 const YEAR = /\b(19[6-9]\d|20[0-4]\d)\b/g;
-const SCORE = /\b(?:CGPA|CPI|GPA|SGPA|OGPA)\b\s*[:\-–]?\s*(\d{1,2}(?:\.\d{1,2})?(?:\s*(?:\/|out of)\s*\d{1,2}(?:\.\d{1,2})?)?)|(\d{1,2}\.\d{1,2}\s*\/\s*(?:10|4(?:\.0)?|5(?:\.0)?))(?:\s*(?:CGPA|CPI|GPA))?|\b(\d{2}(?:\.\d{1,2})?\s?%)/i;
+const SCORE = /\b(?:CGPA|CPI|GPA|SGPA|OGPA)\b\s*[:\-–]?\s*(\d{1,2}(?:\.\d{1,2})?(?:\s*(?:\/|out of)\s*\d{1,2}(?:\.\d{1,2})?)?)|(\d{1,2}\.\d{1,2}\s*\/\s*(?:10|4(?:\.0)?|5(?:\.0)?))(?:\s*(?:CGPA|CPI|GPA))?|\b(?:percentage|aggregate|marks)\b\s*[:\-–]?\s*(\d{1,2}(?:\.\d{1,2})?\s*%?)|\b(\d{2}(?:\.\d{1,2})?\s?%)/i;
 
 function levelOf(degree: string): string {
   const d = degree.toLowerCase().replace(/[.\s’']/g, "");
@@ -385,7 +387,7 @@ function parseEducation(lines: Line[]): EducationItem[] {
     return {
       degree, institution, discipline,
       year: years.length ? String(Math.max(...years)) : "",
-      score: score ? (score[1] ?? score[2] ?? score[3] ?? "").trim() : "",
+      score: score ? (score[1] ?? score[2] ?? score[3] ?? score[4] ?? "").trim() : "",
       level: degree ? levelOf(degree) : "",
       source: e.lines.join(" / "),
     };
@@ -517,6 +519,10 @@ function parseLanguages(lines: Line[]): Array<{ language: string; proficiency?: 
 export function parseResume(text: string, today: Date = new Date()): ParsedResume {
   const lines = prepare(text);
   const sections = sectionize(lines);
+  const refLines = linesOf(sections, "references");
+  const nonReferenceLines = lines.filter((l) => !refLines.includes(l));
+  const expLines = linesOf(sections, "experience");
+  const projLines = linesOf(sections, "projects");
   const top = [...sections.header, ...linesOf(sections, "contact")];
   const suggestions: Suggestion[] = [];
   const questions: string[] = [];
@@ -526,20 +532,31 @@ export function parseResume(text: string, today: Date = new Date()): ParsedResum
   };
 
   // Contact
-  const name = findName(lines);
+  const name = findName(nonReferenceLines);
   if (name) {
     add({ section: "Contact", field: "firstName", label: "First name", value: name.first, confidence: name.confidence, source: name.source });
     if (name.last) add({ section: "Contact", field: "lastName", label: "Last name", value: name.last, confidence: name.confidence, source: name.source });
   }
-  const emailLine = lines.find((l) => EMAIL.test(l.text));
-  if (emailLine) add({ section: "Contact", field: "email", label: "Email", value: EMAIL.exec(emailLine.text)![0], confidence: "high", source: emailLine.text });
-  const phone = findPhone(top, lines);
+  const OBFUSCATED_EMAIL = /\b([A-Za-z0-9](?:[A-Za-z0-9._%+-]*[A-Za-z0-9_+-])?)\s*(?:\[at\]|\(at\)|\bat\b)\s*([A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)\s*(?:\[dot\]|\(dot\)|\bdot\b|\.)\s*([A-Za-z]{2,})\b/i;
+  const emailLine = nonReferenceLines.find((l) => EMAIL.test(l.text));
+  if (emailLine) {
+    add({ section: "Contact", field: "email", label: "Email", value: EMAIL.exec(emailLine.text)![0], confidence: "high", source: emailLine.text });
+  } else {
+    const obfLine = nonReferenceLines.find((l) => OBFUSCATED_EMAIL.test(l.text));
+    if (obfLine) {
+      const m = OBFUSCATED_EMAIL.exec(obfLine.text)!;
+      const deobfuscated = `${m[1]}@${m[2]}.${m[3]}`.toLowerCase();
+      add({ section: "Contact", field: "email", label: "Email", value: deobfuscated, confidence: "medium", source: obfLine.text, note: "Obfuscated in resume" });
+    }
+  }
+  const phoneCandidates = nonReferenceLines.filter((l) => !expLines.includes(l) && !projLines.includes(l));
+  const phone = findPhone(top, phoneCandidates);
   if (phone) {
     const split = splitPhone(phone.value);
     add({ section: "Contact", field: "phone", label: "Phone", value: phone.value, confidence: phone.confidence, source: phone.source,
       note: split.code ? `Country code +${split.code}, number ${split.national}` : "No country code in the resume" });
   }
-  const labelledPlace = lines.filter((l) => /^(location|address|based in|current location)\s*[:\-]/i.test(l.text));
+  const labelledPlace = nonReferenceLines.filter((l) => /^(location|address|based in|current location)\s*[:\-]/i.test(l.text));
   const place = findPlace([...top, ...labelledPlace]);
   if (place) {
     if (place.city) add({ section: "Contact", field: "location", label: "City", value: place.city, confidence: "high", source: place.source });
@@ -550,12 +567,12 @@ export function parseResume(text: string, today: Date = new Date()): ParsedResum
   }
 
   // Links
-  const allText = lines.map((l) => l.text).join("\n");
+  const allText = nonReferenceLines.map((l) => l.text).join("\n");
   const linkedin = /(?:https?:\/\/)?(?:[a-z]{2,3}\.)?linkedin\.com\/in\/[A-Za-z0-9_%-]+\/?/i.exec(allText);
   if (linkedin) add({ section: "Links", field: "linkedin", label: "LinkedIn", value: withScheme(linkedin[0]).replace(/\/$/, ""), confidence: "high", source: lines.find((l) => l.text.includes(linkedin[0]))!.text });
   const github = /(?:https?:\/\/)?(?:www\.)?github\.com\/([A-Za-z0-9-]+)(?![A-Za-z0-9-])/i.exec(allText);
   if (github && !/^(orgs|topics|features|about)$/i.test(github[1]!)) add({ section: "Links", field: "github", label: "GitHub", value: withScheme(github[0]), confidence: "high", source: lines.find((l) => l.text.includes(github[0]))!.text });
-  const portfolioLines = [...top, ...lines.filter((l) => /^(portfolio|website|web|blog|personal site)\s*[:\-]/i.test(l.text))];
+  const portfolioLines = [...top, ...nonReferenceLines.filter((l) => /^(portfolio|website|web|blog|personal site)\s*[:\-]/i.test(l.text))];
   for (const line of portfolioLines) {
     const urls = [...line.text.replace(new RegExp(EMAIL.source, "g"), " ").matchAll(URLISH)].map((m) => m[0]).filter((u) => !/linkedin\.com|github\.com\/?$|github\.com\/|mailto:/i.test(u));
     if (urls[0]) {
@@ -619,7 +636,7 @@ export function parseResume(text: string, today: Date = new Date()): ParsedResum
   }
 
   if (!name) questions.push("Your name was not found. Please check it.");
-  if (!emailLine) questions.push("No email address was found.");
+  if (!emailLine && !suggestions.some((s) => s.field === "email")) questions.push("No email address was found.");
   return { fullName: name?.full ?? "", suggestions, education, work, skills, questions };
 }
 
