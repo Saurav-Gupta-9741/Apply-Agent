@@ -202,6 +202,8 @@ export interface FieldDescriptor {
   /** Stable key within one page scan (used to find the element again). */
   key: string;
   label: string;
+  /** Original un-translated page label when translated by i18n-labels. */
+  originalLabel?: string;
   control: ControlType;
   required: boolean;
   options: string[];

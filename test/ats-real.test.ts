@@ -27,9 +27,9 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
       }
     }
 
-    // Exact descriptor check
+    // Exact descriptor check (original label on page)
     const extractedDescriptors = fields.map((f) => ({
-      label: f.descriptor.label,
+      label: f.descriptor.originalLabel ?? f.descriptor.label,
       control: f.descriptor.control,
       required: f.descriptor.required,
     }));
@@ -136,9 +136,9 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
       }
     }
 
-    // Exact descriptor check
+    // Exact descriptor check (original label on page)
     const extractedDescriptors = fields.map((f) => ({
-      label: f.descriptor.label,
+      label: f.descriptor.originalLabel ?? f.descriptor.label,
       control: f.descriptor.control,
       required: f.descriptor.required,
     }));
@@ -210,9 +210,9 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
       }
     }
 
-    // Exact descriptor check
+    // Exact descriptor check (original label on page)
     const extractedDescriptors = fields.map((f) => ({
-      label: f.descriptor.label,
+      label: f.descriptor.originalLabel ?? f.descriptor.label,
       control: f.descriptor.control,
       required: f.descriptor.required,
     }));
@@ -314,9 +314,9 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
       }
     }
 
-    // Exact descriptor check
+    // Exact descriptor check (original label on page)
     const extractedDescriptors = fields.map((f) => ({
-      label: f.descriptor.label,
+      label: f.descriptor.originalLabel ?? f.descriptor.label,
       control: f.descriptor.control,
       required: f.descriptor.required,
     }));
@@ -448,9 +448,9 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
       }
     }
 
-    // Exact descriptor check
+    // Exact descriptor check (original label on page)
     const extractedDescriptors = fields.map((f) => ({
-      label: f.descriptor.label,
+      label: f.descriptor.originalLabel ?? f.descriptor.label,
       control: f.descriptor.control,
       required: f.descriptor.required,
     }));
@@ -582,9 +582,9 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
       }
     }
 
-    // Exact descriptor check
+    // Exact descriptor check (original label on page)
     const extractedDescriptors = fields.map((f) => ({
-      label: f.descriptor.label,
+      label: f.descriptor.originalLabel ?? f.descriptor.label,
       control: f.descriptor.control,
       required: f.descriptor.required,
     }));
@@ -681,9 +681,9 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
       }
     }
 
-    // Exact descriptor check
+    // Exact descriptor check (original label on page)
     const extractedDescriptors = fields.map((f) => ({
-      label: f.descriptor.label,
+      label: f.descriptor.originalLabel ?? f.descriptor.label,
       control: f.descriptor.control,
       required: f.descriptor.required,
     }));
@@ -760,9 +760,9 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
       }
     }
 
-    // Exact descriptor check
+    // Exact descriptor check (original label on page)
     const extractedDescriptors = fields.map((f) => ({
-      label: f.descriptor.label,
+      label: f.descriptor.originalLabel ?? f.descriptor.label,
       control: f.descriptor.control,
       required: f.descriptor.required,
     }));
@@ -849,9 +849,9 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
       }
     }
 
-    // Exact descriptor check
+    // Exact descriptor check (original label on page)
     const extractedDescriptors = fields.map((f) => ({
-      label: f.descriptor.label,
+      label: f.descriptor.originalLabel ?? f.descriptor.label,
       control: f.descriptor.control,
       required: f.descriptor.required,
     }));
@@ -933,9 +933,9 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
       }
     }
 
-    // Exact descriptor check
+    // Exact descriptor check (original label on page)
     const extractedDescriptors = fields.map((f) => ({
-      label: f.descriptor.label,
+      label: f.descriptor.originalLabel ?? f.descriptor.label,
       control: f.descriptor.control,
       required: f.descriptor.required,
     }));
@@ -1002,9 +1002,9 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
       }
     }
 
-    // Exact descriptor check
+    // Exact descriptor check (original label on page)
     const extractedDescriptors = fields.map((f) => ({
-      label: f.descriptor.label,
+      label: f.descriptor.originalLabel ?? f.descriptor.label,
       control: f.descriptor.control,
       required: f.descriptor.required,
     }));

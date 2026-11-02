@@ -8,6 +8,7 @@
 import type { ControlType, FieldDescriptor } from "../shared/types";
 import { cleanLabel, cssAttr } from "../shared/text";
 import { deepQueryAll, scopeOf } from "./dom";
+import { detectPageLanguage, inspectAndTranslateField, translateOptions } from "../shared/i18n-labels";
 
 /** Native controls, plus buttons that open a list of choices (custom dropdowns). */
 export type FieldElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLButtonElement | HTMLElement;
@@ -559,7 +560,27 @@ export function extractFields(root: ParentNode): ExtractedField[] {
   const sorted = out.sort((a, b) => (position.get(a.elements[0]!) ?? 0) - (position.get(b.elements[0]!) ?? 0));
   assignWorkBlocks(sorted, root);
   assignSections(sorted, root);
+  translateExtractedFields(sorted, root);
   return sorted;
+}
+
+function translateExtractedFields(fields: ExtractedField[], root: ParentNode): void {
+  const doc = "ownerDocument" in root && (root as Element).ownerDocument ? (root as Element).ownerDocument : root instanceof Document ? root : null;
+  const htmlLang = doc?.documentElement?.getAttribute("lang") ?? "";
+  const sampleLabels = fields.map((f) => f.descriptor.label);
+  const detected = detectPageLanguage(htmlLang, sampleLabels);
+  if (detected === "en") return;
+
+  for (const field of fields) {
+    const inspected = inspectAndTranslateField(field.descriptor.label, field.descriptor.options, detected);
+    if (inspected.label !== field.descriptor.label) {
+      field.descriptor.originalLabel = field.descriptor.label;
+      field.descriptor.label = inspected.label;
+    }
+    if (detected !== "unknown" && field.descriptor.options.length) {
+      field.descriptor.options = translateOptions(field.descriptor.options, detected);
+    }
+  }
 }
 
 /** Each field's section: the closest heading before it inside the form (never the page's h1, which is usually the

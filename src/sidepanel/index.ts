@@ -492,7 +492,8 @@ function renderFields(report: RunReport): void {
     if (r.status === "filled" || r.status === "already_filled") counts.filled++;
     else if (r.status === "needs_user" || r.status === "failed") counts.needs++;
     else counts.blank++;
-    const label = h("span", { class: "label" }, r.field.label || "(unlabelled field)");
+    const displayLabel = r.field.originalLabel ? `${r.field.originalLabel} (${r.field.label})` : (r.field.label || "(unlabelled field)");
+    const label = h("span", { class: "label" }, displayLabel);
     if (r.tag === "reused" || (r.decision.kind === "answer" && r.decision.reused)) {
       label.append(h("span", { class: "tag reused", style: "margin-left: 6px; font-size: 10px; color: var(--info); background: var(--info-soft);" }, "reused"));
     }
