@@ -51,6 +51,7 @@ const FULL: Profile = {
   ],
   facts: {
     workCountries: "India",
+    unauthorizedCountries: "United States, United Kingdom, Germany, Canada",
     noticePeriod: "30 days",
     currentCtc: "6 LPA",
     expectedCtc: "20 LPA",

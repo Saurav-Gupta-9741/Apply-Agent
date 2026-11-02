@@ -82,6 +82,7 @@ const NEEDS = /\b(require|requires|required|need|needs|needed|benotig\w*|brauch\
 function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts, page?: PageFacts): Decision | undefined {
   const allowed = canonicalCountries(facts.workCountries);
   const tempAllowed = canonicalCountries(facts.temporaryWorkCountries ?? "");
+  const unauth = canonicalCountries(facts.unauthorizedCountries ?? "");
   const allAllowed = [...new Set([...allowed, ...tempAllowed])];
   if (!allAllowed.length || !yesNoField(field)) return undefined;
   const q = theQuestion(field.label);
@@ -106,15 +107,20 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   }
   // "…in your country of application?", "…the country for which you applied?": the job's country, and only a yes when
   // that is known and one the user may work in (a no could be about another country than the page shows).
-  if (!places.length && /country (of application|for which you (have )?appl|you (are )?apply|you (have )?applied)/.test(whole)) {
+  if (!places.length && /country (of application|for which you (have )?appl|you (are )?(?:applying|apply)|you (have )?applied)/.test(whole)) {
     const job = page?.jobCountries ?? [];
-    if (!job.length || !job.every((c) => canWorkIn(c, allowed))) return undefined;
+    if (job.length && (job.every((c) => canWorkIn(c, allowed)) || job.every((c) => canWorkIn(c, unauth)))) {
+      places = job;
+    } else {
+      return undefined;
+    }
   }
   // No country in the question ("…require sponsorship to work at Cloudflare?"): it is about this job, so the job's own
   // country decides, when the page names exactly that. A choice made earlier on the form is the user's to recall.
   if (!places.length && page?.jobCountries.length && !/you selected|previous (response|question|answer)|above/.test(q)) places = page.jobCountries;
   if (!places.length) return undefined; // the job's country is not known: the user decides
   const can = places.map((c) => canWorkIn(c, allAllowed));
+  const isExplicitlyUnauth = places.map((c) => canWorkIn(c, unauth));
   if (!can.every((x) => x === can[0])) return undefined; // "the US or Canada" with a yes for one and a no for the other
   // Polarity from the question's own words ("…the right to work in Poland without the need for a visa?" asks about the
   // right to work).
@@ -125,7 +131,14 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   } else if (needs) {
     yes = !canWorkIn(places[0]!, allowed);
   } else {
-    yes = can[0]!;
+    if (can[0]) {
+      yes = true;
+    } else if (isExplicitlyUnauth[0]) {
+      yes = false;
+    } else {
+      // Unlisted country and not explicitly unauthorized: ASK! Never guess "No".
+      return undefined;
+    }
   }
   const raw = yes ? "Yes" : "No";
   const val = field.options.length ? (yesNoOption(field.options, raw) ?? bestOption(field.options, raw) ?? raw) : raw;
@@ -434,6 +447,8 @@ export function parseNoticeDays(notice: string): number | undefined {
   if (/^(immediate(ly)?|0(\s*(days?|weeks?|months?))?|none|no notice|available immediately|sofort|ab sofort|immediat(e)?|immediatement|sans preavis|inmediat[oa]|de inmediato|inmediatamente|sin preaviso|imediat[oa]|imediatamente|sem aviso previo|subito|per direct|direct beschikbaar)$/.test(norm)) {
     return 0;
   }
+  const bareNum = norm.match(/^(\d+)$/);
+  if (bareNum && bareNum[1]) return parseInt(bareNum[1], 10);
   const m = norm.match(/\b(\d+)\s*(days?|weeks?|months?|tage?n?|wochen?|monate?n?|jours?|semaines?|mois|dias?|semanas?|mes(?:es)?|giorn[io]|settiman[ae]|mesi|mese|dag(?:en)?|week|weken|maand(?:en)?)\b/);
   if (!m || !m[1]) return undefined;
   const num = parseInt(m[1], 10);
@@ -478,7 +493,7 @@ export function matchNoticeOption(notice: string, options: string[]): string | u
     if (m) return m;
   }
   if (candidateDays === 60) {
-    const m = options.find((o) => /\b(?:2\s*(?:months?|monate?n?|mois|mes(?:es)?|mesi|maand(?:en)?)|60\s*(?:days?|tage?n?|jours?|dias?|giorni))\b/i.test(normalize(o)));
+    const m = options.find((o) => /\b(?:2\s*(?:\+|\s*or\s*more)?\s*(?:months?|monate?n?|mois|mes(?:es)?|mesi|maand(?:en)?)|60\s*(?:\+|\s*or\s*more)?\s*(?:days?|tage?n?|jours?|dias?|giorni))\b/i.test(normalize(o)));
     if (m) return m;
   }
   if (candidateDays === 30) {
@@ -591,17 +606,33 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     // A date picker or a "month"/"year" box needs a date, not "30 days".
     // "Are you subject to a notice period?" is a yes/no question: "30 days" is not its answer.
     const notice = facts.noticePeriod?.trim() ?? "";
-    if (!notice || field.control === "date" || YES_NO_QUESTION.test(q)) return undefined;
+    if (!notice || field.control === "date") return undefined;
+    const candidateDays = parseNoticeDays(notice);
+
+    if (isCompanyOrPlaceSpecific(field.label) || hasExceptionClause(field.label) || /^if\b/i.test(q)) return undefined;
+    const withinMatch = q.match(/^(?:can you|are you (?:able|available) to|could you|would you be able to)?\s*(?:start|join|commence|begin|available|commencer|incorporarse|iniciar)\s+(?:within|in|dans|en|em)\s+(\d+)\s*(days?|weeks?|months?|tage?n?|wochen?|monate?n?|jours?|semaines?|mois|dias?|semanas?|meses?)\??$/i);
+    if (withinMatch && withinMatch[1]) {
+      const allowedNum = parseInt(withinMatch[1], 10);
+      const unit = withinMatch[2]?.toLowerCase() ?? "day";
+      const thresholdDays = /month|monat|mois|mes/i.test(unit) ? allowedNum * 30 : /week|woche|semaine|semana/i.test(unit) ? allowedNum * 7 : allowedNum;
+      if (candidateDays !== undefined) {
+        const canJoin = candidateDays <= thresholdDays;
+        const raw = canJoin ? "Yes" : "No";
+        const val = field.options.length ? (yesNoOption(field.options, raw) ?? bestOption(field.options, raw) ?? raw) : raw;
+        return answer(val, "notice period");
+      }
+    }
+
+    if (YES_NO_QUESTION.test(q)) return undefined;
     // A date ("Start date", a DD/MM/YYYY mask in the label or placeholder) needs a date, not "30 days".
     const shape = normalize(`${field.label} ${field.placeholder}`);
     if (/\b(dd|mm|yyyy|jjjj|aaaa)\b/.test(shape) || /\b(month|year)\b$/.test(q) || /last (working )?day/.test(q)) return undefined;
     // "Start date", "Date Available", "Availability date": a date, and a notice period ("30 days") is not one.
     const savedIsDate = /\b(19|20)\d{2}\b|\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\b|\d{1,2}[\/.-]\d{1,2}/.test(notice.toLowerCase());
     if (/\b(date|datum|fecha|data)\b/.test(q) && !savedIsDate) return undefined;
-    const candidateDays = parseNoticeDays(notice);
     const rawUnit = /\b(days?|weeks?|months?|tage?n?|wochen?|monate?n?|jours?|semaines?|mois|dias?|semanas?|meses?|giorni|settimane|mesi|weken?|maanden?)\b/.exec(shape)?.[1]?.toLowerCase();
     const unit = rawUnit ? (/^(month|monat|mois|mes|mese|maand)/.test(rawUnit) ? "month" : /^(week|woche|semaine|semana|settimana|wek)/.test(rawUnit) ? "week" : "day") : undefined;
-    const saved = /^(\d+)\s*(day|week|month)s?$/i.exec(notice);
+    const saved = /^(\d+)(?:\s*(day|week|month)s?)?$/i.exec(notice);
     if (unit || field.control === "number") {
       if (unit === "month" && candidateDays !== undefined) {
         if (candidateDays % 30 === 0) {
@@ -634,7 +665,7 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
       const opt = matchNoticeOption(notice, field.options);
       return opt ? answer(opt, "notice period") : undefined;
     }
-    return answer(notice, "notice period");
+    return answer(candidateDays !== undefined && !/\b(day|week|month)s?\b/i.test(notice) ? `${candidateDays} days` : notice, "notice period");
   }
   if (topic === "relocation") {
     if (!facts.relocate) return undefined;
