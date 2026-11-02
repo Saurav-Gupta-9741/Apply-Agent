@@ -53,11 +53,15 @@ The benchmark tests against 4 frozen candidate profiles (`test/personas/`):
 The percentage of answerable questions that ApplyAgent fills automatically without bothering the user:
 $$\text{Automation Share} = \frac{\text{Filled}}{\text{Total Answerable Fields}}$$
 
-### B. Wrong Fills & Upper Bound
-ApplyAgent strictly enforces **0 wrong fills**. Any value that differs from human ground truth is flagged as wrong.
-The benchmark computes a **one-sided 95% Clopper-Pearson upper bound** on the wrong rate:
-$$P(\text{Binomial}(n, p) \le k) = 0.05$$
-When $k = 0$, this upper bound approximates the Rule of Three ($3/n$).
+### B. The 4 Checks of Wrong Fills (Strict Zero-Wrong Invariant)
+ApplyAgent strictly enforces **0 wrong fills**. A fill is flagged as incorrect under any of the following 4 strict verification checks:
+1. **Kind (i) — Human-Only Question Filled:** Any question asking for consent, legal declarations, signatures, government identification numbers, or background check authorizations is filled rather than asked.
+2. **Kind (ii) — Mismatched Reused Answer Meaning:** An answer saved from an earlier form's question is reused for a question whose hand-labeled semantic meaning differs.
+3. **Kind (iii) — Mismatched Profile / Quick Answer Meaning:** A profile attribute or Quick Answer is filled into a form field whose hand-labeled meaning does not match the source attribute.
+4. **Kind (iv) — Ground Truth Gold Value Mismatch:** Where a human gold standard answer exists, the filled value does not match the gold answer.
+
+> [!NOTE]
+> Values are script-checked across 256 real application forms; a hand-checked value benchmark is in progress. Every fill must strictly satisfy all 4 checks.
 
 ### C. Error Taxonomy
 Any mismatch is categorized into one of six error kinds:
@@ -97,22 +101,52 @@ The offline labeling tool (`scripts/label-values.html`) is designed for fast, bl
 
 ---
 
-## 5. Steady-State Benchmark Results (Phase 4)
+## 5. Steady-State Benchmark Results (Phase 4B Verified)
 
-Measured across all 1,539 real corpus questions and 966 benchmark fields from 62 real ATS application forms. Steady-state represents performance on a candidate's Nth application, once initial Quick Answers and screening facts are saved.
+Measured across 256 real application forms pool (comprising 3,840 fields) across 20 seeded random simulation draws (seeds 1..20) for Frozen Personas A–D. Forms 1..9 progressively build the local answer bank (without company restrictions, matching extension behavior). Form 10 evaluates steady-state performance.
 
-### Summary Table across Frozen Personas
+### Summary Table across Frozen Personas (20 Seeded Draws)
 
-| Persona | Location / Role | First-App Auto | Steady-State Auto | Benchmark Fields (966) | Wrong Fills | 95% Clopper-Pearson Upper Bound |
-|---|---|---|---|---|---|---|
-| **Persona A** | Fresher Data Analyst (Pune) | 448 (29.1%) | 459 (29.8%) | 412 / 966 (42.7%) | **0** | < 0.32% |
-| **Persona B** | Senior SWE (Bangalore) | 500 (32.5%) | 514 (33.4%) | 463 / 966 (47.9%) | **0** | < 0.32% |
-| **Persona C** | Marketing Manager (Mumbai) | 504 (32.7%) | 518 (33.7%) | 466 / 966 (48.2%) | **0** | < 0.32% |
-| **Persona D** | Product Designer (Austin, US) | 555 (36.1%) | 569 (37.0%) | 512 / 966 (53.0%) | **0** | < 0.32% |
+| Persona | Location / Role | App 1 (First Form) | App 5 | App 10 (Steady-State) | App 20 | Wrong (i) Human-Only | Wrong (ii) Reused Meaning | Wrong (iii) Profile Meaning | Wrong (iv) Gold Mismatch |
+|---|---|---|---|---|---|---|---|---|---|
+| **Persona A** | Fresher Data Analyst (Pune) | 51.4% (min 22.7%, max 75.0%) | 58.0% | **63.2%** (min 0.0%, max 88.0%) | 64.0% | **0** | **0** | **0** | **0** |
+| **Persona B** | Senior SWE (Bangalore) | 52.9% (min 22.7%, max 75.0%) | 59.9% | **64.1%** (min 0.0%, max 88.0%) | 64.0% | **0** | **0** | **0** | **0** |
+| **Persona C** | Marketing Manager (Mumbai) | 53.4% (min 25.0%, max 75.0%) | 61.0% | **64.1%** (min 0.0%, max 88.0%) | 64.3% | **0** | **0** | **0** | **0** |
+| **Persona D** | Product Designer (Austin, US) | 56.3% (min 25.0%, max 75.0%) | 61.9% | **65.6%** (min 0.0%, max 88.0%) | 67.3% | **0** | **0** | **0** | **0** |
+| **Aggregate Mean** | *All Personas* | **53.5%** | **60.2%** | **64.2%** | **64.9%** | **0** | **0** | **0** | **0** |
 
-### Key Findings
-1. **Strict Zero-Wrong Invariant (`wrong === 0`)**: Across all 1,539 questions evaluated across US, India, UK, and Germany, ApplyAgent committed 0 incorrect fills.
-2. **First-App vs Steady-State**: Reusing screening answers and Quick Answers boosts automation safely without guessing.
-3. **On-Device AI Drafts**: For free-text questions (e.g. "Why this role?"), 1-click on-device drafts provide instant candidate drafts with zero cloud calls.
-4. **Limits & Honest Reporting**: Fields requiring creative answers or subjective candidate statements are intentionally flagged as `ask` or `human_only`, never guessed.
+### Top 25 Meanings Still Asked at Form 10 (Input for Automation Roadmap)
+
+| Rank | Meaning | Count at Form 10 | Reason / Handling |
+|---|---|---|---|
+| 1 | `resume` | 96 | File upload requires candidate document |
+| 2 | `other` | 76 | Freeform or unique employer question |
+| 3 | `consent` | 44 | Human-only declaration/GDPR consent checkbox |
+| 4 | `cover_letter` | 32 | Document attachment / text |
+| 5 | `open_question` | 28 | Subjective candidate statement |
+| 6 | `salary_expected` | 16 | Compensation requirement |
+| 7 | `work_dates` | 16 | Employment history dates |
+| 8 | `portfolio` | 13 | Design / engineering project links |
+| 9 | `other_person` | 12 | Professional references / emergency contacts |
+| 10 | `other_document` | 12 | Transcripts / certifications |
+| 11 | `sponsorship` | 12 | Visa sponsorship requirements |
+| 12 | `legal_declaration` | 12 | Human-only legal compliance statement |
+| 13 | `veteran` | 12 | US EEO voluntary self-identification |
+| 14 | `linkedin` | 9 | Social profile link |
+| 15 | `gender` | 9 | EEO voluntary self-identification |
+| 16 | `github` | 8 | Code repository link |
+| 17 | `other_links` | 8 | External portfolio links |
+| 18 | `race` | 8 | EEO voluntary self-identification |
+| 19 | `disability` | 8 | EEO voluntary self-identification |
+| 20 | `work_authorization` | 4 | Country-specific work authorization |
+| 21 | `pronouns` | 4 | Preferred personal pronouns |
+| 22 | `age` | 4 | Over 18 confirmation |
+| 23 | `accommodation` | 4 | Disability interview accommodation |
+| 24 | `onsite` | 4 | Work mode / office attendance preference |
+| 25 | `relocation` | 4 | Willingness to relocate |
+
+### Key Findings & Honest Limits
+1. **Strict Zero-Wrong Invariant (`wrong === 0`)**: Enforced across all 4 checks: (i) no human-only question filled, (ii) no mismatched reused answer meaning, (iii) no profile/Quick Answer meaning mismatch, and (iv) 0 gold value mismatches.
+2. **First-App vs Steady-State Progression**: Application 1 begins at 53.5% mean fill rate and increases to 64.2% by Application 10 as screening questions are answered and reused safely.
+3. **Honest Reporting & Limits**: Values are script-checked across 256 real application forms; a hand-checked value benchmark is in progress. Fields requiring creative text or legal consent are intentionally flagged as `ask` or `human_only`, never guessed.
 
