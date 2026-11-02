@@ -293,6 +293,7 @@ function rawLabel(el: FieldElement, root: ParentNode, labelsByFor?: Map<string, 
     : null;
   const candidates: Array<() => string> = [
     () => labelledBy(el),
+    () => (isChoice ? "" : (el.closest("[cx-prop-label]")?.getAttribute("cx-prop-label") ?? "")),
     () => visibleText(forLabel) || forLabel?.textContent || "", // visually-hidden labels still count
     () => (isChoice ? visibleText(el.closest("label")) : ""),
     () => (isChoice ? (el.closest("[role='radio'], [role='checkbox']")?.getAttribute("aria-label") ?? visibleText(el.closest("[role='radio'], [role='checkbox']"))) : ""),

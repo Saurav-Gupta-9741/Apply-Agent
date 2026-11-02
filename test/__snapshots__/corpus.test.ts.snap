@@ -561,6 +561,38 @@ exports[`real forms, offline > breezy-zero-hash.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > freshteam-dipantara.html 1`] = `
+[
+  "* file      resume                       Apply With Resume",
+  "* text      profile:firstName            First Name",
+  "  text      skip                         Middle Name",
+  "* text      profile:lastName             Last Name",
+  "* text      profile:email                Email",
+  "  text      profile:phone                Mobile",
+  "  text      profile:phone                Phone",
+  "  text      skip                         Hyperlink",
+  "  text      skip                         Hyperlink",
+]
+`;
+
+exports[`real forms, offline > freshteam-ourcodelab.html 1`] = `
+[
+  "* file      resume                       Apply With Resume",
+  "* text      profile:firstName            First Name",
+  "  text      skip                         Middle Name",
+  "* text      profile:lastName             Last Name",
+  "* text      profile:email                Email",
+  "* select    ask:gender                   Gender",
+  "  text      profile:phone                Mobile",
+  "  text      profile:phone                Phone",
+  "* text      ask:missing_profile_value    Street",
+  "* text      ask:missing_profile_value    City / Country",
+  "* text      ask:missing_profile_value    Postal Code",
+  "* radio     ask:unknown                  National Service Obligations",
+  "  text      skip                         Social Network and Web Links",
+]
+`;
+
 exports[`real forms, offline > google-forms-deepmind.html 1`] = `
 [
   "* text      profile:fullName             Full Name",
@@ -1022,6 +1054,22 @@ exports[`real forms, offline > icims-microsoft.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > jazzhr-concordusa.html 1`] = `
+[
+  "* text      profile:firstName            First Name",
+  "* text      profile:lastName             Last Name",
+  "* email     profile:email                Email Address",
+  "* tel       profile:phone                Phone",
+  "  text      skip                         Address",
+  "  text      skip                         City",
+  "  text      skip                         State/Province",
+  "  text      skip                         Postal",
+  "* file      resume                       Resume",
+  "  textarea  skip                         Paste your resume here or",
+  "  textarea  skip                         resumator xml value",
+]
+`;
+
 exports[`real forms, offline > lever-360learning.html 1`] = `
 [
   "  file      resume                       Resume/CV ATTACH RESUME/CV Couldn't auto-read resume. Analyzing resume... Success!",
@@ -1294,6 +1342,56 @@ exports[`real forms, offline > personio-celonis.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > personio-europassistance.html 1`] = `
+[
+  "  text      profile:firstName            Vorname",
+  "  text      profile:lastName             Nachname",
+  "  select    ask:gender                   Geschlecht",
+  "  email     profile:email                E-Mail",
+  "  text      profile:phone                Telefon",
+  "  text      skip                         Verfügbar ab",
+  "  text      ask:salary                   gewünschte Gehaltsbandbreite",
+  "  text      ask:notice_period            Kündigungsfrist",
+  "  text      skip                         Straße und Hausnummer",
+  "  text      skip                         PLZ",
+  "  text      skip                         Ort",
+  "  select    skip                         Hier hast Du uns gefunden:",
+  "  text      skip                         Freies Kommentarfeld",
+  "  select    skip                         Hast du einen deutschen Erstwohnsitz?",
+  "  select    ask:work_authorization       Verfügst du mindestens über eine befristete Aufenthalts- und Arbeitserlaubnis?",
+  "  select    skip                         Verfügst du mindestens über B2 Deutschkenntnisse in Wort und Schrift?",
+  "  file      resume                       Lebenslauf",
+  "  file      skip                         Andere",
+  "  file      skip                         Anschreiben",
+  "  file      skip                         Arbeitszeugnis",
+]
+`;
+
+exports[`real forms, offline > personio-europassistance-2.html 1`] = `
+[
+  "  text      profile:firstName            Vorname",
+  "  text      profile:lastName             Nachname",
+  "  select    ask:gender                   Geschlecht",
+  "  email     profile:email                E-Mail",
+  "  text      profile:phone                Telefon",
+  "  text      skip                         Verfügbar ab",
+  "  text      ask:salary                   gewünschte Gehaltsbandbreite",
+  "  text      ask:notice_period            Kündigungsfrist",
+  "  text      skip                         Straße und Hausnummer",
+  "  text      skip                         PLZ",
+  "  text      skip                         Ort",
+  "  select    skip                         Hier hast Du uns gefunden:",
+  "  text      skip                         Freies Kommentarfeld",
+  "  select    skip                         Hast du einen deutschen Erstwohnsitz?",
+  "  select    ask:work_authorization       Verfügst du mindestens über eine befristete Aufenthalts- und Arbeitserlaubnis?",
+  "  select    skip                         Verfügst du mindestens über B2 Deutschkenntnisse in Wort und Schrift?",
+  "  file      resume                       Lebenslauf",
+  "  file      skip                         Andere",
+  "  file      skip                         Anschreiben",
+  "  file      skip                         Arbeitszeugnis",
+]
+`;
+
 exports[`real forms, offline > personio-flixbus.html 1`] = `
 [
   "* text      profile:firstName            First Name",
@@ -1305,6 +1403,27 @@ exports[`real forms, offline > personio-flixbus.html 1`] = `
   "* select    ask:work_authorization       Work authorization in Germany",
   "  select    skip                         English language proficiency",
   "* file      resume                       CV / Resume",
+]
+`;
+
+exports[`real forms, offline > personio-kaiserxlabs.html 1`] = `
+[
+  "  dropdown  skip                         Select language, current: English",
+  "  dropdown  skip                         Select language, current: English",
+  "  text      profile:firstName            First",
+  "  text      profile:lastName             Last",
+  "* email     profile:email                Email",
+  "  text      profile:phone                Phone",
+  "* text      ask:unknown                  Available from",
+  "* text      ask:salary                   Expected salary",
+  "  date      skip                         Birthday",
+  "  text      skip                         Nationality",
+  "* text      ask:missing_profile_value    Location",
+  "  text      skip                         Website",
+  "* select    ask:unknown                  Place of residence in Germany",
+  "* text      ask:unknown                  Why Kaiser X Labs? State your motivation for applying in a single sentence (in German, max 15 words!).",
+  "* file      resume                       CV",
+  "  file      skip                         Other",
 ]
 `;
 
@@ -1364,6 +1483,21 @@ exports[`real forms, offline > personio-zalando.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > recruitee-bluecrux.html 1`] = `
+[
+  "* text      profile:fullName             Full name",
+  "* email     profile:email                Email address",
+  "  dropdown  profile:phone                Select country calling code: Belgium",
+  "* tel       profile:phone                Phone number",
+  "* file      resume                       CV or resume",
+  "  file      skip                         Cover letter",
+  "* radio     ask:sponsorship              Applicants for employment in Belgium must have work authorization that does not now or in the future require sponsorship of a visa for employment authorization in Belgium and with bluecrux. Do you have this authorization?",
+  "* checkbox  ask:consent                  By applying, I agree to the Bluecrux privacy and data security policies .",
+  "* checkbox  ask:unknown                  After your application, a confirmation message will be sent immediately to the mail adress you used. Please check your SPAM filter if you didn't receive this confirmation, as next steps in the process will be communicated to that adress as well.",
+  "  checkbox  skip                         I agree that my data are collected and used for recruitment purposes for a period of 3 years.",
+]
+`;
+
 exports[`real forms, offline > recruitee-bunq.html 1`] = `
 [
   "* text      profile:fullName             Full Name",
@@ -1392,6 +1526,33 @@ exports[`real forms, offline > recruitee-hostpoint.html 1`] = `
   "  file      skip                         Hier kannst du optional weitere Dokumente wie Arbeitszeugnisse, Diplome, etc. hochladen (max. 50 MB).",
   "  textarea  skip                         Gibt es noch etwas, das du uns gern mitteilen möchtest?",
   "* radio     ask:unknown                  So bin ich auf das Stellenangebot aufmerksam geworden",
+]
+`;
+
+exports[`real forms, offline > recruitee-miaplatform.html 1`] = `
+[
+  "* text      profile:fullName             Full name",
+  "* email     profile:email                Email address",
+  "  dropdown  profile:phone                Select country calling code: Italy",
+  "* tel       profile:phone                Phone number",
+  "  file      skip                         Photo",
+  "* file      resume                       CV or resume",
+  "  file      skip                         Cover letter",
+  "* text      ask:sponsorship              Will you require now or in the future the Visa sponsorship?",
+  "* text      ask:unknown                  Are you open to a hybrid work model at our Milan office?",
+  "* number    ask:salary                   Salary Expectaton",
+]
+`;
+
+exports[`real forms, offline > recruitee-sahl.html 1`] = `
+[
+  "* text      profile:fullName             Full name",
+  "* email     profile:email                Email address",
+  "  dropdown  profile:phone                Select country calling code: Egypt",
+  "* tel       profile:phone                Phone number",
+  "  file      skip                         Photo",
+  "* file      resume                       CV or resume",
+  "  file      skip                         Cover letter",
 ]
 `;
 
@@ -1652,6 +1813,19 @@ exports[`real forms, offline > workable-apac-tokyo.html 1`] = `
 ]
 `;
 
+exports[`real forms, offline > workable-bolderapps.html 1`] = `
+[
+  "* text      profile:firstName            First name",
+  "* text      profile:lastName             Last name",
+  "* email     profile:email                Email",
+  "* tel       profile:phone                Phone",
+  "  text      skip                         Address",
+  "  file      skip                         Photo Choose file",
+  "* file      resume                       Resume Choose file",
+  "* text      ask:salary                   What is your desired HOURLY compensation in USD?",
+]
+`;
+
 exports[`real forms, offline > workable-cp-axtra.html 1`] = `
 [
   "* text      profile:firstName            First name",
@@ -1866,5 +2040,26 @@ exports[`real forms, offline > workday-walmart.html 1`] = `
   "* radio     ask:work_authorization       Are you legally authorized to work in the United States without restriction?",
   "* radio     ask:sponsorship              Will you now or in the future require visa sponsorship for employment authorization?",
   "* select    ask:unknown                  How did you hear about this opportunity?",
+]
+`;
+
+exports[`real forms, offline > zohorecruit-hireboost.html 1`] = `
+[
+  "  file      skip                         Upload resumes/CVs in seconds with the autofill option.",
+  "  dropdown  skip                         Salutation",
+  "  text      profile:firstName            First Name",
+  "  text      profile:lastName             Last Name",
+  "  text      profile:email                Email",
+  "  dropdown  profile:phone                Mobile",
+  "  text      profile:phone                Mobile",
+  "  text      skip                         Country",
+  "  dropdown  skip                         What is your level of English?",
+  "  text      skip                         What is your level of English?",
+  "  text      skip                         Please provide a 30-40 second recording discussing your relevant experience for this position in English. To avoid the need for a prescreening call, please use https://vocaroo.com/ to record yourself. Once completed, kindly include the link to your record",
+  "  dropdown  skip                         Would you like to subscribe to HireBoost's newsletter to receive the latest remote job openings, job search tips, among other information?",
+  "  dropdown  skip                         Where did you discover this job vacancy?",
+  "  text      skip                         Where did you discover this job vacancy?",
+  "  text      profile:linkedin             Please share your LinkedIn profile",
+  "  file      resume                       Resume",
 ]
 `;

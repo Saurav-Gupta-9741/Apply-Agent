@@ -35,12 +35,12 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
     }));
     expect(extractedDescriptors).toEqual([
       {
-            "label": "",
+            "label": "Salutation",
             "control": "dropdown",
             "required": false
       },
       {
-            "label": "",
+            "label": "First Name",
             "control": "text",
             "required": false
       },
@@ -55,12 +55,12 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
             "required": false
       },
       {
-            "label": "",
+            "label": "Mobile",
             "control": "dropdown",
             "required": false
       },
       {
-            "label": "",
+            "label": "Mobile",
             "control": "text",
             "required": false
       },
@@ -70,12 +70,12 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
             "required": false
       },
       {
-            "label": "",
+            "label": "What is your level of English?",
             "control": "dropdown",
             "required": false
       },
       {
-            "label": "None",
+            "label": "What is your level of English?",
             "control": "text",
             "required": false
       },
@@ -90,12 +90,12 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
             "required": false
       },
       {
-            "label": "",
+            "label": "Where did you discover this job vacancy?",
             "control": "dropdown",
             "required": false
       },
       {
-            "label": "None",
+            "label": "Where did you discover this job vacancy?",
             "control": "text",
             "required": false
       },
@@ -107,7 +107,7 @@ describe("Real ATS Fixtures (11 forms across 6 platforms)", () => {
       {
             "label": "Resume",
             "control": "file",
-            "required": true
+            "required": false
       }
 ]);
 

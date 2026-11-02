@@ -21,8 +21,8 @@ const files = (() => {
 const OTHER_PERSON = /emergency|referee|referrer|reference|manager'?s|supervisor/i;
 
 describe("ApplyAgent 100-Form Global Arena Benchmark", () => {
-  it("contains exactly 100 real application forms in offline corpus", () => {
-    expect(files.length).toBe(100);
+  it("contains at least 100 real application forms in offline corpus", () => {
+    expect(files.length).toBeGreaterThanOrEqual(100);
   });
 
   it("covers at least 15 distinct ATS platforms & architectures", () => {
