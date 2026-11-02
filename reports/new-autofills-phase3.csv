@@ -1,0 +1,60 @@
+question,intent,value,source,threshold used
+Do you identify as transgender?,transgender,No,screening rule (transgender),rule
+I identify as transgender:,transgender,No,screening rule (transgender),rule
+[Optional] Pronouns - how should we refer to you in the third person?,pronouns,she/her,screening rule (pronouns),rule
+Pronouns,pronouns,she/her,screening rule (pronouns),rule
+"At Samsara, we encourage employees to bring their whole selves to work (this includes applicants too!) Feel free to share your preferred name and pronouns (she/her, they/them, he/him, ze/zir etc.).",pronouns,she/her,screening rule (pronouns),rule
+"Gender Pronouns (She/Her/Hers, He/Him/His, They/Them/Theirs, etc.)",pronouns,she/her,screening rule (pronouns),rule
+How would you describe your racial/ethnic background? (mark all that apply),race,Asian,screening rule (race/ethnicity),rule
+I identify my race / ethnicity as (select all that apply):,race,Asian,screening rule (race/ethnicity),rule
+Please identify your race.,race,Asian,screening rule (race/ethnicity),rule
+Please identify your ethnicity.,race,Asian,screening rule (race/ethnicity),rule
+How would you describe your racial/ethnic background?,race,Asian,screening rule (race/ethnicity),rule
+How do you identify? (race/ethnicity),race,Asian,screening rule (race/ethnicity),rule
+Race/Ethnicity (Select all that apply),race,Asian,screening rule (race/ethnicity),rule
+Por favor identifique su origen étnico (Please identify your ethnic origin) - Mexico,race,Asian,screening rule (race/ethnicity),rule
+Do you currently live or are you willing to relocate to the job’s location?,relocation,Yes,screening rule (relocation),rule
+Are you open to relocation for this role?,relocation,Yes,screening rule (relocation),rule
+Are you open to relocation?,relocation,Yes,screening rule (relocation),rule
+Are you within a commutable distance or willing to relocate?,relocation,Yes,screening rule (relocation),rule
+Are you open to relocation to Pune? (Yes/No),relocation,Yes,screening rule (relocation),rule
+Are you willing to relocate to Bangalore?,relocation,Yes,screening rule (relocation),rule
+How would you describe your sexual orientation? (mark all that apply),sexual_orientation,I prefer not to say,screening rule (sexual orientation),rule
+How would you describe your sexual orientation?,sexual_orientation,I prefer not to say,screening rule (sexual orientation),rule
+We're committed to ensuring an inclusive and accessible recruitment process. Do you require any adjustments or accommodations to support you during the interview?,accommodation,None,screening rule (accommodation),rule
+Você deseja informar alguma necessidade de acessibilidade para participar das etapas do processo seletivo?,accommodation,No,screening rule (accommodation),rule
+Quais recursos ou adaptações podem contribuir para sua participação no processo seletivo?,accommodation,None,screening rule (accommodation),rule
+Do you require any reasonable adjustments during your recruitment process?,accommodation,None,screening rule (accommodation),rule
+Are you local to or willing to relocate?,relocation,Yes,screening rule (relocation),rule
+What are your personal pronouns?,pronouns,she/her,screening rule (pronouns),rule
+Sexual Orientation,sexual_orientation,I prefer not to say,screening rule (sexual orientation),rule
+Please identify your race/ethnicity,race,Asian,screening rule (race/ethnicity),rule
+What pronouns would you like us to use for you?,pronouns,she/her,screening rule (pronouns),rule
+Is your gender identity the same as the sex you were assigned at birth?,transgender,Yes,screening rule (transgender),rule
+What race/ethnicity do you identify as?,race,Asian,screening rule (race/ethnicity),rule
+Which of the following best describes your sexual orientation?,sexual_orientation,I prefer not to say,screening rule (sexual orientation),rule
+Which option(s) best describes your sexual orientation (check all that apply)?,sexual_orientation,I prefer not to say,screening rule (sexual orientation),rule
+Which option(s) best describes your race/ethnicity (check all that apply)?,race,Asian,screening rule (race/ethnicity),rule
+Do you identify as transgender? (select one),transgender,No,screening rule (transgender),rule
+"Are you open to relocating for this position, or another position with Agile Defense?",relocation,Yes,screening rule (relocation),rule
+"Are you currently based in Ireland, or willing to relocate there at your own expense?",relocation,Yes,screening rule (relocation),rule
+"Do you require an accommodation for the interview process? If yes, please explain.",accommodation,None,screening rule (accommodation),rule
+Are you willing to relocate to the required job location?,relocation,Yes,screening rule (relocation),rule
+Voluntary Self-Identification of Race/Ethnicity (Check all that apply),race,Asian,screening rule (race/ethnicity),rule
+Are you open to relocating to the San Francisco Bay Area?,relocation,Yes,screening rule (relocation),rule
+Do you require any adjustments to be made to the recruitment process?,accommodation,None,screening rule (accommodation),rule
+"Are you currently located in, or willing to relocate to, the Thousand Oaks area or San Francisco Bay area?",relocation,Yes,screening rule (relocation),rule
+I identify as transgender (please select one):,transgender,No,screening rule (transgender),rule
+I identify my sexual orientation as (please select one):,sexual_orientation,I prefer not to say,screening rule (sexual orientation),rule
+I identify my race/ethnicity as (mark all that apply):,race,Asian,screening rule (race/ethnicity),rule
+I identify my sexual orientation as:,sexual_orientation,I prefer not to say,screening rule (sexual orientation),rule
+I identify my race/ethnicity as (please mark all that apply):,race,Asian,screening rule (race/ethnicity),rule
+Are you currently based in or willing to relocate to the Bay Area for this position?,relocation,Yes,screening rule (relocation),rule
+Race and Ethnicity,race,Asian,screening rule (race/ethnicity),rule
+I consider myself a member of the LGBTQ+ community.,sexual_orientation,I prefer not to say,screening rule (sexual orientation),rule
+Pronouns (the pronouns you use),pronouns,she/her,screening rule (pronouns),rule
+What are your pronouns?,pronouns,she/her,screening rule (pronouns),rule
+Please share your gender pronouns.,pronouns,she/her,screening rule (pronouns),rule
+"This position is required to work out of a Lyft Office in Mexico City, if you do not reside within the country and within commutable proximity to the office, are you open to relocating?",relocation,Yes,screening rule (relocation),rule
+What is your race and/or ethnicity? Please check all that apply.,race,Asian,screening rule (race/ethnicity),rule
+Preferred Pronouns,pronouns,she/her,screening rule (pronouns),rule
