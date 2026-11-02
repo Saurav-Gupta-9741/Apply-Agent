@@ -294,6 +294,7 @@ export interface ApplicationRecord {
   /** Where this application stands. Absent: "Applied" (the agent recorded a submission). */
   stage?: TrackerStage;
   company?: string;
+  location?: string;
   notes?: string;
   /** Next follow-up day, "YYYY-MM-DD" (local). */
   followUpAt?: string;

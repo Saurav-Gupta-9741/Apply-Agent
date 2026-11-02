@@ -92,6 +92,20 @@ export function nextFollowUp(entries: TrackerEntry[], today: string): string | u
   return entries.filter((e) => e.followUpAt > today && !CLOSED_STAGES.has(e.stage)).map((e) => e.followUpAt).sort()[0];
 }
 
+export interface AtsBreakdown {
+  ats: string;
+  applied: number;
+  responded: number;
+  responseRate: number | null;
+}
+
+export interface CountryBreakdown {
+  country: string;
+  applied: number;
+  responded: number;
+  responseRate: number | null;
+}
+
 export interface TrackerAnalytics {
   /** Applications in each of the last 8 weeks (Monday to Sunday), oldest first. */
   weeks: Array<{ start: string; count: number }>;
@@ -100,6 +114,21 @@ export interface TrackerAnalytics {
   /** Assessment + Interview + Offer over Applied, 0–100; null before the first application. */
   responseRate: number | null;
   medianDaysToResponse: number | null;
+  meanDaysToResponse: number | null;
+  byAts: AtsBreakdown[];
+  byCountry: CountryBreakdown[];
+}
+
+function detectAtsFromUrl(url: string): string {
+  const lower = url.toLowerCase();
+  if (lower.includes("greenhouse.io")) return "Greenhouse";
+  if (lower.includes("lever.co")) return "Lever";
+  if (lower.includes("ashbyhq.com")) return "Ashby";
+  if (lower.includes("workable.com")) return "Workable";
+  if (lower.includes("smartrecruiters.com")) return "SmartRecruiters";
+  if (lower.includes("personio.de") || lower.includes("personio.com")) return "Personio";
+  if (lower.includes("recruitee.com")) return "Recruitee";
+  return "Other";
 }
 
 function median(values: number[]): number | null {
@@ -133,12 +162,49 @@ export function trackerAnalytics(entries: TrackerEntry[], now: Date): TrackerAna
   const responded = applied.filter((e) => e.respondedAt && Number.isFinite(Date.parse(e.respondedAt)));
   const days = responded.map((e) => (Date.parse(e.respondedAt!) - Date.parse(e.appliedAt!)) / 86_400_000).filter((d) => d >= 0);
   const med = median(days);
+  const meanDays = days.length ? Math.round((days.reduce((a, b) => a + b, 0) / days.length) * 10) / 10 : null;
+
+  // By ATS
+  const atsMap = new Map<string, { applied: number; responded: number }>();
+  for (const e of applied) {
+    const ats = detectAtsFromUrl(e.url);
+    const curr = atsMap.get(ats) ?? { applied: 0, responded: 0 };
+    curr.applied++;
+    if (e.respondedAt) curr.responded++;
+    atsMap.set(ats, curr);
+  }
+  const byAts: AtsBreakdown[] = Array.from(atsMap.entries()).map(([ats, data]) => ({
+    ats,
+    applied: data.applied,
+    responded: data.responded,
+    responseRate: data.applied ? Math.round((data.responded / data.applied) * 100) : null,
+  })).sort((a, b) => b.applied - a.applied);
+
+  // By Country
+  const countryMap = new Map<string, { applied: number; responded: number }>();
+  for (const e of applied) {
+    const c = e.record?.location?.split(",").pop()?.trim() || "Unspecified";
+    const curr = countryMap.get(c) ?? { applied: 0, responded: 0 };
+    curr.applied++;
+    if (e.respondedAt) curr.responded++;
+    countryMap.set(c, curr);
+  }
+  const byCountry: CountryBreakdown[] = Array.from(countryMap.entries()).map(([country, data]) => ({
+    country,
+    applied: data.applied,
+    responded: data.responded,
+    responseRate: data.applied ? Math.round((data.responded / data.applied) * 100) : null,
+  })).sort((a, b) => b.applied - a.applied);
+
   return {
     weeks: weeks.map((w) => ({ start: localDay(w.start), count: w.count })),
     applied: applied.length,
     responded: responded.length,
     responseRate: applied.length ? Math.round((responded.length / applied.length) * 100) : null,
     medianDaysToResponse: med === null ? null : Math.round(med * 10) / 10,
+    meanDaysToResponse: meanDays,
+    byAts,
+    byCountry,
   };
 }
 
