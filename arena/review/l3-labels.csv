@@ -1,0 +1,7 @@
+id,text,agent1_intent,agent2_intent,agent1_confidence,agent2_confidence,ambiguity_reason
+"1","Where did you complete your schooling?","school","other","0.72","0.68","Schooling can mean high school vs university"
+"2","Are you bound by any non-compete clause?","legal_declaration","consent","0.81","0.79","Non-compete is restrictive covenant vs general legal consent"
+"3","Are you willing to work overtime during peak quarters?","shift_flexibility","other","0.75","0.7","Overtime vs standard shift rotational schedule"
+"4","Preferred working hours (IST / GMT)","work_mode","shift_flexibility","0.65","0.62","Timezone preference vs shift flexibility"
+"5","Do you have any relatives working at this company?","references","other","0.84","0.76","Conflict of interest disclosure vs professional references"
+"6","Notice period buyout readiness by employer","notice_period","salary","0.78","0.72","Notice period timeline vs financial buyout compensation"

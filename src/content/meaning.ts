@@ -161,9 +161,48 @@ function hispanicHint(label: string, intent: string): string {
   return intent === "hispanic" && !/hispanic|latin/i.test(label) ? `${label} (Hispanic or Latino)` : label;
 }
 
+export type DetailOwner = "self" | "another_person" | "company" | "legal";
+
+export const ANOTHER_PERSON_PATTERNS = /\b(references?|emergency contacts?|referees?|supervisors?|managers?|fathers?|mothers?|parents?|guardians?|spouses?|next of kin)\b/i;
+export const LEGAL_PATTERNS = /\b(consents?|declarations?|agreements?|background checks?|signatures?|terms|privacy polic(y|ies)|attestations?|certif(y|ied)|acknowledg(e|ment)s?)\b/i;
+export const COMPANY_PATTERNS = /\b(company address(es)?|employer address(es)?|company phones?|office address(es)?|headquarters)\b/i;
+
+/** Two-step decision: first determine whose detail is being asked.
+ * An "another_person" or "legal" result always asks the candidate. */
+export function whoseDetail(field: FieldDescriptor, meaning?: Meaning): DetailOwner {
+  const normLabel = normalize(field.label);
+  const normSection = field.section ? normalize(field.section) : "";
+
+  if (ANOTHER_PERSON_PATTERNS.test(normSection) || ANOTHER_PERSON_PATTERNS.test(normLabel) || meaning?.intent === "references" || meaning?.intent === "father_name") {
+    return "another_person";
+  }
+  if (LEGAL_PATTERNS.test(normSection) || LEGAL_PATTERNS.test(normLabel) || meaning?.intent === "consent" || meaning?.intent === "legal_declaration") {
+    return "legal";
+  }
+  if (COMPANY_PATTERNS.test(normSection) || COMPANY_PATTERNS.test(normLabel)) {
+    return "company";
+  }
+  return "self";
+}
+
+/** Form context input: label + section heading + help text + nearest neighbour joined with [SEP] */
+export function contextInput(field: FieldDescriptor, nearestLabel?: string, helpText?: string): string {
+  const parts = [field.label];
+  if (field.section) parts.push(`Section: ${field.section}`);
+  if (helpText) parts.push(`Help: ${helpText}`);
+  if (nearestLabel) parts.push(`Near: ${nearestLabel}`);
+  return parts.join(" [SEP] ");
+}
+
 /** The decision for a field, with the model's reading of it when there is one. */
 export function decideWithMeaning(field: FieldDescriptor, profile: Profile, answers: Parameters<typeof decide>[2], page?: PageFacts,
   meaning?: Meaning): Decision {
+  const owner = whoseDetail(field, meaning);
+  if (owner === "another_person" || owner === "legal") {
+    // Two-step decision: an "another person" or "legal" result always asks!
+    return field.required ? { kind: "ask", reason: "unknown" } : { kind: "skip", reason: `${owner.replace(/_/g, " ")}: entered by you only` };
+  }
+
   const rule = decide(field, profile, answers, page);
   if (!meaning) return rule;
 
