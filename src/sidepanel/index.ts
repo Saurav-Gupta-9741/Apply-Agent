@@ -35,6 +35,9 @@ import { renderFitCard } from "./fit-card";
 // >>> L3 form structure
 import { mountFormStructureButton } from "./form-structure";
 // <<< L3
+// >>> L4 ai drafts
+import { createDraftWidget, isDraftableField } from "./drafts";
+// <<< L4
 
 let cachedCorrections: UserCorrection[] = [];
 void loadCorrections().then((c) => { cachedCorrections = c; });
@@ -586,33 +589,25 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     });
     card.append(chipBtn);
   }
-  // AI drafts only for new free-text questions, never for sensitive ones, and always for review.
-  const textual = !r.field.options.length && ["text", "textarea"].includes(r.field.control);
-  if (textual && r.decision.kind === "ask" && r.decision.reason === "unknown") {
-    const note = h("span", { class: "ai-note" });
-    const draft = button("Draft with on-device AI", { variant: "ghost", icon: "wand", size: "sm" });
-    draft.addEventListener("click", async () => {
-      busy(draft, true);
-      note.textContent = "Drafting on your laptop…";
-      const profileNow = await loadProfile();
-      const text = await draftAnswer(r.field.label, profileNow, ctx.job).catch(() => null);
-      busy(draft, false);
-      if (!text) {
-        note.textContent = (await aiStatus()) === "unavailable"
-          ? "On-device AI isn't available in this Chrome. Please write it yourself."
-          : "Not enough facts in your profile to answer honestly. Please write it yourself.";
-        return;
-      }
-      input.value = text;
-      const warnings = checkDraft(text, profileNow, ctx.job);
-      if (r.field.maxLength && text.length > r.field.maxLength) {
-        warnings.push(`It is ${text.length} characters; this field allows ${r.field.maxLength}. Shorten it.`);
-      }
-      note.className = `ai-note${warnings.length ? " warn" : ""}`;
-      note.textContent = ["Review before saving. AI can be wrong.", ...warnings].join(" ");
+  // >>> L4 ai drafts
+  if (isDraftableField(r.field) && r.decision.kind === "ask" && !onPageOnly) {
+    const draftWidget = createDraftWidget({
+      question: r.field.label,
+      field: r.field,
+      profile,
+      job: ctx.job,
+      onUse: async (draftText) => {
+        input.value = draftText;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+        r.tag = "drafted";
+        save.click();
+      },
+      toast,
     });
-    left.append(draft, note);
+    card.append(draftWidget);
   }
+  // <<< L4
   const save = button("Save answer", { variant: "primary", size: "sm", icon: "check" });
   save.addEventListener("click", async () => {
     const value = input instanceof HTMLSelectElement && input.multiple

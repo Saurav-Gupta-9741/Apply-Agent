@@ -15,6 +15,7 @@ import { describe, expect, it } from "vitest";
 import { decide, isSecretField, questionTopic } from "../src/content/classify";
 import { decideWithMeaning } from "../src/content/meaning";
 import { applyQuickAnswers, QUICK_QUESTIONS } from "../src/shared/quick-answers";
+import { isDraftableField } from "../src/sidepanel/drafts";
 import { normalize } from "../src/shared/text";
 import type { AnswerEntry, Decision, FieldDescriptor, Profile, SensitiveTopic } from "../src/shared/types";
 import { PERSONA_A, PERSONA_B, PERSONA_C, PERSONA_D } from "./personas";
@@ -230,6 +231,7 @@ describe("Steady-state benchmark: first application vs 10th application (steady-
 
     let totalFirstAuto = 0;
     let totalSteadyAuto = 0;
+    let totalSteadyAssisted = 0;
     let totalWrong = 0;
     let totalQuestionsEvaluated = 0;
 
@@ -317,6 +319,7 @@ describe("Steady-state benchmark: first application vs 10th application (steady-
 
       // Step B: Simulate 10th application (steady-state) with accumulated Answer Bank
       let steadyAuto = 0;
+      let steadyAssisted = 0;
       let steadyAsk = 0;
       let steadyHumanOnly = 0;
       let steadyWrong = 0;
@@ -359,6 +362,9 @@ describe("Steady-state benchmark: first application vs 10th application (steady-
             steadyWrongList.push(`Filled human-only question in steady-state: ${q.label}`);
           }
         } else {
+          if (d.kind === "draft" || isDraftableField(field)) {
+            steadyAssisted++;
+          }
           steadyAsk++;
           const truth = q.intent;
           if (truth && HUMAN_ONLY_INTENTS.has(truth)) {
@@ -436,6 +442,8 @@ describe("Steady-state benchmark: first application vs 10th application (steady-
           autoFilled: steadyAuto,
           autoShare: `${((steadyAuto / totalQ) * 100).toFixed(1)}%`,
           reusedFromBank: steadyReused,
+          assisted: steadyAssisted,
+          assistedShare: `${((steadyAssisted / totalQ) * 100).toFixed(1)}%`,
           ask: steadyAsk,
           humanOnly: steadyHumanOnly,
           wrong: steadyWrong,
@@ -456,17 +464,20 @@ describe("Steady-state benchmark: first application vs 10th application (steady-
 
       totalFirstAuto += firstAuto;
       totalSteadyAuto += steadyAuto;
+      totalSteadyAssisted += steadyAssisted;
       totalWrong += firstWrong + steadyWrong;
       totalQuestionsEvaluated += totalQ;
     }
 
     const overallFirstShare = ((totalFirstAuto / totalQuestionsEvaluated) * 100).toFixed(1) + "%";
     const overallSteadyShare = ((totalSteadyAuto / totalQuestionsEvaluated) * 100).toFixed(1) + "%";
+    const overallAssistedShare = ((totalSteadyAssisted / totalQuestionsEvaluated) * 100).toFixed(1) + "%";
 
     steadyStateResults.summary = {
       totalEvaluations: totalQuestionsEvaluated,
       firstApplicationAutoShare: overallFirstShare,
       steadyStateAutoShare: overallSteadyShare,
+      assistedShare: overallAssistedShare,
       wrong: totalWrong,
     };
 
@@ -475,6 +486,7 @@ describe("Steady-state benchmark: first application vs 10th application (steady-
     console.log("=== STEADY-STATE BENCHMARK RESULTS ===");
     console.log(`First Application Auto Share: ${overallFirstShare}`);
     console.log(`Steady-State Auto Share (10th application): ${overallSteadyShare}`);
+    console.log(`Assisted (AI Drafts) Share: ${overallAssistedShare}`);
     console.log(`Wrong Fills: ${totalWrong} (strictly 0)`);
     console.log("=======================================");
 
