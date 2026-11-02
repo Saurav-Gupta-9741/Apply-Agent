@@ -1,15 +1,17 @@
 # ApplyAgent Test Corpus Audit: Real vs Synthetic Sources
 
 ## 1. Overview
-The offline test corpus in `test/corpus/` consists of 100 HTML files used for static regression testing, snapshot verification, and field extraction evaluation.
+The offline test corpus in `test/corpus/` consists of 111 HTML files used for static regression testing, snapshot verification, and field extraction evaluation.
 
-An audit revealed that **38 of the 100 files** were synthetically generated offline templates (introduced in commit `20f4167`), despite originally carrying the comment `<!-- Real application form, saved by e2e/coverage.spec.ts -->`. These 38 files have now been honestly marked with `<!-- SYNTHETIC -->` at line 1.
+An audit revealed that **38 files** were synthetically generated offline templates (introduced in commit `20f4167`), despite originally carrying the comment `<!-- Real application form, saved by e2e/coverage.spec.ts -->`. These 38 files have now been honestly marked with `<!-- SYNTHETIC -->` at line 1.
+
+In Phase 3B (Step 5), **11 new real application forms** across 6 ATS platforms (Zoho Recruit, Workable, Personio, Freshteam, JazzHR, Recruitee) were captured from live public career portals and verified with exact field extraction tests in `test/ats-real.test.ts`.
 
 | Source Category | Count | Percentage | Description |
 |---|---|---|---|
-| **Real Captured Forms** | 62 | 62.0% | Live captured forms saved by coverage scanning with scripts and styles stripped |
-| **Synthetic Offline Fixtures** | 38 | 38.0% | Synthetically constructed mock pages representing enterprise ATS DOM patterns |
-| **Total Corpus** | 100 | 100.0% | |
+| **Real Captured Forms** | 73 | 65.8% | Live captured forms saved directly from public career sites with scripts and styles stripped |
+| **Synthetic Offline Fixtures** | 38 | 34.2% | Synthetically constructed mock pages representing enterprise ATS DOM patterns |
+| **Total Corpus** | 111 | 100.0% | |
 
 ---
 
@@ -57,8 +59,8 @@ All 38 synthetic files were added in commit `20f4167` via offline fixture genera
 
 ---
 
-## 3. Real Captured Forms (62 Files)
-These 62 files represent real live application forms saved directly from public careers portals:
+## 3. Real Captured Forms (73 Files)
+These 73 files represent real live application forms saved directly from public careers portals:
 
 1. `ashby-airwallex.html`
 2. `ashby-atlan.html`
@@ -122,3 +124,33 @@ These 62 files represent real live application forms saved directly from public 
 60. `workable-monzo.html`
 61. `workable-origin.html`
 62. `workable-our-future-health.html`
+63. `zohorecruit-hireboost.html` (Zoho Recruit, HireBoost)
+64. `workable-bolderapps.html` (Workable, Bolder Apps)
+65. `personio-kaiserxlabs.html` (Personio, Kaiser X Labs)
+66. `personio-europassistance.html` (Personio, Europ Assistance)
+67. `personio-europassistance-2.html` (Personio, Europ Assistance Junior)
+68. `freshteam-ourcodelab.html` (Freshteam, OurCodeLab)
+69. `freshteam-dipantara.html` (Freshteam, Dipantara)
+70. `jazzhr-concordusa.html` (JazzHR, ConcordUSA)
+71. `recruitee-miaplatform.html` (Recruitee, Mia-Platform)
+72. `recruitee-sahl.html` (Recruitee, Sahl)
+73. `recruitee-bluecrux.html` (Recruitee, Bluecrux)
+
+---
+
+## 4. Audited Login-Wall & Challenge-Protected Portals
+Per Step 5 instructions, real company applications behind candidate authentication walls or anti-bot challenge walls were verified and documented rather than inventing synthetic forms:
+
+1. **Workday**:
+   - `https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/Pune-Gera-Commerzone-SEZ/Software-Engineer_JR-0000122396/apply/autofillWithResume`
+   - Gate: `<!-- LOGIN-WALL -->` Step 1 requires "Create Account / Sign In" before application fields are presented. (Applies universally to Workday enterprise tenants including Adobe, Nike, Salesforce, Walmart, Target).
+2. **SmartRecruiters**:
+   - `https://jobs.smartrecruiters.com/Wise/744000158076020-senior-software-engineer-support-tooling`
+   - Gate: `<!-- LOGIN-WALL / BOT-CHALLENGE -->` DataDome challenge iframe (`geo.captcha-delivery.com`) on automated navigation to `/oneclick-ui/`.
+3. **iCIMS**:
+   - `https://careers-shure.icims.com/jobs/5037/software-development-intern/job`
+   - Gate: `<!-- LOGIN-WALL / BOT-CHALLENGE -->` AWS WAF challenge script (`token.awswaf.com`) intercepts requests without session cookie.
+4. **SuccessFactors**:
+   - Gate: `<!-- LOGIN-WALL -->` Enterprise SAP/SuccessFactors career sites mandate SAP Universal ID or candidate portal registration.
+5. **Taleo**:
+   - Gate: `<!-- LOGIN-WALL -->` Standard Taleo enterprise portals require registration of candidate username/password prior to form access.
