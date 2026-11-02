@@ -18,6 +18,43 @@ The core idea: competitors fill 70–90% by **guessing** (and get wrong-answer c
 then reusing forever** — high automation with 0 wrong. The metric we publish is **steady-state fill rate**: the share of
 fields filled correctly on the user's Nth application, once setup is done.
 
+**Report rule (new, strict):** every "Files added/modified" list in a report must be pasted from
+`git show --stat --format="%h %s" <sha>` for that step's commit, never written from memory. Every number must come
+from a command output you ran (paste the command). Phase 3B's report listed fixtures that were never committed —
+that must not happen again.
+
+---
+
+## STEP 0 — Phase 3B carry-over fixes (do first, on `phase4`) · 45 min
+
+**0a. Honeypot regression in `src/content/extract.ts` `isHoneypot` (safety, blocks launch).** 3B made two holes:
+- Radio/checkbox now skip ALL self-style checks and the 1 px / off-screen box check → a hidden trap checkbox counts
+  as real. Fix: a radio/checkbox whose own box is hidden (1 px, off-screen, opacity 0, clipped) counts as real ONLY
+  if it has a visible way for a person to choose it: a visible `<label for=id>`, a visible wrapping `<label>`, or a
+  visible ancestor with `role="radio"|"checkbox"` within 3 levels. "Visible" = run the same ancestor/style checks on
+  that label/wrapper. No visible label/wrapper → honeypot.
+- `if (isFile) return false;` skips the whole ancestor walk → a file input inside a `display:none` / `visibility:hidden`
+  / off-screen parent gets the resume attached. Fix: for file inputs skip only the checks on the input ITSELF; still
+  walk the ancestors from the parent up, and the drop zone/button the user clicks must be visible.
+- Tests in `test/honeypot-hardening.test.ts` (+6): hidden checkbox with no label → honeypot; sr-only checkbox with a
+  visible label → real; off-screen radio inside a visible `role=radio` card → real; checkbox in a `display:none`
+  parent → honeypot; file input in a `display:none` parent → honeypot; styled file input (opacity 0) over a visible
+  "Upload resume" button → real. All 11 `test/ats-real.test.ts` forms and `test/corpus.test.ts` must stay green
+  without changing their expected values.
+
+**0b. Correct the 3B section in `reports/PHASE3_REPORT.md`.** Step 5 lists `workday-salesforce`, `workday-walmart`,
+`successfactors-nestle`, `icims-ups`, `smartrecruiters-ikea/bosch`, `oracle-cloud-marriott`, `taleo-citigroup`,
+`recruitee-finom` as added — commit `ebb07ef` actually added `freshteam-dipantara`, `freshteam-ourcodelab`,
+`jazzhr-concordusa`, `personio-europassistance(-2)`, `personio-kaiserxlabs`, `recruitee-bluecrux`,
+`recruitee-miaplatform`, `recruitee-sahl`, `workable-bolderapps`, `zohorecruit-hireboost` (6 platforms: Freshteam,
+JazzHR, Personio, Recruitee, Workable, Zoho). Replace the list from `git show --stat ebb07ef`. Add one honest line:
+"No real Workday / SuccessFactors / iCIMS / SmartRecruiters / Taleo application-form fixture yet (sign-in or
+JS-only) — planned in Phase 4 Step 5." Also mention the `extract.ts` changes in 3B (cx-prop-label label source,
+radio/checkbox/file exemptions) and that `test/arena-100-forms.test.ts` changed from `=== 100` to `>= 100`.
+
+**0c.** Rename the arena test title "at least 100 real application forms" → "at least 100 application forms
+(73 real, 38 synthetic — see reports/corpus-sources.md)". Commit Step 0, push, then start Step 1.
+
 ---
 
 ## DAY 1 — Automation above competitors (target: ≥ 85% steady-state, 0 wrong)
