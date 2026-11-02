@@ -32,6 +32,9 @@ import { parseResume } from "../shared/resume-parse";
 import { initTracker, renderTrackerCrm, type TrackerUi } from "./tracker";
 import { initUsageMeter, renderUsageMeter } from "./usage-meter";
 import { renderFitCard } from "./fit-card";
+// >>> L3 form structure
+import { mountFormStructureButton } from "./form-structure";
+// <<< L3
 
 let cachedCorrections: UserCorrection[] = [];
 void loadCorrections().then((c) => { cachedCorrections = c; });
@@ -988,6 +991,59 @@ $("report-problem").addEventListener("click", async () => {
     ? "Report copied. Paste it into your message to the ApplyAgent team. It has the questions and decisions, never your answers."
     : "Report saved as a file. Send it to the ApplyAgent team. It has the questions and decisions, never your answers.");
 });
+
+// >>> L3 form structure
+const formStructBtn = document.getElementById("save-form-structure") as HTMLElement | null;
+if (formStructBtn) {
+  const problemBtn = $("report-problem");
+  if (problemBtn) {
+    const observer = new MutationObserver(() => {
+      formStructBtn.hidden = problemBtn.hidden;
+    });
+    observer.observe(problemBtn, { attributes: true, attributeFilter: ["hidden"] });
+  }
+  mountFormStructureButton(formStructBtn, async () => {
+    try {
+      const tab = await activeTab();
+      if (tab?.id !== undefined) {
+        const resp = await chrome.tabs.sendMessage(tab.id, { type: "GET_FORM_STRUCTURE" } satisfies Message);
+        if (resp && !("error" in resp) && resp.fields) return resp;
+      }
+    } catch {}
+    if (lastReport?.report) {
+      const urlStr = lastReport.url || "https://example.com";
+      let domain = "unknown";
+      let path = "";
+      try {
+        const u = new URL(urlStr);
+        domain = u.hostname;
+        path = u.pathname;
+      } catch {}
+      return {
+        version: 1,
+        savedAt: new Date().toISOString(),
+        platform: lastReport.report.platform,
+        domain,
+        path,
+        jobTitle: lastReport.report.jobTitle,
+        actionText: undefined,
+        fieldCount: lastReport.report.fields.length,
+        fields: lastReport.report.fields.map((f) => ({
+          label: f.field.label,
+          originalLabel: f.field.originalLabel,
+          control: f.field.control,
+          required: !!f.field.required,
+          name: f.field.name,
+          options: f.field.options,
+          section: f.field.section,
+          workBlock: f.field.workBlock,
+        })),
+      };
+    }
+    return null;
+  }, toast);
+}
+// <<< L3
 
 // --- Profile -----------------------------------------------------------------------------------------
 const PROFILE_GROUPS: Array<{ title: string; fields: Array<[ProfileKey, string, string, boolean?]> }> = [

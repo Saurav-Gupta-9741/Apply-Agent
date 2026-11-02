@@ -441,4 +441,7 @@ export type Message =
   /** Run the agent again in the job's existing tab (after the user answered its questions). */
   | { type: "QUEUE_RERUN"; id: string }
   | { type: "QUEUE_REMOVE"; id: string }
-  | { type: "QUEUE_CLEAR_FINISHED" };
+  | { type: "QUEUE_CLEAR_FINISHED" }
+// >>> L3 form structure
+  | { type: "GET_FORM_STRUCTURE" };
+// <<< L3

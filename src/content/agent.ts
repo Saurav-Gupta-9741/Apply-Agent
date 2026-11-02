@@ -2,7 +2,7 @@
  * required is filled, no CAPTCHA is waiting, and (in review mode) the user has pressed Submit. */
 
 import type { AnswerEntry, ApplicationRecord, Decision, FieldResult, FillTag, Mode, Profile, RunReport } from "../shared/types";
-import { generic, isGoogleForms, pickAdapter } from "./adapters";
+import { detectSignInWall, generic, isGoogleForms, pickAdapter } from "./adapters";
 import { workEntries } from "./classify";
 import { codeOptionFor, dialCodePickerFor, isDialCodePicker, JUST_A_DIAL_CODE, phoneBoxFor, selectedCode, splitPhone } from "./phone";
 import { decideWithMeaning, type Meaning } from "./meaning";
@@ -108,6 +108,15 @@ function baseReport(doc: Document, platform: string, jobTitle: string): RunRepor
 export async function scanForm(doc: Document, ctx: Omit<AgentContext, "mode">): Promise<RunReport> {
   const { adapter, root } = locate(doc);
   const report = baseReport(doc, adapter.platform, adapter.jobTitle(doc));
+  const wall = detectSignInWall(doc);
+  if (wall.isWall) {
+    return {
+      ...report,
+      status: "needs_user",
+      challenge: wall.reason || "Sign in, then press Continue",
+      errors: ["Sign in, then press Continue. ApplyAgent never types passwords or creates accounts."],
+    };
+  }
   if (!root) return report;
   const page: PageFacts = ctx.page ?? { jobCountries: jobCountries(doc), url: doc.location?.href ?? "", applications: ctx.applications };
   const fields = extractFields(root);
@@ -275,6 +284,15 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
   // A robot check or rate-limit page: stop before touching anything.
   const before = challengeNow();
   if (before) return challengeReport(report, before.kind, before.detail);
+  const wall = detectSignInWall(doc);
+  if (wall.isWall) {
+    return {
+      ...report,
+      status: "needs_user",
+      challenge: wall.reason || "Sign in, then press Continue",
+      errors: ["Sign in, then press Continue. ApplyAgent never types passwords or creates accounts."],
+    };
+  }
   if (!root) {
     // A page without a form may be the confirmation page of an earlier submission.
     const confirmation = detectConfirmation(doc);
@@ -362,6 +380,8 @@ function invalidFields(root: HTMLElement): string[] {
 export async function submitForm(doc: Document, timeoutMs = 20000, beforeSubmit?: BeforeSubmit): Promise<RunReport> {
   const { adapter, root } = locate(doc);
   const report = baseReport(doc, adapter.platform, adapter.jobTitle(doc));
+  const wall = detectSignInWall(doc);
+  if (wall.isWall) return { ...report, status: "needs_user", challenge: wall.reason || "Sign in, then press Continue", errors: ["Sign in, then press Continue"] };
   if (!root) return report;
   if (hasCaptcha(doc)) return { ...report, status: "needs_user", captcha: true, challenge: "a CAPTCHA" };
   const action = adapter.action(root);

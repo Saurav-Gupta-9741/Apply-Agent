@@ -3,6 +3,7 @@
 import type { Detection, Message, RunReport } from "../shared/types";
 import { loadAnswers, loadApplications, loadProfile, loadSettings } from "../shared/storage";
 import { generic, pickAdapter } from "./adapters";
+import { extractFields, type ExtractedField } from "./extract";
 import { highlightField, runOnce, scanForm, submitForm } from "./agent";
 import { detectChallenge, detectConfirmation } from "./detect";
 import { findApplyControl, sensePage } from "./sense";
@@ -176,6 +177,51 @@ if (!window.__applyAgentLoaded) {
       sendResponse({ form: true, url: location.href, platform: platform.name, handsOff: platform.policy === "hands_off" });
       return false;
     }
+    // >>> L3 form structure
+    if (message.type === "GET_FORM_STRUCTURE") {
+      try {
+        const root = formRoot();
+        const adapter = pickAdapter(document, pageUrl());
+        const fields = root ? extractFields(root) : [];
+        const action = root ? adapter.action(root) : null;
+        const actionText = action ? (action.button.textContent || action.button.getAttribute("value") || "").trim() : undefined;
+        let domain = "unknown";
+        let path = "";
+        try {
+          const parsed = new URL(pageUrl());
+          domain = parsed.hostname;
+          path = parsed.pathname;
+        } catch {}
+        sendResponse({
+          version: 1,
+          savedAt: new Date().toISOString(),
+          platform: adapter.platform,
+          domain,
+          path,
+          jobTitle: adapter.jobTitle(document) || document.title || undefined,
+          actionText,
+          fieldCount: fields.length,
+          fields: fields.map((f: ExtractedField) => ({
+            label: f.descriptor.label,
+            originalLabel: f.descriptor.originalLabel,
+            control: f.descriptor.control,
+            required: !!f.descriptor.required,
+            name: f.descriptor.name || undefined,
+            id: f.elements[0]?.id || undefined,
+            automationId: f.elements[0]?.getAttribute("data-automation-id") || f.elements[0]?.getAttribute("data-testid") || f.elements[0]?.getAttribute("data-sf-field") || undefined,
+            ariaLabel: f.elements[0]?.getAttribute("aria-label") || undefined,
+            placeholder: f.elements[0] instanceof HTMLInputElement || f.elements[0] instanceof HTMLTextAreaElement ? f.elements[0].placeholder || undefined : undefined,
+            options: f.descriptor.options?.length ? [...f.descriptor.options] : undefined,
+            section: f.descriptor.section,
+            workBlock: f.descriptor.workBlock,
+          })),
+        });
+      } catch (err) {
+        sendResponse({ error: String(err) });
+      }
+      return false;
+    }
+    // <<< L3
     if (message.type === "OPEN_APPLICATION") {
       const control = findApplyControl(document);
       if (!control) return false;

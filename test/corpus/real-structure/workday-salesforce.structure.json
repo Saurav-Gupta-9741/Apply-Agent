@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "savedAt": "2026-11-02T17:23:36.094Z",
+  "platform": "workday",
+  "domain": "salesforce.wd12.myworkdayjobs.com",
+  "path": "/Careers/job/Lead-Software-Engineer",
+  "jobTitle": "Lead Software Engineer - Core Cloud Infrastructure",
+  "actionText": "Submit Application",
+  "fieldCount": 15,
+  "fields": [
+    {
+      "label": "First Name",
+      "control": "text",
+      "required": true,
+      "name": "legalNameSection.firstName",
+      "id": "input-1",
+      "automationId": "legalNameSection_firstName",
+      "section": "My Information"
+    },
+    {
+      "label": "Last Name",
+      "control": "text",
+      "required": true,
+      "name": "legalNameSection.lastName",
+      "id": "input-2",
+      "automationId": "legalNameSection_lastName",
+      "section": "My Information"
+    },
+    {
+      "label": "Email Address",
+      "control": "email",
+      "required": true,
+      "name": "email",
+      "id": "input-3",
+      "automationId": "email",
+      "section": "My Information"
+    },
+    {
+      "label": "Phone Number",
+      "control": "tel",
+      "required": true,
+      "name": "phoneNumber",
+      "id": "input-4",
+      "automationId": "phone-number",
+      "section": "My Information"
+    },
+    {
+      "label": "Address Line 1",
+      "control": "text",
+      "required": true,
+      "name": "addressSection.addressLine1",
+      "id": "input-5",
+      "automationId": "addressSection_addressLine1",
+      "section": "My Information"
+    },
+    {
+      "label": "City",
+      "control": "text",
+      "required": true,
+      "name": "addressSection.city",
+      "id": "input-6",
+      "automationId": "addressSection_city",
+      "section": "My Information"
+    },
+    {
+      "label": "Postal Code",
+      "control": "text",
+      "required": true,
+      "name": "addressSection.postalCode",
+      "id": "input-7",
+      "automationId": "addressSection_postalCode",
+      "section": "My Information"
+    },
+    {
+      "label": "Attach Resume or CV",
+      "control": "file",
+      "required": true,
+      "name": "resume",
+      "id": "input-resume",
+      "automationId": "file-upload-input",
+      "section": "Resume / CV"
+    },
+    {
+      "label": "LinkedIn Profile",
+      "control": "url",
+      "required": false,
+      "name": "linkedinUrl",
+      "id": "input-linkedin",
+      "automationId": "linkedinQuestion",
+      "placeholder": "https://www.linkedin.com/in/...",
+      "section": "Resume / CV"
+    },
+    {
+      "label": "Are you legally authorized to work in the United States?",
+      "control": "radio",
+      "required": true,
+      "name": "work_auth_us",
+      "options": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "label": "Will you now or in the future require sponsorship for employment visa status?",
+      "control": "radio",
+      "required": true,
+      "name": "visa_sponsorship",
+      "options": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "label": "Earliest date available to start / Notice Period",
+      "control": "text",
+      "required": false,
+      "name": "noticePeriod",
+      "id": "input-notice",
+      "automationId": "noticePeriodInput",
+      "placeholder": "e.g. 2 weeks",
+      "section": "Will you now or in the future require sponsorship for employment visa status?"
+    },
+    {
+      "label": "Gender",
+      "control": "select",
+      "required": false,
+      "name": "gender",
+      "id": "select-gender",
+      "options": [
+        "Female",
+        "Male",
+        "Non-Binary",
+        "Decline to self-identify"
+      ],
+      "section": "Voluntary Self-Identification"
+    },
+    {
+      "label": "Veteran Status",
+      "control": "select",
+      "required": false,
+      "name": "veteranStatus",
+      "id": "select-veteran",
+      "options": [
+        "I am not a protected veteran",
+        "I identify as one or more of the classifications of protected veteran",
+        "I decline to self-identify"
+      ],
+      "section": "Voluntary Self-Identification"
+    },
+    {
+      "label": "Disability Status (Form CC-305)",
+      "control": "select",
+      "required": false,
+      "name": "disabilityStatus",
+      "id": "select-disability",
+      "options": [
+        "Yes, I have a disability, or have had one in the past",
+        "No, I do not have a disability and have not had one in the past",
+        "I do not wish to answer"
+      ],
+      "section": "Voluntary Self-Identification"
+    }
+  ]
+}

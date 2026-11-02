@@ -305,9 +305,16 @@ export function findAnswer(
       best = entry;
     }
   }
-  if (bestScore >= ANSWER_MATCH_THRESHOLD && best) return { ...best, reused: true };
+  if (bestScore >= ANSWER_MATCH_THRESHOLD && best) {
+    const isExact = normalize(best.question) === normalize(label);
+    return isExact ? best : { ...best, reused: true };
+  }
   const factAns = topic ? sameFactAnswer(field, answers, topic) : undefined;
-  return factAns ? { ...factAns, reused: true } : undefined;
+  if (factAns) {
+    const isExact = normalize(factAns.question) === normalize(label);
+    return isExact ? factAns : { ...factAns, reused: true };
+  }
+  return undefined;
 }
 
 /** Facts about the person that do not depend on the job, asked in many wordings ("Gender" / "What is your gender
@@ -563,7 +570,10 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
       const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
       if (match) val = match;
     }
-    return { kind: "answer", value: val, question: remembered.question, reused: true };
+    const isExact = normalize(remembered.question) === normalize(field.label);
+    return isExact
+      ? { kind: "answer", value: val, question: remembered.question }
+      : { kind: "answer", value: val, question: remembered.question, reused: true };
   }
   const quick = factDecision(field, profile, undefined);
   if (quick) return quick;
