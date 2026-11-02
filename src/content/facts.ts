@@ -1025,6 +1025,22 @@ export function narrowerSkill(label: string, skill: string, others: string[] = [
   return false;
 }
 
+function matchYearsOption(options: string[], years: number): string | undefined {
+  for (const opt of options) {
+    const req = parseRequirement(opt);
+    if (req && req.unit === "years") {
+      if (req.min !== undefined && req.max !== undefined) {
+        if (years >= req.min && years <= req.max) return opt;
+      } else if (req.min !== undefined) {
+        if (years >= req.min) return opt;
+      } else if (req.max !== undefined) {
+        if (years <= req.max) return opt;
+      }
+    }
+  }
+  return undefined;
+}
+
 export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
   if (!answerableLength(field.label)) return undefined;
   const q = normalize(field.label);
@@ -1110,7 +1126,9 @@ export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile)
         const yearsStr = String(primary.years);
         if (field.control === "number" || field.control === "text") return answer(yearsStr, "skills");
         if (field.options.length) {
-          const match = bestOption(field.options, yearsStr, 0.7) ?? field.options.find((o) => o.includes(yearsStr));
+          const match = bestOption(field.options, yearsStr, 0.7)
+            ?? matchYearsOption(field.options, primary.years)
+            ?? field.options.find((o) => o.includes(yearsStr));
           if (match) return answer(match, "skills");
         }
       }
@@ -1142,6 +1160,12 @@ export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile)
     if (/\b(how many years|years of experience)\b/i.test(q) && typeof primary.years === "number") {
       const yearsStr = String(primary.years);
       if (field.control === "number" || field.control === "text") return answer(yearsStr, "skills");
+      if (field.options.length) {
+        const match = bestOption(field.options, yearsStr, 0.7)
+          ?? matchYearsOption(field.options, primary.years)
+          ?? field.options.find((o) => o.includes(yearsStr));
+        if (match) return answer(match, "skills");
+      }
     }
   }
 

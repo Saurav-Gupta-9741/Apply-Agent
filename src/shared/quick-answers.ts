@@ -4,7 +4,7 @@
  * on the first application and throughout steady-state.
  */
 
-import type { LanguageEntry, Profile, QuickFacts } from "./types";
+import type { LanguageEntry, Profile, QuickFacts, SkillEntry } from "./types";
 
 export interface QuickQuestion {
   id: string;
@@ -14,6 +14,7 @@ export interface QuickQuestion {
   kind: "yesno" | "choice" | "multi" | "number" | "text" | "date";
   options?: string[];
   defaultAnswer?: string;
+  placeholder?: string;
 }
 
 export const QUICK_QUESTIONS: QuickQuestion[] = [
@@ -248,7 +249,39 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     kind: "text",
     defaultAnswer: "",
   },
+  {
+    id: "topSkills",
+    factKey: "skillsInventory",
+    prompt: "What are your core technical and professional skills?",
+    why: "Forms ask about specific tools, languages and skills in 45% of applications",
+    kind: "text",
+    placeholder: "e.g. Python (4 yrs), React (3 yrs), SQL (4 yrs), AWS (2 yrs)",
+    defaultAnswer: "",
+  },
 ];
+
+/** Parses a free-text skills list (e.g. "Python (4 yrs), React (3 yrs)") into SkillEntry objects. */
+export function parseSkillsInput(input: string | string[]): SkillEntry[] {
+  const items = Array.isArray(input) ? input : String(input).split(/[,;\n]+/);
+  const result: SkillEntry[] = [];
+  for (const item of items) {
+    const trimmed = item.trim();
+    if (!trimmed) continue;
+    const m = trimmed.match(/^([^(:\-–]+)(?:(?:\(|\s*[:\-–]\s*)\s*(\d+(?:\.\d+)?)\s*(?:yrs?|years?)?\s*\)?)?/i);
+    if (m) {
+      const name = m[1]!.trim();
+      const years = m[2] ? parseFloat(m[2]) : 3;
+      if (name) {
+        result.push({
+          name,
+          years,
+          level: years >= 5 ? "Advanced" : years >= 2 ? "Intermediate" : "Beginner",
+        });
+      }
+    }
+  }
+  return result;
+}
 
 /**
  * Pure function applying Quick Answers answers map to a Profile object.
@@ -341,6 +374,25 @@ export function applyQuickAnswers(profile: Profile, answers: Record<string, stri
   if ("linkedin" in answers) next.linkedin = getStr("linkedin");
   if ("github" in answers) next.github = getStr("github");
   if ("portfolio" in answers) next.portfolio = getStr("portfolio");
+
+  if ("topSkills" in answers || "skillsInventory" in answers) {
+    const raw = answers.topSkills ?? answers.skillsInventory;
+    if (raw !== undefined && raw !== null) {
+      const skills = parseSkillsInput(raw);
+      if (skills.length) {
+        const existing = [...(next.skillsInventory ?? [])];
+        for (const s of skills) {
+          const idx = existing.findIndex((e) => e.name.toLowerCase() === s.name.toLowerCase());
+          if (idx >= 0) {
+            existing[idx] = s;
+          } else {
+            existing.push(s);
+          }
+        }
+        next.skillsInventory = existing;
+      }
+    }
+  }
 
   return next;
 }

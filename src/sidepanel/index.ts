@@ -23,6 +23,7 @@ import { HANDS_OFF_MESSAGE, isHandsOff, platformFor } from "../shared/platforms"
 import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shared/backup";
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
 import { findSuggestedCorrection } from "../shared/corrections";
+import { extractTechTerms } from "../shared/techterms";
 import { buildDiagnostic } from "../shared/diagnostic";
 import { clockTime, loadPacing, loadPacingState, PACING_BOUNDS, savePacing, statusLine, type PacingSettings } from "../shared/pacing";
 import type { ConsentBox, ConsentList, TickResult } from "../shared/consent-review";
@@ -626,6 +627,29 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     busy(save, true);
     // An answer to a question ApplyAgent asked goes straight to the answer bank; only edits of filled fields are corrections.
     await updateAnswers((answers) => upsertAnswer(answers, entry));
+
+    // When the user answers an unknown skill question, add the skill to skillsInventory for future forms:
+    const skillTerms = extractTechTerms(r.field.label);
+    if (skillTerms.length > 0) {
+      const isYes = /^(yes|true|y)\b/i.test(value);
+      const yearsNum = parseFloat((value.match(/\b\d+(?:\.\d+)?\b/) || [])[0] ?? "");
+      if (isYes || !Number.isNaN(yearsNum)) {
+        const prof = await loadProfile();
+        const inv = [...(prof.skillsInventory ?? [])];
+        for (const term of skillTerms) {
+          const existing = inv.find((s) => s.name.toLowerCase() === term.toLowerCase());
+          const y = !Number.isNaN(yearsNum) ? yearsNum : 2;
+          if (existing) {
+            if (!Number.isNaN(yearsNum)) existing.years = yearsNum;
+          } else {
+            inv.push({ name: term, years: y, level: y >= 5 ? "Advanced" : "Intermediate" });
+          }
+        }
+        await saveProfile({ ...prof, skillsInventory: inv });
+        profile = { ...profile, skillsInventory: inv };
+      }
+    }
+
     await ctx.onSaved();
     busy(save, false);
   });
