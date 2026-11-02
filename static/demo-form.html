@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo Application · Senior Software Engineer · Acme Corp</title>
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --success: #16a34a;
+    --banner-bg: #eff6ff;
+    --banner-border: #bfdbfe;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 24px 16px;
+    line-height: 1.5;
+  }
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  .demo-banner {
+    background: var(--banner-bg);
+    border: 1px solid var(--banner-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: #1e40af;
+  }
+  .demo-banner strong { display: block; margin-bottom: 4px; }
+  h1 { font-size: 24px; margin: 0 0 4px 0; }
+  .subtitle { color: var(--text-muted); margin-bottom: 24px; font-size: 14px; }
+  .field { margin-bottom: 18px; }
+  .field label { display: block; font-weight: 500; font-size: 14px; margin-bottom: 6px; }
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="tel"],
+  .field input[type="number"],
+  .field select,
+  .field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+  .radio-group { display: flex; gap: 16px; margin-top: 4px; }
+  .radio-group label { font-weight: normal; font-size: 14px; cursor: pointer; }
+  .btn-submit {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 12px;
+  }
+  .btn-submit:hover { background: var(--primary-hover); }
+  .success-banner {
+    display: none;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    padding: 16px;
+    border-radius: 8px;
+    margin-top: 16px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="demo-banner">
+    <strong>ApplyAgent Interactive Practice Form</strong>
+    Open the ApplyAgent side panel and click <strong>Fill this application</strong> (or press <code>Alt+Shift+F</code>).
+    Watch ApplyAgent fill your details in 5 seconds. Nothing leaves your browser.
+  </div>
+
+  <h1>Senior Full Stack Engineer</h1>
+  <div class="subtitle">Acme Demo Corp · Bengaluru / Remote · Full-time</div>
+
+  <form id="application-form" novalidate>
+    <div class="field">
+      <label for="first_name">First Name *</label>
+      <input type="text" id="first_name" name="first_name" required />
+    </div>
+
+    <div class="field">
+      <label for="last_name">Last Name *</label>
+      <input type="text" id="last_name" name="last_name" required />
+    </div>
+
+    <div class="field">
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email" required />
+    </div>
+
+    <div class="field">
+      <label for="phone">Phone Number *</label>
+      <input type="tel" id="phone" name="phone" required />
+    </div>
+
+    <div class="field">
+      <label for="resume">Attach Resume / CV *</label>
+      <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required />
+    </div>
+
+    <div class="field">
+      <label for="linkedin">LinkedIn Profile URL</label>
+      <input type="text" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/username" />
+    </div>
+
+    <div class="field">
+      <label for="experience">Total Years of Experience *</label>
+      <input type="number" id="experience" name="experience" min="0" max="50" required />
+    </div>
+
+    <div class="field">
+      <label for="notice">Notice Period *</label>
+      <select id="notice" name="notice" required>
+        <option value="">Select notice period...</option>
+        <option value="immediate">Immediate / Serving notice</option>
+        <option value="15_days">15 days</option>
+        <option value="30_days">30 days</option>
+        <option value="60_days">60 days</option>
+        <option value="90_days">90 days</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Are you legally authorized to work in this location? *</label>
+      <div class="radio-group">
+        <label><input type="radio" name="work_auth" value="yes" required /> Yes</label>
+        <label><input type="radio" name="work_auth" value="no" /> No</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="why_company">Why do you want to join Acme Demo Corp?</label>
+      <textarea id="why_company" name="why_company" rows="4" placeholder="Tell us why this role interests you..."></textarea>
+    </div>
+
+    <div class="field">
+      <label style="font-weight: normal; font-size: 13px; color: var(--text-muted);">
+        <input type="checkbox" id="consent" name="consent" required />
+        I consent to Acme Demo Corp reviewing my application for this role.
+      </label>
+    </div>
+
+    <button type="submit" class="btn-submit" id="submit-btn">Submit Application</button>
+  </form>
+
+  <div id="success-message" class="success-banner">
+    <h3>Thank you for applying to Acme Demo Corp!</h3>
+    <p>Your application was submitted successfully. (ApplyAgent recorded confirmation for this practice run).</p>
+  </div>
+</div>
+
+<script>
+  document.getElementById("application-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    document.getElementById("application-form").style.display = "none";
+    document.getElementById("success-message").style.display = "block";
+  });
+</script>
+</body>
+</html>

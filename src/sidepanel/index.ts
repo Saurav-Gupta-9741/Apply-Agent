@@ -535,8 +535,8 @@ interface CardContext {
 }
 
 const NEVER_TEXT: Record<string, string> = {
-  identity: "For your safety, ApplyAgent never stores or types ID numbers or bank details. Enter it yourself on the page. Genuine employers rarely ask for these before an offer, so make sure this site is real.",
-  signature: "Signing is a legal act, so ApplyAgent never signs for you. Type your signature on the page yourself.",
+  identity: "ID numbers: enter yourself on page.",
+  signature: "Signature: please sign on the page.",
 };
 
 function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
@@ -547,11 +547,11 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   const appliedBefore = isAppliedBeforeQuestion(r.field.label);
   const onPageOnly = youOnly || upload || appliedBefore;
   const why = youOnly ? NEVER_TEXT[topic!]!
-    : upload ? "Attach this file yourself on the page. ApplyAgent only attaches your resume."
-      : appliedBefore ? "Company-specific: answer it on the page."
-        : sensitive ? "Sensitive: only you answer this. Saved for this topic."
-          : r.decision.kind === "ask" && r.decision.reason === "missing_profile_value" ? "Missing from your profile."
-            : r.status === "failed" ? `Could not fill: ${r.detail ?? "unknown reason"}` : "New question: answer once, reused next time.";
+    : upload ? "Attach this file on the page."
+      : appliedBefore ? "Company-specific: answer on the page."
+        : sensitive ? "Sensitive question: only you answer this."
+          : r.decision.kind === "ask" && r.decision.reason === "missing_profile_value" ? "Missing from your saved profile."
+            : r.status === "failed" ? "Could not fill on page." : "New question: saved for future forms.";
   const whyRow = h("span", { class: "question-why" });
   whyRow.append(icon(youOnly ? "lock" : appliedBefore ? "lock" : sensitive ? "shield" : upload ? "upload" : "info", 14), h("span", {}, why));
   const card = h("div", { class: `question${sensitive || youOnly || appliedBefore ? " sensitive" : ""}` },
@@ -2234,4 +2234,25 @@ if (quickHost && quickHost.parentElement) {
   quickHost.parentElement.insertBefore(setupWizardBtn, quickHost);
 }
 // <<< L2
+
+// >>> L5 onboarding
+import { createOnboardingElement, isFirstRun } from "./onboarding";
+
+async function checkAndMountOnboarding(): Promise<void> {
+  if (await isFirstRun()) {
+    const secApply = document.getElementById("sec-apply");
+    if (secApply) {
+      const el = createOnboardingElement({
+        onDone: async () => {
+          await renderProfile();
+          await renderSetup();
+          toast("Setup complete! You are ready to apply.", "ok");
+        },
+      });
+      secApply.insertBefore(el, secApply.firstChild);
+    }
+  }
+}
+void checkAndMountOnboarding();
+// <<< L5
 

@@ -239,7 +239,7 @@ export function createResumeReviewElement(
       const badge = document.createElement("span");
       badge.className = `chip ${item.suggestion.confidence === "high" ? "ok" : item.suggestion.confidence === "medium" ? "warn" : "bad"}`;
       badge.style.fontSize = "10px";
-      badge.textContent = item.suggestion.confidence;
+      badge.textContent = item.suggestion.confidence === "high" ? "Sure" : "Not sure";
       top.append(badge);
 
       if (item.suggestion.computed) {
