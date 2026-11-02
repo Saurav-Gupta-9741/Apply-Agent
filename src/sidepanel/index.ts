@@ -2121,3 +2121,32 @@ void (async () => {
     await renderFeed();
   }
 })();
+
+// >>> L2 Quick Answers Wizard
+export async function launchQuickAnswersWizard(container?: HTMLElement): Promise<void> {
+  const { mountQuickAnswers } = await import("./quick-answers");
+  const target = container ?? document.getElementById("quick-card") ?? document.body;
+  await mountQuickAnswers(target, async () => {
+    profile = await loadProfile();
+    await renderQuick();
+    await renderSetup();
+    toast("Quick answers saved");
+  });
+}
+
+const setupWizardBtn = document.createElement("button");
+setupWizardBtn.id = "launch-quick-wizard";
+setupWizardBtn.className = "btn btn-secondary btn-sm";
+setupWizardBtn.textContent = "Setup wizard (2 min)";
+setupWizardBtn.type = "button";
+setupWizardBtn.style.cssText = "margin-bottom: 12px;";
+setupWizardBtn.addEventListener("click", () => {
+  const card = document.getElementById("quick-card");
+  if (card) void launchQuickAnswersWizard(card);
+});
+const quickHost = document.getElementById("quick-card");
+if (quickHost && quickHost.parentElement) {
+  quickHost.parentElement.insertBefore(setupWizardBtn, quickHost);
+}
+// <<< L2
+

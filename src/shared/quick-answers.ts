@@ -4,7 +4,7 @@
  * on the first application and throughout steady-state.
  */
 
-import type { Profile, QuickFacts } from "./types";
+import type { LanguageEntry, Profile, QuickFacts } from "./types";
 
 export interface QuickQuestion {
   id: string;
@@ -121,9 +121,18 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     defaultAnswer: "10%",
   },
   {
+    id: "over18",
+    factKey: "facts.over18",
+    prompt: "Are you at least 18 years of age or older?",
+    why: "Legal minimum age requirement asked on 86% of forms",
+    kind: "choice",
+    options: ["Yes", "No"],
+    defaultAnswer: "Yes",
+  },
+  {
     id: "highestDegree",
-    factKey: "degree",
-    prompt: "Highest completed degree:",
+    factKey: "educationLevel",
+    prompt: "Highest completed education level:",
     why: "Autofills educational qualification fields",
     kind: "choice",
     options: ["Bachelor's Degree", "Master's Degree", "Doctorate (PhD)", "Diploma / Associate", "High School"],
@@ -144,6 +153,14 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     why: "Answers 'How many years of experience do you have?'",
     kind: "number",
     defaultAnswer: "3",
+  },
+  {
+    id: "languages",
+    factKey: "languages",
+    prompt: "Languages and proficiency (e.g. English: Fluent, Hindi: Native):",
+    why: "Populates multi-language competency questions",
+    kind: "text",
+    defaultAnswer: "English: Fluent",
   },
   {
     id: "gender",
@@ -275,9 +292,33 @@ export function applyQuickAnswers(profile: Profile, answers: Record<string, stri
     next.facts!.travel = (v === "Yes" || v === "No" || v === "Decline") ? v : "";
   }
   if ("travelPercent" in answers) next.facts!.travelPercent = getStr("travelPercent");
-  if ("highestDegree" in answers) next.degree = getStr("highestDegree");
+  if ("over18" in answers) {
+    const v = getStr("over18");
+    next.facts!.over18 = (v === "Yes" || v === "No") ? v : "";
+  }
+  if ("highestDegree" in answers) {
+    const v = getStr("highestDegree");
+    next.educationLevel = v;
+    if (!next.degree) next.degree = v;
+  }
   if ("graduationYear" in answers) next.graduationYear = getStr("graduationYear");
   if ("experienceYears" in answers) next.experienceYears = getStr("experienceYears");
+  if ("languages" in answers) {
+    const langStr = getStr("languages");
+    if (langStr) {
+      const validProf = ["Native", "Fluent", "Professional", "Conversational", "Basic"];
+      const entries: LanguageEntry[] = langStr.split(",").map((part) => {
+        const [lang, prof] = part.split(":").map((s) => s.trim());
+        const p = (prof && validProf.includes(prof))
+          ? (prof as LanguageEntry["proficiency"])
+          : "Fluent";
+        return { language: lang || part.trim(), proficiency: p };
+      }).filter((e) => e.language);
+      if (entries.length) {
+        next.languages = entries;
+      }
+    }
+  }
   if ("gender" in answers) {
     const v = getStr("gender");
     next.facts!.gender = (v === "Male" || v === "Female" || v === "Non-binary" || v === "Decline") ? v : "";
@@ -295,6 +336,7 @@ export function applyQuickAnswers(profile: Profile, answers: Record<string, stri
     const v = getStr("disability");
     next.facts!.disability = (v === "Yes" || v === "No" || v === "Decline") ? v : "";
   }
+  if ("pronouns" in answers) next.facts!.pronouns = getStr("pronouns");
   if ("heardFrom" in answers) next.facts!.heardFrom = getStr("heardFrom");
   if ("linkedin" in answers) next.linkedin = getStr("linkedin");
   if ("github" in answers) next.github = getStr("github");

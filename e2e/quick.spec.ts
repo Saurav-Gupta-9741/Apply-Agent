@@ -62,3 +62,33 @@ test("screening pre-answers are saved in the panel and written to answers bank",
   expect(stored.answers.find((a: any) => a.question === "Do you have a valid driver's license?").answer).toBe("Yes");
   expect(stored.answers.find((a: any) => a.question === "Are you bound by a non-compete agreement?").answer).toBe("No");
 });
+
+test("quick answers setup wizard guides user through questions and saves to profile", async ({ ext }) => {
+  await setStorage(ext, { profile: PROFILE, answers: [] });
+  await ext.reload();
+  await goTo(ext, "answers");
+  const launchBtn = ext.locator("#launch-quick-wizard");
+  await expect(launchBtn).toBeVisible();
+  await launchBtn.click();
+
+  const wizard = ext.locator(".quick-wizard-card");
+  await expect(wizard).toBeVisible();
+  await expect(wizard.locator(".wizard-step-counter")).toContainText("Question 1 of");
+
+  // Click Next to step 2
+  await wizard.locator(".wizard-next").click();
+  await expect(wizard.locator(".wizard-step-counter")).toContainText("Question 2 of");
+
+  // Step 2: Skip to step 3
+  await wizard.locator(".wizard-skip").click();
+  await expect(wizard.locator(".wizard-step-counter")).toContainText("Question 3 of");
+
+  // Save & Exit
+  await wizard.locator(".wizard-save-exit").click();
+  await expect(ext.locator("#toasts")).toContainText("Quick answers saved");
+
+  // Verify storage was updated
+  const stored = await ext.evaluate(() => chrome.storage.local.get("profile"));
+  expect(stored.profile?.facts?.workCountries).toBeDefined();
+});
+

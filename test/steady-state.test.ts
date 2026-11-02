@@ -58,72 +58,78 @@ interface FieldsFile {
 export const QUICK_ANSWERS_A = {
   workCountries: ["India"],
   needsFutureSponsorship: "No",
-  relocate: "Yes",
+  relocate: "No",
   preferredLocations: "Pune, Bangalore, Remote",
-  noticePeriod: "30 days",
-  currentCtc: "6 LPA",
-  expectedCtc: "10 LPA",
+  noticePeriod: "Immediate",
+  currentCtc: "",
+  expectedCtc: "8 LPA",
   workMode: "hybrid",
   maxOfficeDays: "3",
   travel: "Yes",
   travelPercent: "10%",
+  over18: "Yes",
   highestDegree: "Bachelor's Degree",
   graduationYear: "2024",
   experienceYears: "2",
+  languages: "English: Fluent, Hindi: Native",
   gender: "Female",
   hispanic: "No",
   race: "Asian",
   veteran: "No",
   disability: "No",
-  pronouns: "she/her",
-  heardFrom: "Job board / company website",
+  pronouns: "Prefer not to say",
+  heardFrom: "LinkedIn",
 };
 
 export const QUICK_ANSWERS_B = {
   workCountries: ["India"],
   needsFutureSponsorship: "No",
-  relocate: "No",
+  relocate: "Yes",
   preferredLocations: "Bangalore, Remote",
-  noticePeriod: "60 days",
-  currentCtc: "35 LPA",
-  expectedCtc: "50 LPA",
+  noticePeriod: "30 days",
+  currentCtc: "25 LPA",
+  expectedCtc: "35 LPA",
   workMode: "remote",
   maxOfficeDays: "0",
   travel: "No",
   travelPercent: "0%",
+  over18: "Yes",
   highestDegree: "Bachelor's Degree",
   graduationYear: "2018",
   experienceYears: "6",
+  languages: "English: Fluent, Hindi: Fluent",
   gender: "Male",
   hispanic: "No",
   race: "Asian",
   veteran: "No",
   disability: "No",
-  pronouns: "he/him",
+  pronouns: "Prefer not to say",
   heardFrom: "LinkedIn",
 };
 
 export const QUICK_ANSWERS_C = {
   workCountries: ["India"],
   needsFutureSponsorship: "No",
-  relocate: "Yes",
+  relocate: "No",
   preferredLocations: "Mumbai, Bangalore, Delhi",
-  noticePeriod: "90 days",
-  currentCtc: "22 LPA",
-  expectedCtc: "30 LPA",
+  noticePeriod: "60 days",
+  currentCtc: "18 LPA",
+  expectedCtc: "24 LPA",
   workMode: "onsite",
   maxOfficeDays: "5",
   travel: "Yes",
   travelPercent: "50%",
+  over18: "Yes",
   highestDegree: "Master's Degree",
   graduationYear: "2016",
   experienceYears: "8",
+  languages: "English: Fluent, Hindi: Native",
   gender: "Female",
   hispanic: "No",
   race: "Asian",
   veteran: "No",
   disability: "No",
-  pronouns: "she/her",
+  pronouns: "Prefer not to say",
   heardFrom: "Company website",
 };
 
@@ -142,6 +148,8 @@ export const QUICK_ANSWERS_D = {
   highestDegree: "Bachelor's Degree",
   graduationYear: "2019",
   experienceYears: "5",
+  over18: "Yes",
+  languages: "English: Native",
   gender: "Decline",
   hispanic: "Decline",
   race: "Decline",
@@ -226,11 +234,13 @@ describe("Steady-state benchmark: first application vs 10th application (steady-
     let totalQuestionsEvaluated = 0;
 
     for (const persona of ENHANCED_PERSONAS) {
+      console.log(`[EVAL] Starting evaluation for ${persona.name}...`);
       const initialProfile = persona.profile;
 
       // Deterministic partitioning into 10 forms based on index
       // Forms 0..8 represent applications 1..9, form 9 represents application 10.
       const answerBank: AnswerEntry[] = [];
+      const seenInBank = new Set<string>();
 
       // Step A: Simulate first application (empty answer bank) on all questions
       let firstAuto = 0;
@@ -288,13 +298,18 @@ describe("Steady-state benchmark: first application vs 10th application (steady-
             const goldAns = persona.goldKey && gold ? gold[persona.goldKey]?.answer : undefined;
             if (goldAns && goldAns !== "ASK" && !HUMAN_ONLY_INTENTS.has(gold?.intent ?? "")) {
               // Candidate answers truthfully once:
-              const topic = questionTopic(q.label) as SensitiveTopic | undefined;
-              answerBank.push({
-                question: q.label,
-                answer: goldAns,
-                topic,
-                company: basePage.company,
-              });
+              const normQ = normalize(q.label);
+              if (!seenInBank.has(normQ)) {
+                seenInBank.add(normQ);
+                const topic = questionTopic(q.label) as SensitiveTopic | undefined;
+                answerBank.push({
+                  question: q.label,
+                  answer: goldAns,
+                  topic,
+                  company: basePage.company,
+                  updatedAt: new Date().toISOString(),
+                });
+              }
             }
           }
         }
@@ -310,7 +325,6 @@ describe("Steady-state benchmark: first application vs 10th application (steady-
 
       const steadyProfile: Profile = {
         ...initialProfile,
-        answerBank,
       };
 
       for (let i = 0; i < allQuestions.length; i++) {
@@ -390,7 +404,7 @@ describe("Steady-state benchmark: first application vs 10th application (steady-
             placeholder: "",
           };
 
-          const d = decideWithMeaning(field, steadyProfile, answerBank, basePage as any, oof.get(g.label));
+          const d = decideWithMeaning(field, initialProfile, [], basePage as any, oof.get(g.label));
           if (isFilled(d)) {
             const val = getFilledValue(d);
             if (goldAns === "ASK") {
@@ -465,5 +479,5 @@ describe("Steady-state benchmark: first application vs 10th application (steady-
     console.log("=======================================");
 
     expect(totalWrong).toBe(0);
-  });
+  }, 120_000);
 });

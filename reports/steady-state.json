@@ -1,35 +1,35 @@
 {
-  "generatedAt": "2026-11-02T12:20:23.806Z",
+  "generatedAt": "2026-11-02T14:13:38.500Z",
   "questionCount": 1539,
   "benchmarkFieldCount": 966,
   "personas": {
     "A": {
       "name": "Persona A (Fresher DA, Pune)",
       "firstApplication": {
-        "autoFilled": 457,
-        "autoShare": "29.7%",
-        "ask": 1082,
+        "autoFilled": 448,
+        "autoShare": "29.1%",
+        "ask": 1091,
         "humanOnly": 143,
         "wrong": 0
       },
       "steadyState": {
-        "autoFilled": 469,
-        "autoShare": "30.5%",
+        "autoFilled": 460,
+        "autoShare": "29.9%",
         "reusedFromBank": 0,
-        "ask": 1070,
+        "ask": 1079,
         "humanOnly": 143,
         "wrong": 0
       },
       "benchmarkFields": {
         "total": 966,
-        "firstApplicationAuto": 418,
-        "firstApplicationShare": "43.3%",
-        "steadyStateAuto": 419,
-        "steadyStateShare": "43.4%"
+        "firstApplicationAuto": 411,
+        "firstApplicationShare": "42.5%",
+        "steadyStateAuto": 412,
+        "steadyStateShare": "42.7%"
       },
       "scriptGold": {
         "evaluated": 150,
-        "matches": 33,
+        "matches": 22,
         "wrong": 0
       }
     },
@@ -59,7 +59,7 @@
       },
       "scriptGold": {
         "evaluated": 150,
-        "matches": 50,
+        "matches": 36,
         "wrong": 0
       }
     },
@@ -89,7 +89,7 @@
       },
       "scriptGold": {
         "evaluated": 150,
-        "matches": 85,
+        "matches": 44,
         "wrong": 0
       }
     },
@@ -126,8 +126,8 @@
   },
   "summary": {
     "totalEvaluations": 6156,
-    "firstApplicationAutoShare": "33.0%",
-    "steadyStateAutoShare": "34.1%",
+    "firstApplicationAutoShare": "32.8%",
+    "steadyStateAutoShare": "34.0%",
     "wrong": 0
   }
 }
