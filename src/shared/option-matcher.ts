@@ -818,7 +818,12 @@ function matchYearBracket(candidates: ParsedCandidate[], q: ExperienceQuantity):
   });
   if (contained.length === 1) return contained[0]!.c;
   if (contained.length > 1) {
-    // Overlapping ranges: ambiguous -> return null (ask!)
+    // Overlapping brackets ("1-2" / "2-4" for 2): the ATS convention is "a bracket starts at its lower bound", but
+    // only for a whole number of years the user typed; a converted "24 months" stays for the user.
+    if (!q.fromMonths && Number.isInteger(t)) {
+      const starting = contained.filter((p) => p.b!.kind === "range" && (p.b as { min: number }).min === t);
+      if (starting.length === 1) return starting[0]!.c;
+    }
     return null;
   }
   // Open-ended "N+ years": the highest threshold the value satisfies ("6" → "5+", never "1+").

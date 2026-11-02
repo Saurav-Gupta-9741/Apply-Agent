@@ -1,12 +1,17 @@
 /** DOM queries that also look inside open shadow roots: forms built from web components (Lit, Stencil,
  * Salesforce, SmartRecruiters-style widgets) keep their inputs there, out of reach of querySelectorAll. */
 
+const shadowHostCache = new WeakMap<ParentNode, Element[]>();
+
 function shadowHosts(root: ParentNode): Element[] {
+  const cached = shadowHostCache.get(root);
+  if (cached) return cached;
   const all = root.querySelectorAll("*");
   const hosts: Element[] = [];
   for (let i = 0; i < all.length; i++) {
     if (all[i]!.shadowRoot) hosts.push(all[i]!);
   }
+  shadowHostCache.set(root, hosts);
   return hosts;
 }
 

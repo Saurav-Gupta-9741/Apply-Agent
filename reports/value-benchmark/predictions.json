@@ -238,16 +238,16 @@
   },
   "ashby-airwallex::4528562a": {
    "A": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "B": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "C": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "D": {
     "decide": "Yes",
@@ -850,16 +850,16 @@
   },
   "ashby-bridgepoint-consulting::f6945084": {
    "A": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "B": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "C": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "D": {
     "decide": "Yes",
@@ -1588,16 +1588,16 @@
   },
   "ashby-headway::ca0338fe": {
    "A": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "B": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "C": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "D": {
     "decide": "Yes",
@@ -2110,8 +2110,8 @@
   },
   "ashby-linear::86704206": {
    "A": {
-    "decide": "Immediate",
-    "decideWithMeaning": "Immediate"
+    "decide": "0 days",
+    "decideWithMeaning": "0 days"
    },
    "B": {
     "decide": "30 days",
@@ -2398,20 +2398,20 @@
   },
   "ashby-lio::013e9d70": {
    "A": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "B": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "C": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "D": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    }
   },
   "ashby-lio::824c3f19": {
@@ -5008,20 +5008,20 @@
   },
   "bamboohr-maplr::cf9db6d6": {
    "A": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "B": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "C": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "D": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    }
   },
   "bamboohr-maplr::f39878e5": {
@@ -6052,16 +6052,16 @@
   },
   "breezy-small-batch-standard::a20b3b56": {
    "A": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:sponsorship)",
+    "decideWithMeaning": "ASK (ask:sponsorship)"
    },
    "B": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:sponsorship)",
+    "decideWithMeaning": "ASK (ask:sponsorship)"
    },
    "C": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:sponsorship)",
+    "decideWithMeaning": "ASK (ask:sponsorship)"
    },
    "D": {
     "decide": "Yes",
@@ -13162,16 +13162,16 @@
   },
   "lever-institute-of-foundation-models::dc444655": {
    "A": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "B": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "C": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "D": {
     "decide": "Yes",
@@ -13936,8 +13936,8 @@
   },
   "lever-paytm::a1233f36": {
    "A": {
-    "decide": "Immediate",
-    "decideWithMeaning": "Immediate"
+    "decide": "0 days",
+    "decideWithMeaning": "0 days"
    },
    "B": {
     "decide": "30 days",
@@ -14206,20 +14206,20 @@
   },
   "lever-riocan::2040ac0a": {
    "A": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "B": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "C": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    },
    "D": {
-    "decide": "No",
-    "decideWithMeaning": "No"
+    "decide": "ASK (ask:work_authorization)",
+    "decideWithMeaning": "ASK (ask:work_authorization)"
    }
   },
   "lever-riocan::eaf0de85": {

@@ -76,3 +76,19 @@ export function buildDiagnostic(report: RunReport | undefined, meta: DiagnosticM
     : { page: pageAddress(meta.url ?? ""), result: "no application form found" };
   return JSON.stringify({ applyAgent: meta.version, browser: meta.browser, when: meta.when, ...body }, null, 2);
 }
+
+export function saveDiagnosticFile(text: string, doc: Document = typeof document !== "undefined" ? document : ({} as any)): void {
+  if (!doc?.createElement) return;
+  const url = typeof URL.createObjectURL === "function"
+    ? URL.createObjectURL(new Blob([text], { type: "application/json" }))
+    : "data:application/json;charset=utf-8," + encodeURIComponent(text);
+  const link = doc.createElement("a");
+  link.href = url;
+  link.download = `applyagent-diagnostics-${new Date().toISOString().slice(0, 10)}.json`;
+  doc.body.append(link);
+  link.click();
+  link.remove();
+  if (typeof URL.revokeObjectURL === "function") {
+    setTimeout(() => URL.revokeObjectURL(url), 10_000);
+  }
+}

@@ -24,11 +24,9 @@ import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shar
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
 import { findSuggestedCorrection } from "../shared/corrections";
 import { extractTechTerms } from "../shared/techterms";
-import { buildDiagnostic } from "../shared/diagnostic";
+import { buildDiagnostic, saveDiagnosticFile } from "../shared/diagnostic";
 import { clockTime, loadPacing, loadPacingState, PACING_BOUNDS, savePacing, statusLine, type PacingSettings } from "../shared/pacing";
 import type { ConsentBox, ConsentList, TickResult } from "../shared/consent-review";
-import { parseResumeFromBuffer, createResumeReviewElement } from "./resume-import";
-import { parseResume } from "../shared/resume-parse";
 import { initTracker, renderTrackerCrm, type TrackerUi } from "./tracker";
 import { initUsageMeter, renderUsageMeter } from "./usage-meter";
 import { renderFitCard } from "./fit-card";
@@ -390,6 +388,8 @@ function clearReport(): void {
   $("fields").replaceChildren();
   $("fields-box").hidden = true;
   $("report-problem").hidden = true;
+  const exportDiagBtn = document.getElementById("export-diagnostics");
+  if (exportDiagBtn) exportDiagBtn.hidden = true;
   lastReport = undefined;
   clearConsent();
 }
@@ -686,6 +686,8 @@ function showReport(report: RunReport | undefined): void {
   const tabId = runTabId;
   void activeTab().then((tab) => (lastReport = { report, url: report?.url ?? tab?.url ?? "", tabId: tabId ?? tab?.id }));
   $("report-problem").hidden = false;
+  const exportDiagBtn = document.getElementById("export-diagnostics");
+  if (exportDiagBtn) exportDiagBtn.hidden = false;
   ($("submit") as HTMLButtonElement).hidden = true;
   $("questions").replaceChildren();
   if (!report) {
@@ -986,6 +988,20 @@ $("report-problem").addEventListener("click", async () => {
     ? "Report copied. Paste it into your message to the ApplyAgent team. It has the questions and decisions, never your answers."
     : "Report saved as a file. Send it to the ApplyAgent team. It has the questions and decisions, never your answers.");
 });
+
+const exportDiagBtnEl = document.getElementById("export-diagnostics");
+if (exportDiagBtnEl) {
+  exportDiagBtnEl.addEventListener("click", async () => {
+    const brands = (navigator as Navigator & { userAgentData?: { brands: Array<{ brand: string; version: string }> } }).userAgentData?.brands;
+    const browser = brands?.filter((b) => !/not.?a.?brand/i.test(b.brand)).map((b) => `${b.brand} ${b.version}`).join(", ")
+      || (/Chrome\/[\d.]+/.exec(navigator.userAgent)?.[0] ?? "unknown");
+    const text = buildDiagnostic(lastReport?.report, {
+      version: chrome.runtime.getManifest().version, browser, when: new Date().toISOString(), url: lastReport?.url,
+    }, await loadProfile());
+    saveDiagnosticFile(text, document);
+    toast("Diagnostics exported to local file. Contains questions and decisions only, zero personal data.");
+  });
+}
 
 // >>> L3 form structure
 const formStructBtn = document.getElementById("save-form-structure") as HTMLElement | null;
@@ -1314,6 +1330,7 @@ $("resume").addEventListener("change", async (event) => {
 
   try {
     toast("Parsing resume...", "ok");
+    const { parseResumeFromBuffer, createResumeReviewElement } = await import("./resume-import");
     const parsed = await parseResumeFromBuffer(file.name, bytes);
     if (parsed.suggestions.length > 0 || parsed.questions.length > 0) {
       const reviewDialog = $("resume-review-dialog") as HTMLDialogElement | null;
@@ -1360,6 +1377,8 @@ if (pasteBtn && pasteDialog) {
     }
     pasteDialog.close();
     try {
+      const { parseResume } = await import("../shared/resume-parse");
+      const { createResumeReviewElement } = await import("./resume-import");
       const parsed = parseResume(raw);
       const reviewDialog = $("resume-review-dialog") as HTMLDialogElement | null;
       if (reviewDialog) {

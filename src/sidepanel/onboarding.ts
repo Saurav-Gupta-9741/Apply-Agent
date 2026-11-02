@@ -6,7 +6,6 @@
  */
 
 import { loadProfile, saveProfile } from "../shared/storage";
-import { parseResumeFromBuffer } from "./resume-import";
 import { mountQuickAnswers } from "./quick-answers";
 import type { Profile } from "../shared/types";
 
@@ -91,6 +90,7 @@ export function createOnboardingElement(options: OnboardingOptions): HTMLElement
           for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
           const profile = await loadProfile();
           profile.resume = { name: file.name, type: file.type || "application/octet-stream", dataBase64: btoa(binary) };
+          const { parseResumeFromBuffer } = await import("./resume-import");
           const parsed = await parseResumeFromBuffer(file.name, bytes);
           if (parsed.fullName) {
             const parts = parsed.fullName.trim().split(/\s+/);
@@ -132,6 +132,7 @@ export function createOnboardingElement(options: OnboardingOptions): HTMLElement
         const profile = await loadProfile();
         const encoder = new TextEncoder();
         const bytes = encoder.encode(txt);
+        const { parseResumeFromBuffer } = await import("./resume-import");
         const parsed = await parseResumeFromBuffer("resume.txt", bytes);
         if (parsed.fullName) {
           const parts = parsed.fullName.trim().split(/\s+/);

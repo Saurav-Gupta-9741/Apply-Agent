@@ -23,7 +23,7 @@ const FULL: Profile = {
   currentCompany: "Initech", currentTitle: "Software Engineer", school: "IIT Jodhpur", discipline: "Computer Science",
   graduationYear: "2026", experienceYears: "3", targetRoles: "Backend Engineer", preferredLocations: "Bengaluru", skills: "Python, Java",
   facts: {
-    workCountries: "India", noticePeriod: "30 days", currentCtc: "12 LPA", expectedCtc: "18 LPA", relocate: "Yes", heardFrom: "LinkedIn",
+    workCountries: "India", unauthorizedCountries: "United States, United Kingdom, Germany, Canada, Netherlands, Ireland, France, European Union", noticePeriod: "30 days", currentCtc: "12 LPA", expectedCtc: "18 LPA", relocate: "Yes", heardFrom: "LinkedIn",
     gender: "Female", hispanic: "No", race: "Asian", veteran: "No", disability: "No",
   },
 };
@@ -148,7 +148,7 @@ describe("a) work authorization and sponsorship polarity (user can work only in 
   const foreign: Array<[string, PageFacts | undefined, Want]> = [
     ["Benötigen Sie ein Visum, um in Deutschland zu arbeiten?", DE, { oneOf: ["Yes", null] }],
     ["Benötigen Sie eine Arbeitserlaubnis für Deutschland?", DE, { oneOf: ["Yes", null] }],
-    ["Haben Sie eine Arbeitserlaubnis für Deutschland?", DE, "No"],
+    ["Haben Sie eine Arbeitserlaubnis für Deutschland?", DE, { oneOf: ["No", null] }],
     ["Avez-vous besoin d'un parrainage de visa pour travailler en France ?", undefined, { oneOf: ["Yes", null] }],
     ["¿Necesita patrocinio de visa para trabajar en España?", undefined, { oneOf: ["Yes", null] }],
     ["¿Necesita permiso de trabajo para trabajar en España?", undefined, { oneOf: ["Yes", null] }],

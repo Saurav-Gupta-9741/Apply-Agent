@@ -51,7 +51,7 @@ const common = {
 };
 
 const configs = [
-  { ...common, format: "esm", entryPoints: { background: "src/background/index.ts", sidepanel: "src/sidepanel/index.ts", offscreen: "src/offscreen/index.ts" } },
+  { ...common, format: "esm", splitting: true, entryPoints: { background: "src/background/index.ts", sidepanel: "src/sidepanel/index.ts", offscreen: "src/offscreen/index.ts" } },
   // Injected scripts cannot be ES modules, so the content script is a classic script (IIFE).
   { ...common, format: "iife", entryPoints: { content: "src/content/index.ts" } },
 ];
