@@ -140,7 +140,7 @@ export function trackerAnalytics(entries: TrackerEntry[], now: Date): TrackerAna
 }
 
 /** One CSV cell. Cells that a spreadsheet would run as a formula (=, +, -, @) are made plain text. */
-function csvCell(value: string): string {
+export function csvCell(value: string): string {
   let v = value.replace(/\r?\n/g, " ");
   if (/^[=+\-@\t\r]/.test(v)) v = `'${v}`;
   return /[",]/.test(v) || v !== v.trim() ? `"${v.replace(/"/g, '""')}"` : v;
