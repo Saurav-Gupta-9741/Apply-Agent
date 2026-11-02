@@ -77,6 +77,7 @@ export function questionPolarity(text: string): "negative" | "positive" {
 /** The common screening question a question asks: the first one whose pattern it matches. */
 export function screeningKey(text: string): string | undefined {
   const norm = normalize(text);
+  if (/\b(commercial|cdl)\b/i.test(norm)) return undefined;
   return COMMON_SCREENING_QUESTIONS.find((q) => q.pattern.test(norm))?.key;
 }
 

@@ -240,6 +240,11 @@ export function findAnswer(
     if (isSponsorReq !== entrySponsorReq && (topic === "sponsorship" || topic === "work_authorization" || entryTopic === "sponsorship" || entryTopic === "work_authorization")) {
       continue;
     }
+    const hasFutureEntry = /\bfuture\b/i.test(entry.question);
+    const hasFutureLabel = /\bfuture\b/i.test(label);
+    if (hasFutureEntry !== hasFutureLabel && (topic === "sponsorship" || entryTopic === "sponsorship")) {
+      continue;
+    }
 
     // An exact match always reuses the user's saved answer to this exact question.
     if (normalize(entry.question) === normalize(label)) {
@@ -451,6 +456,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
       if (field.options.length) {
         const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
         if (match) val = match;
+        else return { kind: "ask", reason: "unknown" };
       }
       return { kind: "answer", value: val, question: "Tracker › confirmed previous application" };
     }
@@ -464,6 +470,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
       if (field.options.length) {
         const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
         if (match) val = match;
+        else return { kind: "ask", reason: "unknown" };
       }
       return { kind: "answer", value: val, question: entry.question };
     }
