@@ -153,7 +153,7 @@ describe("found while labelling the real questions", () => {
 
 /** Round 2: fresh forms from nine ATSs (BambooHR, Teamtailor, Breezy, Recruitee, Personio…), never seen before. */
 describe("round 2 real findings", () => {
-  const facts = { workCountries: "India", noticePeriod: "30 days", currentCtc: "6 LPA", expectedCtc: "20 LPA", relocate: "Yes" as const,
+  const facts = { workCountries: "India", unauthorizedCountries: "United States, Poland", noticePeriod: "30 days", currentCtc: "6 LPA", expectedCtc: "20 LPA", relocate: "Yes" as const,
     heardFrom: "LinkedIn", gender: "Female" as const, hispanic: "No" as const, race: "Decline", veteran: "No" as const, disability: "No" as const };
   const profile = { ...PROFILE, location: "Pune", country: "India", github: "https://github.com/asha", facts };
   const text = (label: string): FieldDescriptor => ({ ...field(label, "text"), options: [] });
@@ -202,7 +202,7 @@ describe("round 2 real findings", () => {
 
 /** Round 3: 52 fresh forms from companies never scanned before, measured before any change. */
 describe("round 3 real findings", () => {
-  const facts = { workCountries: "India", noticePeriod: "30 days", currentCtc: "6 LPA", expectedCtc: "20 LPA", relocate: "Yes" as const,
+  const facts = { workCountries: "India", unauthorizedCountries: "United States, Poland", noticePeriod: "30 days", currentCtc: "6 LPA", expectedCtc: "20 LPA", relocate: "Yes" as const,
     heardFrom: "LinkedIn", gender: "Female" as const, hispanic: "No" as const, race: "Decline", veteran: "No" as const, disability: "No" as const };
   const profile = { ...PROFILE, location: "Pune", country: "India", degree: "Master's Degree", facts };
   const ask = (label: string, control: FieldDescriptor["control"] = "text", options: string[] = []) =>

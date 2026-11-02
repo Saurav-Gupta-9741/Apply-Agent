@@ -10,7 +10,7 @@ import { mount, PROFILE } from "./fixtures";
 
 const ME: Profile = {
   ...PROFILE, country: "India",
-  facts: { workCountries: "India", noticePeriod: "", currentCtc: "", expectedCtc: "", relocate: "", heardFrom: "", gender: "", hispanic: "", race: "", veteran: "", disability: "" },
+  facts: { workCountries: "India", unauthorizedCountries: "United States, United Kingdom", noticePeriod: "", currentCtc: "", expectedCtc: "", relocate: "", heardFrom: "", gender: "", hispanic: "", race: "", veteran: "", disability: "" },
 };
 const yesNo = (label: string, control: FieldDescriptor["control"] = "select"): FieldDescriptor => ({
   key: "k", label, control, required: true, options: control === "select" ? ["Yes", "No"] : [], name: "", autocomplete: "", placeholder: "",

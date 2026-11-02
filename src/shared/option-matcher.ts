@@ -818,9 +818,10 @@ function matchYearBracket(candidates: ParsedCandidate[], q: ExperienceQuantity):
   });
   if (contained.length === 1) return contained[0]!.c;
   if (contained.length > 1) {
-    // Overlapping brackets ("1-2" / "2-4" for 2): the ATS convention is "a bracket starts at its lower bound", but
-    // only for a whole number of years the user typed; a converted "24 months" stays for the user.
-    if (!q.fromMonths && Number.isInteger(t)) {
+    // Overlapping brackets: if it's a full tiered ATS scale (3+ options with plus/less), standard ATS convention starts at lower bound.
+    // Isolated overlapping options (e.g. ["3-5 years", "5-8 years"]) are ambiguous -> ask!
+    const hasScale = candidates.length >= 3 && parsed.some((p) => p.b?.kind === "plus" || p.b?.kind === "less");
+    if (hasScale && !q.fromMonths && Number.isInteger(t)) {
       const starting = contained.filter((p) => p.b!.kind === "range" && (p.b as { min: number }).min === t);
       if (starting.length === 1) return starting[0]!.c;
     }
@@ -862,9 +863,11 @@ export interface NoticeBracket {
 
 export function parseNoticeBracket(text: string): NoticeBracket | undefined {
   const norm = text.trim().toLowerCase().replace(/\s+/g, " ");
+  const clean = norm.replace(/\s*\([^)]*\)/g, "").trim();
 
   // Immediate
-  if (/^(immediate|immediately|available immediately|immediate start|available now|asap|now|0 days?)\b/i.test(norm)) {
+  if (/^(immediate|immediately|available immediately|immediate start|available now|asap|now|0 days?)\b/i.test(norm) ||
+      /^(immediate|immediately|available immediately|immediate start|available now|asap|now|0 days?)\b/i.test(clean)) {
     return { kind: "single", minDays: 0, maxDays: 0 };
   }
 
@@ -878,7 +881,8 @@ export function parseNoticeBracket(text: string): NoticeBracket | undefined {
   };
 
   // Range: "1 to 2 months", "1 - 2 months", "15 to 30 days", "30 - 60 days", "30-60 days", "31-60 days"
-  const rangeMatch = /^(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)?\s*(?:-|–|—|to)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(norm);
+  const rangeMatch = /^(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)?\s*(?:-|–|—|to)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(norm)
+    ?? /^(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)?\s*(?:-|–|—|to)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(clean);
   if (rangeMatch) {
     const unit = rangeMatch[4]!;
     const minVal = parseFloat(rangeMatch[1]!);
@@ -890,24 +894,30 @@ export function parseNoticeBracket(text: string): NoticeBracket | undefined {
   // Plus / or more: "2+ months", "60+ days", "2 months or more", "at least 2 months"
   const plusMatch = /^(\d+(?:\.\d+)?)\s*\+\s*(days?|weeks?|months?)\b/i.exec(norm)
     ?? /^(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\s*(?:\+|or more|and above|or above|plus)\b/i.exec(norm)
-    ?? /^(?:at least)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(norm);
+    ?? /^(?:at least)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(norm)
+    ?? /^(\d+(?:\.\d+)?)\s*\+\s*(days?|weeks?|months?)\b/i.exec(clean)
+    ?? /^(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\s*(?:\+|or more|and above|or above|plus)\b/i.exec(clean)
+    ?? /^(?:at least)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(clean);
   if (plusMatch) {
     return { kind: "plus", minDays: toDays(plusMatch[1]!, plusMatch[2]!), exclusive: false };
   }
 
-  const overMatch = /^(?:more than|over|greater than|>)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(norm);
+  const overMatch = /^(?:more than|over|greater than|>)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(norm)
+    ?? /^(?:more than|over|greater than|>)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(clean);
   if (overMatch) {
     return { kind: "plus", minDays: toDays(overMatch[1]!, overMatch[2]!), exclusive: true };
   }
 
   // Less than: "less than 1 month", "under 30 days"
-  const lessMatch = /^(?:less than|under|fewer than|<)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(norm);
+  const lessMatch = /^(?:less than|under|fewer than|<)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(norm)
+    ?? /^(?:less than|under|fewer than|<)\s*(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)\b/i.exec(clean);
   if (lessMatch) {
     return { kind: "less", minDays: 0, maxDays: toDays(lessMatch[1]!, lessMatch[2]!) };
   }
 
   // Single value: "15 days", "30 days", "1 month", "2 months", "60 days"
-  const singleMatch = /^(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)$/i.exec(norm);
+  const singleMatch = /^(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)$/i.exec(clean)
+    ?? /^(\d+(?:\.\d+)?)\s*(days?|weeks?|months?)$/i.exec(norm);
   if (singleMatch) {
     const days = toDays(singleMatch[1]!, singleMatch[2]!);
     return { kind: "single", minDays: days, maxDays: days };

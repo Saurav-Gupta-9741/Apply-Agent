@@ -148,14 +148,12 @@ export function migrateStorage(raw: StorageDump): MigrationResult {
     migrated.licenceKey = raw.licenceKey || raw.settings?.licenceKey;
     upgradedKeys.push("licenceKey");
   }
-  if (raw.pacing || raw.settings?.safePacing !== undefined) {
-    migrated.pacing = {
-      safePacing: raw.settings?.safePacing ?? raw.pacing?.safePacing ?? true,
-      dailyApplyCap: raw.settings?.dailyApplyCap ?? raw.pacing?.dailyApplyCap ?? 50,
-      ...raw.pacing,
-    };
-    upgradedKeys.push("pacing");
-  }
+  migrated.pacing = {
+    safePacing: raw.settings?.safePacing ?? raw.pacing?.safePacing ?? true,
+    dailyApplyCap: raw.settings?.dailyApplyCap ?? raw.pacing?.dailyApplyCap ?? 50,
+    ...raw.pacing,
+  };
+  upgradedKeys.push("pacing");
 
   // Detect format version
   let version: "v1.0" | "phase3" | "current" = "current";

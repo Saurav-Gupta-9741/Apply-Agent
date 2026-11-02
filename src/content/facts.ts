@@ -665,7 +665,8 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
       const opt = matchNoticeOption(notice, field.options);
       return opt ? answer(opt, "notice period") : undefined;
     }
-    return answer(candidateDays !== undefined && !/\b(day|week|month)s?\b/i.test(notice) ? `${candidateDays} days` : notice, "notice period");
+    const isBareNumber = /^\d+$/.test(notice.trim());
+    return answer(isBareNumber ? `${candidateDays} days` : notice, "notice period");
   }
   if (topic === "relocation") {
     if (!facts.relocate) return undefined;

@@ -211,7 +211,7 @@ export function decideWithMeaning(field: FieldDescriptor, profile: Profile, answ
       (rule.key === "firstName" || rule.key === "lastName" || rule.key === "fullName" || rule.key === "email" || rule.key === "phone")) {
     return field.required ? { kind: "ask", reason: "unknown" } : { kind: "skip", reason: "another person: entered by you only" };
   }
-  if (owner === "legal" && (rule.kind === "profile" || rule.kind === "answer")) {
+  if (owner === "legal" && (rule.kind === "profile" || (rule.kind === "answer" && (rule.reused || rule.question.startsWith("Quick answers › "))))) {
     return field.required ? { kind: "ask", reason: "sensitive" } : { kind: "skip", reason: "legal: entered by you only" };
   }
 

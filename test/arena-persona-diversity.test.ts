@@ -58,6 +58,7 @@ export const PERSONA_US_TECH: Profile = {
   graduationYear: "2018",
   facts: {
     workCountries: "India", // H1B worker in US, legally authorized in India
+    unauthorizedCountries: "United States",
     noticePeriod: "2 weeks",
     currentCtc: "$160k",
     expectedCtc: "$190k",

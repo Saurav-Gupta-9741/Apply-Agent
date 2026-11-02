@@ -2110,8 +2110,8 @@
   },
   "ashby-linear::86704206": {
    "A": {
-    "decide": "0 days",
-    "decideWithMeaning": "0 days"
+    "decide": "Immediate",
+    "decideWithMeaning": "Immediate"
    },
    "B": {
     "decide": "30 days",
@@ -13936,8 +13936,8 @@
   },
   "lever-paytm::a1233f36": {
    "A": {
-    "decide": "0 days",
-    "decideWithMeaning": "0 days"
+    "decide": "Immediate",
+    "decideWithMeaning": "Immediate"
    },
    "B": {
     "decide": "30 days",
