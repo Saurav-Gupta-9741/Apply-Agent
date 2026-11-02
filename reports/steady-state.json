@@ -1,142 +1,412 @@
 {
-  "generatedAt": "2026-11-02T19:25:56.811Z",
-  "questionCount": 1539,
-  "benchmarkFieldCount": 966,
+  "generatedAt": "2026-11-02T21:00:34.744Z",
+  "draws": 20,
+  "formsPoolSize": 256,
+  "checkpoints": [
+    1,
+    5,
+    10,
+    20
+  ],
   "personas": {
     "A": {
       "name": "Persona A (Fresher DA, Pune)",
-      "firstApplication": {
-        "autoFilled": 448,
-        "autoShare": "29.1%",
-        "ask": 1091,
-        "humanOnly": 143,
-        "wrong": 0
+      "application1": {
+        "meanAutoFilled": 9.1,
+        "meanAutoShare": "51.4%",
+        "minAutoShare": "22.7%",
+        "maxAutoShare": "75.0%",
+        "meanReused": 0.4,
+        "meanAssisted": 0.7,
+        "meanAsk": 8.6,
+        "meanHumanOnly": 0.8,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       },
-      "steadyState": {
-        "autoFilled": 459,
-        "autoShare": "29.8%",
-        "reusedFromBank": 0,
-        "assisted": 161,
-        "assistedShare": "10.5%",
-        "ask": 1080,
-        "humanOnly": 143,
-        "wrong": 0
+      "application5": {
+        "meanAutoFilled": 9.8,
+        "meanAutoShare": "58.0%",
+        "minAutoShare": "22.7%",
+        "maxAutoShare": "76.9%",
+        "meanReused": 2.3,
+        "meanAssisted": 0.7,
+        "meanAsk": 7.7,
+        "meanHumanOnly": 0.4,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       },
-      "benchmarkFields": {
-        "total": 966,
-        "firstApplicationAuto": 411,
-        "firstApplicationShare": "42.5%",
-        "steadyStateAuto": 412,
-        "steadyStateShare": "42.7%"
+      "application10": {
+        "meanAutoFilled": 11.4,
+        "meanAutoShare": "63.2%",
+        "minAutoShare": "0.0%",
+        "maxAutoShare": "88.0%",
+        "meanReused": 2.8,
+        "meanAssisted": 0.7,
+        "meanAsk": 6.1,
+        "meanHumanOnly": 0.7,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       },
-      "scriptGold": {
-        "evaluated": 150,
-        "matches": 22,
-        "wrong": 0
+      "application20": {
+        "meanAutoFilled": 11.9,
+        "meanAutoShare": "64.0%",
+        "minAutoShare": "28.6%",
+        "maxAutoShare": "92.9%",
+        "meanReused": 2.8,
+        "meanAssisted": 1.3,
+        "meanAsk": 7.2,
+        "meanHumanOnly": 0.6,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       }
     },
     "B": {
       "name": "Persona B (Senior SWE, Bangalore)",
-      "firstApplication": {
-        "autoFilled": 500,
-        "autoShare": "32.5%",
-        "ask": 1039,
-        "humanOnly": 143,
-        "wrong": 0
+      "application1": {
+        "meanAutoFilled": 9.3,
+        "meanAutoShare": "52.9%",
+        "minAutoShare": "22.7%",
+        "maxAutoShare": "75.0%",
+        "meanReused": 0.3,
+        "meanAssisted": 0.7,
+        "meanAsk": 8.3,
+        "meanHumanOnly": 0.8,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       },
-      "steadyState": {
-        "autoFilled": 514,
-        "autoShare": "33.4%",
-        "reusedFromBank": 0,
-        "assisted": 160,
-        "assistedShare": "10.4%",
-        "ask": 1025,
-        "humanOnly": 143,
-        "wrong": 0
+      "application5": {
+        "meanAutoFilled": 10.2,
+        "meanAutoShare": "59.9%",
+        "minAutoShare": "22.7%",
+        "maxAutoShare": "81.8%",
+        "meanReused": 2.1,
+        "meanAssisted": 0.7,
+        "meanAsk": 7.3,
+        "meanHumanOnly": 0.4,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       },
-      "benchmarkFields": {
-        "total": 966,
-        "firstApplicationAuto": 432,
-        "firstApplicationShare": "44.7%",
-        "steadyStateAuto": 434,
-        "steadyStateShare": "44.9%"
+      "application10": {
+        "meanAutoFilled": 11.6,
+        "meanAutoShare": "64.1%",
+        "minAutoShare": "0.0%",
+        "maxAutoShare": "88.0%",
+        "meanReused": 2.6,
+        "meanAssisted": 0.7,
+        "meanAsk": 5.9,
+        "meanHumanOnly": 0.7,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       },
-      "scriptGold": {
-        "evaluated": 150,
-        "matches": 36,
-        "wrong": 0
+      "application20": {
+        "meanAutoFilled": 11.9,
+        "meanAutoShare": "64.0%",
+        "minAutoShare": "28.6%",
+        "maxAutoShare": "92.9%",
+        "meanReused": 2.5,
+        "meanAssisted": 1.3,
+        "meanAsk": 7.2,
+        "meanHumanOnly": 0.6,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       }
     },
     "C": {
       "name": "Persona C (Marketing Mgr, Mumbai)",
-      "firstApplication": {
-        "autoFilled": 518,
-        "autoShare": "33.7%",
-        "ask": 1021,
-        "humanOnly": 143,
-        "wrong": 0
+      "application1": {
+        "meanAutoFilled": 9.4,
+        "meanAutoShare": "53.4%",
+        "minAutoShare": "25.0%",
+        "maxAutoShare": "75.0%",
+        "meanReused": 0.3,
+        "meanAssisted": 0.7,
+        "meanAsk": 8.3,
+        "meanHumanOnly": 0.8,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       },
-      "steadyState": {
-        "autoFilled": 559,
-        "autoShare": "36.3%",
-        "reusedFromBank": 0,
-        "assisted": 154,
-        "assistedShare": "10.0%",
-        "ask": 980,
-        "humanOnly": 143,
-        "wrong": 0
+      "application5": {
+        "meanAutoFilled": 10.3,
+        "meanAutoShare": "61.0%",
+        "minAutoShare": "26.7%",
+        "maxAutoShare": "84.6%",
+        "meanReused": 2.1,
+        "meanAssisted": 0.7,
+        "meanAsk": 7.2,
+        "meanHumanOnly": 0.4,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       },
-      "benchmarkFields": {
-        "total": 966,
-        "firstApplicationAuto": 433,
-        "firstApplicationShare": "44.8%",
-        "steadyStateAuto": 442,
-        "steadyStateShare": "45.8%"
+      "application10": {
+        "meanAutoFilled": 11.6,
+        "meanAutoShare": "64.1%",
+        "minAutoShare": "0.0%",
+        "maxAutoShare": "88.0%",
+        "meanReused": 2.6,
+        "meanAssisted": 0.7,
+        "meanAsk": 5.9,
+        "meanHumanOnly": 0.7,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       },
-      "scriptGold": {
-        "evaluated": 150,
-        "matches": 44,
-        "wrong": 0
+      "application20": {
+        "meanAutoFilled": 11.9,
+        "meanAutoShare": "64.3%",
+        "minAutoShare": "28.6%",
+        "maxAutoShare": "92.9%",
+        "meanReused": 2.5,
+        "meanAssisted": 1.3,
+        "meanAsk": 7.2,
+        "meanHumanOnly": 0.6,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       }
     },
     "D": {
       "name": "Persona D (Product Designer, Austin)",
-      "firstApplication": {
-        "autoFilled": 556,
-        "autoShare": "36.1%",
-        "ask": 983,
-        "humanOnly": 143,
-        "wrong": 0
+      "application1": {
+        "meanAutoFilled": 10.1,
+        "meanAutoShare": "56.3%",
+        "minAutoShare": "25.0%",
+        "maxAutoShare": "75.0%",
+        "meanReused": 0.3,
+        "meanAssisted": 0.6,
+        "meanAsk": 7.6,
+        "meanHumanOnly": 0.8,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       },
-      "steadyState": {
-        "autoFilled": 556,
-        "autoShare": "36.1%",
-        "reusedFromBank": 0,
-        "assisted": 158,
-        "assistedShare": "10.3%",
-        "ask": 983,
-        "humanOnly": 143,
-        "wrong": 0
+      "application5": {
+        "meanAutoFilled": 10.4,
+        "meanAutoShare": "61.9%",
+        "minAutoShare": "26.7%",
+        "maxAutoShare": "85.7%",
+        "meanReused": 1.4,
+        "meanAssisted": 0.7,
+        "meanAsk": 7,
+        "meanHumanOnly": 0.4,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       },
-      "benchmarkFields": {
-        "total": 966,
-        "firstApplicationAuto": 487,
-        "firstApplicationShare": "50.4%",
-        "steadyStateAuto": 487,
-        "steadyStateShare": "50.4%"
+      "application10": {
+        "meanAutoFilled": 11.8,
+        "meanAutoShare": "65.6%",
+        "minAutoShare": "0.0%",
+        "maxAutoShare": "88.0%",
+        "meanReused": 1.6,
+        "meanAssisted": 0.7,
+        "meanAsk": 5.8,
+        "meanHumanOnly": 0.7,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       },
-      "scriptGold": {
-        "evaluated": 0,
-        "matches": 0,
-        "wrong": 0
+      "application20": {
+        "meanAutoFilled": 12.5,
+        "meanAutoShare": "67.3%",
+        "minAutoShare": "35.7%",
+        "maxAutoShare": "92.9%",
+        "meanReused": 1.1,
+        "meanAssisted": 1.3,
+        "meanAsk": 6.6,
+        "meanHumanOnly": 0.6,
+        "wrong": {
+          "kind1HumanOnly": 0,
+          "kind2MismatchedReusedMeaning": 0,
+          "kind3MismatchedProfileMeaning": 0,
+          "kind4GoldMismatch": 0,
+          "total": 0
+        }
       }
     }
   },
   "summary": {
-    "totalEvaluations": 6156,
-    "firstApplicationAutoShare": "32.8%",
-    "steadyStateAutoShare": "33.9%",
-    "assistedShare": "10.3%",
-    "wrong": 0
-  }
+    "firstApplicationMeanShare": "53.5%",
+    "application5MeanShare": "60.2%",
+    "application10SteadyStateMeanShare": "64.2%",
+    "application20MeanShare": "64.9%",
+    "wrong": {
+      "kind1HumanOnly": 0,
+      "kind2MismatchedReusedMeaning": 0,
+      "kind3MismatchedProfileMeaning": 0,
+      "kind4GoldMismatch": 0,
+      "total": 0
+    }
+  },
+  "top25StillAskedMeaningsAtForm10": [
+    {
+      "meaning": "resume",
+      "count": 96
+    },
+    {
+      "meaning": "other",
+      "count": 76
+    },
+    {
+      "meaning": "consent",
+      "count": 44
+    },
+    {
+      "meaning": "cover_letter",
+      "count": 32
+    },
+    {
+      "meaning": "open_question",
+      "count": 28
+    },
+    {
+      "meaning": "salary_expected",
+      "count": 16
+    },
+    {
+      "meaning": "work_dates",
+      "count": 16
+    },
+    {
+      "meaning": "portfolio",
+      "count": 13
+    },
+    {
+      "meaning": "other_person",
+      "count": 12
+    },
+    {
+      "meaning": "other_document",
+      "count": 12
+    },
+    {
+      "meaning": "sponsorship",
+      "count": 12
+    },
+    {
+      "meaning": "legal_declaration",
+      "count": 12
+    },
+    {
+      "meaning": "veteran",
+      "count": 12
+    },
+    {
+      "meaning": "linkedin",
+      "count": 9
+    },
+    {
+      "meaning": "gender",
+      "count": 9
+    },
+    {
+      "meaning": "github",
+      "count": 8
+    },
+    {
+      "meaning": "other_links",
+      "count": 8
+    },
+    {
+      "meaning": "race",
+      "count": 8
+    },
+    {
+      "meaning": "disability",
+      "count": 8
+    },
+    {
+      "meaning": "work_authorization",
+      "count": 4
+    },
+    {
+      "meaning": "pronouns",
+      "count": 4
+    },
+    {
+      "meaning": "age",
+      "count": 4
+    },
+    {
+      "meaning": "accommodation",
+      "count": 4
+    },
+    {
+      "meaning": "onsite",
+      "count": 4
+    },
+    {
+      "meaning": "relocation",
+      "count": 4
+    }
+  ]
 }
