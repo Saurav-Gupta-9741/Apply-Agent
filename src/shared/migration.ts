@@ -2,8 +2,10 @@
  * Storage schema migration and backward-compatibility engine.
  * Ensures seamless upgrades from v1.0 (main) and Phase 3 formats to the current schema.
  *
- * Guarantees:
- * - Zero data loss: every existing key and field is safely preserved.
+ * Guarantees (enforced by test/migration.test.ts):
+ * - Add-only: every existing key, field and value is kept exactly; only missing fields are filled.
+ * - Before writing, the old values of every key it changes are saved under "migrationBackup".
+ * - Runs once per schema version, from the background worker on install/update.
  * - Missing fields receive safe canonical defaults.
  * - Single-profile v1.0 stores automatically migrate into CandidateProfile format.
  * - Historical answers and application records gain modern tracking/kanban metadata.
@@ -78,51 +80,32 @@ export function migrateStorage(raw: StorageDump): MigrationResult {
     }
   }
 
-  // 2. Answers migration
+  // 2. Answers: keep EVERY field (country, intent, reused… drive answer reuse); only fill what is missing.
   if (Array.isArray(raw.answers)) {
     migrated.answers = raw.answers.map((a: any) => ({
-      question: a.question || "",
+      ...a,
+      question: a.question ?? "",
       answer: a.answer ?? a.value ?? "",
-      topic: a.topic || undefined,
-      company: a.company || undefined,
-      createdAt: a.createdAt || new Date().toISOString(),
       updatedAt: a.updatedAt || a.createdAt || new Date().toISOString(),
     }));
     upgradedKeys.push("answers");
   }
 
-  // 3. Applications / Tracker CRM migration
+  // 3. Applications: keep every field and value (status, company, url…); only add the tracker fields that are missing.
   if (Array.isArray(raw.applications)) {
     migrated.applications = raw.applications.map((app: any) => {
       let stage: TrackerStage = "Applied";
-      if (app.stage) {
-        stage = app.stage;
-      } else if (app.kanbanStage) {
-        const k = String(app.kanbanStage).toLowerCase();
-        if (k === "saved") stage = "Saved";
-        else if (k === "assessment") stage = "Assessment";
-        else if (k === "interview") stage = "Interview";
-        else if (k === "offer") stage = "Offer";
-        else if (k === "rejected") stage = "Rejected";
-        else if (k === "withdrawn") stage = "Withdrawn";
-        else stage = "Applied";
-      } else if (app.status === "failed") {
-        stage = "Rejected";
-      } else if (app.status === "saved") {
-        stage = "Saved";
-      }
-
+      const k = String(app.kanbanStage ?? "").toLowerCase();
+      if (k === "saved" || app.status === "saved") stage = "Saved";
+      else if (k === "assessment") stage = "Assessment";
+      else if (k === "interview") stage = "Interview";
+      else if (k === "offer") stage = "Offer";
+      else if (k === "rejected" || app.status === "failed") stage = "Rejected";
+      else if (k === "withdrawn") stage = "Withdrawn";
       return {
         ...app,
-        id: app.id || `app_${Math.random().toString(36).slice(2, 9)}`,
-        company: app.company || app.jobTitle || "Unknown Company",
-        jobTitle: app.jobTitle || "Role",
-        url: app.url || "",
-        createdAt: app.createdAt || app.appliedAt || app.date || new Date().toISOString(),
-        status: (app.status === "applied_confirmed" || app.status === "needs_check" || app.status === "in_progress") ? app.status : "applied_confirmed",
-        stage,
-        kanbanStage: stage,
-        notes: app.notes || "",
+        stage: app.stage ?? stage,
+        notes: app.notes ?? "",
         contacts: Array.isArray(app.contacts) ? app.contacts : [],
         reminders: Array.isArray(app.reminders) ? app.reminders : [],
       };
@@ -130,27 +113,14 @@ export function migrateStorage(raw: StorageDump): MigrationResult {
     upgradedKeys.push("applications");
   }
 
-  // 4. Settings & Licence migration
-  if (raw.settings) {
-    migrated.settings = {
-      mode: "review",
-      maxParallel: 1,
-      perHostMax: 1,
-      dailyCap: 50,
-      cooldownDays: 30,
-      detection: "job_sites",
-      understanding: true,
-      ...raw.settings,
-    };
-    upgradedKeys.push("settings");
-  }
+  // 4. Settings are left as they are: loadSettings() already fills defaults on read.
   if (raw.licenceKey || raw.settings?.licenceKey) {
     migrated.licenceKey = raw.licenceKey || raw.settings?.licenceKey;
     upgradedKeys.push("licenceKey");
   }
   migrated.pacing = {
-    safePacing: raw.settings?.safePacing ?? raw.pacing?.safePacing ?? true,
-    dailyApplyCap: raw.settings?.dailyApplyCap ?? raw.pacing?.dailyApplyCap ?? 50,
+    safePacing: raw.settings?.safePacing ?? true,
+    dailyApplyCap: raw.settings?.dailyApplyCap ?? 50,
     ...raw.pacing,
   };
   upgradedKeys.push("pacing");
@@ -164,4 +134,29 @@ export function migrateStorage(raw: StorageDump): MigrationResult {
   }
 
   return { migrated, version, upgradedKeys };
+}
+
+/** Bump when a new add-only step is added to migrateStorage. */
+export const SCHEMA_VERSION = 1;
+
+interface StorageArea {
+  get(keys: null): Promise<Record<string, unknown>>;
+  set(items: Record<string, unknown>): Promise<void>;
+}
+
+/** Upgrades chrome.storage.local once per SCHEMA_VERSION. Only ever calls set() (never remove/clear). */
+export async function runStorageMigration(area: StorageArea = chrome.storage.local as unknown as StorageArea): Promise<MigrationResult | undefined> {
+  const all = await area.get(null);
+  if (typeof all.schemaVersion === "number" && all.schemaVersion >= SCHEMA_VERSION) return undefined;
+  const result = migrateStorage(all as StorageDump);
+  const keys = [...new Set(result.upgradedKeys)];
+  const backup: Record<string, unknown> = {};
+  for (const k of keys) if (k in all) backup[k] = all[k];
+  if (Object.keys(backup).length) {
+    await area.set({ migrationBackup: { at: new Date().toISOString(), fromVersion: all.schemaVersion ?? 0, data: backup } });
+  }
+  const changes: Record<string, unknown> = { schemaVersion: SCHEMA_VERSION };
+  for (const k of keys) changes[k] = result.migrated[k];
+  await area.set(changes);
+  return result;
 }

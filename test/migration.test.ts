@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import { migrateStorage } from "../src/shared/migration";
+import { migrateStorage, runStorageMigration, SCHEMA_VERSION } from "../src/shared/migration";
 
 describe("L7: Storage Upgrades & Backward-Compatibility", () => {
   it("migrates v1.0 (main) legacy storage format without data loss", () => {
@@ -118,5 +118,69 @@ describe("L7: Storage Upgrades & Backward-Compatibility", () => {
     expect(migrated.applications![0]!.stage).toBe("Applied");
     expect(migrated.pacing?.safePacing).toBe(true);
     expect(migrated.pacing?.dailyApplyCap).toBe(30);
+  });
+});
+
+/** Every value present before must be present, unchanged, after (deep, for objects and arrays of objects). */
+function expectKept(before: unknown, after: unknown, path = "root"): void {
+  if (Array.isArray(before)) {
+    expect(Array.isArray(after), path).toBe(true);
+    expect((after as unknown[]).length, path).toBe(before.length);
+    before.forEach((v, i) => expectKept(v, (after as unknown[])[i], `${path}[${i}]`));
+  } else if (before && typeof before === "object") {
+    for (const [k, v] of Object.entries(before)) expectKept(v, (after as Record<string, unknown>)?.[k], `${path}.${k}`);
+  } else {
+    expect(after, path).toEqual(before);
+  }
+}
+
+describe("migration is add-only (Claude review: no field may be dropped or changed)", () => {
+  const dump = {
+    candidateProfiles: [{ id: "p1", name: "SWE", profile: { firstName: "Asha", email: "a@x.com", customField: "keep me" }, createdAt: "2026-01-01" }],
+    activeProfileId: "p1",
+    answers: [
+      { question: "Notice period?", answer: "30 days", updatedAt: "2026-02-01", country: "India", intent: "notice_period", reused: true, extra: 7 },
+      { question: "Relocate?", value: "Yes", createdAt: "2026-02-02" },
+    ],
+    applications: [
+      { id: "a1", url: "https://boards.greenhouse.io/x/jobs/1", company: "X", status: "needs_check", appliedAt: "2026-03-01", custom: { a: 1 } },
+      { url: "https://jobs.lever.co/y/2", status: "failed" },
+    ],
+    settings: { mode: "auto", somethingNew: true },
+    corrections: [{ question: "q", answer: "a", count: 2 }],
+    queue: [{ url: "u", status: "pending" }],
+    unknownFutureKey: { nested: [1, 2, 3] },
+  };
+
+  it("keeps every existing key, field and value", () => {
+    const { migrated } = migrateStorage(JSON.parse(JSON.stringify(dump)));
+    expectKept(dump, migrated);
+  });
+
+  it("fills only missing fields", () => {
+    const { migrated } = migrateStorage(JSON.parse(JSON.stringify(dump)));
+    expect(migrated.answers![1]!.answer).toBe("Yes");
+    expect(migrated.applications![1]!.stage).toBe("Rejected");
+    expect(migrated.applications![0]!.status).toBe("needs_check");
+    expect(migrated.applications![1]!.company).toBeUndefined();
+  });
+
+  it("runStorageMigration: backs up what it changes, only calls set, runs once per version", async () => {
+    const store: Record<string, unknown> = JSON.parse(JSON.stringify(dump));
+    const calls: string[] = [];
+    const area = {
+      get: async (_: null) => JSON.parse(JSON.stringify(store)),
+      set: async (items: Record<string, unknown>) => { calls.push(Object.keys(items).join(",")); Object.assign(store, items); },
+    };
+    const first = await runStorageMigration(area);
+    expect(first).toBeDefined();
+    expect(store.schemaVersion).toBe(SCHEMA_VERSION);
+    const backup = store.migrationBackup as { data: Record<string, unknown> };
+    expect(backup.data.answers).toEqual(dump.answers);
+    expect(backup.data.applications).toEqual(dump.applications);
+    expectKept(dump, store);
+    const second = await runStorageMigration(area);
+    expect(second).toBeUndefined();
+    expect(calls.length).toBe(2); // backup + changes, nothing on the second run
   });
 });

@@ -1,6 +1,7 @@
 /** Background service worker: application tracker, proof screenshots, and the parallel queue.
  * State lives in chrome.storage, never in memory, because the worker is stopped when idle. */
 
+import { runStorageMigration } from "../shared/migration";
 import type { ApplicationRecord, ApplicationStatus, Message, RunReport } from "../shared/types";
 import { loadApplications, loadQueue, loadSettings, setQueueRunning, updateApplications as updateStoredApplications, updateCorrections, updateAnswers, upsertAnswer } from "../shared/storage";
 import { applyCorrection, isLearnableCorrection, type CorrectionMessage } from "../shared/corrections";
@@ -20,6 +21,8 @@ const resyncDetector = () => void loadSettings().then((s) => syncDetector(s.dete
 const FILL_MENU = "applyagent-fill";
 
 chrome.runtime.onInstalled.addListener(() => {
+  // Upgrade saved data once per schema version (add-only, with a backup of whatever it changes).
+  void runStorageMigration().catch(() => undefined);
   // The icon click is handled below (it opens the panel and tells it to re-read the page).
   chrome.sidePanel?.setPanelBehavior({ openPanelOnActionClick: false }).catch(() => undefined);
   chrome.contextMenus.removeAll(() => {
