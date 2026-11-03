@@ -27,7 +27,14 @@ export type Feature =
   | "tracker_analytics"
   | "enterprise_multistep";
 
+declare const __APPLYAGENT_BETA__: boolean | undefined;
+
+/** Beta builds only (node build.mjs --beta): every feature is unlocked for testers and nothing can be bought.
+ * Normal builds and the tests have it false, so the real Free/Pro rules stay tested. */
+export const BETA_ALL_FREE: boolean = typeof __APPLYAGENT_BETA__ !== "undefined" && __APPLYAGENT_BETA__ === true;
+
 export function isPro(license: LicensePayload | null): boolean {
+  if (BETA_ALL_FREE) return true;
   if (!license) return false;
   return license.plan === "pro" || license.plan === "founder" || license.trial === true;
 }
@@ -192,6 +199,7 @@ export async function currentLicense(now = new Date()): Promise<LicensePayload |
 }
 
 export function licensingConfigured(): boolean {
+  if (BETA_ALL_FREE) return false; // no buying during the beta
   return !!LICENSE_SERVER && !!LICENSE_PUBLIC_JWK;
 }
 

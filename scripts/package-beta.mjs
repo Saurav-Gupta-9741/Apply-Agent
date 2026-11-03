@@ -4,7 +4,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 
 const version = JSON.parse(readFileSync("static/manifest.json", "utf8")).version;
-execFileSync(process.execPath, ["build.mjs"], { stdio: "inherit" });
+execFileSync(process.execPath, ["build.mjs", "--beta"], { stdio: "inherit" });
 if (!existsSync("dist/manifest.json")) throw new Error("build did not produce dist/manifest.json");
 mkdirSync("release", { recursive: true });
 const out = `release/applyagent-beta-${version}.zip`;

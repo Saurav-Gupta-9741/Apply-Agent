@@ -7,6 +7,8 @@ import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } fr
 
 const watch = process.argv.includes("--watch");
 const testBuild = process.argv.includes("--test");
+// Beta builds (node build.mjs --beta): every feature free, nothing for sale. See src/shared/license.ts BETA_ALL_FREE.
+const betaBuild = process.argv.includes("--beta");
 const outdir = testBuild ? "dist-test" : "dist";
 export const TEST_ORIGINS = [
   "http://127.0.0.1:8181/*", "http://localhost:8181/*",
@@ -48,6 +50,7 @@ const common = {
   target: "chrome116",
   sourcemap: watch ? "inline" : false,
   logLevel: testBuild ? "warning" : "info",
+  define: { __APPLYAGENT_BETA__: betaBuild ? "true" : "false" },
 };
 
 const configs = [

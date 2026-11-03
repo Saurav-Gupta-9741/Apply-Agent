@@ -14,7 +14,7 @@ import { pendingSubmission, sendToApplication } from "../shared/frames";
 import { isValidJobUrl, parseJobList } from "../background/queue";
 import { GOOD_MATCH, parseFeed, rankFeed } from "../shared/fit";
 import { aiStatus, checkDraft, draftAnswer } from "../shared/ai";
-import { activate, buyUrl, canUseFeature, currentLicense, isLifetimeLicense, licensingConfigured, remainingSubmissions, submittedThisMonth } from "../shared/license";
+import { activate, BETA_ALL_FREE, buyUrl, canUseFeature, currentLicense, isLifetimeLicense, licensingConfigured, remainingSubmissions, submittedThisMonth } from "../shared/license";
 import { FREE_MONTHLY_SUBMISSIONS, SUPPORT_EMAIL } from "../shared/config";
 import { hydrateIcons, icon } from "./icons";
 import { NEVER_REMEMBER, type PendingQuestion } from "../shared/types";
@@ -2145,6 +2145,17 @@ async function renderPlan(): Promise<void> {
   const pill = $("plan-pill");
   const badge = $("plan-badge");
   const meter = $("plan-meter");
+
+  if (BETA_ALL_FREE) {
+    $("plan-status").textContent = "Beta · every feature is free while we test. Thank you for helping!";
+    pill.textContent = "Beta";
+    pill.className = "plan-pill";
+    badge.textContent = "Beta";
+    badge.className = "chip";
+    meter.style.width = "100%";
+    $("buy-row").hidden = true;
+    return;
+  }
 
   if (license) {
     const isLife = isLifetimeLicense(license);
