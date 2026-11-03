@@ -1,0 +1,17 @@
+S A N J A Y   K U M A R
+
+  Mumbai,  Maharashtra    	|   +91  9012345678  |   sanjay.k.kumar@gmail.com
+
+E D U C A T I O N
+
+   M.Tech	(Computer Science)   -   IIT Bombay      2023
+   CPI : 8.91 / 10
+
+W O R K   E X P E R I E N C E
+
+   Machine Learning Engineer ,  Fractal Analytics  	  Aug 2023  –  Current
+   •   Trained   forecasting   models   in   TensorFlow .
+
+S K I L L S
+
+   Python ,   TensorFlow ,   Pandas ,   SQL

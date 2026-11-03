@@ -8,7 +8,7 @@ import type { Decision, FieldDescriptor, Profile, QuickFacts } from "../src/shar
 import { PROFILE } from "./fixtures";
 
 const FACTS: QuickFacts = {
-  workCountries: "India", noticePeriod: "Immediate", currentCtc: "0", expectedCtc: "20 LPA", relocate: "Yes", heardFrom: "LinkedIn",
+  workCountries: "India", unauthorizedCountries: "United States, United Kingdom", noticePeriod: "Immediate", currentCtc: "0", expectedCtc: "20 LPA", relocate: "Yes", heardFrom: "LinkedIn",
   gender: "Male", hispanic: "No", race: "Decline", veteran: "No", disability: "No",
 };
 const ME: Profile = { ...PROFILE, country: "India", facts: FACTS };

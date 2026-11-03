@@ -14,8 +14,10 @@ Regenerate: `STORE=1 npx playwright test e2e/store-shots.spec.ts && python scrip
 Fills job applications on company career sites from your profile. Asks before anything sensitive. You press Submit.
 
 ## Detailed description
-ApplyAgent fills job applications on company career sites for you: Greenhouse, Lever, Ashby, Workable, BambooHR,
-Teamtailor, Breezy, Recruitee, Personio and companies' own careers pages.
+Job application autofill for Greenhouse, Lever, Workday, Ashby, and company career sites. Private, on-device AI autofill tailored for India and global applicants with zero data collection.
+
+ApplyAgent fills job applications on company career sites for you: Greenhouse, Lever, Workday, Ashby, Workable, BambooHR,
+Teamtailor, Breezy, Recruitee, Personio, SuccessFactors, iCIMS, and companies' own careers pages.
 
 HOW IT WORKS
 • Save your profile, resume and a few quick answers once (notice period, work permit, expected salary).
@@ -42,8 +44,8 @@ ALSO
 • Works on multi-step forms, forms inside frames, and forms in 7 languages.
 
 PRICING
-• Free: 20 submitted applications a month, every feature.
-• Pro: ₹149 for 30 days in India, $9 elsewhere. Unlimited applications.
+• Free: unlimited single-form applications, answer bank, Quick Answers, basic tracker, save form structure.
+• Pro: ₹149 for 30 days in India, $9 elsewhere. Queue & bulk apply, resume import, AI drafts, tracker analytics & reminders, enterprise multi-step flows.
 • Founder (limited time): ₹2999 in India, $49 elsewhere, valid for 10 years.
 • One-time payments only: nothing renews automatically. You get a licence key; no account needed.
 
@@ -64,10 +66,10 @@ and the final submission to the user.
 | Optional host permissions (`https://*/*`) | Requested per site, only when the user allows a careers site (one click for the common job-application platforms). Never used on LinkedIn, Indeed, Naukri and similar platforms. |
 | Remote code | None. All code and the model ship inside the package. |
 
-## Privacy practices tab
-- **Data collected:** Personally identifiable information (name, email, phone, address the user types), Website
-  content (the application form being filled). Both are handled **locally only**.
-- **Not collected/transmitted:** health, financial, authentication, location tracking, web history, user activity.
+## Privacy practices tab / Data-use disclosure
+- **Data collected:** No data collected. Everything (profile, resume, answers, applications) stays 100% on your device in local browser storage.
+- **Transmitted off device:** None. The only optional network call is the licence key check (`POST /activate`) when you buy and activate a Pro key.
+- **Not collected/transmitted:** No personal details, no resume bytes, no answers, no tracking, no health, no financial, no authentication, no analytics.
 - **Certifications:** not sold to third parties; not used or transferred for purposes unrelated to the single purpose;
   not used for creditworthiness or lending.
 - **Privacy policy URL:** your hosted copy of `../PRIVACY.md`.

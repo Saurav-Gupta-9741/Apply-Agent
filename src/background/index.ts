@@ -1,6 +1,7 @@
 /** Background service worker: application tracker, proof screenshots, and the parallel queue.
  * State lives in chrome.storage, never in memory, because the worker is stopped when idle. */
 
+import { runStorageMigration } from "../shared/migration";
 import type { ApplicationRecord, ApplicationStatus, Message, RunReport } from "../shared/types";
 import { loadApplications, loadQueue, loadSettings, setQueueRunning, updateApplications as updateStoredApplications, updateCorrections, updateAnswers, upsertAnswer } from "../shared/storage";
 import { applyCorrection, isLearnableCorrection, type CorrectionMessage } from "../shared/corrections";
@@ -11,7 +12,7 @@ import { modelFits, understand } from "./understand";
 import { isValidJobUrl } from "./queue";
 import { backOff, onTabClosed, onTabReport, PACE_ALARM, pendingQuestions, pump, queueStatusFor, runInTab, updateQueue, working } from "./runner";
 import { PENDING_MS, pendingSubmission, type PendingSubmission } from "../shared/frames";
-import { currentLicense, remainingSubmissions } from "../shared/license";
+import { canUseFeature, currentLicense, remainingSubmissions } from "../shared/license";
 
 const PUMP_ALARM = "queue-pump";
 
@@ -20,6 +21,8 @@ const resyncDetector = () => void loadSettings().then((s) => syncDetector(s.dete
 const FILL_MENU = "applyagent-fill";
 
 chrome.runtime.onInstalled.addListener(() => {
+  // Upgrade saved data once per schema version (add-only, with a backup of whatever it changes).
+  void runStorageMigration().catch(() => undefined);
   // The icon click is handled below (it opens the panel and tells it to re-read the page).
   chrome.sidePanel?.setPanelBehavior({ openPanelOnActionClick: false }).catch(() => undefined);
   chrome.contextMenus.removeAll(() => {
@@ -284,6 +287,14 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse: (r
       return true;
     case "QUEUE_START":
       (async () => {
+        const lic = await currentLicense();
+        if (!canUseFeature(lic, "queue")) {
+          const note = "Bulk apply and background queue require Pro. Upgrade to Pro in Profile & plan.";
+          await updateQueue((q) => q.map((x) => (x.status === "queued" && x.note !== note ? { ...x, note } : x)));
+          await setQueueRunning(false);
+          sendResponse(false);
+          return;
+        }
         await setQueueRunning(true);
         await chrome.alarms.create(PUMP_ALARM, { periodInMinutes: 1 });
         await pump();

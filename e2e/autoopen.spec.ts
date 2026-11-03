@@ -3,7 +3,7 @@
 
 import type { Page } from "@playwright/test";
 import type { QueueItem } from "../src/shared/types";
-import { ANSWERS, BASE, expect, getStorage, goTo, PROFILE, setStorage, test } from "./fixtures";
+import { ANSWERS, BASE, expect, getStorage, goTo, PROFILE, PRO_LICENSE, setStorage, test } from "./fixtures";
 
 async function pinTo(ext: Page, page: Page): Promise<void> {
   const tabId = await ext.evaluate(async (url) => (await chrome.tabs.query({})).find((t) => t.url === url)!.id!, page.url());
@@ -35,7 +35,7 @@ test("Preview on a job description whose Apply button opens the form on the same
 
 test("the queue opens the application from a job description link", async ({ ext }) => {
   await setStorage(ext, {
-    profile: PROFILE, answers: ANSWERS, settings: { mode: "review", maxParallel: 1, perHostMax: 1, dailyCap: 25, cooldownDays: 30 },
+    profile: PROFILE, answers: ANSWERS, license: PRO_LICENSE, settings: { mode: "review", maxParallel: 1, perHostMax: 1, dailyCap: 25, cooldownDays: 30 },
   });
   await ext.evaluate((url) => chrome.runtime.sendMessage({ type: "QUEUE_ADD", jobs: [{ url, title: "Data Engineer", company: "Acme" }] }), `${BASE}/job.html`);
   await ext.evaluate(() => chrome.runtime.sendMessage({ type: "QUEUE_START" }));

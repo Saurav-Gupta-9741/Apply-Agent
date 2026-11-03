@@ -5,7 +5,8 @@ import {
   NEVER_REMEMBER, type AnswerEntry, type Decision, type FieldDescriptor, type Profile, type ProfileKey, type SensitiveTopic, type WorkEntry,
 } from "../shared/types";
 import { bestOption, normalize, sameQuestionScore, yesNoOption } from "../shared/text";
-import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion } from "../shared/screening";
+import { parseRequirement } from "../shared/requirements";
+import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion, screeningKey } from "../shared/screening";
 import { factDecision, hasConfirmedApplication, HEARD_ABOUT, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, type PageFacts } from "./facts";
 
 /** Secrets and one-time codes: payment cards, passwords, PINs, one-time codes, security questions, captchas and
@@ -33,7 +34,7 @@ const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   ["sponsorship", /sponsor|visa|visum|parrainage|patrocinio/],
   ["work_authorization", /\bwork permit\b|arbeitserlaubnis|arbeitsvisum|arbeitsberechtigung|berechtigt|aufenthaltstitel|arbeitsgenehmigung|permis de travail|autorisation (?:de|pour)?\s*travail\w*|autorizacion (?:de|para)?\s*trabaj\w*|permiso de trabajo|autorizacao (?:de|para)?\s*trabalh\w*|visto de trabalho|permissao de trabalho|permesso di (lavor\w*|soggiorno)|werkvergunning|gerechtigd.*werken|authori[sz]ed to work|work authori[sz]ation|right to work|eligible to work|legally (able|permitted|entitled)/],
   ["salary", /gehalt|salaire|salari|retribuzione|stipendio|preten[st]|remunera|sueldo|ordenado|gehaltsvorstellung|bruttojahresgehalt|zielgehalt|basisgehalt|jahresgehalt|monatsgehalt|verdienst|salary|compensation|\bctc\b|\blpa\b|pay expectation|expected pay|desired pay|\b(?:fixed|variable)\s*pay\b|\bbonus\b|\bincentive\b|\b(?:hourly|daily|contract(?:or)?|consulting|billing|pay)\s+rate\b|\brate of pay\b|\bhourly pay\b|年収|給与|希望給与|月給|時給|報酬|万円/],
-  ["notice_period", /when (are|would|will|could) you (be )?available|available to start|available for employment|^date available$|earliest (date )?(you|to) (could |would |can )?start|kundigungsfrist|eintrittstermin|eintrittsdatum|fruhester eintritt|fruhestes eintrittsdatum|verfugbarkeit|preavis|delai de preavis|disponibilite|date de disponibilite|plazo de (pre)?aviso|preaviso|periodo de preaviso|disponibilidad|disponibilidade|disponibilita|beschikbaarheid|beschikbaarheidsdatum|fecha de incorporacion|aviso previo|prazo de aviso previo|preavviso|periodo di preavviso|opzegtermijn|notice period|start date|when can you (start|join)|earliest (start|joining)|availability to start|when would be your earliest availability|earliest availability|can you start (immediately|right away)|are you (able|available) to start (immediately|right away)|start (immediately|right away)|konnen sie (ab )?sofort (starten|beginnen|anfangen|eintreten)|ab sofort (verfugbar|starten|beginnen|anfangen)|sofort verfugbar|pouvez vous commencer immediatement|etes vous disponible immediatement|disponible immediatement|puede incorporarse inmediatamente|puede comenzar inmediatamente|disponibilidad inmediata|incorporacion inmediata|pode comecar imediatamente|disponibilidade imediata|inicio imediato|入社可能時期|入社日|勤務開始可能日/],
+  ["notice_period", /when (are|would|will|could) you (be )?available|available to start|available for employment|^date available$|earliest (date )?(you|to) (could |would |can )?start|kundigungsfrist|eintrittstermin|eintrittsdatum|fruhester eintritt|fruhestes eintrittsdatum|verfugbarkeit|preavis|delai de preavis|disponibilite|date de disponibilite|plazo de (pre)?aviso|preaviso|periodo de preaviso|disponibilidad|disponibilidade|disponibilita|beschikbaarheid|beschikbaarheidsdatum|fecha de incorporacion|aviso previo|prazo de aviso previo|preavviso|periodo di preavviso|opzegtermijn|notice period|start date|when can you (start|join)|earliest (start|joining)|availability to start|when would be your earliest availability|earliest availability|can you start (immediately|right away)|are you (able|available) to start (immediately|right away)|start (immediately|right away)|^(?:can you|are you (?:able|available) to|could you|would you be able to)\s+(?:start|begin|commence|join)\s+(?:within|in)\s+\d+|konnen sie (ab )?sofort (starten|beginnen|anfangen|eintreten)|ab sofort (verfugbar|starten|beginnen|anfangen)|sofort verfugbar|pouvez vous commencer immediatement|etes vous disponible immediatement|disponible immediatement|puede incorporarse inmediatamente|puede comenzar inmediatamente|disponibilidad inmediata|incorporacion inmediata|pode comecar imediatamente|disponibilidade imediata|inicio imediato|入社可能時期|入社日|勤務開始可能日/],
   ["relocation", /relocat|umzug|umziehen|demenag|reubic|mudanza|trasferi|verhuiz/],
   ["pronouns", /\bpronouns?\b/],
   ["sexual_orientation", /\bsexual orientation\b|\blgbt|\bmember of the (lesbian|lgbt)/],
@@ -43,7 +44,7 @@ const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   ["veteran", /veteran|military|armed forces/],
   ["accommodation", /\baccommodat|ajustements?|adjustments? (to|during|for)|recursos ou adaptacoes|necessidade de acessibilidade/],
   ["disability", /disabilit|behinderung|schwerbehindert|handicap|discapacidad|deficiencia|disabile/],
-  ["age", /geburtsdatum|\balter\b|date de naissance|fecha de nacim(i)?ento|\bedad\b|data de nascimento|\bidade\b|data di nascita|geboortedatum|date of birth|\bdob\b|\bage\b|birth ?date|18 years of age|18 years old|over the age of 18|current age|how old are you|what is your age/],
+  ["age", /geburtsdatum|\balter\b|date de naissance|fecha de nacim(i)?ento|\bedad\b|data de nascimento|\bidade\b|data di nascita|geboortedatum|date of birth|\bdob\b|\bage\b|birth ?date|18 years of age|18 years old|over the age of 18|18 or older|current age|how old are you|what is your age/],
   ["criminal", /vorstrafe|fuhrungszeugnis|casier judiciaire|antecedentes penales|antecedentes criminais|casellario|convict|criminal|felony|background check/],
   ["consent", /datenschutz|einwilligung|ich (stimme|akzeptiere|bestatige|willige)|\bj accepte\b|je (certifie|consens|confirme)|confidentialite|\bacepto\b|consiento|privacidad|\baceito\b|\bconcordo\b|privacidade|\bacconsento\b|ik ga akkoord|\brgpd\b|\bdsgvo\b|\bi (certify|agree|acknowledge|consent|confirm|understand)\b|privacy (policy|notice)|terms (of|and)|data processing|gdpr/],
 ];
@@ -163,7 +164,34 @@ function yesNoChoice(field: FieldDescriptor): boolean {
   return field.options.length > 0 && !!yesNoOption(field.options, "Yes") && !!yesNoOption(field.options, "No");
 }
 
-export function findAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic?: SensitiveTopic): AnswerEntry | undefined {
+const COUNTRY_MENTION = /\b(united states|u\.?s\.?a?|canada|u\.?k\.?|united kingdom|great britain|germany|deutschland|france|india|australia|singapore|ireland|netherlands|spain|italy)\b/i;
+
+function extractCountry(text: string): string | undefined {
+  const m = COUNTRY_MENTION.exec(text);
+  if (!m) return undefined;
+  const c = m[1]!.toLowerCase().replace(/\./g, "");
+  if (c === "us" || c === "usa" || c === "united states") return "united states";
+  if (c === "uk" || c === "united kingdom" || c === "great britain") return "united kingdom";
+  return c;
+}
+
+const COMPANY_NAME_IN_QUESTION = /\b(?:worked|employed|contractor|interned)\s+(?:at|for|with)\s+([A-Z][a-zA-Z0-9&]+)|\b(?:at|for|with)\s+([A-Z][a-zA-Z0-9&]+)\s+previously\b/i;
+
+function extractCompany(text: string): string | undefined {
+  const m = COMPANY_NAME_IN_QUESTION.exec(text);
+  return m ? (m[1] ?? m[2])?.trim().toLowerCase() : undefined;
+}
+
+const HERE_OR_THIS_COMPANY = /\b(here|this company|our company|this organization|our organization|for us|with us)\b/i;
+const SPONSOR_REQUIRE_PATTERN = /\b(require|need|will you.*require|in the future.*require|visa sponsorship)\b/i;
+const AUTH_WITHOUT_PATTERN = /\b(authorized to work without|legally authorized.*without|without.*sponsorship)\b/i;
+
+export function findAnswer(
+  field: FieldDescriptor,
+  answers: AnswerEntry[],
+  topic?: SensitiveTopic,
+  page?: PageFacts
+): AnswerEntry | undefined {
   const label = field.label ? questionKey(field) : "";
   if (!label) return undefined;
 
@@ -182,8 +210,87 @@ export function findAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic
     // Strict polarity: a saved answer is reused only for a question with the same polarity.
     if (questionPolarity(entry.question) !== labelPolarity) continue;
 
+    // Follow-up / condition trap: never reuse general answers for conditional follow-up fields
+    const CONDITIONAL_OR_FOLLOWUP = /\bif\s+(?:yes|no|so|applicable|other|any|true|false)\b|\bwhich\s+one\b|\bplease\s+(?:explain|specify|describe|elaborate)\b/i;
+    if (CONDITIONAL_OR_FOLLOWUP.test(label) !== CONDITIONAL_OR_FOLLOWUP.test(entry.question)) continue;
+
+    // Time scope: now / currently vs future vs past / previously
+    const hasFutureEntry = /\b(?:in\s+the\s+)?future\b|\blater\b/i.test(entry.question);
+    const hasFutureLabel = /\b(?:in\s+the\s+)?future\b|\blater\b/i.test(label);
+    if (hasFutureEntry !== hasFutureLabel) continue;
+
+    const hasPastEntry = /\b(?:previously|formerly|in\s+the\s+past|past|prior|ever)\b/i.test(entry.question);
+    const hasPastLabel = /\b(?:previously|formerly|in\s+the\s+past|past|prior|ever)\b/i.test(label);
+    if (hasPastEntry !== hasPastLabel) continue;
+
+    const hasCurrentEntry = /\b(?:currently|presently|at\s+present|current)\b/i.test(entry.question);
+    const hasCurrentLabel = /\b(?:currently|presently|at\s+present|current)\b/i.test(label);
+    if (hasCurrentEntry !== hasCurrentLabel && (hasPastEntry || hasPastLabel || hasFutureEntry || hasFutureLabel)) continue;
+
+    // Restrictions check: "with restrictions" vs "without restrictions"
+    const RESTRICTION_PATTERN = /\b(?:without|with)\s+(?:any\s+)?restrictions?\b/i;
+    const restrEntry = RESTRICTION_PATTERN.exec(entry.question)?.[0]?.toLowerCase();
+    const restrLabel = RESTRICTION_PATTERN.exec(label)?.[0]?.toLowerCase();
+    if (restrEntry && restrLabel && restrEntry !== restrLabel) continue;
+    if ((restrEntry && !restrLabel) || (!restrEntry && restrLabel)) continue;
+
+    // 1. Company trap: never reuse across different companies
+    const entryCo = entry.company?.toLowerCase() || extractCompany(entry.question);
+    const labelCo = page?.company?.toLowerCase() || extractCompany(label);
+    if (entryCo && labelCo && entryCo !== labelCo) continue;
+    if (HERE_OR_THIS_COMPANY.test(label) || HERE_OR_THIS_COMPANY.test(entry.question)) {
+      if (entry.company && page?.company && entry.company.toLowerCase() !== page.company.toLowerCase()) continue;
+    }
+
+    // 2. Number trap: match numbers/years/hours
+    const isAgeQuestion = screeningKey(entry.question) === "age_18" && screeningKey(label) === "age_18";
+    if (!isAgeQuestion) {
+      const reqEntry = parseRequirement(entry.question);
+      const reqLabel = parseRequirement(label);
+      if (reqEntry && reqLabel) {
+        if (reqEntry.unit !== reqLabel.unit || reqEntry.min !== reqLabel.min || reqEntry.max !== reqLabel.max) continue;
+      } else if ((reqEntry && !reqLabel) || (!reqEntry && reqLabel)) {
+        continue;
+      } else {
+        const numsEntry = (entry.question.match(/\b\d+\b/g) || []).join(",");
+        const numsLabel = (label.match(/\b\d+\b/g) || []).join(",");
+        if (numsEntry && numsLabel && numsEntry !== numsLabel) continue;
+      }
+    }
+
+    // Degree level check (Bachelor's vs Master's vs PhD / Doctorate vs GED)
+    const DEGREE_LEVEL = /\b(bachelor|undergraduate|master|postgraduate|doctorate|phd|associate|ged|high school)\b/i;
+    const degEntry = entry.question.match(DEGREE_LEVEL)?.[0]?.toLowerCase();
+    const degLabel = label.match(DEGREE_LEVEL)?.[0]?.toLowerCase();
+    if (degEntry && degLabel) {
+      const normDeg = (d: string) => d.includes("bachelor") || d.includes("undergrad") ? "bachelor"
+        : d.includes("master") || d.includes("postgrad") ? "master"
+        : d.includes("doctor") || d.includes("phd") ? "phd"
+        : d.includes("ged") || d.includes("high school") ? "ged"
+        : d;
+      if (normDeg(degEntry) !== normDeg(degLabel)) continue;
+    }
+
+    // 3. Country trap: never reuse across different countries
+    const countryEntry = extractCountry(entry.question);
+    const countryLabel = extractCountry(label);
+    if (countryEntry && countryLabel && countryEntry !== countryLabel) continue;
+    if (countryEntry !== countryLabel && (topic === "work_authorization" || entryTopic === "work_authorization" || topic === "relocation" || entryTopic === "relocation")) {
+      continue;
+    }
+
+    // 4. Negation / Sponsorship trap
+    const isSponsorReq = SPONSOR_REQUIRE_PATTERN.test(label) && !AUTH_WITHOUT_PATTERN.test(label);
+    const entrySponsorReq = SPONSOR_REQUIRE_PATTERN.test(entry.question) && !AUTH_WITHOUT_PATTERN.test(entry.question);
+    if (isSponsorReq !== entrySponsorReq && (topic === "sponsorship" || topic === "work_authorization" || entryTopic === "sponsorship" || entryTopic === "work_authorization")) {
+      continue;
+    }
+
     // An exact match always reuses the user's saved answer to this exact question.
     if (normalize(entry.question) === normalize(label)) {
+      if (isCompanyOrPlaceSpecific(label) && entry.company && page?.company && entry.company.toLowerCase() !== page.company.toLowerCase()) {
+        continue;
+      }
       bestScore = 1;
       best = entry;
       break;
@@ -201,8 +308,16 @@ export function findAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic
       best = entry;
     }
   }
-  if (bestScore >= ANSWER_MATCH_THRESHOLD) return best;
-  return topic ? sameFactAnswer(field, answers, topic) : undefined;
+  if (bestScore >= ANSWER_MATCH_THRESHOLD && best) {
+    const isExact = normalize(best.question) === normalize(label);
+    return isExact ? best : { ...best, reused: true };
+  }
+  const factAns = topic ? sameFactAnswer(field, answers, topic) : undefined;
+  if (factAns) {
+    const isExact = normalize(factAns.question) === normalize(label);
+    return isExact ? factAns : { ...factAns, reused: true };
+  }
+  return undefined;
 }
 
 /** Facts about the person that do not depend on the job, asked in many wordings ("Gender" / "What is your gender
@@ -359,6 +474,9 @@ export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" |
 }
 
 export function decide(field: FieldDescriptor, profile: Profile, answers: AnswerEntry[], page?: PageFacts): Decision {
+  if (field.translatedLabel) {
+    field = { ...field, label: field.translatedLabel, originalLabel: field.label };
+  }
   const topic = sensitiveTopic(field);
   // Identity numbers, secrets and signatures: the user types them on the page; optional ones stay blank. Checked
   // before anything reads the answer bank, so a stored answer can never be filled into one.
@@ -367,7 +485,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   }
   if (isStartImmediatelyQuestion(field.label)) {
     // An answer the user saved for this kind of question (never a notice period such as "30 days"), else the quick answer.
-    const entry = findAnswer(field, answers, "notice_period");
+    const entry = findAnswer(field, answers, "notice_period", page);
     if (entry && isStartImmediatelyQuestion(entry.question)) {
       let val: string | undefined = entry.answer;
       if (field.options.length) {
@@ -378,7 +496,12 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
           val = yesNoOption(field.options, entry.answer) ?? bestOption(field.options, entry.answer);
         }
       }
-      if (val) return { kind: "answer", value: val, question: entry.question };
+      if (val) {
+        const isExact = normalize(entry.question) === normalize(field.label);
+        return isExact
+          ? { kind: "answer", value: val, question: entry.question }
+          : { kind: "answer", value: val, question: entry.question, reused: true };
+      }
     }
     const quick = factDecision(field, profile, "notice_period", page);
     return quick ?? { kind: "ask", reason: "sensitive", topic: "notice_period" };
@@ -389,6 +512,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
       if (field.options.length) {
         const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
         if (match) val = match;
+        else return { kind: "ask", reason: "unknown" };
       }
       return { kind: "answer", value: val, question: "Tracker › confirmed previous application" };
     }
@@ -396,14 +520,18 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   }
 
   if (topic) {
-    const entry = findAnswer(field, answers, topic);
+    const entry = findAnswer(field, answers, topic, page);
     if (entry) {
       let val = entry.answer;
       if (field.options.length) {
         const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
         if (match) val = match;
+        else return { kind: "ask", reason: "unknown" };
       }
-      return { kind: "answer", value: val, question: entry.question };
+      const isExact = normalize(entry.question) === normalize(field.label);
+      return isExact
+        ? { kind: "answer", value: val, question: entry.question }
+        : { kind: "answer", value: val, question: entry.question, reused: true };
     }
     // The user's quick answers, only where the question clearly is that question (see facts.ts).
     const someoneElse = OTHER_PERSON.test(normalize(field.label)) || SOMEONE_ELSES.test(field.label)
@@ -449,14 +577,17 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   const work = workDecision(field, profile);
   if (work) return work;
 
-  const remembered = findAnswer(field, answers);
+  const remembered = findAnswer(field, answers, undefined, page);
   if (remembered) {
     let val = remembered.answer;
     if (field.options.length) {
       const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
       if (match) val = match;
     }
-    return { kind: "answer", value: val, question: remembered.question };
+    const isExact = normalize(remembered.question) === normalize(field.label);
+    return isExact
+      ? { kind: "answer", value: val, question: remembered.question }
+      : { kind: "answer", value: val, question: remembered.question, reused: true };
   }
   const quick = factDecision(field, profile, undefined);
   if (quick) return quick;

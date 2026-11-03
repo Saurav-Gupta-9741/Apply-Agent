@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "synthetic": true,
+  "note": "hand-written from public documentation; to be replaced by owner captures",
+  "savedAt": "2026-11-02T19:26:35.745Z",
+  "platform": "smartrecruiters",
+  "domain": "jobs.smartrecruiters.com",
+  "path": "/IKEA/12345-supply-chain-data-scientist",
+  "jobTitle": "Supply Chain Data Scientist",
+  "actionText": "Submit Application",
+  "fieldCount": 10,
+  "fields": [
+    {
+      "label": "First Name",
+      "control": "text",
+      "required": true,
+      "name": "firstName",
+      "id": "ik-fn"
+    },
+    {
+      "label": "Last Name",
+      "control": "text",
+      "required": true,
+      "name": "lastName",
+      "id": "ik-ln"
+    },
+    {
+      "label": "Email",
+      "control": "email",
+      "required": true,
+      "name": "email",
+      "id": "ik-email"
+    },
+    {
+      "label": "Phone",
+      "control": "tel",
+      "required": true,
+      "name": "phone",
+      "id": "ik-phone"
+    },
+    {
+      "label": "Location / City",
+      "control": "text",
+      "required": true,
+      "name": "location",
+      "id": "ik-location"
+    },
+    {
+      "label": "Resume / CV",
+      "control": "file",
+      "required": true,
+      "name": "resume",
+      "id": "ik-resume"
+    },
+    {
+      "label": "Notice period",
+      "control": "text",
+      "required": true,
+      "name": "noticePeriod",
+      "id": "ik-notice",
+      "placeholder": "e.g. 2 months"
+    },
+    {
+      "label": "Expected salary / compensation",
+      "control": "text",
+      "required": true,
+      "name": "expectedSalary",
+      "id": "ik-salary"
+    },
+    {
+      "label": "English language proficiency",
+      "control": "select",
+      "required": true,
+      "name": "englishLevel",
+      "id": "ik-eng",
+      "options": [
+        "Fluent / Native",
+        "Professional working proficiency",
+        "Basic"
+      ]
+    },
+    {
+      "label": "I consent to the processing of my candidate data in accordance with SmartRecruiters privacy policy",
+      "control": "checkbox",
+      "required": true,
+      "name": "agreeTerms",
+      "id": "ik-consent"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
  * (the test build allows only 127.0.0.1 and localhost). */
 
 import type { Page } from "@playwright/test";
-import { ANSWERS, BASE, expect, goTo, PROFILE, runIn, setStorage, test } from "./fixtures";
+import { ANSWERS, BASE, expect, goTo, PROFILE, PRO_LICENSE, runIn, setStorage, test } from "./fixtures";
 
 const NOT_ALLOWED = "http://127.0.0.2:8181";
 
@@ -129,7 +129,7 @@ test("resume autofill: the resume goes first, the site's own parsing is waited f
 
 test("the queue carries a page-per-step application to its last step", async ({ ext, context }) => {
   await setStorage(ext, {
-    profile: PROFILE, answers: ANSWERS, settings: { mode: "review", maxParallel: 1, perHostMax: 1, dailyCap: 25, cooldownDays: 30 },
+    profile: PROFILE, answers: ANSWERS, license: PRO_LICENSE, settings: { mode: "review", maxParallel: 1, perHostMax: 1, dailyCap: 25, cooldownDays: 30 },
   });
   await ext.evaluate(() => chrome.runtime.sendMessage({
     type: "QUEUE_ADD", jobs: [{ url: "http://127.0.0.1:8181/step1.html", title: "Data Engineer", company: "Acme" }],

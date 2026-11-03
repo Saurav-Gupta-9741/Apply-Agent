@@ -96,6 +96,47 @@ export function paidUntilAfter(
   return { paidUntil: extendedUntil(current?.paidUntil, now, PASS_DAYS), lifetime: current?.lifetime === true };
 }
 
+export interface ReferralResult {
+  success: boolean;
+  error?: "self_referral" | "already_claimed" | "invalid_key";
+  referrerPaidUntil?: number;
+  refereePaidUntil?: number;
+}
+
+/** Server-side referral bonus: both referrer and buyer get +30 days of Pro.
+ * Strictly prevents self-referral and duplicate claims. */
+export function applyReferralCredit(
+  referrerKey: string,
+  refereeKey: string,
+  referrerCurrent: { paidUntil: number; lifetime?: boolean },
+  refereeCurrent: { paidUntil: number; lifetime?: boolean },
+  claimedReferrals: Set<string>,
+  now: number
+): ReferralResult {
+  if (referrerKey === refereeKey) {
+    return { success: false, error: "self_referral" };
+  }
+  if (!LICENSE_KEY_FORMAT.test(referrerKey) || !LICENSE_KEY_FORMAT.test(refereeKey)) {
+    return { success: false, error: "invalid_key" };
+  }
+  const claimId = `${referrerKey}:${refereeKey}`;
+  if (claimedReferrals.has(claimId) || claimedReferrals.has(refereeKey)) {
+    return { success: false, error: "already_claimed" };
+  }
+
+  const referrerNext = extendedUntil(referrerCurrent.paidUntil, now, PASS_DAYS);
+  const refereeNext = extendedUntil(refereeCurrent.paidUntil, now, PASS_DAYS);
+
+  claimedReferrals.add(claimId);
+  claimedReferrals.add(refereeKey);
+
+  return {
+    success: true,
+    referrerPaidUntil: referrerNext,
+    refereePaidUntil: refereeNext,
+  };
+}
+
 export function escapeHtml(text: string): string {
   return text.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 }

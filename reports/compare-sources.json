@@ -1,0 +1,95 @@
+{
+  "note": "Every competitor fact on site/compare/* must appear here with verifiedVerbatim true. Re-check before each release.",
+  "sources": [
+    {
+      "competitor": "Simplify",
+      "url": "https://simplify.jobs/",
+      "checkedAt": "2026-11-03",
+      "httpStatus": 200,
+      "quote": "Simplify is free for job seekers — matches, autofill, and the tracker included.",
+      "verifiedVerbatim": true,
+      "method": "Node fetch of the page HTML, case-insensitive substring match"
+    },
+    {
+      "competitor": "Simplify",
+      "url": "https://simplify.jobs/",
+      "checkedAt": "2026-11-03",
+      "httpStatus": 200,
+      "quote": "Build one profile. We match it against millions of openings, autofill applications with the Copilot extension, tailor your resume per role",
+      "verifiedVerbatim": true,
+      "method": "Node fetch of the page HTML, case-insensitive substring match"
+    },
+    {
+      "competitor": "Jobright",
+      "url": "https://jobright.ai/",
+      "checkedAt": "2026-11-03",
+      "httpStatus": 200,
+      "quote": "Apply to hundreds of jobs daily across all major ATS platforms.",
+      "verifiedVerbatim": true,
+      "method": "Node fetch of the page HTML, case-insensitive substring match"
+    },
+    {
+      "competitor": "Huntr",
+      "url": "https://huntr.co/",
+      "checkedAt": "2026-11-03",
+      "httpStatus": 200,
+      "quote": "auto filling job applications with the same key information",
+      "verifiedVerbatim": true,
+      "method": "Node fetch of the page HTML, case-insensitive substring match"
+    },
+    {
+      "competitor": "Huntr",
+      "url": "https://huntr.co/",
+      "checkedAt": "2026-11-03",
+      "httpStatus": 200,
+      "quote": "This feature works on 1000s of websites",
+      "verifiedVerbatim": true,
+      "method": "Node fetch of the page HTML, case-insensitive substring match"
+    },
+    {
+      "competitor": "Huntr",
+      "url": "https://huntr.co/",
+      "checkedAt": "2026-11-03",
+      "httpStatus": 200,
+      "quote": "Track all job applications in one place",
+      "verifiedVerbatim": true,
+      "method": "Node fetch of the page HTML, case-insensitive substring match"
+    },
+    {
+      "competitor": "LazyApply",
+      "url": "https://lazyapply.com/",
+      "checkedAt": "2026-11-03",
+      "httpStatus": 200,
+      "quote": "Apply to jobs across multiple platforms with a single click.",
+      "verifiedVerbatim": true,
+      "method": "Node fetch of the page HTML, case-insensitive substring match"
+    },
+    {
+      "competitor": "LazyApply",
+      "url": "https://lazyapply.com/",
+      "checkedAt": "2026-11-03",
+      "httpStatus": 200,
+      "quote": "15 Applications/Day",
+      "verifiedVerbatim": true,
+      "method": "Node fetch of the page HTML, case-insensitive substring match"
+    },
+    {
+      "competitor": "LazyApply",
+      "url": "https://lazyapply.com/",
+      "checkedAt": "2026-11-03",
+      "httpStatus": 200,
+      "quote": "platforms like Greenhouse, Dice, Indeed and Ziprecruiter",
+      "verifiedVerbatim": true,
+      "method": "Node fetch of the page HTML, case-insensitive substring match"
+    },
+    {
+      "competitor": "Teal",
+      "url": "https://www.tealhq.com/",
+      "checkedAt": "2026-11-03",
+      "httpStatus": 403,
+      "quote": null,
+      "verifiedVerbatim": false,
+      "method": "blocked"
+    }
+  ]
+}

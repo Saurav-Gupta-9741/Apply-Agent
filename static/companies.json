@@ -1,0 +1,542 @@
+[
+  {
+    "slug": "figma",
+    "name": "Figma",
+    "ats": "greenhouse",
+    "country": "United States",
+    "industry": "Design Software",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:12:49.209Z",
+    "jobCount": 141
+  },
+  {
+    "slug": "stripe",
+    "name": "Stripe",
+    "ats": "greenhouse",
+    "country": "United States",
+    "industry": "Fintech",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:12:51.270Z",
+    "jobCount": 739
+  },
+  {
+    "slug": "airbnb",
+    "name": "Airbnb",
+    "ats": "greenhouse",
+    "country": "United States",
+    "industry": "Hospitality",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:12:53.284Z",
+    "jobCount": 212
+  },
+  {
+    "slug": "discord",
+    "name": "Discord",
+    "ats": "greenhouse",
+    "country": "United States",
+    "industry": "Communications",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:12:55.269Z",
+    "jobCount": 40
+  },
+  {
+    "slug": "databricks",
+    "name": "Databricks",
+    "ats": "greenhouse",
+    "country": "United States",
+    "industry": "Data & AI",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:12:57.306Z",
+    "jobCount": 910
+  },
+  {
+    "slug": "gitlab",
+    "name": "GitLab",
+    "ats": "greenhouse",
+    "country": "United States",
+    "industry": "Developer Tools",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:12:59.364Z",
+    "jobCount": 234
+  },
+  {
+    "slug": "gusto",
+    "name": "Gusto",
+    "ats": "greenhouse",
+    "country": "United States",
+    "industry": "Payroll & HR",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:13:01.300Z",
+    "jobCount": 84
+  },
+  {
+    "slug": "samsara",
+    "name": "Samsara",
+    "ats": "greenhouse",
+    "country": "United States",
+    "industry": "IoT",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:13:03.307Z",
+    "jobCount": 330
+  },
+  {
+    "slug": "instacart",
+    "name": "Instacart",
+    "ats": "greenhouse",
+    "country": "United States",
+    "industry": "E-Commerce",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:13:05.307Z",
+    "jobCount": 94
+  },
+  {
+    "slug": "twitch",
+    "name": "Twitch",
+    "ats": "greenhouse",
+    "country": "United States",
+    "industry": "Media Streaming",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:13:09.326Z",
+    "jobCount": 55
+  },
+  {
+    "slug": "chime",
+    "name": "Chime",
+    "ats": "greenhouse",
+    "country": "United States",
+    "industry": "Fintech",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:13:11.330Z",
+    "jobCount": 74
+  },
+  {
+    "slug": "spotify",
+    "name": "Spotify",
+    "ats": "lever",
+    "country": "Sweden",
+    "industry": "Music Streaming",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:13:27.885Z",
+    "jobCount": 86
+  },
+  {
+    "slug": "palantir",
+    "name": "Palantir",
+    "ats": "lever",
+    "country": "United States",
+    "industry": "Data Analytics",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:13:32.786Z",
+    "jobCount": 305
+  },
+  {
+    "slug": "zeta",
+    "name": "Zeta",
+    "ats": "lever",
+    "country": "India",
+    "industry": "Banking Tech",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:13:57.870Z",
+    "jobCount": 31
+  },
+  {
+    "slug": "paytm",
+    "name": "Paytm",
+    "ats": "lever",
+    "country": "India",
+    "industry": "Fintech",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:01.807Z",
+    "jobCount": 199
+  },
+  {
+    "slug": "airwallex",
+    "name": "Airwallex",
+    "ats": "ashby",
+    "country": "Australia",
+    "industry": "Fintech",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:08.593Z",
+    "jobCount": 478
+  },
+  {
+    "slug": "linear",
+    "name": "Linear",
+    "ats": "ashby",
+    "country": "United States",
+    "industry": "Issue Tracking",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:10.151Z",
+    "jobCount": 31
+  },
+  {
+    "slug": "replit",
+    "name": "Replit",
+    "ats": "ashby",
+    "country": "United States",
+    "industry": "Cloud IDE",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:12.169Z",
+    "jobCount": 34
+  },
+  {
+    "slug": "ramp",
+    "name": "Ramp",
+    "ats": "ashby",
+    "country": "United States",
+    "industry": "Corporate Cards",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:14.217Z",
+    "jobCount": 170
+  },
+  {
+    "slug": "synthesia",
+    "name": "Synthesia",
+    "ats": "ashby",
+    "country": "United Kingdom",
+    "industry": "AI Video",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:20.394Z",
+    "jobCount": 33
+  },
+  {
+    "slug": "elevenlabs",
+    "name": "ElevenLabs",
+    "ats": "ashby",
+    "country": "United States",
+    "industry": "AI Audio",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:22.459Z",
+    "jobCount": 146
+  },
+  {
+    "slug": "cursor",
+    "name": "Cursor (Anysphere)",
+    "ats": "ashby",
+    "country": "United States",
+    "industry": "AI Editor",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:24.200Z",
+    "jobCount": 123
+  },
+  {
+    "slug": "bluecrux",
+    "name": "Bluecrux",
+    "ats": "recruitee",
+    "country": "Belgium",
+    "industry": "Supply Chain",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:27.288Z",
+    "jobCount": 34
+  },
+  {
+    "slug": "miaplatform",
+    "name": "Mia-Platform",
+    "ats": "recruitee",
+    "country": "Italy",
+    "industry": "Cloud Tech",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:29.718Z",
+    "jobCount": 5
+  },
+  {
+    "slug": "sahl",
+    "name": "Sahl",
+    "ats": "recruitee",
+    "country": "Egypt",
+    "industry": "Fintech",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:32.117Z",
+    "jobCount": 6
+  },
+  {
+    "slug": "bunq",
+    "name": "bunq",
+    "ats": "recruitee",
+    "country": "Netherlands",
+    "industry": "Neobank",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:35.156Z",
+    "jobCount": 27
+  },
+  {
+    "slug": "bolderapps",
+    "name": "Bolder Apps",
+    "ats": "workable",
+    "country": "United Kingdom",
+    "industry": "Mobile Apps",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:44.104Z",
+    "jobCount": 36
+  },
+  {
+    "slug": "revisionz",
+    "name": "Revisionz",
+    "ats": "workable",
+    "country": "Canada",
+    "industry": "Consulting",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:46.115Z",
+    "jobCount": 6
+  },
+  {
+    "slug": "groww",
+    "name": "Groww",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:52.533Z",
+    "jobCount": 9
+  },
+  {
+    "slug": "inmobi",
+    "name": "Inmobi",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:54.414Z",
+    "jobCount": 82
+  },
+  {
+    "slug": "druva",
+    "name": "Druva",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:56.448Z",
+    "jobCount": 28
+  },
+  {
+    "slug": "observeai",
+    "name": "Observeai",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:14:58.475Z",
+    "jobCount": 9
+  },
+  {
+    "slug": "n26",
+    "name": "N26",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:00.471Z",
+    "jobCount": 28
+  },
+  {
+    "slug": "getyourguide",
+    "name": "Getyourguide",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:02.492Z",
+    "jobCount": 68
+  },
+  {
+    "slug": "contentful",
+    "name": "Contentful",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:04.460Z",
+    "jobCount": 29
+  },
+  {
+    "slug": "adyen",
+    "name": "Adyen",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:06.487Z",
+    "jobCount": 241
+  },
+  {
+    "slug": "monzo",
+    "name": "Monzo",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:08.480Z",
+    "jobCount": 61
+  },
+  {
+    "slug": "deliveroo",
+    "name": "Deliveroo",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:10.526Z",
+    "jobCount": 202
+  },
+  {
+    "slug": "sumup",
+    "name": "Sumup",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:12.494Z",
+    "jobCount": 355
+  },
+  {
+    "slug": "trustpilot",
+    "name": "Trustpilot",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:14.496Z",
+    "jobCount": 45
+  },
+  {
+    "slug": "typeform",
+    "name": "Typeform",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:16.540Z",
+    "jobCount": 11
+  },
+  {
+    "slug": "cabify",
+    "name": "Cabify",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:18.511Z",
+    "jobCount": 57
+  },
+  {
+    "slug": "celonis",
+    "name": "Celonis",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:20.531Z",
+    "jobCount": 226
+  },
+  {
+    "slug": "hellofresh",
+    "name": "Hellofresh",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:22.538Z",
+    "jobCount": 378
+  },
+  {
+    "slug": "wildlifestudios",
+    "name": "Wildlifestudios",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:26.524Z",
+    "jobCount": 15
+  },
+  {
+    "slug": "vtex",
+    "name": "Vtex",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:28.532Z",
+    "jobCount": 31
+  },
+  {
+    "slug": "quintoandar",
+    "name": "Quintoandar",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:30.541Z",
+    "jobCount": 98
+  },
+  {
+    "slug": "xendit",
+    "name": "Xendit",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:32.548Z",
+    "jobCount": 19
+  },
+  {
+    "slug": "paypay",
+    "name": "Paypay",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:34.551Z",
+    "jobCount": 85
+  },
+  {
+    "slug": "robinhood",
+    "name": "Robinhood",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:38.572Z",
+    "jobCount": 161
+  },
+  {
+    "slug": "twilio",
+    "name": "Twilio",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:40.567Z",
+    "jobCount": 133
+  },
+  {
+    "slug": "datadog",
+    "name": "Datadog",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:42.627Z",
+    "jobCount": 404
+  },
+  {
+    "slug": "grafanalabs",
+    "name": "Grafanalabs",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:44.587Z",
+    "jobCount": 124
+  },
+  {
+    "slug": "asana",
+    "name": "Asana",
+    "ats": "greenhouse",
+    "country": "Multiple",
+    "industry": "",
+    "unverified": false,
+    "verifiedAt": "2026-11-03T07:15:46.601Z",
+    "jobCount": 108
+  }
+]

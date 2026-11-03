@@ -1,7 +1,7 @@
 /** "Report a problem" must help fix the site without exposing the user: questions and decisions only. */
 
 import { describe, expect, it } from "vitest";
-import { buildDiagnostic } from "../src/shared/diagnostic";
+import { buildDiagnostic, saveDiagnosticFile } from "../src/shared/diagnostic";
 import type { FieldResult, RunReport } from "../src/shared/types";
 import { PROFILE } from "./fixtures";
 
@@ -54,5 +54,26 @@ describe("buildDiagnostic", () => {
     expect(JSON.parse(buildDiagnostic(undefined, { ...META, url: "https://acme.com/careers?ref=x" }))).toMatchObject({
       page: "https://acme.com/careers", result: "no application form found",
     });
+  });
+
+  it("exports diagnostics file without personal data or query strings", () => {
+    let clicked = false;
+    let appendedName = "";
+    const fakeLink: any = {
+      href: "",
+      download: "",
+      click: () => { clicked = true; },
+      remove: () => {},
+    };
+    const fakeDoc: any = {
+      createElement: (tag: string) => (tag === "a" ? fakeLink : {}),
+      body: {
+        append: (el: any) => { appendedName = el.download; },
+      },
+    };
+
+    saveDiagnosticFile(text, fakeDoc as any);
+    expect(clicked).toBe(true);
+    expect(appendedName).toMatch(/^applyagent-diagnostics-\d{4}-\d{2}-\d{2}\.json$/);
   });
 });

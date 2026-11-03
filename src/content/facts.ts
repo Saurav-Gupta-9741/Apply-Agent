@@ -6,6 +6,7 @@
  *  - relocation: only the general question "Are you willing to relocate?"
  *  - diversity questions: only where the form offers choices, and only a choice that clearly matches */
 
+import { evaluateEeoPolicy } from "../shared/locale/country-rules";
 import type { ApplicationRecord, Decision, FieldDescriptor, Profile, QuickFacts, SensitiveTopic } from "../shared/types";
 import { canonicalCountries, canWorkIn, countriesIn, extractPlacesInText } from "../shared/countries";
 import { bestOption, normalize, yesNoOption } from "../shared/text";
@@ -55,6 +56,8 @@ export interface PageFacts {
   jobCountries: string[];
   /** URL of the application page, to identify the company and check application history. */
   url?: string;
+  /** Company name for the job, if known. */
+  company?: string;
   /** Confirmed application history from the tracker. */
   applications?: ApplicationRecord[];
 }
@@ -80,6 +83,7 @@ const NEEDS = /\b(require|requires|required|need|needs|needed|benotig\w*|brauch\
 function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts, page?: PageFacts): Decision | undefined {
   const allowed = canonicalCountries(facts.workCountries);
   const tempAllowed = canonicalCountries(facts.temporaryWorkCountries ?? "");
+  const unauth = canonicalCountries(facts.unauthorizedCountries ?? "");
   const allAllowed = [...new Set([...allowed, ...tempAllowed])];
   if (!allAllowed.length || !yesNoField(field)) return undefined;
   const q = theQuestion(field.label);
@@ -104,15 +108,20 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   }
   // "…in your country of application?", "…the country for which you applied?": the job's country, and only a yes when
   // that is known and one the user may work in (a no could be about another country than the page shows).
-  if (!places.length && /country (of application|for which you (have )?appl|you (are )?apply|you (have )?applied)/.test(whole)) {
+  if (!places.length && /country (of application|for which you (have )?appl|you (are )?(?:applying|apply)|you (have )?applied)/.test(whole)) {
     const job = page?.jobCountries ?? [];
-    if (!job.length || !job.every((c) => canWorkIn(c, allowed))) return undefined;
+    if (job.length && (job.every((c) => canWorkIn(c, allowed)) || job.every((c) => canWorkIn(c, unauth)))) {
+      places = job;
+    } else {
+      return undefined;
+    }
   }
   // No country in the question ("…require sponsorship to work at Cloudflare?"): it is about this job, so the job's own
   // country decides, when the page names exactly that. A choice made earlier on the form is the user's to recall.
   if (!places.length && page?.jobCountries.length && !/you selected|previous (response|question|answer)|above/.test(q)) places = page.jobCountries;
   if (!places.length) return undefined; // the job's country is not known: the user decides
   const can = places.map((c) => canWorkIn(c, allAllowed));
+  const isExplicitlyUnauth = places.map((c) => canWorkIn(c, unauth));
   if (!can.every((x) => x === can[0])) return undefined; // "the US or Canada" with a yes for one and a no for the other
   // Polarity from the question's own words ("…the right to work in Poland without the need for a visa?" asks about the
   // right to work).
@@ -121,9 +130,23 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   if (needs && facts.needsFutureSponsorship) {
     yes = facts.needsFutureSponsorship === "Yes";
   } else if (needs) {
-    yes = !canWorkIn(places[0]!, allowed);
+    if (canWorkIn(places[0]!, allowed)) {
+      yes = false;
+    } else if (canWorkIn(places[0]!, tempAllowed) || isExplicitlyUnauth[0]) {
+      yes = true;
+    } else {
+      // Unlisted country: the user may hold a visa there that needs no sponsorship. ASK, same as authorization.
+      return undefined;
+    }
   } else {
-    yes = can[0]!;
+    if (can[0]) {
+      yes = true;
+    } else if (isExplicitlyUnauth[0]) {
+      yes = false;
+    } else {
+      // Unlisted country and not explicitly unauthorized: ASK! Never guess "No".
+      return undefined;
+    }
   }
   const raw = yes ? "Yes" : "No";
   const val = field.options.length ? (yesNoOption(field.options, raw) ?? bestOption(field.options, raw) ?? raw) : raw;
@@ -255,7 +278,7 @@ function diversityAnswer(field: FieldDescriptor, facts: QuickFacts, topic: Sensi
   }
   if (topic === "disability" && facts.disability) {
     const v = choice(field, facts.disability, { Yes: /^yes\b|^i have a disability/, No: /^no\b|do not have a disability|don ?t have a disability/, Decline: DECLINE },
-      { Yes: "Yes", No: "No" }); // "I do not want" is a fragment, not an answer
+      { Yes: "Yes", No: "No", Decline: "Decline" });
     return v ? answer(v, "disability") : undefined;
   }
   if (topic === "race" && facts.race) {
@@ -263,12 +286,55 @@ function diversityAnswer(field: FieldDescriptor, facts: QuickFacts, topic: Sensi
       const v = choice(field, "Decline", { Decline: DECLINE }, { Decline: "Decline" });
       return v ? answer(v, "race/ethnicity") : undefined;
     }
-    if (!field.options.length || field.control === "text") return undefined;
-    // Exactly one choice that is the saved answer, or starts with it as a whole word ("Asian (Not Hispanic or Latino)").
-    // Several sub-groups that all start with it ("Asian or Asian British - Indian / - Pakistani…") are the user's pick.
     const saved = normalize(facts.race);
-    const fits = field.options.filter((o) => normalize(o) === saved || normalize(o).startsWith(`${saved} `));
-    return fits.length === 1 ? answer(fits[0]!, "race/ethnicity") : undefined;
+    const v = choice(field, facts.race, {
+      Asian: /^asian\b/,
+      Black: /^black|african american/,
+      White: /^white/,
+      Hispanic: /^hispanic|latino/,
+      Decline: DECLINE,
+    }, { Asian: "Asian", Black: "Black", White: "White", Hispanic: "Hispanic", Decline: "Decline" });
+    if (v) return answer(v, "race/ethnicity");
+    if (field.options.length) {
+      const fits = field.options.filter((o) => normalize(o) === saved || normalize(o).startsWith(`${saved} `));
+      if (fits.length === 1) return answer(fits[0]!, "race/ethnicity");
+    }
+  }
+  if (topic === "veteran" && facts.veteran && !/another country|foreign|other countr/.test(q)) {
+    const v = choice(field, facts.veteran, {
+      Yes: /^(?!.*\b(not|decline|don ?t|prefer)\b).*(veteran|^yes\b)/, No: /\b(not a|am not|non) ?(protected )?veteran|^no\b/, Decline: DECLINE,
+    }, { Yes: "Yes", No: "No", Decline: "Decline" });
+    return v ? answer(v, "veteran status") : undefined;
+  }
+  if (topic === "pronouns" && facts.pronouns) {
+    if (/\bif\s+["']?other["']?\s+is\s+selected\b/i.test(q)) return undefined;
+    if (field.control === "text") return answer(facts.pronouns, "pronouns");
+    const v = choice(field, facts.pronouns, {
+      "she/her": /she\/her|she \/ her|she\/hers|female/i,
+      "he/him": /he\/him|he \/ him|he\/his|male/i,
+      "they/them": /they\/them|they \/ them/i,
+      Decline: DECLINE,
+    }, { "she/her": "she/her", "he/him": "he/him", "they/them": "they/them", Decline: "Decline" });
+    return v ? answer(v, "pronouns") : undefined;
+  }
+  if (topic === "sexual_orientation" && facts.sexualOrientation) {
+    const v = choice(field, facts.sexualOrientation, {
+      Heterosexual: /straight|heterosexual/,
+      Decline: DECLINE,
+    }, { Heterosexual: "Heterosexual", Decline: "I prefer not to say" });
+    return v ? answer(v, "sexual orientation") : undefined;
+  }
+  if (topic === "transgender" && facts.transgender) {
+    const target = /\b(same as|assigned at birth)\b/i.test(q) ? (facts.transgender === "No" ? "Yes" : "No") : facts.transgender;
+    const v = choice(field, target, { Yes: /^yes\b/, No: /^no\b/, Decline: DECLINE }, { Yes: "Yes", No: "No", Decline: "Decline" });
+    return v ? answer(v, "transgender") : undefined;
+  }
+  if (topic === "accommodation" && facts.needsAccommodation) {
+    if (field.control === "text" || field.control === "textarea") {
+      if (facts.needsAccommodation === "No") return answer("None", "accommodation");
+    }
+    const v = choice(field, facts.needsAccommodation, { Yes: /^yes\b/, No: /^no\b/, Decline: DECLINE }, { Yes: "Yes", No: "No", Decline: "Decline" });
+    return v ? answer(v, "accommodation") : undefined;
   }
   return undefined;
 }
@@ -389,6 +455,8 @@ export function parseNoticeDays(notice: string): number | undefined {
   if (/^(immediate(ly)?|0(\s*(days?|weeks?|months?))?|none|no notice|available immediately|sofort|ab sofort|immediat(e)?|immediatement|sans preavis|inmediat[oa]|de inmediato|inmediatamente|sin preaviso|imediat[oa]|imediatamente|sem aviso previo|subito|per direct|direct beschikbaar)$/.test(norm)) {
     return 0;
   }
+  const bareNum = norm.match(/^(\d+)$/);
+  if (bareNum && bareNum[1]) return parseInt(bareNum[1], 10);
   const m = norm.match(/\b(\d+)\s*(days?|weeks?|months?|tage?n?|wochen?|monate?n?|jours?|semaines?|mois|dias?|semanas?|mes(?:es)?|giorn[io]|settiman[ae]|mesi|mese|dag(?:en)?|week|weken|maand(?:en)?)\b/);
   if (!m || !m[1]) return undefined;
   const num = parseInt(m[1], 10);
@@ -433,7 +501,7 @@ export function matchNoticeOption(notice: string, options: string[]): string | u
     if (m) return m;
   }
   if (candidateDays === 60) {
-    const m = options.find((o) => /\b(?:2\s*(?:months?|monate?n?|mois|mes(?:es)?|mesi|maand(?:en)?)|60\s*(?:days?|tage?n?|jours?|dias?|giorni))\b/i.test(normalize(o)));
+    const m = options.find((o) => /\b(?:2\s*(?:\+|\s*or\s*more)?\s*(?:months?|monate?n?|mois|mes(?:es)?|mesi|maand(?:en)?)|60\s*(?:\+|\s*or\s*more)?\s*(?:days?|tage?n?|jours?|dias?|giorni))\b/i.test(normalize(o)));
     if (m) return m;
   }
   if (candidateDays === 30) {
@@ -491,6 +559,8 @@ export function foreignSubdivision(field: FieldDescriptor, profile: Profile): De
 }
 
 /** The quick answer for this question, if the user gave one and the question clearly is that question. */
+const COUNTRY_ALPHA2: Record<string, string> = { germany: "DE", france: "FR", "united kingdom": "GB", "united states": "US" };
+
 export function factDecision(field: FieldDescriptor, profile: Profile, topic: SensitiveTopic | undefined, page?: PageFacts): Decision | undefined {
   if (!topic) {
     const instructed = nonUsInstruction(field, profile) ?? foreignSubdivision(field, profile);
@@ -546,17 +616,33 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     // A date picker or a "month"/"year" box needs a date, not "30 days".
     // "Are you subject to a notice period?" is a yes/no question: "30 days" is not its answer.
     const notice = facts.noticePeriod?.trim() ?? "";
-    if (!notice || field.control === "date" || YES_NO_QUESTION.test(q)) return undefined;
+    if (!notice || field.control === "date") return undefined;
+    const candidateDays = parseNoticeDays(notice);
+
+    if (isCompanyOrPlaceSpecific(field.label) || hasExceptionClause(field.label) || /^if\b/i.test(q)) return undefined;
+    const withinMatch = q.match(/^(?:can you|are you (?:able|available) to|could you|would you be able to)?\s*(?:start|join|commence|begin|available|commencer|incorporarse|iniciar)\s+(?:within|in|dans|en|em)\s+(\d+)\s*(days?|weeks?|months?|tage?n?|wochen?|monate?n?|jours?|semaines?|mois|dias?|semanas?|meses?)\??$/i);
+    if (withinMatch && withinMatch[1]) {
+      const allowedNum = parseInt(withinMatch[1], 10);
+      const unit = withinMatch[2]?.toLowerCase() ?? "day";
+      const thresholdDays = /month|monat|mois|mes/i.test(unit) ? allowedNum * 30 : /week|woche|semaine|semana/i.test(unit) ? allowedNum * 7 : allowedNum;
+      if (candidateDays !== undefined) {
+        const canJoin = candidateDays <= thresholdDays;
+        const raw = canJoin ? "Yes" : "No";
+        const val = field.options.length ? (yesNoOption(field.options, raw) ?? bestOption(field.options, raw) ?? raw) : raw;
+        return answer(val, "notice period");
+      }
+    }
+
+    if (YES_NO_QUESTION.test(q)) return undefined;
     // A date ("Start date", a DD/MM/YYYY mask in the label or placeholder) needs a date, not "30 days".
     const shape = normalize(`${field.label} ${field.placeholder}`);
     if (/\b(dd|mm|yyyy|jjjj|aaaa)\b/.test(shape) || /\b(month|year)\b$/.test(q) || /last (working )?day/.test(q)) return undefined;
     // "Start date", "Date Available", "Availability date": a date, and a notice period ("30 days") is not one.
     const savedIsDate = /\b(19|20)\d{2}\b|\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\b|\d{1,2}[\/.-]\d{1,2}/.test(notice.toLowerCase());
     if (/\b(date|datum|fecha|data)\b/.test(q) && !savedIsDate) return undefined;
-    const candidateDays = parseNoticeDays(notice);
     const rawUnit = /\b(days?|weeks?|months?|tage?n?|wochen?|monate?n?|jours?|semaines?|mois|dias?|semanas?|meses?|giorni|settimane|mesi|weken?|maanden?)\b/.exec(shape)?.[1]?.toLowerCase();
     const unit = rawUnit ? (/^(month|monat|mois|mes|mese|maand)/.test(rawUnit) ? "month" : /^(week|woche|semaine|semana|settimana|wek)/.test(rawUnit) ? "week" : "day") : undefined;
-    const saved = /^(\d+)\s*(day|week|month)s?$/i.exec(notice);
+    const saved = /^(\d+)(?:\s*(day|week|month)s?)?$/i.exec(notice);
     if (unit || field.control === "number") {
       if (unit === "month" && candidateDays !== undefined) {
         if (candidateDays % 30 === 0) {
@@ -589,13 +675,27 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
       const opt = matchNoticeOption(notice, field.options);
       return opt ? answer(opt, "notice period") : undefined;
     }
-    return answer(notice, "notice period");
+    const isBareNumber = /^\d+$/.test(notice.trim());
+    return answer(isBareNumber ? `${candidateDays} days` : notice, "notice period");
   }
   if (topic === "relocation") {
-    if (!facts.relocate || !/^(are you |would you be |will you be )?(willing|open|able|ready) to relocate( if (needed|required|necessary))?$/.test(q)) return undefined;
-    return yesNoField(field) ? answer(facts.relocate, "relocation") : undefined;
+    if (!facts.relocate) return undefined;
+    if (field.control === "textarea" || field.control === "text") return undefined;
+    if (!/\b(relocat|open to (?:relocation|relocating)|willing to relocate)\b/i.test(q)) return undefined;
+    if (yesNoField(field)) {
+      const match = field.options.length ? (yesNoOption(field.options, facts.relocate) ?? facts.relocate) : facts.relocate;
+      return answer(match, "relocation");
+    }
+    return undefined;
   }
-  if (topic && ["gender", "race", "veteran", "disability"].includes(topic)) return diversityAnswer(field, facts, topic);
+  if (topic && ["gender", "race", "veteran", "disability", "pronouns", "sexual_orientation", "transgender", "accommodation"].includes(topic)) {
+    // Country rules: Germany and France restrict collecting race/ethnicity, so on a job there the user answers it.
+    // Gender (Anrede/civilité) is asked on nearly every German and French form and stays the user's saved answer.
+    const jobs = page?.jobCountries ?? [];
+    const alpha2 = jobs.length === 1 ? COUNTRY_ALPHA2[jobs[0]!.toLowerCase()] : undefined;
+    if (topic === "race" && evaluateEeoPolicy(topic, alpha2) === "prohibited_or_skip") return undefined;
+    return diversityAnswer(field, facts, topic);
+  }
   if ((topic === "age" || /\b(?:18 years (?:of age )?or older|at least 18|over 18|18 or older)\b/i.test(q)) && facts.over18 && yesNoField(field)) {
     if (/^(are you |do you confirm you are |confirm you are )?(at least 18|18 years (?:of age )?or older|18 or older|over the age of 18)/i.test(q)) {
       const match = field.options.length ? (yesNoOption(field.options, facts.over18) ?? facts.over18) : facts.over18;
@@ -660,9 +760,12 @@ export function mentions(text: string, term: string): boolean {
   if (lowerTerm === "google cloud" || lowerTerm === "gcp") {
     return /\b(?:google cloud|gcp)\b/i.test(raw);
   }
+  if (lowerTerm === "open source" || lowerTerm === "open-source") {
+    return /\bopen[- ]source\b/i.test(raw);
+  }
 
   // General term whole-word matching:
-  const escaped = escapeRegex(cleanTerm);
+  const escaped = escapeRegex(cleanTerm).replace(/\s+/g, "[- ]");
   const regex = new RegExp(`\\b${escaped}\\b`, "i");
   return regex.test(raw);
 }
@@ -971,6 +1074,22 @@ export function narrowerSkill(label: string, skill: string, others: string[] = [
   return false;
 }
 
+function matchYearsOption(options: string[], years: number): string | undefined {
+  for (const opt of options) {
+    const req = parseRequirement(opt);
+    if (req && req.unit === "years") {
+      if (req.min !== undefined && req.max !== undefined) {
+        if (years >= req.min && years <= req.max) return opt;
+      } else if (req.min !== undefined) {
+        if (years >= req.min) return opt;
+      } else if (req.max !== undefined) {
+        if (years <= req.max) return opt;
+      }
+    }
+  }
+  return undefined;
+}
+
 export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
   if (!answerableLength(field.label)) return undefined;
   const q = normalize(field.label);
@@ -1056,7 +1175,9 @@ export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile)
         const yearsStr = String(primary.years);
         if (field.control === "number" || field.control === "text") return answer(yearsStr, "skills");
         if (field.options.length) {
-          const match = bestOption(field.options, yearsStr, 0.7) ?? field.options.find((o) => o.includes(yearsStr));
+          const match = bestOption(field.options, yearsStr, 0.7)
+            ?? matchYearsOption(field.options, primary.years)
+            ?? field.options.find((o) => o.includes(yearsStr));
           if (match) return answer(match, "skills");
         }
       }
@@ -1088,6 +1209,12 @@ export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile)
     if (/\b(how many years|years of experience)\b/i.test(q) && typeof primary.years === "number") {
       const yearsStr = String(primary.years);
       if (field.control === "number" || field.control === "text") return answer(yearsStr, "skills");
+      if (field.options.length) {
+        const match = bestOption(field.options, yearsStr, 0.7)
+          ?? matchYearsOption(field.options, primary.years)
+          ?? field.options.find((o) => o.includes(yearsStr));
+        if (match) return answer(match, "skills");
+      }
     }
   }
 

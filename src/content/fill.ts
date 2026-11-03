@@ -1,6 +1,7 @@
 /** Puts values into form controls the way a real user would, so React/Vue forms register them, then reads
  * the value back to verify it stuck. */
 
+import { formatDate } from "../shared/locale/formats";
 import { deepQueryAll, scopeOf } from "./dom";
 import { isDropzone, visibleText, type ExtractedField, type FieldElement } from "./extract";
 import type { ResumeFile } from "../shared/types";
@@ -45,8 +46,17 @@ export function formatDateFor(el: HTMLInputElement | HTMLTextAreaElement, value:
   const [, year, month, day = "01"] = iso as unknown as [string, string, string, string?];
   if (el instanceof HTMLInputElement && el.type === "date") return `${year}-${month}-${day}`;
   if (el instanceof HTMLInputElement && el.type === "month") return `${year}-${month}`;
-  const pattern = DATE_PATTERN.exec(`${el.getAttribute("placeholder") ?? ""} ${el.getAttribute("aria-label") ?? ""} ${hint}`);
-  if (!pattern) return value;
+  const textContext = `${el.getAttribute("placeholder") ?? ""} ${el.getAttribute("aria-label") ?? ""} ${hint} ${el.getAttribute("data-automation-id") ?? ""}`;
+  const pattern = DATE_PATTERN.exec(textContext);
+  // Japanese forms: "年月日" (e.g. 2026年05月01日). Only when the box itself shows that form.
+  if (!pattern && /年.*月.*日|yyyy年/i.test(textContext)) {
+    return formatDate({ year: Number(year), month: Number(month), day: Number(day) }, "年月日");
+  }
+  if (!pattern) {
+    if (/\b(mm|month)\b/i.test(textContext) && !/\b(yy|yyyy|year)\b/i.test(textContext)) return month;
+    if (/\b(yyyy|year)\b/i.test(textContext) && !/\b(mm|month)\b/i.test(textContext)) return year;
+    return value;
+  }
   const [, a, sep, b, c] = pattern as unknown as [string, string, string, string, string?];
   const part = (token: string) => {
     const t = token.toLowerCase();
@@ -292,6 +302,8 @@ const NOT_AN_OPTION = /^(loading|searching|please wait|no (results|options|match
 const OPTION_SELECTOR = [
   "[role='option']",
   "[data-automation-id='promptOption']",
+  "[data-automation-id='select-option']",
+  "[data-automation-id='menuItem']",
   "[data-reach-combobox-option]",
   "li.select2-results__option",
   "li.active-result",
@@ -302,6 +314,17 @@ const OPTION_SELECTOR = [
   ".fabric-select-option",
   ".dropdown-menu > li",
   ".dropdown-menu > .dropdown-item",
+  ".sapMSelectListItem",
+  ".sapMComboBoxItem",
+  ".oj-listbox-result",
+  ".oj-listbox-item",
+  "oj-option",
+  "mat-option",
+  ".mat-option",
+  ".mat-mdc-option",
+  ".zp_select_option",
+  ".zp_option",
+  "li.zp_dropdown_item",
 ].join(", ");
 
 function visibleOptions(scope: ParentNode): HTMLElement[] {
@@ -321,7 +344,7 @@ function visibleOptions(scope: ParentNode): HTMLElement[] {
   });
 }
 
-const LIST_CONTAINERS = "[role='listbox'], .exportSelectPopup, .select2-dropdown, .chosen-drop, [data-automation-id*='promptPopup'], [data-automation-id*='menu'], .dropdown-menu.show, .fabric-select-menu";
+const LIST_CONTAINERS = "[role='listbox'], .exportSelectPopup, .select2-dropdown, .chosen-drop, [data-automation-id*='promptPopup'], [data-automation-id*='menu'], .dropdown-menu.show, .fabric-select-menu, .sapMPopover, .sapMSelectItems, .sapMComboBoxList, .oj-listbox-results, .oj-select-results, .mat-select-panel, .mat-mdc-select-panel, .cdk-overlay-pane, .zp_dropdown_menu, .zp_select_options";
 
 /** The list a dropdown opened, when it does not name it: the one inside the field's own group, else the only open list
  * on the page. Never every option on the page: another open list, or a menu built of options, is not this field's. */
@@ -392,7 +415,7 @@ const DROPDOWN_PLACEHOLDER = /^(select|choose|please select)\b|^(select( one| an
 
 /** What a custom dropdown currently shows, without its placeholder ("Select One"). */
 export function dropdownValue(el: Element): string {
-  const selectedChild = el.querySelector(".combobox-selected-text, .selected-value, [data-selected], .filter-option-inner-inner");
+  const selectedChild = el.querySelector(".combobox-selected-text, .selected-value, [data-selected], .filter-option-inner-inner, .mat-select-value-text, .mat-mdc-select-value-text, .mat-select-value, .oj-select-single-label, [data-automation-id='promptOptionTitle'], [data-automation-id='selectedItem'], .zp_selected_value, .sapMSltLabel");
   const text = cleanLabel(selectedChild?.textContent ?? "") ||
     cleanLabel(el.textContent ?? "") ||
     cleanLabel(el.getAttribute("data-value") ?? "") ||

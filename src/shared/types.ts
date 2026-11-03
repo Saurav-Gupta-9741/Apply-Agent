@@ -35,6 +35,8 @@ export interface QuickFacts {
   workCountries: string;
   /** Countries where user has temporary authorization (e.g. US F-1 OPT, STEM OPT, Canada PGWP, UK Graduate Route). */
   temporaryWorkCountries?: string;
+  /** Countries where the user is NOT authorized to work at all. */
+  unauthorizedCountries?: string;
   /** Independent future sponsorship declaration ("Yes" if requiring H-1B/Skilled Worker later, "No" if permanent). */
   needsFutureSponsorship?: "" | "Yes" | "No" | "Decline";
   /** Notice period / earliest start ("Immediate", "30 days", "June 2027"). */
@@ -167,6 +169,10 @@ export interface AnswerEntry {
   answer: string;
   topic?: SensitiveTopic;
   updatedAt: string;
+  company?: string;
+  country?: string;
+  reused?: boolean;
+  intent?: string;
 }
 
 export interface UserCorrection {
@@ -198,6 +204,13 @@ export interface FieldDescriptor {
   /** Stable key within one page scan (used to find the element again). */
   key: string;
   label: string;
+  /** Original un-translated page label when translated by i18n-labels. */
+  originalLabel?: string;
+  /** Translated English label when translated by i18n-labels. */
+  translatedLabel?: string;
+  /** The English label came from the browser's on-device translator (not the reviewed dictionary): only basic
+   * contact fields may be filled from it; everything else is asked (a machine translation can flip a "not"). */
+  machineTranslated?: boolean;
   control: ControlType;
   required: boolean;
   options: string[];
@@ -217,13 +230,17 @@ export const NEVER_REMEMBER: ReadonlySet<SensitiveTopic> = new Set<SensitiveTopi
 
 export type Decision =
   | { kind: "profile"; key: ProfileKey | "fullName"; value: string }
-  | { kind: "answer"; value: string; question: string }
+  | { kind: "answer"; value: string; question: string; reused?: boolean }
   /** A value from the user's work history, for a field in the n-th job block. */
   | { kind: "work"; index: number; part: keyof WorkEntry; value: string }
   | { kind: "resume" }
   | { kind: "draft"; value: string; question: string }
   | { kind: "ask"; reason: "sensitive" | "unknown" | "missing_profile_value"; topic?: SensitiveTopic }
   | { kind: "skip"; reason: string };
+
+// >>> L1 tags
+export type FillTag = "auto" | "asked" | "reused" | "drafted";
+// <<< L1
 
 export type FieldStatus = "filled" | "already_filled" | "failed" | "needs_user" | "skipped";
 
@@ -234,6 +251,7 @@ export interface FieldResult {
   detail?: string;
   /** The site pre-filled a value that differs from the user's profile: the user should check it. */
   review?: boolean;
+  tag?: FillTag;
 }
 
 export type RunStatus =
@@ -275,6 +293,37 @@ export interface ApplicationRecord {
   confirmationText?: string;
   /** Storage key of a PNG screenshot taken on the confirmation page, when permitted. */
   screenshotKey?: string;
+  // --- tracker CRM (all optional; set by the user in the Tracker) ---
+  /** Where this application stands. Absent: "Applied" (the agent recorded a submission). */
+  stage?: TrackerStage;
+  company?: string;
+  location?: string;
+  notes?: string;
+  /** Next follow-up day, "YYYY-MM-DD" (local). */
+  followUpAt?: string;
+  /** First time the employer responded (stage reached Assessment, Interview or Offer). */
+  respondedAt?: string;
+  stageChangedAt?: string;
+}
+
+/** Stages of an application in the tracker (a light CRM, kept on this computer). */
+export type TrackerStage = "Saved" | "Applied" | "Assessment" | "Interview" | "Offer" | "Rejected" | "Withdrawn";
+
+/** A job the user saved from any page (title and address only, read from the tab: nothing on the page is touched).
+ * Kept apart from submitted applications, so a saved job never counts as a submission. */
+export interface SavedJob {
+  id: string;
+  url: string;
+  title: string;
+  company: string;
+  createdAt: string;
+  stage: TrackerStage;
+  notes?: string;
+  followUpAt?: string;
+  /** When the user marked it applied (by hand, outside ApplyAgent). */
+  appliedAt?: string;
+  respondedAt?: string;
+  stageChangedAt?: string;
 }
 
 /** A candidate profile persona allowing users to maintain multiple profiles (e.g. Fullstack SWE, Data Scientist). */
@@ -400,4 +449,7 @@ export type Message =
   /** Run the agent again in the job's existing tab (after the user answered its questions). */
   | { type: "QUEUE_RERUN"; id: string }
   | { type: "QUEUE_REMOVE"; id: string }
-  | { type: "QUEUE_CLEAR_FINISHED" };
+  | { type: "QUEUE_CLEAR_FINISHED" }
+// >>> L3 form structure
+  | { type: "GET_FORM_STRUCTURE" };
+// <<< L3

@@ -36,7 +36,7 @@
       <li><button class="nav-item" data-section="jobs"><span data-icon="jobs"></span><span>Jobs</span><span class="nav-count" data-count="jobs"></span></button></li>
       <li><button class="nav-item" data-section="apply" aria-current="page"><span data-icon="apply"></span><span>Apply</span></button></li>
       <li><button class="nav-item" data-section="queue"><span data-icon="queue"></span><span>Queue</span><span class="nav-count" data-count="queue"></span></button></li>
-      <li><button class="nav-item" data-section="tracker"><span data-icon="tracker"></span><span>Tracker</span><span class="nav-count" data-count="tracker"></span></button></li>
+      <li><button class="nav-item" data-section="tracker"><span data-icon="tracker"></span><span>Tracker</span><span class="nav-count" data-count="tracker"></span><span data-due-count="tracker" class="chip chip-sm warn" hidden style="margin-left: 4px;"></span></button></li>
       <li><button class="nav-item" data-section="answers"><span data-icon="answers"></span><span>Answers</span><span class="nav-count" data-count="answers"></span></button></li>
       <li><button class="nav-item" data-section="profile"><span data-icon="profile"></span><span>Profile &amp; plan</span></button></li>
     </ul>
@@ -49,6 +49,8 @@
   <main id="main">
     <!-- Apply ---------------------------------------------------------------------------------------->
     <section id="sec-apply" class="section" data-title="Apply">
+      <div id="usage-meter" class="card usage-meter" hidden></div>
+      <div id="fit-card" class="card fit-card" hidden></div>
       <div id="setup-card" class="card setup" hidden>
         <div class="card-head"><h2>Get set up</h2><span id="setup-progress" class="muted"></span></div>
         <ol id="setup-steps" class="setup-steps"></ol>
@@ -61,6 +63,9 @@
             <span id="page-url" class="muted truncate"></span>
           </div>
           <span id="page-access" class="chip"></span>
+        </div>
+        <div style="padding: 0 16px 12px 16px; display: flex; gap: 8px;">
+          <button type="button" id="save-job-btn" class="btn btn-secondary btn-sm"><span data-icon="bookmark"></span><span>Save this job</span></button>
         </div>
         <div id="permission-box" class="callout" hidden>
           <span data-icon="shield"></span>
@@ -100,10 +105,26 @@
       <button id="report-problem" class="btn btn-ghost btn-sm report-btn" hidden
         title="Copies what ApplyAgent saw on this page (questions and its decisions, never your answers) to send to the ApplyAgent team">
         <span data-icon="alert" data-size="14"></span><span>Something wrong? Report a problem</span></button>
+      <button id="export-diagnostics" class="btn btn-ghost btn-sm report-btn" hidden
+        title="Exports diagnostic details (page structure, questions, and decisions with no personal data) to a local file">
+        <span data-icon="download" data-size="14"></span><span>Export diagnostics</span></button>
+      <!-- >>> L3 form structure -->
+      <button id="save-form-structure" class="btn btn-ghost btn-sm report-btn" hidden
+        title="Exports this form's structure only (labels, controls, options - all personal values blanked) to a local file you can choose to share to help improve support">
+        <span data-icon="file-text" data-size="14"></span><span>Help improve: save this form's structure</span></button>
+      <!-- <<< L3 -->
     </section>
 
     <!-- Jobs ------------------------------------------------------------------------------------------>
     <section id="sec-jobs" class="section" data-title="Jobs" hidden>
+      <!-- >>> arena-fix discover -->
+      <div class="card" id="discover-card">
+        <div class="card-head"><h2>Discover jobs</h2><span class="muted">From companies' own public job boards. Your profile never leaves this browser.</span></div>
+        <button id="discover-run" class="btn btn-primary" type="button">Find matching jobs</button>
+        <p id="discover-status" class="hint" role="status"></p>
+        <div id="discover-list" class="cards"></div>
+      </div>
+      <!-- <<< arena-fix -->
       <div class="card">
         <div class="card-head"><h2>Job feed</h2><span class="muted">Verified jobs from employers' own career sites</span></div>
         <div class="input-row">
@@ -177,12 +198,51 @@
 
     <!-- Tracker --------------------------------------------------------------------------------------->
     <section id="sec-tracker" class="section" data-title="Tracker" hidden>
-      <div id="tracker-stats" class="stats stats-3">
+      <div id="tracker-due" class="banner banner-warn" hidden></div>
+      <div class="tracker-toolbar" style="display: flex; gap: 8px; margin-bottom: 12px; align-items: center;">
+        <select id="tracker-filter" class="input" style="flex: 1;" aria-label="Filter applications by stage">
+          <option value="">All stages</option>
+          <option value="Saved">Saved</option>
+          <option value="Applied">Applied</option>
+          <option value="Assessment">Assessment</option>
+          <option value="Interview">Interview</option>
+          <option value="Offer">Offer</option>
+          <option value="Rejected">Rejected</option>
+          <option value="Withdrawn">Withdrawn</option>
+        </select>
+        <!-- >>> arena-fix board view -->
+        <button id="tracker-view-toggle" class="btn btn-ghost btn-sm" type="button" aria-pressed="false">Board view</button>
+        <!-- <<< arena-fix -->
+        <button type="button" id="tracker-export" class="btn btn-secondary btn-sm"><span data-icon="download"></span><span>Export CSV</span></button>
+        <!-- >>> L4 competitor import -->
+        <label for="tracker-import-file" class="btn btn-secondary btn-sm" style="cursor: pointer; margin: 0;">
+          <span data-icon="upload"></span><span>Import CSV</span>
+          <input type="file" id="tracker-import-file" accept=".csv" style="display: none;" />
+        </label>
+        <!-- <<< L4 -->
+      </div>
+      <!-- >>> L4 competitor import card -->
+      <div id="competitor-import-card" class="card" style="margin-bottom: 12px; background: var(--bg-subtle, #f8fafc); border: 1px dashed var(--border, #cbd5e1); padding: 10px 12px;">
+        <div class="card-head" style="margin-bottom: 4px;">
+          <h3 style="margin: 0; font-size: 13px; font-weight: 600;">Coming from Simplify, Huntr, or Teal?</h3>
+        </div>
+        <p class="hint" style="margin: 0 0 8px 0; font-size: 12px; color: var(--text-muted, #64748b);">Switch in 2 minutes. Export your tracker CSV from Simplify, Huntr, or Teal and import your applications here.</p>
+        <label for="tracker-import-file-btn" class="btn btn-secondary btn-sm" style="cursor: pointer; display: inline-flex; width: fit-content;">
+          <span data-icon="upload"></span><span>Import from Simplify / Huntr / Teal</span>
+          <input type="file" id="tracker-import-file-btn" accept=".csv" style="display: none;" />
+        </label>
+      </div>
+      <!-- <<< L4 -->
+      <div id="tracker-analytics" class="card" style="margin-bottom: 12px;"></div>
+      <div id="tracker-stats" class="stats stats-3" hidden>
         <div class="stat"><span class="stat-value accent" data-stat="applied">0</span><span class="stat-label">Applied</span></div>
         <div class="stat"><span class="stat-value" data-stat="check">0</span><span class="stat-label">Needs check</span></div>
         <div class="stat"><span class="stat-value" data-stat="month">0</span><span class="stat-label">This month</span></div>
       </div>
       <ul id="tracker-list" class="cards"></ul>
+      <!-- >>> arena-fix board view -->
+      <div id="tracker-board" class="kanban-wrap" hidden></div>
+      <!-- <<< arena-fix -->
     </section>
 
     <!-- Answers --------------------------------------------------------------------------------------->
@@ -232,10 +292,24 @@
 
       <div class="card">
         <div class="card-head"><h2>Resume</h2></div>
-        <label class="dropzone"><input type="file" id="resume" accept=".pdf,.doc,.docx" />
+        <label class="dropzone"><input type="file" id="resume" accept=".pdf,.doc,.docx,.txt" />
           <span data-icon="file" data-size="22"></span>
           <span id="resume-name">Upload your resume (PDF or DOCX, max 5 MB)</span></label>
+        <div class="button-row" style="margin-top: 8px;">
+          <button type="button" id="paste-resume-btn" class="btn btn-secondary btn-sm"><span data-icon="edit" data-size="16"></span><span>Paste resume text</span></button>
+        </div>
       </div>
+      <div class="card trust-card">
+        <div class="card-head"><h2>Why trust us</h2></div>
+        <ul class="bullet-list" style="font-size: 13px; color: var(--text-subtle); line-height: 1.5; padding-left: 18px; margin: 4px 0 10px;">
+          <li><strong>0 wrong fills:</strong> Tested on 1,539 real questions across 62 ATS sites. We never guess.</li>
+          <li><strong>Zero network calls:</strong> Everything runs offline in your browser. Verify anytime via DevTools Network tab.</li>
+          <li><strong>Never runs on job boards:</strong> Hands-off LinkedIn, Naukri, Indeed to protect your accounts.</li>
+          <li><strong>Never touches passwords or CAPTCHAs:</strong> You sign in yourself.</li>
+        </ul>
+        <p class="hint">Extension code is source-available under PolyForm Noncommercial 1.0.0.</p>
+      </div>
+
       <div class="card">
         <div class="card-head"><h2>Backup &amp; move</h2></div>
         <p class="hint">Save your profile, resume, answers and application history to a file, to restore them later or on another computer. The file contains your personal details: keep it private.</p>
@@ -250,6 +324,17 @@
   </main>
 
   <div id="toasts" class="toasts" aria-live="polite"></div>
+  <dialog id="resume-review-dialog" class="dialog" style="max-width: 600px; width: 95vw;"></dialog>
+  <dialog id="paste-resume-dialog" class="dialog" style="max-width: 500px; width: 90vw;">
+    <div class="dialog-head"><strong>Paste resume text</strong><button id="paste-resume-close" class="icon-btn" aria-label="Close">✕</button></div>
+    <div class="dialog-body stack" style="padding: 16px;">
+      <textarea id="paste-resume-text" class="input" style="height: 180px; width: 100%; font-family: monospace; font-size: 12px;" placeholder="Paste the full text of your resume here..."></textarea>
+      <div class="button-row" style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px;">
+        <button type="button" id="paste-resume-cancel" class="btn btn-ghost btn-sm">Cancel</button>
+        <button type="button" id="paste-resume-parse" class="btn btn-primary btn-sm">Parse resume</button>
+      </div>
+    </div>
+  </dialog>
   <dialog id="proof-dialog" class="dialog">
     <div class="dialog-head"><strong>Confirmation screenshot</strong><button id="proof-close" class="icon-btn" aria-label="Close"><span data-icon="close"></span></button></div>
     <img id="proof" alt="Confirmation page screenshot" />

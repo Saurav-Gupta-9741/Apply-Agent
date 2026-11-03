@@ -1,5 +1,6 @@
 /** Side panel UI. Page-derived text (labels, titles) is always inserted as text, never as HTML. */
 
+import { initDiscover } from "./discover";
 import type {
   AnswerEntry, ApplicationRecord, Detection, FeedJob, FieldResult, FitResult, Message, Mode, Profile, ProfileKey, QueueItem,
   QueueStatus, QuickFacts, RunReport, Settings, WorkEntry, UserCorrection, SkillEntry, LanguageEntry,
@@ -13,7 +14,7 @@ import { pendingSubmission, sendToApplication } from "../shared/frames";
 import { isValidJobUrl, parseJobList } from "../background/queue";
 import { GOOD_MATCH, parseFeed, rankFeed } from "../shared/fit";
 import { aiStatus, checkDraft, draftAnswer } from "../shared/ai";
-import { activate, buyUrl, currentLicense, isLifetimeLicense, licensingConfigured, remainingSubmissions, submittedThisMonth } from "../shared/license";
+import { activate, buyUrl, canUseFeature, currentLicense, isLifetimeLicense, licensingConfigured, remainingSubmissions, submittedThisMonth } from "../shared/license";
 import { FREE_MONTHLY_SUBMISSIONS, SUPPORT_EMAIL } from "../shared/config";
 import { hydrateIcons, icon } from "./icons";
 import { NEVER_REMEMBER, type PendingQuestion } from "../shared/types";
@@ -23,9 +24,19 @@ import { HANDS_OFF_MESSAGE, isHandsOff, platformFor } from "../shared/platforms"
 import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shared/backup";
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
 import { findSuggestedCorrection } from "../shared/corrections";
-import { buildDiagnostic } from "../shared/diagnostic";
+import { extractTechTerms } from "../shared/techterms";
+import { buildDiagnostic, saveDiagnosticFile } from "../shared/diagnostic";
 import { clockTime, loadPacing, loadPacingState, PACING_BOUNDS, savePacing, statusLine, type PacingSettings } from "../shared/pacing";
 import type { ConsentBox, ConsentList, TickResult } from "../shared/consent-review";
+import { initTracker, renderTrackerCrm, type TrackerUi } from "./tracker";
+import { initUsageMeter, renderUsageMeter } from "./usage-meter";
+import { renderFitCard } from "./fit-card";
+// >>> L3 form structure
+import { mountFormStructureButton } from "./form-structure";
+// <<< L3
+// >>> L4 ai drafts
+import { createDraftWidget, isDraftableField } from "./drafts";
+// <<< L4
 
 let cachedCorrections: UserCorrection[] = [];
 void loadCorrections().then((c) => { cachedCorrections = c; });
@@ -255,6 +266,8 @@ async function refreshPage(): Promise<void> {
   $("permission-box").hidden = allowed || !pattern || handsOff;
   ($("run") as HTMLButtonElement).disabled = !canFill;
   ($("preview") as HTMLButtonElement).disabled = !canFill;
+  void renderUsageMeter({ toast: (m, t) => toast(m, t ?? ""), showPlan: () => showSection("profile") });
+  void renderFitCard(tab?.id, canFill, () => showSection("profile"));
   await renderDetection(tab, handsOff, embedded);
 }
 
@@ -376,6 +389,8 @@ function clearReport(): void {
   $("fields").replaceChildren();
   $("fields-box").hidden = true;
   $("report-problem").hidden = true;
+  const exportDiagBtn = document.getElementById("export-diagnostics");
+  if (exportDiagBtn) exportDiagBtn.hidden = true;
   lastReport = undefined;
   clearConsent();
 }
@@ -484,7 +499,11 @@ function renderFields(report: RunReport): void {
     if (r.status === "filled" || r.status === "already_filled") counts.filled++;
     else if (r.status === "needs_user" || r.status === "failed") counts.needs++;
     else counts.blank++;
-    const label = h("span", { class: "label" }, r.field.label || "(unlabelled field)");
+    const displayLabel = r.field.originalLabel ? `${r.field.originalLabel} (${r.field.label})` : (r.field.label || "(unlabelled field)");
+    const label = h("span", { class: "label" }, displayLabel);
+    if (r.tag === "reused" || (r.decision.kind === "answer" && r.decision.reused)) {
+      label.append(h("span", { class: "tag reused", style: "margin-left: 6px; font-size: 10px; color: var(--info); background: var(--info-soft);" }, "reused"));
+    }
     const note = fieldNote(r);
     if (note) label.append(h("span", { class: "detail" }, note));
     list.append(h("li", { class: "field-row" }, label, chip(text, tone)));
@@ -517,8 +536,8 @@ interface CardContext {
 }
 
 const NEVER_TEXT: Record<string, string> = {
-  identity: "For your safety, ApplyAgent never stores or types ID numbers or bank details. Enter it yourself on the page. Genuine employers rarely ask for these before an offer, so make sure this site is real.",
-  signature: "Signing is a legal act, so ApplyAgent never signs for you. Type your signature on the page yourself.",
+  identity: "never stores or types ID numbers",
+  signature: "never signs for you",
 };
 
 function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
@@ -529,11 +548,11 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   const appliedBefore = isAppliedBeforeQuestion(r.field.label);
   const onPageOnly = youOnly || upload || appliedBefore;
   const why = youOnly ? NEVER_TEXT[topic!]!
-    : upload ? "Attach this file yourself on the page. ApplyAgent only attaches your resume."
-      : appliedBefore ? "Company-specific: answer it on the page."
-        : sensitive ? "Sensitive: only you answer this. Saved for this topic."
-          : r.decision.kind === "ask" && r.decision.reason === "missing_profile_value" ? "Missing from your profile."
-            : r.status === "failed" ? `Could not fill: ${r.detail ?? "unknown reason"}` : "New question: answer once, reused next time.";
+    : upload ? "Attach this file yourself on page."
+      : appliedBefore ? "Company-specific: answer on the page."
+        : sensitive ? "Sensitive question: only you answer this."
+          : r.decision.kind === "ask" && r.decision.reason === "missing_profile_value" ? "Missing from your saved profile."
+            : r.status === "failed" ? "Could not fill on page." : "New question: saved for future forms.";
   const whyRow = h("span", { class: "question-why" });
   whyRow.append(icon(youOnly ? "lock" : appliedBefore ? "lock" : sensitive ? "shield" : upload ? "upload" : "info", 14), h("span", {}, why));
   const card = h("div", { class: `question${sensitive || youOnly || appliedBefore ? " sensitive" : ""}` },
@@ -571,33 +590,25 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     });
     card.append(chipBtn);
   }
-  // AI drafts only for new free-text questions, never for sensitive ones, and always for review.
-  const textual = !r.field.options.length && ["text", "textarea"].includes(r.field.control);
-  if (textual && r.decision.kind === "ask" && r.decision.reason === "unknown") {
-    const note = h("span", { class: "ai-note" });
-    const draft = button("Draft with on-device AI", { variant: "ghost", icon: "wand", size: "sm" });
-    draft.addEventListener("click", async () => {
-      busy(draft, true);
-      note.textContent = "Drafting on your laptop…";
-      const profileNow = await loadProfile();
-      const text = await draftAnswer(r.field.label, profileNow, ctx.job).catch(() => null);
-      busy(draft, false);
-      if (!text) {
-        note.textContent = (await aiStatus()) === "unavailable"
-          ? "On-device AI isn't available in this Chrome. Please write it yourself."
-          : "Not enough facts in your profile to answer honestly. Please write it yourself.";
-        return;
-      }
-      input.value = text;
-      const warnings = checkDraft(text, profileNow, ctx.job);
-      if (r.field.maxLength && text.length > r.field.maxLength) {
-        warnings.push(`It is ${text.length} characters; this field allows ${r.field.maxLength}. Shorten it.`);
-      }
-      note.className = `ai-note${warnings.length ? " warn" : ""}`;
-      note.textContent = ["Review before saving. AI can be wrong.", ...warnings].join(" ");
+  // >>> L4 ai drafts
+  if (isDraftableField(r.field) && r.decision.kind === "ask" && !onPageOnly) {
+    const draftWidget = createDraftWidget({
+      question: r.field.label,
+      field: r.field,
+      profile,
+      job: ctx.job,
+      onUse: async (draftText) => {
+        input.value = draftText;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+        r.tag = "drafted";
+        save.click();
+      },
+      toast,
     });
-    left.append(draft, note);
+    card.append(draftWidget);
   }
+  // <<< L4
   const save = button("Save answer", { variant: "primary", size: "sm", icon: "check" });
   save.addEventListener("click", async () => {
     const value = input instanceof HTMLSelectElement && input.multiple
@@ -616,6 +627,29 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     busy(save, true);
     // An answer to a question ApplyAgent asked goes straight to the answer bank; only edits of filled fields are corrections.
     await updateAnswers((answers) => upsertAnswer(answers, entry));
+
+    // When the user answers an unknown skill question, add the skill to skillsInventory for future forms:
+    const skillTerms = extractTechTerms(r.field.label);
+    if (skillTerms.length > 0) {
+      const isYes = /^(yes|true|y)\b/i.test(value);
+      const yearsNum = parseFloat((value.match(/\b\d+(?:\.\d+)?\b/) || [])[0] ?? "");
+      if (isYes || !Number.isNaN(yearsNum)) {
+        const prof = await loadProfile();
+        const inv = [...(prof.skillsInventory ?? [])];
+        for (const term of skillTerms) {
+          const existing = inv.find((s) => s.name.toLowerCase() === term.toLowerCase());
+          const y = !Number.isNaN(yearsNum) ? yearsNum : 2;
+          if (existing) {
+            if (!Number.isNaN(yearsNum)) existing.years = yearsNum;
+          } else {
+            inv.push({ name: term, years: y, level: y >= 5 ? "Advanced" : "Intermediate" });
+          }
+        }
+        await saveProfile({ ...prof, skillsInventory: inv });
+        profile = { ...profile, skillsInventory: inv };
+      }
+    }
+
     await ctx.onSaved();
     busy(save, false);
   });
@@ -653,6 +687,8 @@ function showReport(report: RunReport | undefined): void {
   const tabId = runTabId;
   void activeTab().then((tab) => (lastReport = { report, url: report?.url ?? tab?.url ?? "", tabId: tabId ?? tab?.id }));
   $("report-problem").hidden = false;
+  const exportDiagBtn = document.getElementById("export-diagnostics");
+  if (exportDiagBtn) exportDiagBtn.hidden = false;
   ($("submit") as HTMLButtonElement).hidden = true;
   $("questions").replaceChildren();
   if (!report) {
@@ -954,6 +990,73 @@ $("report-problem").addEventListener("click", async () => {
     : "Report saved as a file. Send it to the ApplyAgent team. It has the questions and decisions, never your answers.");
 });
 
+const exportDiagBtnEl = document.getElementById("export-diagnostics");
+if (exportDiagBtnEl) {
+  exportDiagBtnEl.addEventListener("click", async () => {
+    const brands = (navigator as Navigator & { userAgentData?: { brands: Array<{ brand: string; version: string }> } }).userAgentData?.brands;
+    const browser = brands?.filter((b) => !/not.?a.?brand/i.test(b.brand)).map((b) => `${b.brand} ${b.version}`).join(", ")
+      || (/Chrome\/[\d.]+/.exec(navigator.userAgent)?.[0] ?? "unknown");
+    const text = buildDiagnostic(lastReport?.report, {
+      version: chrome.runtime.getManifest().version, browser, when: new Date().toISOString(), url: lastReport?.url,
+    }, await loadProfile());
+    saveDiagnosticFile(text, document);
+    toast("Diagnostics exported to local file. Contains questions and decisions only, zero personal data.");
+  });
+}
+
+// >>> L3 form structure
+const formStructBtn = document.getElementById("save-form-structure") as HTMLElement | null;
+if (formStructBtn) {
+  const problemBtn = $("report-problem");
+  if (problemBtn) {
+    const observer = new MutationObserver(() => {
+      formStructBtn.hidden = problemBtn.hidden;
+    });
+    observer.observe(problemBtn, { attributes: true, attributeFilter: ["hidden"] });
+  }
+  mountFormStructureButton(formStructBtn, async () => {
+    try {
+      const tab = await activeTab();
+      if (tab?.id !== undefined) {
+        const resp = await chrome.tabs.sendMessage(tab.id, { type: "GET_FORM_STRUCTURE" } satisfies Message);
+        if (resp && !("error" in resp) && resp.fields) return resp;
+      }
+    } catch {}
+    if (lastReport?.report) {
+      const urlStr = lastReport.url || "https://example.com";
+      let domain = "unknown";
+      let path = "";
+      try {
+        const u = new URL(urlStr);
+        domain = u.hostname;
+        path = u.pathname;
+      } catch {}
+      return {
+        version: 1,
+        savedAt: new Date().toISOString(),
+        platform: lastReport.report.platform,
+        domain,
+        path,
+        jobTitle: lastReport.report.jobTitle,
+        actionText: undefined,
+        fieldCount: lastReport.report.fields.length,
+        fields: lastReport.report.fields.map((f) => ({
+          label: f.field.label,
+          originalLabel: f.field.originalLabel,
+          control: f.field.control,
+          required: !!f.field.required,
+          name: f.field.name,
+          options: f.field.options,
+          section: f.field.section,
+          workBlock: f.field.workBlock,
+        })),
+      };
+    }
+    return null;
+  }, toast);
+}
+// <<< L3
+
 // --- Profile -----------------------------------------------------------------------------------------
 const PROFILE_GROUPS: Array<{ title: string; fields: Array<[ProfileKey, string, string, boolean?]> }> = [
   { title: "Personal", fields: [
@@ -1225,7 +1328,84 @@ $("resume").addEventListener("change", async (event) => {
   for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
   profile.resume = { name: file.name, type: file.type || "application/octet-stream", dataBase64: btoa(binary) };
   showResume(`${file.name} · not saved yet`, true);
+
+  try {
+    toast("Parsing resume...", "ok");
+    const { parseResumeFromBuffer, createResumeReviewElement } = await import("./resume-import");
+    const parsed = await parseResumeFromBuffer(file.name, bytes);
+    if (parsed.suggestions.length > 0 || parsed.questions.length > 0) {
+      const reviewDialog = $("resume-review-dialog") as HTMLDialogElement | null;
+      if (reviewDialog) {
+        reviewDialog.replaceChildren();
+        reviewDialog.append(
+          createResumeReviewElement(
+            parsed,
+            profile,
+            async (updated) => {
+              profile = updated;
+              await saveProfile(profile);
+              await renderProfile();
+              reviewDialog.close();
+              toast("Profile updated from resume", "ok");
+            },
+            () => reviewDialog.close()
+          )
+        );
+        reviewDialog.showModal();
+      }
+    }
+  } catch (err) {
+    console.error("Resume parse error:", err);
+    toast("Could not extract details from resume", "warn");
+  }
 });
+
+const pasteDialog = $("paste-resume-dialog") as HTMLDialogElement | null;
+const pasteBtn = $("paste-resume-btn");
+if (pasteBtn && pasteDialog) {
+  pasteBtn.addEventListener("click", () => {
+    const ta = $("paste-resume-text") as HTMLTextAreaElement | null;
+    if (ta) ta.value = "";
+    pasteDialog.showModal();
+  });
+  $("paste-resume-close")?.addEventListener("click", () => pasteDialog.close());
+  $("paste-resume-cancel")?.addEventListener("click", () => pasteDialog.close());
+  $("paste-resume-parse")?.addEventListener("click", async () => {
+    const raw = ($("paste-resume-text") as HTMLTextAreaElement)?.value?.trim() ?? "";
+    if (!raw) {
+      toast("Please paste resume text first", "warn");
+      return;
+    }
+    pasteDialog.close();
+    try {
+      const { parseResume } = await import("../shared/resume-parse");
+      const { createResumeReviewElement } = await import("./resume-import");
+      const parsed = parseResume(raw);
+      const reviewDialog = $("resume-review-dialog") as HTMLDialogElement | null;
+      if (reviewDialog) {
+        reviewDialog.replaceChildren();
+        reviewDialog.append(
+          createResumeReviewElement(
+            parsed,
+            profile,
+            async (updated) => {
+              profile = updated;
+              await saveProfile(profile);
+              await renderProfile();
+              reviewDialog.close();
+              toast("Profile updated from resume", "ok");
+            },
+            () => reviewDialog.close()
+          )
+        );
+        reviewDialog.showModal();
+      }
+    } catch (err) {
+      console.error("Resume parse error:", err);
+      toast("Could not parse resume text", "warn");
+    }
+  });
+}
 
 $("save-profile").addEventListener("click", async () => {
   for (const key of PROFILE_KEYS) {
@@ -1457,42 +1637,22 @@ const RECORD_CHIP: Record<ApplicationRecord["status"], [string, string]> = {
   applied_confirmed: ["Applied", "ok"], needs_check: ["Needs check", "warn"], in_progress: ["Submitting", "info"],
 };
 
+async function openProofModal(key: string): Promise<void> {
+  const data = await chrome.storage.local.get(key);
+  ($("proof") as HTMLImageElement).src = data[key] as string;
+  ($("proof-dialog") as HTMLDialogElement).showModal();
+}
+
+const trackerUi: TrackerUi = {
+  toast: (msg, tone) => toast(msg, tone ?? ""),
+  showProof: (key) => void openProofModal(key),
+};
+
 async function renderTracker(): Promise<void> {
   const records = await loadApplications();
-  const now = new Date();
   const applied = records.filter((r) => r.status === "applied_confirmed").length;
-  document.querySelector("[data-stat='applied']")!.textContent = String(applied);
-  document.querySelector("[data-stat='check']")!.textContent = String(records.filter((r) => r.status === "needs_check").length);
-  document.querySelector("[data-stat='month']")!.textContent = String(submittedThisMonth(records, now));
   setCount("tracker", applied);
-  const list = $("tracker-list");
-  list.replaceChildren();
-  if (!records.length) {
-    list.append(empty("tracker", "No applications yet", "Every application appears here, marked Applied only when the employer's site confirms it."));
-    return;
-  }
-  for (const r of records) {
-    const [text, tone] = RECORD_CHIP[r.status];
-    const body = h("div", { class: "item-body" },
-      h("div", { class: "item-top" }, h("span", { class: "item-title" }, r.jobTitle || hostOf(r.url) || "Application"), chip(text, tone)),
-      h("div", { class: "item-sub" }, [hostOf(r.url), r.platform, relativeDate(r.createdAt)].filter(Boolean).join(" · ")));
-    if (r.confirmationText) body.append(h("div", { class: "item-quote" }, r.confirmationText));
-    const actions = h("div", { class: "item-actions" });
-    if (r.screenshotKey) {
-      const view = button("View proof", { variant: "ghost", icon: "image", size: "sm" });
-      view.addEventListener("click", async () => {
-        const data = await chrome.storage.local.get(r.screenshotKey!);
-        ($("proof") as HTMLImageElement).src = data[r.screenshotKey!] as string;
-        ($("proof-dialog") as HTMLDialogElement).showModal();
-      });
-      actions.append(view);
-    }
-    const open = button("Open", { variant: "ghost", icon: "external", size: "sm" });
-    open.addEventListener("click", () => void chrome.tabs.create({ url: r.url }));
-    actions.append(open);
-    body.append(actions);
-    list.append(h("li", { class: "item" }, body));
-  }
+  await renderTrackerCrm(trackerUi);
 }
 
 $("proof-close").addEventListener("click", () => ($("proof-dialog") as HTMLDialogElement).close());
@@ -1730,7 +1890,15 @@ setInterval(() => {
   if (!$("sec-queue").hidden) void renderPacing();
 }, 30_000);
 
-$("queue-start").addEventListener("click", () => void queueMessage({ type: "QUEUE_START" }));
+$("queue-start").addEventListener("click", async () => {
+  const lic = await currentLicense();
+  if (!canUseFeature(lic, "queue")) {
+    setStatus("Bulk apply and background queue require Pro. Upgrade to Pro in Profile & plan.", "warn");
+    showSection("profile");
+    return;
+  }
+  void queueMessage({ type: "QUEUE_START" });
+});
 $("queue-pause").addEventListener("click", () => void queueMessage({ type: "QUEUE_PAUSE" }));
 $("queue-clear").addEventListener("click", () => void queueMessage({ type: "QUEUE_CLEAR_FINISHED" }));
 
@@ -1989,13 +2157,13 @@ async function renderPlan(): Promise<void> {
     meter.style.width = "100%";
     meter.parentElement!.classList.remove("low");
   } else {
-    $("plan-status").textContent = `Free · ${left} of ${FREE_MONTHLY_SUBMISSIONS} applications left this month`;
-    pill.textContent = `Free · ${left} left`;
+    $("plan-status").textContent = "Free · Unlimited single-form autofill";
+    pill.textContent = "Free";
     pill.className = "plan-pill";
-    badge.textContent = left ? "Free" : "Limit reached";
-    badge.className = `chip ${left ? "" : "warn"}`;
-    meter.style.width = `${(left / FREE_MONTHLY_SUBMISSIONS) * 100}%`;
-    meter.parentElement!.classList.toggle("low", left <= 5);
+    badge.textContent = "Free";
+    badge.className = "chip";
+    meter.style.width = "100%";
+    meter.parentElement!.classList.remove("low");
   }
   $("buy-row").hidden = !licensingConfigured();
   const { licenseKey } = await chrome.storage.local.get("licenseKey");
@@ -2021,11 +2189,9 @@ $("activate").addEventListener("click", async () => {
   }
 });
 
-/** Free-plan guard before any submission started from the panel. */
+/** Free-plan guard before any submission started from the panel (unlimited on single forms). */
 async function canSubmit(): Promise<boolean> {
-  if ((await remaining()) > 0) return true;
-  setStatus(`You've used all ${FREE_MONTHLY_SUBMISSIONS} free applications this month. Upgrade to Pro in Profile & plan.`, "warn");
-  return false;
+  return true;
 }
 
 // --- start ----------------------------------------------------------------------------------------------
@@ -2048,6 +2214,11 @@ void renderDetectionSetting();
 void loadShortcuts();
 void renderAnswers();
 void renderTracker();
+initTracker(trackerUi, () => void renderTrackerCrm(trackerUi));
+// >>> arena-fix discover
+initDiscover(trackerUi);
+// <<< arena-fix
+initUsageMeter({ toast: (m, t) => toast(m, t ?? ""), showPlan: () => showSection("profile") });
 void (async () => {
   const cached = await chrome.storage.local.get(["feedCache", "feedSource"]);
   if (cached.feedCache) {
@@ -2058,3 +2229,53 @@ void (async () => {
     await renderFeed();
   }
 })();
+
+// >>> L2 Quick Answers Wizard
+export async function launchQuickAnswersWizard(container?: HTMLElement): Promise<void> {
+  const { mountQuickAnswers } = await import("./quick-answers");
+  const target = container ?? document.getElementById("quick-card") ?? document.body;
+  await mountQuickAnswers(target, async () => {
+    profile = await loadProfile();
+    await renderQuick();
+    await renderSetup();
+    toast("Quick answers saved");
+  });
+}
+
+const setupWizardBtn = document.createElement("button");
+setupWizardBtn.id = "launch-quick-wizard";
+setupWizardBtn.className = "btn btn-secondary btn-sm";
+setupWizardBtn.textContent = "Setup wizard (2 min)";
+setupWizardBtn.type = "button";
+setupWizardBtn.style.cssText = "margin-bottom: 12px;";
+setupWizardBtn.addEventListener("click", () => {
+  const card = document.getElementById("quick-card");
+  if (card) void launchQuickAnswersWizard(card);
+});
+const quickHost = document.getElementById("quick-card");
+if (quickHost && quickHost.parentElement) {
+  quickHost.parentElement.insertBefore(setupWizardBtn, quickHost);
+}
+// <<< L2
+
+// >>> L5 onboarding
+import { createOnboardingElement, isFirstRun } from "./onboarding";
+
+async function checkAndMountOnboarding(): Promise<void> {
+  if (await isFirstRun()) {
+    const secApply = document.getElementById("sec-apply");
+    if (secApply) {
+      const el = createOnboardingElement({
+        onDone: async () => {
+          await renderProfile();
+          await renderSetup();
+          toast("Setup complete! You are ready to apply.", "ok");
+        },
+      });
+      secApply.insertBefore(el, secApply.firstChild);
+    }
+  }
+}
+void checkAndMountOnboarding();
+// <<< L5
+

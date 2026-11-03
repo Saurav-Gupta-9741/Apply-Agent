@@ -35,13 +35,13 @@ describe("licence tokens", () => {
     expect(await verifyLicense(token, null, NOW)).toBeNull();
   });
 
-  it("limits free users to 20 submissions a month and lifts it for Pro", () => {
-    const apps: ApplicationRecord[] = Array.from({ length: 20 }, (_, i) => ({
+  it("allows unlimited single form submissions for free and Pro users", () => {
+    const apps: ApplicationRecord[] = Array.from({ length: 50 }, (_, i) => ({
       id: String(i), url: "", platform: "", jobTitle: "", status: "applied_confirmed", createdAt: "2026-10-03T00:00:00Z",
     }));
-    expect(remainingSubmissions(null, apps, NOW)).toBe(0);
-    expect(remainingSubmissions(null, apps.slice(0, 5), NOW)).toBe(15);
-    expect(remainingSubmissions(null, apps, new Date("2026-11-02T00:00:00Z"))).toBe(20); // new month
+    expect(remainingSubmissions(null, apps, NOW)).toBe(Number.POSITIVE_INFINITY);
+    expect(remainingSubmissions(null, apps.slice(0, 5), NOW)).toBe(Number.POSITIVE_INFINITY);
+    expect(remainingSubmissions(null, apps, new Date("2026-11-02T00:00:00Z"))).toBe(Number.POSITIVE_INFINITY);
     expect(remainingSubmissions({ key: "k", plan: "pro", exp: future }, apps, NOW)).toBe(Number.POSITIVE_INFINITY);
   });
 });

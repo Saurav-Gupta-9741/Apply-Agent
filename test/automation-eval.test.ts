@@ -1,9 +1,10 @@
-/** Automation evaluation measuring automation share across all 1,539 real questions.
- * Fails if auto drops below baseline or if wrong > 0.
+/** Category-level automation evaluation measuring automation share across all 1,539 real questions.
+ * Evaluates automation share across US, IN, GB, DE job pages and enforces that wrong fills stay strictly at 0.
+ * Floor is read from reports/automation-floor.json (committed, never overwritten by the test).
  * Writes reports/scorecard.json and reports/automation-baseline.json.
  */
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { decideWithMeaning } from "../src/content/meaning";
 import type { Decision, FieldDescriptor, Profile } from "../src/shared/types";
@@ -50,6 +51,7 @@ const FULL: Profile = {
   ],
   facts: {
     workCountries: "India",
+    unauthorizedCountries: "United States, United Kingdom, Germany, Canada",
     noticePeriod: "30 days",
     currentCtc: "6 LPA",
     expectedCtc: "20 LPA",
@@ -146,6 +148,35 @@ describe("automation evaluation across all 1,539 real questions", () => {
     const wrongList: string[] = [];
     const latencies: number[] = [];
 
+    type CountryCode = "US" | "IN" | "GB" | "DE";
+    const COUNTRY_MAP: Record<CountryCode, string[]> = {
+      US: ["United States"],
+      IN: ["India"],
+      GB: ["United Kingdom"],
+      DE: ["Germany"],
+    };
+
+    const perCountry: Record<
+      CountryCode,
+      {
+        auto: number;
+        wrong: number;
+        wrongList: string[];
+        draft: number;
+        askOnce: number;
+        humanOnly: number;
+      }
+    > = {
+      US: { auto: 0, wrong: 0, wrongList: [], draft: 0, askOnce: 0, humanOnly: 0 },
+      IN: { auto: 0, wrong: 0, wrongList: [], draft: 0, askOnce: 0, humanOnly: 0 },
+      GB: { auto: 0, wrong: 0, wrongList: [], draft: 0, askOnce: 0, humanOnly: 0 },
+      DE: { auto: 0, wrong: 0, wrongList: [], draft: 0, askOnce: 0, humanOnly: 0 },
+    };
+
+    let totalQuestionCount = 0;
+    const ok = (as: string, intent: string, label: string) =>
+      as === intent || (as === "fullName" && intent === "firstName" && /preferred/i.test(label));
+
     for (const r of rounds) {
       const labels = JSON.parse(readFileSync(`reports/${r}`, "utf8")) as Array<{
         label: string;
@@ -154,7 +185,7 @@ describe("automation evaluation across all 1,539 real questions", () => {
         options?: string[];
       }>;
       for (const l of labels) {
-        tally.total++;
+        totalQuestionCount++;
         const field: FieldDescriptor = {
           key: "k",
           label: l.label,
@@ -171,36 +202,47 @@ describe("automation evaluation across all 1,539 real questions", () => {
           placeholder: "",
         };
 
-        const t0 = performance.now();
-        const d = decideWithMeaning(field, FULL, [], { jobCountries: ["United States"], url: "https://boards.greenhouse.io/acme/jobs/123" }, oof.get(l.label));
-        latencies.push(performance.now() - t0);
-
-        const filled = filledAs(d);
-        const ok = (as: string) => as === l.intent || (as === "fullName" && l.intent === "firstName" && /preferred/i.test(l.label));
-
-        if (filled) {
-          if (ok(filled)) {
-            tally.auto++;
-          } else {
-            tally.wrong++;
-            wrongList.push(`${filled} ≠ ${l.intent}: ${l.label}`);
+        for (const code of ["US", "IN", "GB", "DE"] as const) {
+          const t0 = performance.now();
+          const d = decideWithMeaning(
+            field,
+            FULL,
+            [],
+            { jobCountries: COUNTRY_MAP[code], url: "https://boards.greenhouse.io/acme/jobs/123" },
+            oof.get(l.label)
+          );
+          if (code === "US") {
+            latencies.push(performance.now() - t0);
           }
-        } else if ((d as { kind: string }).kind === "draft") {
-          tally.draft++;
-        } else if (HUMAN_ONLY_INTENTS.has(l.intent) || (d.kind === "ask" && (d.topic === "consent" || d.topic === "signature" || d.topic === "identity"))) {
-          tally.humanOnly++;
-        } else {
-          tally.askOnce++;
+
+          const filled = filledAs(d);
+          if (filled) {
+            if (ok(filled, l.intent, l.label)) {
+              perCountry[code].auto++;
+            } else {
+              perCountry[code].wrong++;
+              perCountry[code].wrongList.push(`${filled} ≠ ${l.intent}: ${l.label} (${code})`);
+            }
+          } else if ((d as { kind: string }).kind === "draft") {
+            perCountry[code].draft++;
+          } else if (
+            HUMAN_ONLY_INTENTS.has(l.intent) ||
+            (d.kind === "ask" && (d.topic === "consent" || d.topic === "signature" || d.topic === "identity"))
+          ) {
+            perCountry[code].humanOnly++;
+          } else {
+            perCountry[code].askOnce++;
+          }
         }
       }
     }
 
     latencies.sort((a, b) => a - b);
-    const p50 = latencies[tally.total >> 1] ?? 0;
-    const p99 = latencies[Math.floor(tally.total * 0.99)] ?? 0;
+    const p50 = latencies[totalQuestionCount >> 1] ?? 0;
+    const p99 = latencies[Math.floor(totalQuestionCount * 0.99)] ?? 0;
 
     const scorecard = {
-      totalQuestions: tally.total,
+      totalQuestions: totalQuestionCount,
       modelOof: {
         total: rawOof.length,
         accuracy: `${((oofCorrect / rawOof.length) * 100).toFixed(1)}%`,
@@ -208,13 +250,19 @@ describe("automation evaluation across all 1,539 real questions", () => {
         actThreshold: 0.85,
       },
       automation: {
-        autoFilled: tally.auto,
-        autoShare: `${((tally.auto / tally.total) * 100).toFixed(1)}%`,
-        draft: tally.draft,
-        askOnce: tally.askOnce,
-        humanOnly: tally.humanOnly,
-        wrong: tally.wrong,
-        wrongList,
+        autoFilled: perCountry.US.auto,
+        autoShare: `${((perCountry.US.auto / totalQuestionCount) * 100).toFixed(1)}%`,
+        draft: perCountry.US.draft,
+        askOnce: perCountry.US.askOnce,
+        humanOnly: perCountry.US.humanOnly,
+        wrong: perCountry.US.wrong,
+        wrongList: perCountry.US.wrongList,
+      },
+      perCountry: {
+        US: { auto: perCountry.US.auto, wrong: perCountry.US.wrong },
+        IN: { auto: perCountry.IN.auto, wrong: perCountry.IN.wrong },
+        GB: { auto: perCountry.GB.auto, wrong: perCountry.GB.wrong },
+        DE: { auto: perCountry.DE.auto, wrong: perCountry.DE.wrong },
       },
       latency: {
         p50Ms: Number(p50.toFixed(3)),
@@ -222,13 +270,20 @@ describe("automation evaluation across all 1,539 real questions", () => {
       },
     };
 
+    const floor = JSON.parse(readFileSync("reports/automation-floor.json", "utf8")) as {
+      autoFilled: number;
+      wrong: number;
+    };
+
     writeFileSync("reports/automation-baseline.json", JSON.stringify(scorecard, null, 2));
     writeFileSync("reports/scorecard.json", JSON.stringify(scorecard, null, 2));
-    console.log("Automation Scorecard:", scorecard);
+    console.log("Automation Scorecard (Category-Level across 4 Countries):", scorecard);
 
     // Baseline gates:
-    expect(tally.wrong).toBe(0);
-    expect(tally.auto).toBeGreaterThanOrEqual(511);
+    for (const code of ["US", "IN", "GB", "DE"] as const) {
+      expect(perCountry[code].wrong).toBe(0);
+    }
+    expect(perCountry.US.auto).toBeGreaterThanOrEqual(floor.autoFilled);
     expect(scorecard.modelOof.accuracy).toBe("77.6%");
     expect(scorecard.modelOof.precisionAtActThreshold).toBe("95.7%");
   });

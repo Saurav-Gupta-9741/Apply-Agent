@@ -23,7 +23,7 @@ const FULL: Profile = {
   currentCompany: "Initech", currentTitle: "Software Engineer", school: "IIT Jodhpur", discipline: "Computer Science",
   graduationYear: "2026", experienceYears: "3", targetRoles: "Backend Engineer", preferredLocations: "Bengaluru", skills: "Python, Java",
   facts: {
-    workCountries: "India", noticePeriod: "30 days", currentCtc: "12 LPA", expectedCtc: "18 LPA", relocate: "Yes", heardFrom: "LinkedIn",
+    workCountries: "India", unauthorizedCountries: "United States, United Kingdom, Germany, Canada, Netherlands, Ireland, France, European Union", noticePeriod: "30 days", currentCtc: "12 LPA", expectedCtc: "18 LPA", relocate: "Yes", heardFrom: "LinkedIn",
     gender: "Female", hispanic: "No", race: "Asian", veteran: "No", disability: "No",
   },
 };
@@ -139,16 +139,20 @@ describe("a) work authorization and sponsorship polarity (user can work only in 
     const p = { ...FULL, facts: { ...FULL.facts!, workCountries: "India, EU" } };
     expect(filled(decide(field("Are you authorized to work in Germany?"), p, [], US))).toBe("Yes");
   });
-  it("EU right: 'Will you require sponsorship to work in Switzerland?' with 'India, EU' → Yes (Switzerland is not EU)", () => {
-    const p = { ...FULL, facts: { ...FULL.facts!, workCountries: "India, EU" } };
+  it("EU right: 'Will you require sponsorship to work in Switzerland?' with 'India, EU' + Switzerland not authorized → Yes (Switzerland is not EU)", () => {
+    const p = { ...FULL, facts: { ...FULL.facts!, workCountries: "India, EU", unauthorizedCountries: "Switzerland" } };
     expect(filled(decide(field("Will you require sponsorship to work in Switzerland?"), p, [], US))).toBe("Yes");
+  });
+  it("EU right: sponsorship for Switzerland with 'India, EU' and Switzerland unlisted → ask (EU does not cover it; the user may hold a Swiss permit)", () => {
+    const p = { ...FULL, facts: { ...FULL.facts!, workCountries: "India, EU", unauthorizedCountries: "" } };
+    expect(filled(decide(field("Will you require sponsorship to work in Switzerland?"), p, [], US))).toBeNull();
   });
 
   // other languages: the need is said with a verb the English rule does not know
   const foreign: Array<[string, PageFacts | undefined, Want]> = [
     ["Benötigen Sie ein Visum, um in Deutschland zu arbeiten?", DE, { oneOf: ["Yes", null] }],
     ["Benötigen Sie eine Arbeitserlaubnis für Deutschland?", DE, { oneOf: ["Yes", null] }],
-    ["Haben Sie eine Arbeitserlaubnis für Deutschland?", DE, "No"],
+    ["Haben Sie eine Arbeitserlaubnis für Deutschland?", DE, { oneOf: ["No", null] }],
     ["Avez-vous besoin d'un parrainage de visa pour travailler en France ?", undefined, { oneOf: ["Yes", null] }],
     ["¿Necesita patrocinio de visa para trabajar en España?", undefined, { oneOf: ["Yes", null] }],
     ["¿Necesita permiso de trabajo para trabajar en España?", undefined, { oneOf: ["Yes", null] }],
@@ -305,7 +309,7 @@ describe("e) notice period, start dates and yes/no availability", () => {
     ["Can you start immediately?", "select", { oneOf: ["No", null] }, { options: ["Yes", "No"] }],
     ["Are you currently serving your notice period?", "select", null, { options: ["Yes", "No"] }],
     ["Is your notice period negotiable?", "select", null, { options: ["Yes", "No"] }],
-    ["Can you join within 15 days?", "select", null, { options: ["Yes", "No"] }],
+    ["Can you join within 15 days?", "select", { oneOf: ["No", null] }, { options: ["Yes", "No"] }],
     ["How soon can you join us? (in days)", "number", { oneOf: ["30", null] }],
   ];
   for (const [label, control, want, extra] of cases) {

@@ -1,0 +1,46 @@
+name: Beta feedback
+description: Report a wrong fill, a missed field, or anything broken while testing ApplyAgent.
+title: "[beta] "
+labels: ["beta-feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for testing. **Do not paste personal details** (name, email, phone, address, ID numbers) anywhere in this form or in screenshots.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What happened?
+      options:
+        - It filled something WRONG
+        - It asked about a field it should have filled
+        - Something broke or did not load
+        - Confusing or slow
+        - Idea / other
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Job page address
+      description: The company's career page (for example boards.greenhouse.io/...). Not a page with your details.
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Which question, what ApplyAgent did, and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics (optional)
+      description: Side panel → Report a problem → Export diagnostics. It holds questions and decisions only; check it before pasting.
+      render: json
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: Chrome 131 / Edge 131

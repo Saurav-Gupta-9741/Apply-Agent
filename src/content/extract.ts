@@ -8,6 +8,7 @@
 import type { ControlType, FieldDescriptor } from "../shared/types";
 import { cleanLabel, cssAttr } from "../shared/text";
 import { deepQueryAll, scopeOf } from "./dom";
+import { detectPageLanguage, inspectAndTranslateField, translateOptions } from "../shared/i18n-labels";
 
 /** Native controls, plus buttons that open a list of choices (custom dropdowns). */
 export type FieldElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLButtonElement | HTMLElement;
@@ -19,7 +20,7 @@ export interface ExtractedField {
 }
 
 const SKIP_INPUT_TYPES = new Set(["hidden", "submit", "button", "reset", "image", "search", "password"]);
-export const DROPDOWN = "button[aria-haspopup='listbox'], [role='combobox']:not(input):not(select), [role='listbox'][tabindex='0']:not(select)";
+export const DROPDOWN = "button[aria-haspopup='listbox'], [role='combobox']:not(input):not(select), [role='listbox'][tabindex='0']:not(select), mat-select, oj-select-single, oj-combobox-one, .zp_field_select, .zp_select";
 export const DROPZONE = "[data-dropzone], [data-testid*='dropzone' i], [data-ui*='dropzone' i], [class*='dropzone' i], [class*='drop-zone' i], [class*='file-drop' i], [class*='fileDrop' i]";
 
 export function isDropzone(el: Element): boolean {
@@ -30,17 +31,19 @@ export function isDropzone(el: Element): boolean {
   return true;
 }
 const CONTROLS = `input, textarea, select, ${DROPDOWN}, ${DROPZONE}`;
-const LABELISH = "legend, label, .label, [class*='label'], [class*='Label'], [class*='question-title'], [class*='questionTitle'], [role='heading'], h3, h4";
+const LABELISH = "legend, label, .label, [class*='label'], [class*='Label'], [class*='question-title'], [class*='questionTitle'], [role='heading'], h3, h4, [data-automation-id*='label' i], mat-label, oj-label, .sapMLabel";
 const GENERIC_LABEL = /^(attach|attach file|upload|upload file|browse|choose( a)? file|select( a)? file|drop (your )?files?( here)?|enter manually|type your response|your answer|answer|select|choose|select an option|please select|optional)\W*$/i;
 
 let computedStyleCache = new WeakMap<Element, CSSStyleDeclaration>();
 let styleHiddenCache = new WeakMap<Element, boolean>();
 let isHiddenCache = new WeakMap<Element, boolean>();
+let honeypotAncestorCache = new WeakMap<Element, boolean>();
 
 export function clearExtractCaches(): void {
   computedStyleCache = new WeakMap<Element, CSSStyleDeclaration>();
   styleHiddenCache = new WeakMap<Element, boolean>();
   isHiddenCache = new WeakMap<Element, boolean>();
+  honeypotAncestorCache = new WeakMap<Element, boolean>();
 }
 
 function getStyle(el: Element): CSSStyleDeclaration | null | undefined {
@@ -117,49 +120,146 @@ function styleTrap(s: StyleLike, isField: boolean, far: (v: string) => boolean):
   return false;
 }
 
-function isHoneypot(el: FieldElement, labelsByFor?: Map<string, HTMLLabelElement>): boolean {
+function isHoneypot(el: FieldElement, labelsByFor?: Map<string, HTMLElement>): boolean {
+  const isFile = (el instanceof HTMLInputElement && el.type === "file") || isDropzone(el);
+  const isRadioOrCheckbox = el instanceof HTMLInputElement && (el.type === "radio" || el.type === "checkbox");
   const textLike = el instanceof HTMLTextAreaElement
-    || el instanceof HTMLInputElement && !["radio", "checkbox", "file"].includes(el.type) && el.getAttribute("role") !== "combobox" && !el.hasAttribute("aria-autocomplete");
-  if (!textLike) return false;
-  const labelText = (el.id && labelsByFor?.get(el.id)?.textContent) || el.closest("label")?.textContent || "";
-  const describedAs = [el.getAttribute("name"), el.id, el.getAttribute("placeholder"), el.getAttribute("aria-label"),
-    labelledBy(el), labelText].join(" ");
-  if (HONEYPOT_WORDS.test(describedAs)) return true;
+    || (el instanceof HTMLInputElement && !["radio", "checkbox", "file"].includes(el.type) && el.getAttribute("role") !== "combobox" && !el.hasAttribute("aria-autocomplete"));
+  if (textLike) {
+    const labelText = (el.id && labelsByFor?.get(el.id)?.textContent) || el.closest("label")?.textContent || "";
+    const describedAs = [el.getAttribute("name"), el.id, el.getAttribute("placeholder"), el.getAttribute("aria-label"),
+      labelledBy(el), labelText].join(" ");
+    if (HONEYPOT_WORDS.test(describedAs)) return true;
+  }
   // Not for people: inert, hidden from assistive technology, or folded away in a closed <details> (its <summary> shows).
   if (el.closest("[inert]") || el.closest("[aria-hidden='true']")) return true;
   const details = el.closest("details");
   if (details && !details.open && !el.closest("summary")) return true;
-  // Where the browser has laid the page out: a box of a pixel or less, or placed outside the page on the left or top.
+
   const doc = el.ownerDocument;
   const laidOut = doc.documentElement.getBoundingClientRect().width > 0;
-  if (laidOut && el.getClientRects().length) {
-    const rect = el.getBoundingClientRect();
-    const view = doc.defaultView;
-    const scrollX = view?.scrollX ?? 0;
-    const scrollY = view?.scrollY ?? 0;
-    if (rect.width <= 1 || rect.height <= 1 || rect.right + scrollX < 0 || rect.bottom + scrollY < 0) return true;
-  }
-  // Chrome's own answer (see-through, invisible or not rendered); jsdom has no checkVisibility.
-  const check = (el as Element & { checkVisibility?: (o?: Record<string, boolean>) => boolean }).checkVisibility;
-  if (laidOut && typeof check === "function" && !check.call(el, { opacityProperty: true, visibilityProperty: true, contentVisibilityAuto: true })) return true;
-  // The same from the styles (also where nothing is laid out yet): see-through, moved off-screen, clipped, or 1 px.
   const far = (v: string) => {
     const m = /^(-\d+(?:\.\d+)?)(px|em|rem)$/.exec(v);
     return !!m && parseFloat(m[1]!) * (m[2] === "px" ? 1 : 16) <= -500;
   };
   const hasSheets = !!doc.styleSheets?.length;
-  let d = 0;
-  for (let node: Element | null = el; node; node = node.parentElement, d++) {
-    if (d > MAX_DEPTH) return true;
+
+  function isVisibleElement(target: Element): boolean {
+    if (target.closest("[inert]") || target.closest("[aria-hidden='true']")) return false;
+    const d = target.closest("details");
+    if (d && !d.open && !target.closest("summary")) return false;
+
+    if (laidOut && target.getClientRects().length) {
+      const rect = target.getBoundingClientRect();
+      const view = doc.defaultView;
+      const scrollX = view?.scrollX ?? 0;
+      const scrollY = view?.scrollY ?? 0;
+      if (rect.width <= 1 || rect.height <= 1 || rect.right + scrollX < 0 || rect.bottom + scrollY < 0) return false;
+    }
+    const checkFn = (target as Element & { checkVisibility?: (o?: Record<string, boolean>) => boolean }).checkVisibility;
+    if (laidOut && typeof checkFn === "function" && !checkFn.call(target, { opacityProperty: true, visibilityProperty: true, contentVisibilityAuto: true })) {
+      return false;
+    }
+    let depth = 0;
+    for (let node: Element | null = target; node; node = node.parentElement, depth++) {
+      if (depth > MAX_DEPTH) return false;
+      const isTarget = node === target;
+      if (node.hasAttribute("hidden") || styleHidden(node)) return false;
+      if (!hasSheets) {
+        if (node instanceof HTMLElement && styleTrap(node.style, isTarget, far)) return false;
+        if (CLIP_NOTHING.test(node.getAttribute("style") ?? "")) return false;
+        continue;
+      }
+      const s = getStyle(node);
+      if (s && (s.display === "none" || s.visibility === "hidden" || styleTrap(s, isTarget, far))) return false;
+    }
+    return true;
+  }
+
+  // 1. Self box checks: for file inputs, skip checks on input ITSELF.
+  let selfHidden = false;
+  if (!isFile) {
+    if (laidOut && el.getClientRects().length) {
+      const rect = el.getBoundingClientRect();
+      const view = doc.defaultView;
+      const scrollX = view?.scrollX ?? 0;
+      const scrollY = view?.scrollY ?? 0;
+      if (rect.width <= 1 || rect.height <= 1 || rect.right + scrollX < 0 || rect.bottom + scrollY < 0) {
+        selfHidden = true;
+      }
+    }
+    const check = (el as Element & { checkVisibility?: (o?: Record<string, boolean>) => boolean }).checkVisibility;
+    if (laidOut && typeof check === "function" && !check.call(el, { opacityProperty: true, visibilityProperty: true, contentVisibilityAuto: true })) {
+      selfHidden = true;
+    }
     if (!hasSheets) {
-      if (node instanceof HTMLElement && styleTrap(node.style, node === el, far)) return true;
-      // The raw attribute too: some parsers drop the space-separated "clip: rect(0 0 0 0)".
-      if (CLIP_NOTHING.test(node.getAttribute("style") ?? "")) return true;
+      if (el instanceof HTMLElement && (styleHidden(el) || styleTrap(el.style, true, far))) selfHidden = true;
+      if (CLIP_NOTHING.test(el.getAttribute("style") ?? "")) selfHidden = true;
+    } else {
+      const style = getStyle(el);
+      if (style && (style.display === "none" || style.visibility === "hidden" || styleTrap(style, true, far))) selfHidden = true;
+    }
+  }
+
+  // If a text-like or select input is self-hidden, it is definitely a honeypot.
+  if (selfHidden && !isRadioOrCheckbox) return true;
+
+  // A radio/checkbox whose own box is hidden counts as real ONLY if it has a visible way for a person to choose it:
+  // a visible <label for=id>, a visible wrapping <label>, an element pointed to by aria-labelledby, or a visible ancestor with role="radio"|"checkbox" within 3 levels.
+  if (isRadioOrCheckbox && selfHidden) {
+    const forLabel = el.id ? (labelsByFor ? (labelsByFor.get(el.id) ?? null) : (doc.querySelector(`label[for="${CSS.escape(el.id)}"]`) as HTMLElement | null)) : null;
+    const wrapLabel = el.closest("label");
+    const ariaLabelId = el.getAttribute("aria-labelledby");
+    const ariaLabelEl = ariaLabelId ? (doc.getElementById(ariaLabelId) as HTMLElement | null) : null;
+    let roleAncestor: HTMLElement | null = null;
+    let curr = el.parentElement;
+    for (let lvl = 1; lvl <= 3 && curr; lvl++, curr = curr.parentElement) {
+      const role = curr.getAttribute("role");
+      if (role === "radio" || role === "checkbox") {
+        roleAncestor = curr as HTMLElement;
+        break;
+      }
+    }
+    const choosers = [forLabel, wrapLabel, ariaLabelEl, roleAncestor].filter((c): c is HTMLElement => !!c && c !== el);
+    const hasVisibleChooser = choosers.some((c) => isVisibleElement(c));
+    if (!hasVisibleChooser) return true;
+  }
+
+  // 2. Ancestor walk: applies to ALL fields (including file inputs and radio/checkboxes).
+  let d = 0;
+  const chain: Element[] = [];
+  let isTrap = false;
+  for (let node: Element | null = el.parentElement; node; node = node.parentElement, d++) {
+    if (d > MAX_DEPTH) { isTrap = true; break; }
+    const cached = honeypotAncestorCache.get(node);
+    if (cached !== undefined) {
+      if (cached) isTrap = true;
+      break;
+    }
+    chain.push(node);
+    if (node.hasAttribute("hidden") || node.getAttribute("aria-hidden") === "true" || styleHidden(node)) {
+      isTrap = true;
+      break;
+    }
+    if (!hasSheets) {
+      if (node instanceof HTMLElement && styleTrap(node.style, false, far)) {
+        isTrap = true;
+        break;
+      }
+      if (CLIP_NOTHING.test(node.getAttribute("style") ?? "")) {
+        isTrap = true;
+        break;
+      }
       continue;
     }
     const style = getStyle(node);
-    if (style && styleTrap(style, node === el, far)) return true;
+    if (style && (style.display === "none" || style.visibility === "hidden" || styleTrap(style, false, far))) {
+      isTrap = true;
+      break;
+    }
   }
+  for (const node of chain) honeypotAncestorCache.set(node, isTrap);
+  if (isTrap) return true;
   return false;
 }
 
@@ -190,11 +290,13 @@ function isHidden(el: Element): boolean {
 }
 
 /** Text a person can see: skips hidden status messages, option lists and nested controls. */
-export function visibleText(el: Element | null | undefined, depth = 0, visited = new WeakSet<Element>()): string {
-  if (!el || depth > 128 || visited.has(el)) return "";
+export function visibleText(el: Element | null | undefined, depth = 0, visited?: WeakSet<Element>): string {
+  if (!el || depth > 128) return "";
+  if (visited ? visited.has(el) : false) return "";
+  if (!visited) visited = new WeakSet<Element>();
   visited.add(el);
   let out = "";
-  for (const node of Array.from(el.childNodes)) {
+  for (let node = el.firstChild; node; node = node.nextSibling) {
     if (node.nodeType === Node.TEXT_NODE) out += node.textContent ?? "";
     else if (node instanceof Element) {
       const tag = node.tagName.toLowerCase();
@@ -221,6 +323,7 @@ function humanName(name: string): string {
 }
 
 function hasOtherControl(container: Element, own: Set<Element>): boolean {
+  if (container instanceof HTMLFormElement || container.tagName === "FORM" || container.tagName === "BODY" || container.tagName === "HTML") return true;
   const controls = container.querySelectorAll(CONTROLS);
   for (let i = 0; i < controls.length; i++) {
     const c = controls[i];
@@ -277,14 +380,15 @@ const NOT_A_QUESTION = /^(no file (selected|chosen)|choose file|drag (and|&) dro
 /** Raw question text (with its "*" markers) for one control. */
 const MACHINE_NAME = /^[a-z0-9]+([-_][a-z0-9]+)+$/;
 
-function rawLabel(el: FieldElement, root: ParentNode, labelsByFor?: Map<string, HTMLLabelElement>): string {
+function rawLabel(el: FieldElement, root: ParentNode, labelsByFor?: Map<string, HTMLElement>): string {
   const isChoice = el instanceof HTMLInputElement && (el.type === "radio" || el.type === "checkbox");
   // label[for] resolves in the element's own tree (document or shadow root), like the browser does.
   const forLabel = el.id
-    ? (labelsByFor?.get(el.id) ?? scopeOf(el).querySelector(`label[for="${cssAttr(el.id)}"]`) ?? root.querySelector(`label[for="${cssAttr(el.id)}"]`))
+    ? (labelsByFor ? (labelsByFor.get(el.id) ?? null) : (scopeOf(el).querySelector(`label[for="${cssAttr(el.id)}"], oj-label[for="${cssAttr(el.id)}"], mat-label[for="${cssAttr(el.id)}"]`) ?? root.querySelector(`label[for="${cssAttr(el.id)}"], oj-label[for="${cssAttr(el.id)}"], mat-label[for="${cssAttr(el.id)}"]`)))
     : null;
   const candidates: Array<() => string> = [
     () => labelledBy(el),
+    () => (isChoice ? "" : (el.closest("[cx-prop-label]")?.getAttribute("cx-prop-label") ?? "")),
     () => visibleText(forLabel) || forLabel?.textContent || "", // visually-hidden labels still count
     () => (isChoice ? visibleText(el.closest("label")) : ""),
     () => (isChoice ? (el.closest("[role='radio'], [role='checkbox']")?.getAttribute("aria-label") ?? visibleText(el.closest("[role='radio'], [role='checkbox']"))) : ""),
@@ -316,13 +420,13 @@ function rawLabel(el: FieldElement, root: ParentNode, labelsByFor?: Map<string, 
   return "";
 }
 
-export function labelFor(el: FieldElement, root: ParentNode, labelsByFor?: Map<string, HTMLLabelElement>): string {
+export function labelFor(el: FieldElement, root: ParentNode, labelsByFor?: Map<string, HTMLElement>): string {
   return cleanLabel(rawLabel(el, root, labelsByFor));
 }
 
 function optionsForCustomDropdown(el: HTMLElement, root: ParentNode): string[] {
   const container = el.closest("[role='listitem'], [role='group'], fieldset, .field, form") ?? el.parentElement ?? root;
-  const opts = Array.from(container.querySelectorAll<HTMLElement>("[role='option']"))
+  const opts = Array.from(container.querySelectorAll<HTMLElement>("[role='option'], mat-option, oj-option, .sapMSelectListItem, .zp_select_option, [data-automation-id='promptOption']"))
     .map((o) => cleanLabel(o.textContent ?? ""))
     .filter((o) => o && !/^(select|choose|--|please select)/i.test(o));
   if (opts.length > 0) return opts;
@@ -330,12 +434,30 @@ function optionsForCustomDropdown(el: HTMLElement, root: ParentNode): string[] {
   if (listId) {
     const list = el.ownerDocument.getElementById(listId);
     if (list) {
-      return Array.from(list.querySelectorAll<HTMLElement>("[role='option']"))
+      return Array.from(list.querySelectorAll<HTMLElement>("[role='option'], mat-option, oj-option, .sapMSelectListItem, .zp_select_option, [data-automation-id='promptOption']"))
         .map((o) => cleanLabel(o.textContent ?? ""))
         .filter((o) => o && !/^(select|choose|--|please select)/i.test(o));
     }
   }
   return [];
+}
+
+function optionsForSelect(el: HTMLSelectElement): string[] {
+  const opts: string[] = [];
+  for (let child: Element | null = el.firstElementChild; child; child = child.nextElementSibling) {
+    if (child.tagName === "OPTION") {
+      const t = cleanLabel(child.textContent ?? "");
+      if (t && !/^(select|choose|--|please select)/i.test(t)) opts.push(t);
+    } else if (child.tagName === "OPTGROUP") {
+      for (let sub: Element | null = child.firstElementChild; sub; sub = sub.nextElementSibling) {
+        if (sub.tagName === "OPTION") {
+          const t = cleanLabel(sub.textContent ?? "");
+          if (t && !/^(select|choose|--|please select)/i.test(t)) opts.push(t);
+        }
+      }
+    }
+  }
+  return opts;
 }
 
 function controlType(el: FieldElement): ControlType {
@@ -357,7 +479,7 @@ function isRequired(els: FieldElement[], raw: string): boolean {
     || e.closest("[role='group'], [role='radiogroup']")?.getAttribute("aria-required") === "true") || REQUIRED_MARK.test(raw);
 }
 
-function groupRaw(group: HTMLInputElement[], root: ParentNode, labelsByFor?: Map<string, HTMLLabelElement>): string {
+function groupRaw(group: HTMLInputElement[], root: ParentNode, labelsByFor?: Map<string, HTMLElement>): string {
   const first = group[0]!;
   const legend = first.closest("fieldset")?.querySelector("legend");
   return visibleText(legend)
@@ -384,15 +506,23 @@ function labelAfter(el: Element): string {
 
 export function extractFields(root: ParentNode): ExtractedField[] {
   clearExtractCaches();
+  let all = deepQueryAll<FieldElement>(root, CONTROLS);
+  if (!all.length && "querySelector" in root) {
+    const iframe = (root as ParentNode).querySelector<HTMLIFrameElement>("iframe#icims_iframe, iframe.icims-iframe, iframe[title*='iCIMS' i]");
+    try {
+      if (iframe?.contentDocument?.body) {
+        return extractFields(iframe.contentDocument.body);
+      }
+    } catch {}
+  }
   const out: ExtractedField[] = [];
   const groups = new Map<string, HTMLInputElement[]>();
   let counter = 0;
-  const all = deepQueryAll<FieldElement>(root, CONTROLS);
   const position = new Map(all.map((el, i) => [el as Element, i]));
 
-  const labelsByFor = new Map<string, HTMLLabelElement>();
-  for (const l of deepQueryAll<HTMLLabelElement>(root, "label[for]")) {
-    const targetId = l.htmlFor || l.getAttribute("for");
+  const labelsByFor = new Map<string, HTMLElement>();
+  for (const l of deepQueryAll<HTMLElement>(root, "label[for], oj-label[for], mat-label[for]")) {
+    const targetId = (l as any).htmlFor || l.getAttribute("for");
     if (targetId && !labelsByFor.has(targetId)) {
       labelsByFor.set(targetId, l);
     }
@@ -405,7 +535,7 @@ export function extractFields(root: ParentNode): ExtractedField[] {
     if (("disabled" in el && (el as HTMLInputElement).disabled) || ((el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && el.readOnly)) continue;
     // File inputs are usually hidden behind a styled "Upload" button but still accept files.
     const isFile = (el instanceof HTMLInputElement && el.type === "file") || isDropzone(el);
-    if (!isFile && isHidden(el)) continue;
+    if (isFile ? (el.parentElement && isHidden(el.parentElement)) : isHidden(el)) continue;
     if (isHoneypot(el, labelsByFor)) continue;
     // Radios, and checkboxes sharing a name, are one question with several options.
     if (el instanceof HTMLInputElement && (el.type === "radio" || (el.type === "checkbox" && el.name))) {
@@ -415,6 +545,7 @@ export function extractFields(root: ParentNode): ExtractedField[] {
       continue;
     }
     const raw = rawLabel(el, root, labelsByFor);
+
     if (HONEYPOT_WORDS.test(raw) && !["radio", "checkbox", "file"].includes(el instanceof HTMLInputElement ? el.type : "")) continue;
     // Custom dropdowns often name themselves "Country Select One Required": the question is "Country".
     const label = el.matches(DROPDOWN) ? cleanLabel(raw).replace(/(\s+(select one|please select|select|required))+$/i, "") : cleanLabel(raw);
@@ -426,8 +557,8 @@ export function extractFields(root: ParentNode): ExtractedField[] {
         control: controlType(el),
         required: isRequired([el], raw),
         options: el instanceof HTMLSelectElement
-          ? Array.from(el.options).map((o) => cleanLabel(o.textContent ?? "")).filter((o) => o && !/^(select|choose|--|please select)/i.test(o))
-          : optionsForCustomDropdown(el, root),
+          ? optionsForSelect(el)
+          : (el.matches(DROPDOWN) ? optionsForCustomDropdown(el, root) : []),
         name: el.getAttribute("name") || el.id,
         autocomplete: el.getAttribute("autocomplete") ?? "",
         placeholder: el.getAttribute("placeholder") ?? "",
@@ -475,7 +606,24 @@ export function extractFields(root: ParentNode): ExtractedField[] {
   const sorted = out.sort((a, b) => (position.get(a.elements[0]!) ?? 0) - (position.get(b.elements[0]!) ?? 0));
   assignWorkBlocks(sorted, root);
   assignSections(sorted, root);
+  translateExtractedFields(sorted, root);
   return sorted;
+}
+
+function translateExtractedFields(fields: ExtractedField[], root: ParentNode): void {
+  const doc = "ownerDocument" in root && (root as Element).ownerDocument ? (root as Element).ownerDocument : root instanceof Document ? root : null;
+  const htmlLang = doc?.documentElement?.getAttribute("lang") ?? "";
+  const sampleLabels = fields.map((f) => f.descriptor.label);
+  const detected = detectPageLanguage(htmlLang, sampleLabels);
+  if (detected === "en") return;
+
+  for (const field of fields) {
+    const inspected = inspectAndTranslateField(field.descriptor.label, field.descriptor.options, detected);
+    if (inspected.label !== field.descriptor.label) {
+      field.descriptor.originalLabel = field.descriptor.label;
+      field.descriptor.translatedLabel = inspected.label;
+    }
+  }
 }
 
 /** Each field's section: the closest heading before it inside the form (never the page's h1, which is usually the

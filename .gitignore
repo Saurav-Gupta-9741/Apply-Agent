@@ -7,3 +7,7 @@ playwright-report/
 testpages/build/
 models/
 site/dist/
+
+# Round-6 raw API bodies (provenance hashes live in reports/round6-jobs.json)
+arena/raw/
+release/

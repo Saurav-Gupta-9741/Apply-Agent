@@ -1,0 +1,19 @@
+Emily J. Carter
+New York, NY | (212) 555-0147 | emily.carter@protonmail.com | github.com/emcarter
+
+Experience
+Data Scientist, Spotify — New York, NY
+June 2020 - Present
+- Built recommendation models in Python and PyTorch.
+- Ran A/B tests with SQL and Spark.
+
+Data Analyst, Capital One — McLean, VA
+Aug 2017 - May 2020
+- Built Tableau dashboards for credit risk.
+
+Education
+Columbia University — M.S. in Data Science, 2017
+University of Michigan — B.S. in Statistics, GPA 3.8/4.0, 2015
+
+Skills
+Python, R, SQL, PyTorch, Spark, Tableau, Statistics

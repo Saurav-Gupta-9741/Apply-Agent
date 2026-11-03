@@ -93,6 +93,43 @@ function isStepOrFinal(root: HTMLElement): boolean {
   return !!action && (action.kind === "next" || SUBMIT_TEXT.test(buttonText(action.button)));
 }
 
+export interface SignInWallDetection {
+  isWall: boolean;
+  reason?: string;
+}
+
+const SIGN_IN_PATTERNS = /\b(sign ?in|log ?in|log ?on|create (an )?account|candidate home|candidate portal|already have an account|anmelden|connexion|iniciar sesi[oó]n)\b/i;
+
+/** Detect if the page is a sign-in or account registration barrier before the application.
+ * ApplyAgent stops here, never types passwords or auto-creates accounts. */
+export function detectSignInWall(doc: Document): SignInWallDetection {
+  // If there's an active password input, it's a sign-in wall
+  const password = doc.querySelector("input[type='password']");
+  if (password && visible(password as HTMLElement)) {
+    return { isWall: true, reason: "Sign in, then press Continue" };
+  }
+
+  // Workday specific login/create account pages
+  if (doc.querySelector("[data-automation-id='signInPage'], [data-automation-id='createAccountPage'], [data-automation-id='signInSubmitButton'], [data-automation-id='createAccountSubmitButton']")) {
+    return { isWall: true, reason: "Sign in, then press Continue" };
+  }
+
+  // Check heading / button indicators when no job application controls are present
+  const headings = Array.from(doc.querySelectorAll("h1, h2, h3, [role='heading']")).map((h) => text(h));
+  const hasSignInHeading = headings.some((h) => SIGN_IN_PATTERNS.test(h));
+  if (hasSignInHeading) {
+    const hasApplicationIndicators = !!doc.querySelector("input[type='file'], [data-automation-id*='resume' i], [data-automation-id*='experience' i], [data-sf-field*='resume' i]");
+    if (!hasApplicationIndicators) {
+      const buttons = Array.from(doc.querySelectorAll("button, [role='button'], input[type='submit']")).map((b) => buttonText(b as HTMLElement));
+      if (buttons.some((b) => /sign ?in|log ?in|log ?on|create account/i.test(b))) {
+        return { isWall: true, reason: "Sign in, then press Continue" };
+      }
+    }
+  }
+
+  return { isWall: false };
+}
+
 const greenhouse: Adapter = {
   platform: "greenhouse",
   matches: (url, doc) =>
@@ -142,6 +179,123 @@ const googleForms: Adapter = {
   },
 };
 
+const workday: Adapter = {
+  platform: "workday",
+  matches: (url, doc) =>
+    /(^|\.)(wd\d+\.)?myworkdayjobs\.com$|(^|\.)(wd\d+\.)?workday\.com$/.test(url.hostname)
+    || !!doc.querySelector("[data-automation-id='jobApplicationRoot'], [data-automation-id='applicationForm'], [data-automation-id='workdayApplication'], [data-automation-id='applyForm'], [data-automation-id='applicationPage'], .workday-application-container, #wd-apply-form"),
+  formRoot: (doc) =>
+    doc.querySelector<HTMLElement>("[data-automation-id='jobApplicationRoot'], [data-automation-id='applicationForm'], [data-automation-id='applyForm'], [data-automation-id='workdayApplication'], .workday-application-container, form#wd-apply-form, [data-automation-id='applicationPage']")
+    ?? bestRoot(doc, "form", "[data-automation-id*='application' i], [data-automation-id*='jobApplication' i], [data-automation-id*='applyForm' i]"),
+  action: (root) => {
+    const submitBtn = root.querySelector<HTMLElement>("[data-automation-id='page-footer-submit'], button[data-automation-id='submit-button'], [data-automation-id='pageSubmitButton'], button[data-automation-id*='submit' i]");
+    if (submitBtn && visible(submitBtn) && !(submitBtn as HTMLButtonElement).disabled) return { kind: "submit", button: submitBtn };
+    const nextBtn = root.querySelector<HTMLElement>("[data-automation-id='bottom-navigation-next-button'], [data-automation-id='page-footer-save-and-continue'], button[data-automation-id*='next' i], button[data-automation-id*='continue' i]");
+    if (nextBtn && visible(nextBtn) && !(nextBtn as HTMLButtonElement).disabled) {
+      if (SUBMIT_TEXT.test(buttonText(nextBtn))) return { kind: "submit", button: nextBtn };
+      return { kind: "next", button: nextBtn };
+    }
+    return primaryAction(root);
+  },
+  jobTitle: (doc) => text(doc.querySelector("[data-automation-id='jobPostingHeader'], [data-automation-id='jobTitle'], .css-header-block h1, h1")) || doc.title,
+};
+
+const smartRecruiters: Adapter = {
+  platform: "smartrecruiters",
+  matches: (url, doc) => /(^|\.)smartrecruiters\.com$/.test(url.hostname) || !!doc.querySelector("spl-job-application, form[action*='smartrecruiters'], form#ikea-apply, .sr-ikea-container"),
+  formRoot: (doc) => doc.querySelector<HTMLElement>("spl-job-application, form#ikea-apply, form#application-form, .sr-ikea-container form") ?? bestRoot(doc, "form"),
+  action: (root) => primaryAction(root),
+  jobTitle: (doc) => text(doc.querySelector("h1.job-title, .job-title, h1")) || doc.title,
+};
+
+const successFactors: Adapter = {
+  platform: "successfactors",
+  matches: (url, doc) => /(^|\.)successfactors\.(com|eu)$/.test(url.hostname) || !!doc.querySelector("#careerCenterApp, form[action*='successfactors'], .sapFiori, .sapUiForm, [data-sf-field], form#sapApplyForm"),
+  formRoot: (doc) => doc.querySelector<HTMLElement>("#careerCenterApp, form#sapApplyForm, .sapUiForm form, .sapUiForm, form") ?? bestRoot(doc, "form"),
+  action: (root) => primaryAction(root),
+  jobTitle: (doc) => text(doc.querySelector(".sapMTitle, .jobTitle, h1")) || doc.title,
+};
+
+const icims: Adapter = {
+  platform: "icims",
+  matches: (url, doc) => /(^|\.)icims\.com$/.test(url.hostname) || !!doc.querySelector("iframe#icims_iframe, iframe[title*='iCIMS' i], form[action*='icims'], form#icims_candidate_form, .iCIMS_JobContent, .iCIMS_PortalSection"),
+  formRoot: (doc) => {
+    const iframe = doc.querySelector<HTMLIFrameElement>("iframe#icims_iframe, iframe[title*='iCIMS' i]");
+    try {
+      if (iframe?.contentDocument?.body && countFields(iframe.contentDocument.body) > 0) {
+        return bestRoot(iframe.contentDocument, "form") ?? iframe.contentDocument.body;
+      }
+    } catch {}
+    return doc.querySelector<HTMLElement>("form#icims_candidate_form, .iCIMS_JobContent form, form") ?? bestRoot(doc, "form");
+  },
+  action: (root) => primaryAction(root),
+  jobTitle: (doc) => text(doc.querySelector(".iCIMS_Header h1, .iCIMS_JobTitle, h1")) || doc.title,
+};
+
+const taleo: Adapter = {
+  platform: "taleo",
+  matches: (url, doc) => /(^|\.)taleo\.net$/.test(url.hostname) || !!doc.querySelector("form[name='dlgfrm'], #requisitionDescriptionInterface"),
+  formRoot: (doc) => doc.querySelector<HTMLElement>("form[name='dlgfrm'], form") ?? bestRoot(doc, "form"),
+  action: (root) => primaryAction(root),
+  jobTitle: (doc) => text(doc.querySelector(".mastertable h1, .titlepage, h1")) || doc.title,
+};
+
+const oracleCloud: Adapter = {
+  platform: "oraclecloud",
+  matches: (url, doc) => /(^|\.)oraclecloud\.com$/.test(url.hostname) || !!doc.querySelector("oj-form-layout, [data-oracle-app]"),
+  formRoot: (doc) => doc.querySelector<HTMLElement>("oj-form-layout, form") ?? bestRoot(doc, "form"),
+  action: (root) => primaryAction(root),
+  jobTitle: (doc) => text(doc.querySelector("oj-heading, h1")) || doc.title,
+};
+
+const darwinbox: Adapter = {
+  platform: "darwinbox",
+  matches: (url, doc) => /(^|\.)darwinbox\.(in|com)$/.test(url.hostname) || !!doc.querySelector(".candidate-application-form, #candidate_form, form[action*='darwinbox']"),
+  formRoot: (doc) => doc.querySelector<HTMLElement>(".candidate-application-form, #candidate_form, form") ?? bestRoot(doc, "form"),
+  action: (root) => primaryAction(root),
+  jobTitle: (doc) => text(doc.querySelector(".job-title, h1")) || doc.title,
+};
+
+const keka: Adapter = {
+  platform: "keka",
+  matches: (url, doc) => /(^|\.)keka\.com$/.test(url.hostname) || !!doc.querySelector(".keka-application-form, [data-keka-form], form[action*='keka']"),
+  formRoot: (doc) => doc.querySelector<HTMLElement>(".keka-application-form, [data-keka-form], form") ?? bestRoot(doc, "form"),
+  action: (root) => primaryAction(root),
+  jobTitle: (doc) => text(doc.querySelector(".job-title, h1")) || doc.title,
+};
+
+const zohoRecruit: Adapter = {
+  platform: "zohorecruit",
+  matches: (url, doc) => /(^|\.)zohorecruit\.(com|in|eu)$/.test(url.hostname) || !!doc.querySelector("#zp_candidate_form, .zp_candidate_form, form[action*='zohorecruit']"),
+  formRoot: (doc) => doc.querySelector<HTMLElement>("#zp_candidate_form, .zp_candidate_form, form") ?? bestRoot(doc, "form"),
+  action: (root) => primaryAction(root),
+  jobTitle: (doc) => text(doc.querySelector(".rec-job-title, h1")) || doc.title,
+};
+
+const freshteam: Adapter = {
+  platform: "freshteam",
+  matches: (url, doc) => /(^|\.)freshteam\.com$/.test(url.hostname) || !!doc.querySelector("#ft-career-portal, .freshteam-application-form, form[action*='freshteam']"),
+  formRoot: (doc) => doc.querySelector<HTMLElement>("#ft-career-portal, .freshteam-application-form, form") ?? bestRoot(doc, "form"),
+  action: (root) => primaryAction(root),
+  jobTitle: (doc) => text(doc.querySelector(".posting-header h1, h1")) || doc.title,
+};
+
+const jazzhr: Adapter = {
+  platform: "jazzhr",
+  matches: (url, doc) => /(^|\.)(applytojob\.com|jazzhr\.com)$/.test(url.hostname) || !!doc.querySelector("#resumator-form, .resumator-job, form[action*='applytojob']"),
+  formRoot: (doc) => doc.querySelector<HTMLElement>("#resumator-form, form") ?? bestRoot(doc, "form"),
+  action: (root) => primaryAction(root),
+  jobTitle: (doc) => text(doc.querySelector(".job-title, h1")) || doc.title,
+};
+
+const recruitee: Adapter = {
+  platform: "recruitee",
+  matches: (url, doc) => /(^|\.)recruitee\.com$/.test(url.hostname) || !!doc.querySelector("#new_candidate, .careers-form, form[action*='recruitee']"),
+  formRoot: (doc) => doc.querySelector<HTMLElement>("#new_candidate, .careers-form, form") ?? bestRoot(doc, "form"),
+  action: (root) => primaryAction(root),
+  jobTitle: (doc) => text(doc.querySelector("h1, .job-title")) || doc.title,
+};
+
 /** Any other site: the form with the most fields, if it looks like an application. */
 export const generic: Adapter = {
   platform: "generic",
@@ -151,7 +305,11 @@ export const generic: Adapter = {
   jobTitle: (doc) => text(doc.querySelector("h1")) || doc.title,
 };
 
-const ADAPTERS = [greenhouse, lever, ashby, googleForms, generic];
+const ADAPTERS = [
+  greenhouse, lever, ashby, workday, smartRecruiters, successFactors, icims,
+  taleo, oracleCloud, darwinbox, keka, zohoRecruit, freshteam, jazzhr, recruitee,
+  googleForms, generic,
+];
 
 export function pickAdapter(doc: Document, href: string = doc.location?.href ?? "about:blank"): Adapter {
   let url: URL;

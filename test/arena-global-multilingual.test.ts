@@ -77,6 +77,7 @@ export const PERSONA_GERMAN: Profile = {
   facts: {
     ...BASE_FACTS,
     workCountries: "Germany, EU",
+    unauthorizedCountries: "United States",
     noticePeriod: "3 Monate",
     currentCtc: "75.000 €",
     expectedCtc: "90.000 €",

@@ -59,4 +59,6 @@ canvas.save(f"{OUT}/screenshot-fill.png")
 panel_slide("queue", "Several applications,\nhuman-paced", "Up to 5 at once on company career sites.\nNever on LinkedIn, Naukri or Indeed.")
 panel_slide("answers", "Answer once,\nreused everywhere", "Notice period, work permit, salary:\nsaved on your computer, never uploaded.")
 panel_slide("tracker", "Applied means\nconfirmed", "Recorded only when the employer's site\nconfirms your application.")
+if os.path.exists(f"{RAW}/profile.png"):
+    panel_slide("profile", "Why trust us:\nzero cloud data", "1,539 real questions evaluated, 0 wrong.\nEverything runs offline in your browser.")
 print("store/: " + ", ".join(sorted(os.listdir(OUT))))

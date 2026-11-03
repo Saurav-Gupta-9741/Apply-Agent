@@ -68,8 +68,10 @@ export async function getStorage<T = unknown>(ext: Page, key: string): Promise<T
   return ext.evaluate(async (k) => (await chrome.storage.local.get(k))[k], key) as Promise<T>;
 }
 
+export const PRO_LICENSE = { key: "E2E-PRO-KEY", plan: "pro" as const, exp: 9999999999 };
+
 export async function setup(ext: Page, answers: AnswerEntry[] = []): Promise<void> {
-  await setStorage(ext, { profile: PROFILE, answers });
+  await setStorage(ext, { profile: PROFILE, answers, license: PRO_LICENSE });
 }
 
 /** Run the agent in the tab showing `page`, the same way the side panel does (inject + message). */

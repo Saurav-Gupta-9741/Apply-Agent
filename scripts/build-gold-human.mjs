@@ -375,5 +375,5 @@ const goldHuman = selected150.map((q, idx) => {
   return item;
 });
 
-writeFileSync("reports/gold-human.json", JSON.stringify(goldHuman, null, 2));
-console.log("Wrote reports/gold-human.json with 150 hand-labelled ground truth entries.");
+writeFileSync("reports/gold-script.json", JSON.stringify(goldHuman, null, 2));
+console.log("Wrote reports/gold-script.json with 150 script-generated gold truth entries.");

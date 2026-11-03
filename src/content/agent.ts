@@ -1,8 +1,9 @@
 /** The agent: reads the form, decides every field, fills and verifies, and submits only when everything
  * required is filled, no CAPTCHA is waiting, and (in review mode) the user has pressed Submit. */
 
-import type { AnswerEntry, ApplicationRecord, Decision, FieldResult, Mode, Profile, RunReport } from "../shared/types";
-import { generic, isGoogleForms, pickAdapter } from "./adapters";
+import { translateFieldsOnDevice } from "../shared/locale/translator";
+import type { AnswerEntry, ApplicationRecord, Decision, FieldResult, FillTag, Mode, Profile, RunReport } from "../shared/types";
+import { detectSignInWall, generic, isGoogleForms, pickAdapter } from "./adapters";
 import { workEntries } from "./classify";
 import { codeOptionFor, dialCodePickerFor, isDialCodePicker, JUST_A_DIAL_CODE, phoneBoxFor, selectedCode, splitPhone } from "./phone";
 import { decideWithMeaning, type Meaning } from "./meaning";
@@ -108,9 +109,19 @@ function baseReport(doc: Document, platform: string, jobTitle: string): RunRepor
 export async function scanForm(doc: Document, ctx: Omit<AgentContext, "mode">): Promise<RunReport> {
   const { adapter, root } = locate(doc);
   const report = baseReport(doc, adapter.platform, adapter.jobTitle(doc));
+  const wall = detectSignInWall(doc);
+  if (wall.isWall) {
+    return {
+      ...report,
+      status: "needs_user",
+      challenge: wall.reason || "Sign in, then press Continue",
+      errors: ["Sign in, then press Continue. ApplyAgent never types passwords or creates accounts."],
+    };
+  }
   if (!root) return report;
   const page: PageFacts = ctx.page ?? { jobCountries: jobCountries(doc), url: doc.location?.href ?? "", applications: ctx.applications };
   const fields = extractFields(root);
+  await translateFieldsOnDevice(fields.map((f) => f.descriptor), doc.documentElement?.lang ?? "");
   const meanings = await readMeanings(fields, ctx);
   report.fields = fields.map((field) => {
     const first = field.elements[0];
@@ -218,6 +229,14 @@ function phoneFor(box: Element, ctx: AgentContext): { value: string } | { proble
   return { problem: shown ? `The country code shows +${shown}, your number is +${code}: set the code, then the number` : `Choose the country code +${code}, then the number` };
 }
 
+function fillTagFor(d: Decision): FillTag | undefined {
+  if (d.kind === "answer") return d.reused ? "reused" : "auto";
+  if (d.kind === "profile" || d.kind === "work" || d.kind === "resume") return "auto";
+  if (d.kind === "draft") return "drafted";
+  if (d.kind === "ask") return "asked";
+  return undefined;
+}
+
 async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meaning): Promise<FieldResult> {
   const first = field.elements[0];
   const box = first && isDialCodePicker(first) ? phoneBoxFor(first) : undefined;
@@ -232,12 +251,13 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
     return {
       field: field.descriptor, decision, status: "already_filled", review: differs || undefined,
       detail: differs ? `The site filled "${existing}"; your profile says "${decision.value}"` : existing,
+      tag: fillTagFor(decision),
     };
   }
   if (decision.kind === "skip") return { field: field.descriptor, decision, status: "skipped", detail: decision.reason };
   const guarded = consentGuard(field.descriptor, decision);
   if (guarded) return { field: field.descriptor, decision: guarded, status: field.descriptor.required ? "needs_user" : "skipped", detail: CONSENT_DETAIL };
-  if (decision.kind === "ask") return { field: field.descriptor, decision, status: "needs_user" };
+  if (decision.kind === "ask") return { field: field.descriptor, decision, status: "needs_user", tag: "asked" };
   const el = field.elements[0]!;
   let value = decision.kind === "resume" ? ctx.profile.resume?.name ?? "" : decision.value;
   if (phone) {
@@ -248,7 +268,10 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
   const outcome = field.descriptor.control === "combobox" ? await fillCombobox(el as HTMLInputElement, value)
     : field.descriptor.control === "dropdown" || el.matches(DROPDOWN) ? await fillDropdown(el, value)
     : fillField(field, value, ctx.profile.resume);
-  return { field: field.descriptor, decision, status: outcome.ok ? "filled" : "failed", detail: outcome.detail };
+  return {
+    field: field.descriptor, decision, status: outcome.ok ? "filled" : "failed", detail: outcome.detail,
+    tag: fillTagFor(decision),
+  };
 }
 
 /** Fill everything the agent is allowed to fill. Never overwrites a value already present. */
@@ -263,6 +286,15 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
   // A robot check or rate-limit page: stop before touching anything.
   const before = challengeNow();
   if (before) return challengeReport(report, before.kind, before.detail);
+  const wall = detectSignInWall(doc);
+  if (wall.isWall) {
+    return {
+      ...report,
+      status: "needs_user",
+      challenge: wall.reason || "Sign in, then press Continue",
+      errors: ["Sign in, then press Continue. ApplyAgent never types passwords or creates accounts."],
+    };
+  }
   if (!root) {
     // A page without a form may be the confirmation page of an earlier submission.
     const confirmation = detectConfirmation(doc);
@@ -281,6 +313,7 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
   // Resume parsers start a moment after the upload and take a few seconds: give them time before typing.
   // Start pre-reading question meanings concurrently while the resume parser settles:
   const preRemaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file");
+  await translateFieldsOnDevice(preRemaining.map((f) => f.descriptor), doc.documentElement?.lang ?? "");
   const meaningsPromise = readMeanings(preRemaining, ctx);
   if (uploaded.size) await settle(doc, 1000, 10_000, 2000);
   // 2. One block per job in the work history ("Add another" in a repeating experience section).
@@ -288,6 +321,7 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
   // 3. Everything else, read again: the page may have changed meanwhile.
   const rest: FieldResult[] = [];
   const remaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file"); // files: step 1
+  await translateFieldsOnDevice(remaining.map((f) => f.descriptor), doc.documentElement?.lang ?? "");
   const meanings = await meaningsPromise;
   const newFields = remaining.filter((f) => !meanings.has(f.descriptor.label));
   if (newFields.length) {
@@ -350,6 +384,8 @@ function invalidFields(root: HTMLElement): string[] {
 export async function submitForm(doc: Document, timeoutMs = 20000, beforeSubmit?: BeforeSubmit): Promise<RunReport> {
   const { adapter, root } = locate(doc);
   const report = baseReport(doc, adapter.platform, adapter.jobTitle(doc));
+  const wall = detectSignInWall(doc);
+  if (wall.isWall) return { ...report, status: "needs_user", challenge: wall.reason || "Sign in, then press Continue", errors: ["Sign in, then press Continue"] };
   if (!root) return report;
   if (hasCaptcha(doc)) return { ...report, status: "needs_user", captcha: true, challenge: "a CAPTCHA" };
   const action = adapter.action(root);

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Enterprise ATS Widgets Showcase · ApplyAgent Test</title>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"JobPosting","title":"Enterprise Staff Engineer"}</script>
+<style>
+  body { font: 15px system-ui, sans-serif; max-width: 720px; margin: 32px auto; padding: 0 16px; color: #222; }
+  .field-group { margin: 16px 0; display: flex; flex-direction: column; gap: 6px; }
+  label, .lbl { font-weight: 600; font-size: 14px; }
+  input, select, button { font: inherit; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; }
+  [role="combobox"] { cursor: pointer; background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 8px 12px; }
+  .popover { position: absolute; z-index: 100; background: #fff; border: 1px solid #999; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-top: 4px; min-width: 220px; }
+  ul[role="listbox"] { list-style: none; margin: 0; padding: 4px 0; }
+  li[role="option"] { padding: 8px 12px; cursor: pointer; }
+  li[role="option"]:hover { background: #eef2ff; color: #4338ca; }
+  fieldset { border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px; margin: 20px 0; }
+  legend { font-weight: 700; color: #374151; padding: 0 8px; }
+</style>
+</head>
+<body>
+<h1>Enterprise Staff Engineer</h1>
+<p>Application form testing Workday, SAP UI5, Oracle JET, Angular Material, Zoho Recruit, and SmartRecruiters widgets.</p>
+
+<form id="enterprise-form" novalidate>
+  <!-- 1. Workday section -->
+  <fieldset data-automation-id="workdaySection">
+    <legend>Workday Personal Details</legend>
+    <div class="field-group">
+      <label for="wd-fn" data-automation-id="legalFirstNameLabel">First Name *</label>
+      <input id="wd-fn" data-automation-id="legalFirstName" name="firstName" required />
+    </div>
+    <div class="field-group">
+      <label for="wd-ln" data-automation-id="legalLastNameLabel">Last Name *</label>
+      <input id="wd-ln" data-automation-id="legalLastName" name="lastName" required />
+    </div>
+    <div class="field-group">
+      <label for="wd-em" data-automation-id="emailLabel">Email Address *</label>
+      <input id="wd-em" data-automation-id="email" type="email" name="email" required />
+    </div>
+    <div class="field-group">
+      <label for="wd-phone" data-automation-id="phoneLabel">Phone Number *</label>
+      <input id="wd-phone" data-automation-id="phone-number" type="tel" name="phone" required />
+    </div>
+    <div class="field-group" data-automation-id="dateSectionMonth">
+      <label for="wd-m">Start Month</label>
+      <input id="wd-m" data-automation-id="dateInput" placeholder="MM" aria-label="Month" />
+    </div>
+    <div class="field-group" data-automation-id="dateSectionYear">
+      <label for="wd-y">Start Year</label>
+      <input id="wd-y" data-automation-id="dateInput" placeholder="YYYY" aria-label="Year" />
+    </div>
+  </fieldset>
+
+  <!-- 2. SAP UI5 Combobox (SuccessFactors) -->
+  <fieldset>
+    <legend>SAP UI5 / SuccessFactors</legend>
+    <div class="field-group" style="position:relative;">
+      <label id="sap-country-lbl">Country *</label>
+      <div id="sap-country-combo" role="combobox" aria-labelledby="sap-country-lbl" aria-haspopup="listbox" aria-expanded="false" tabindex="0" class="sapMComboBoxBase">
+        <span class="sapMSltLabel">Select Country...</span>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- 3. Oracle JET (Oracle Recruiting Cloud) -->
+  <fieldset>
+    <legend>Oracle JET Components</legend>
+    <div class="field-group" style="position:relative;">
+      <oj-label for="oj-location-select">Preferred Location</oj-label>
+      <oj-select-single id="oj-location-select" role="combobox" aria-haspopup="listbox" tabindex="0">
+        <span class="oj-select-single-label">Select location</span>
+      </oj-select-single>
+    </div>
+  </fieldset>
+
+  <!-- 4. Angular Material -->
+  <fieldset>
+    <legend>Angular Material</legend>
+    <div class="field-group" style="position:relative;">
+      <mat-label id="mat-edu-lbl">Highest Degree</mat-label>
+      <mat-select id="mat-edu-select" role="combobox" aria-labelledby="mat-edu-lbl" aria-haspopup="listbox" tabindex="0">
+        <div class="mat-select-value"><span class="mat-select-value-text">Select Degree</span></div>
+      </mat-select>
+    </div>
+  </fieldset>
+
+  <!-- 5. Zoho Recruit -->
+  <fieldset>
+    <legend>Zoho Recruit</legend>
+    <div class="field-group" style="position:relative;">
+      <label class="lbl">Notice Period</label>
+      <div id="zoho-notice-dropdown" role="combobox" aria-haspopup="listbox" tabindex="0" class="zp_field_select">
+        <span class="zp_selected_value">Select Notice Period</span>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- 6. SmartRecruiters Web Component (Shadow DOM) -->
+  <fieldset>
+    <legend>SmartRecruiters Custom Element</legend>
+    <div id="sr-shadow-host"></div>
+  </fieldset>
+
+  <button type="submit" id="btn-submit" data-automation-id="page-footer-submit">Submit Application</button>
+</form>
+
+<script>
+  // Wire SAP UI5 Combobox
+  const sapCombo = document.getElementById("sap-country-combo");
+  sapCombo.addEventListener("click", () => {
+    let popover = document.querySelector(".sapMPopover");
+    if (popover) { popover.remove(); return; }
+    popover = document.createElement("div");
+    popover.className = "popover sapMPopover";
+    popover.innerHTML = `
+      <ul role="listbox" class="sapMSelectItems">
+        <li role="option" class="sapMSelectListItem">India</li>
+        <li role="option" class="sapMSelectListItem">United States</li>
+        <li role="option" class="sapMSelectListItem">Germany</li>
+      </ul>
+    `;
+    popover.querySelectorAll(".sapMSelectListItem").forEach(item => {
+      item.addEventListener("click", () => {
+        sapCombo.querySelector(".sapMSltLabel").textContent = item.textContent.trim();
+        sapCombo.setAttribute("data-value", item.textContent.trim());
+        popover.remove();
+      });
+    });
+    sapCombo.parentElement.appendChild(popover);
+  });
+
+  // Wire Oracle JET oj-select
+  const ojSelect = document.getElementById("oj-location-select");
+  ojSelect.addEventListener("click", () => {
+    let popup = document.querySelector(".oj-listbox-results");
+    if (popup) { popup.remove(); return; }
+    popup = document.createElement("div");
+    popup.className = "popover oj-listbox-results";
+    popup.innerHTML = `
+      <ul role="listbox">
+        <li role="option" class="oj-listbox-result">Bengaluru</li>
+        <li role="option" class="oj-listbox-result">London</li>
+        <li role="option" class="oj-listbox-result">Pune</li>
+      </ul>
+    `;
+    popup.querySelectorAll(".oj-listbox-result").forEach(res => {
+      res.addEventListener("click", () => {
+        ojSelect.querySelector(".oj-select-single-label").textContent = res.textContent.trim();
+        ojSelect.setAttribute("data-value", res.textContent.trim());
+        popup.remove();
+      });
+    });
+    ojSelect.parentElement.appendChild(popup);
+  });
+
+  // Wire Angular Material mat-select
+  const matSelect = document.getElementById("mat-edu-select");
+  matSelect.addEventListener("click", () => {
+    let overlay = document.querySelector(".cdk-overlay-container");
+    if (overlay) { overlay.remove(); return; }
+    overlay = document.createElement("div");
+    overlay.className = "popover cdk-overlay-container";
+    overlay.innerHTML = `
+      <div class="mat-select-panel" role="listbox">
+        <mat-option role="option" class="mat-option">Master's Degree</mat-option>
+        <mat-option role="option" class="mat-option">Bachelor's Degree</mat-option>
+      </div>
+    `;
+    overlay.querySelectorAll("mat-option").forEach(opt => {
+      opt.addEventListener("click", () => {
+        matSelect.querySelector(".mat-select-value-text").textContent = opt.textContent.trim();
+        matSelect.setAttribute("data-value", opt.textContent.trim());
+        overlay.remove();
+      });
+    });
+    matSelect.parentElement.appendChild(overlay);
+  });
+
+  // Wire Zoho Recruit dropdown
+  const zohoDrop = document.getElementById("zoho-notice-dropdown");
+  zohoDrop.addEventListener("click", () => {
+    let menu = document.querySelector(".zp_dropdown_menu");
+    if (menu) { menu.remove(); return; }
+    menu = document.createElement("div");
+    menu.className = "popover zp_dropdown_menu";
+    menu.innerHTML = `
+      <ul role="listbox" class="zp_select_options">
+        <li role="option" class="zp_select_option">30 days</li>
+        <li role="option" class="zp_select_option">Immediate</li>
+      </ul>
+    `;
+    menu.querySelectorAll(".zp_select_option").forEach(opt => {
+      opt.addEventListener("click", () => {
+        zohoDrop.querySelector(".zp_selected_value").textContent = opt.textContent.trim();
+        zohoDrop.setAttribute("data-value", opt.textContent.trim());
+        menu.remove();
+      });
+    });
+    zohoDrop.parentElement.appendChild(menu);
+  });
+
+  // Attach SmartRecruiters Shadow DOM
+  const srHost = document.getElementById("sr-shadow-host");
+  const shadow = srHost.attachShadow({ mode: "open" });
+  shadow.innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:6px;">
+      <label for="sr-city">City / Current City</label>
+      <input id="sr-city" name="city" style="padding:8px 12px; border:1px solid #ccc; border-radius:4px; font:inherit;" />
+    </div>
+  `;
+</script>
+</body>
+</html>
