@@ -1,0 +1,292 @@
+{
+  "checkedAt": "2026-11-03T07:15:46.611Z",
+  "kept": 54,
+  "dropped": [
+    {
+      "slug": "doordash",
+      "name": "DoorDash",
+      "ats": "greenhouse",
+      "country": "United States",
+      "industry": "Food Delivery",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "postman",
+      "name": "Postman",
+      "ats": "greenhouse",
+      "country": "India",
+      "industry": "Developer Tools",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "browserstack",
+      "name": "BrowserStack",
+      "ats": "greenhouse",
+      "country": "India",
+      "industry": "Software Testing",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "razorpay",
+      "name": "Razorpay",
+      "ats": "greenhouse",
+      "country": "India",
+      "industry": "Fintech",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "cred",
+      "name": "CRED",
+      "ats": "greenhouse",
+      "country": "India",
+      "industry": "Fintech",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "swiggy",
+      "name": "Swiggy",
+      "ats": "greenhouse",
+      "country": "India",
+      "industry": "Food Delivery",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "dream11",
+      "name": "Dream11",
+      "ats": "greenhouse",
+      "country": "India",
+      "industry": "Gaming",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "netflix",
+      "name": "Netflix",
+      "ats": "lever",
+      "country": "United States",
+      "industry": "Entertainment",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "atlassian",
+      "name": "Atlassian",
+      "ats": "lever",
+      "country": "Australia",
+      "industry": "Collaboration",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "lyft",
+      "name": "Lyft",
+      "ats": "lever",
+      "country": "United States",
+      "industry": "Ridesharing",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "clevertap",
+      "name": "CleverTap",
+      "ats": "lever",
+      "country": "India",
+      "industry": "Customer Engagement",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "inmobi",
+      "name": "InMobi",
+      "ats": "lever",
+      "country": "India",
+      "industry": "AdTech",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "urbancompany",
+      "name": "Urban Company",
+      "ats": "lever",
+      "country": "India",
+      "industry": "Home Services",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "deel",
+      "name": "Deel",
+      "ats": "ashby",
+      "country": "United States",
+      "industry": "Global Payroll",
+      "unverified": true,
+      "why": "HTTP 200, 0 jobs"
+    },
+    {
+      "slug": "fireworks-ai",
+      "name": "Fireworks AI",
+      "ats": "ashby",
+      "country": "United States",
+      "industry": "AI Infrastructure",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "ikea",
+      "name": "IKEA",
+      "ats": "smartrecruiters",
+      "country": "Sweden",
+      "industry": "Retail",
+      "unverified": true,
+      "why": "robots.txt"
+    },
+    {
+      "slug": "bosch",
+      "name": "Bosch",
+      "ats": "smartrecruiters",
+      "country": "Germany",
+      "industry": "Engineering",
+      "unverified": true,
+      "why": "robots.txt"
+    },
+    {
+      "slug": "visa",
+      "name": "Visa",
+      "ats": "smartrecruiters",
+      "country": "United States",
+      "industry": "Financial Services",
+      "unverified": true,
+      "why": "robots.txt"
+    },
+    {
+      "slug": "linkedin",
+      "name": "LinkedIn Engineering",
+      "ats": "smartrecruiters",
+      "country": "United States",
+      "industry": "Software",
+      "unverified": true,
+      "why": "robots.txt"
+    },
+    {
+      "slug": "skechers",
+      "name": "Skechers",
+      "ats": "smartrecruiters",
+      "country": "United States",
+      "industry": "Footwear",
+      "unverified": true,
+      "why": "robots.txt"
+    },
+    {
+      "slug": "wearelotus",
+      "name": "Lotus Bakeries",
+      "ats": "recruitee",
+      "country": "Belgium",
+      "industry": "Food Production",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "personio",
+      "name": "Personio",
+      "ats": "personio",
+      "country": "Germany",
+      "industry": "HR Tech",
+      "unverified": true,
+      "why": "HTTP 200, 0 jobs"
+    },
+    {
+      "slug": "kaiserxlabs",
+      "name": "Kaiser X Labs",
+      "ats": "personio",
+      "country": "Germany",
+      "industry": "Design Consultancy",
+      "unverified": true,
+      "why": "robots.txt"
+    },
+    {
+      "slug": "europassistance",
+      "name": "Europ Assistance",
+      "ats": "personio",
+      "country": "Germany",
+      "industry": "Insurance",
+      "unverified": true,
+      "why": "robots.txt"
+    },
+    {
+      "slug": "flix",
+      "name": "FlixBus / FlixMobility",
+      "ats": "personio",
+      "country": "Germany",
+      "industry": "Transportation",
+      "unverified": true,
+      "why": "robots.txt"
+    },
+    {
+      "slug": "celonis",
+      "name": "Celonis",
+      "ats": "personio",
+      "country": "Germany",
+      "industry": "Process Mining",
+      "unverified": true,
+      "why": "robots.txt"
+    },
+    {
+      "slug": "trade-republic",
+      "name": "Trade Republic",
+      "ats": "personio",
+      "country": "Germany",
+      "industry": "WealthTech",
+      "unverified": true,
+      "why": "robots.txt"
+    },
+    {
+      "slug": "hireboost",
+      "name": "HireBoost",
+      "ats": "workable",
+      "country": "India",
+      "industry": "Staffing",
+      "unverified": true,
+      "why": "HTTP 404, 0 jobs"
+    },
+    {
+      "slug": "monzo",
+      "name": "Monzo Bank",
+      "ats": "workable",
+      "country": "United Kingdom",
+      "industry": "Fintech",
+      "unverified": true,
+      "why": "HTTP 200, 0 jobs"
+    },
+    {
+      "slug": "starling",
+      "name": "Starling Bank",
+      "ats": "workable",
+      "country": "United Kingdom",
+      "industry": "Fintech",
+      "unverified": true,
+      "why": "HTTP 200, 0 jobs"
+    },
+    {
+      "slug": "nubank",
+      "name": "Nubank",
+      "ats": "greenhouse",
+      "country": "Multiple",
+      "industry": "",
+      "why": "HTTP 200, 0 jobs"
+    },
+    {
+      "slug": "mercari",
+      "name": "Mercari",
+      "ats": "greenhouse",
+      "country": "Multiple",
+      "industry": "",
+      "why": "HTTP 200, 0 jobs"
+    }
+  ]
+}
