@@ -6,8 +6,9 @@
 
 import type { ApplicationRecord, SavedJob, TrackerStage } from "../shared/types";
 import { applicationKey } from "../shared/license";
-import { loadApplications, loadSavedJobs, updateApplications, updateSavedJobs } from "../shared/storage";
+import { loadApplications, loadProfile, loadSavedJobs, updateApplications, updateSavedJobs } from "../shared/storage";
 import { icon } from "./icons";
+import { getAdjacentStage, handleKanbanKeyboard, renderKanbanBoard } from "./kanban";
 // >>> L4 competitor import
 import { importCompetitorCsv } from "../shared/import-competitors";
 // <<< L4
@@ -394,6 +395,11 @@ function entryItem(e: TrackerEntry, today: string, ui: TrackerUi): HTMLLIElement
   const open = smallButton("Open", "external");
   open.addEventListener("click", () => void chrome.tabs.create({ url: e.url }));
   actions.append(open);
+  const prep = smallButton("Interview prep");
+  prep.addEventListener("click", () => void showDrafts(e, body, "prep"));
+  const email = smallButton("Follow-up email");
+  email.addEventListener("click", () => void showDrafts(e, body, "email"));
+  actions.append(prep, email);
   if (e.kind === "saved") {
     const remove = smallButton("Remove", "trash");
     remove.addEventListener("click", () => void removeSavedJob(e.id).then(() => ui.toast("Removed from the tracker")));
@@ -401,6 +407,96 @@ function entryItem(e: TrackerEntry, today: string, ui: TrackerUi): HTMLLIElement
   }
   body.append(actions);
   return el("li", { class: "item", "data-kind": e.kind, "data-entry": e.id }, body);
+}
+
+// --- Board view (kanban) and drafts ---------------------------------------------------------------------------
+
+let boardView = ((): boolean => {
+  try { return localStorage.getItem("applyagent.trackerView") === "board"; } catch { return false; }
+})();
+
+export function setBoardView(on: boolean): void {
+  boardView = on;
+  try { localStorage.setItem("applyagent.trackerView", on ? "board" : "list"); } catch { /* storage blocked: kept for this session */ }
+}
+
+/** The kanban board: arrow buttons, Left/Right keys or drag and drop move a job to another stage. */
+function renderBoard(board: HTMLElement, shown: TrackerEntry[], ui: TrackerUi): void {
+  board.innerHTML = renderKanbanBoard(shown); // every value in it is escaped by kanban.ts
+  const byId = new Map(shown.map((e) => [e.id, e]));
+  const move = (e: TrackerEntry, stage: TrackerStage | null): void => {
+    if (!stage || stage === e.stage) return;
+    void editEntry(e, { stage }).then(() => ui.toast(`Moved to ${stage}`));
+  };
+  board.querySelectorAll<HTMLElement>(".kanban-card").forEach((card) => {
+    const e = byId.get(card.dataset.id ?? "");
+    if (!e) return;
+    card.querySelector(".btn-stage-prev")?.addEventListener("click", () => move(e, getAdjacentStage(e.stage, "prev")));
+    card.querySelector(".btn-stage-next")?.addEventListener("click", () => move(e, getAdjacentStage(e.stage, "next")));
+    card.querySelector(".btn-open-prep")?.addEventListener("click", () => void showDrafts(e, card, "prep"));
+    card.addEventListener("keydown", (ev) => {
+      if (ev.target === card) move(e, handleKanbanKeyboard(ev, e.stage));
+    });
+    card.addEventListener("dragstart", (ev) => ev.dataTransfer?.setData("text/plain", e.id));
+  });
+  board.querySelectorAll<HTMLElement>(".kanban-column").forEach((col) => {
+    col.addEventListener("dragover", (ev) => ev.preventDefault());
+    col.addEventListener("drop", (ev) => {
+      ev.preventDefault();
+      const e = byId.get(ev.dataTransfer?.getData("text/plain") ?? "");
+      if (e) move(e, col.dataset.stage as TrackerStage);
+    });
+  });
+}
+
+/** Interview prep or a follow-up email as an editable draft the user copies. Nothing is sent and nothing is typed
+ * into any page. "Copy prompt" lets the user ask their own AI for a fuller draft. Loaded on demand, so the
+ * background worker (which imports this file's pure helpers) never loads it. */
+async function showDrafts(e: TrackerEntry, host: HTMLElement, kind: "prep" | "email"): Promise<void> {
+  host.querySelector(".draft-panel")?.remove();
+  const { generateFollowUpEmail, generateInterviewPrep } = await import("./interview");
+  const profile = await loadProfile();
+  const role = e.title || "this role";
+  const company = e.company || hostOf(e.url) || "the company";
+  let heading: string;
+  let text: string;
+  let prompt: string;
+  if (kind === "prep") {
+    const r = await generateInterviewPrep(role, company, "", profile);
+    heading = "Interview prep: starter questions to practise";
+    text = [
+      "Questions you may be asked:",
+      ...r.likelyQuestions.map((q) => `- ${q}`),
+      "",
+      "Stories from your profile (Situation, Task, Action, Result):",
+      ...r.suggestedStarPoints.map((p) => `- ${p.situation} | ${p.task} | ${p.action} | ${p.result}`),
+    ].join("\n");
+    prompt = r.promptForExternalAi;
+  } else {
+    const name = [profile.firstName, profile.lastName].filter(Boolean).join(" ") || "Your name";
+    const r = generateFollowUpEmail(role, company, e.stage, name);
+    heading = "Follow-up email draft";
+    text = `Subject: ${r.subject}\n\n${r.body}`;
+    prompt = r.promptForExternalAi;
+  }
+  const area = el("textarea", { class: "input draft-text", rows: "10", "aria-label": heading });
+  area.value = text;
+  const panel = el("div", { class: "draft-panel", role: "region", "aria-label": heading },
+    el("strong", {}, heading),
+    el("p", { class: "muted" }, "A starting point to edit. ApplyAgent never sends it and never types it into a page."),
+    area);
+  const note = el("span", { class: "muted draft-note", role: "status" });
+  const copy = smallButton("Copy text");
+  copy.addEventListener("click", () => void navigator.clipboard.writeText(area.value).then(
+    () => { note.textContent = "Copied"; }, () => { note.textContent = "Copy failed: select the text and copy it"; }));
+  const copyPrompt = smallButton("Copy prompt for your AI");
+  copyPrompt.addEventListener("click", () => void navigator.clipboard.writeText(prompt).then(
+    () => { note.textContent = "Prompt copied: paste it into your own AI"; }, () => { note.textContent = "Copy failed"; }));
+  const close = smallButton("Close");
+  close.addEventListener("click", () => panel.remove());
+  panel.append(el("div", { class: "item-actions" }, copy, copyPrompt, close), note);
+  host.append(panel);
+  area.focus();
 }
 
 /** Renders the tracker list, filter, follow-up banner and analytics. Returns the number of follow-ups due. */
@@ -441,6 +537,18 @@ export async function renderTrackerCrm(ui: TrackerUi, now = new Date()): Promise
   if (!list) return due.length;
   list.replaceChildren();
   const shown = stageFilter ? entries.filter((e) => e.stage === stageFilter) : entries;
+  const board = document.getElementById("tracker-board");
+  const toggle = document.getElementById("tracker-view-toggle");
+  if (toggle) {
+    toggle.textContent = boardView ? "List view" : "Board view";
+    toggle.setAttribute("aria-pressed", String(boardView));
+  }
+  if (board) board.hidden = !boardView;
+  list.hidden = boardView && !!board;
+  if (boardView && board) {
+    renderBoard(board, shown, ui);
+    return due.length;
+  }
   if (!shown.length) {
     const wrap = el("span", { class: "icon-wrap" });
     wrap.append(icon("tracker", 20));
@@ -455,6 +563,10 @@ export async function renderTrackerCrm(ui: TrackerUi, now = new Date()): Promise
 
 /** Wire the tracker's own controls once (filter, export) and re-render on changes to saved jobs. */
 export function initTracker(ui: TrackerUi, rerender: () => void): void {
+  document.getElementById("tracker-view-toggle")?.addEventListener("click", () => {
+    setBoardView(!boardView);
+    rerender();
+  });
   const select = document.getElementById("tracker-filter") as HTMLSelectElement | null;
   select?.addEventListener("change", () => {
     stageFilter = select.value as TrackerStage | "";

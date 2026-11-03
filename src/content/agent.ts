@@ -1,6 +1,7 @@
 /** The agent: reads the form, decides every field, fills and verifies, and submits only when everything
  * required is filled, no CAPTCHA is waiting, and (in review mode) the user has pressed Submit. */
 
+import { translateFieldsOnDevice } from "../shared/locale/translator";
 import type { AnswerEntry, ApplicationRecord, Decision, FieldResult, FillTag, Mode, Profile, RunReport } from "../shared/types";
 import { detectSignInWall, generic, isGoogleForms, pickAdapter } from "./adapters";
 import { workEntries } from "./classify";
@@ -120,6 +121,7 @@ export async function scanForm(doc: Document, ctx: Omit<AgentContext, "mode">): 
   if (!root) return report;
   const page: PageFacts = ctx.page ?? { jobCountries: jobCountries(doc), url: doc.location?.href ?? "", applications: ctx.applications };
   const fields = extractFields(root);
+  await translateFieldsOnDevice(fields.map((f) => f.descriptor), doc.documentElement?.lang ?? "");
   const meanings = await readMeanings(fields, ctx);
   report.fields = fields.map((field) => {
     const first = field.elements[0];
@@ -311,6 +313,7 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
   // Resume parsers start a moment after the upload and take a few seconds: give them time before typing.
   // Start pre-reading question meanings concurrently while the resume parser settles:
   const preRemaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file");
+  await translateFieldsOnDevice(preRemaining.map((f) => f.descriptor), doc.documentElement?.lang ?? "");
   const meaningsPromise = readMeanings(preRemaining, ctx);
   if (uploaded.size) await settle(doc, 1000, 10_000, 2000);
   // 2. One block per job in the work history ("Add another" in a repeating experience section).
@@ -318,6 +321,7 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
   // 3. Everything else, read again: the page may have changed meanwhile.
   const rest: FieldResult[] = [];
   const remaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file"); // files: step 1
+  await translateFieldsOnDevice(remaining.map((f) => f.descriptor), doc.documentElement?.lang ?? "");
   const meanings = await meaningsPromise;
   const newFields = remaining.filter((f) => !meanings.has(f.descriptor.label));
   if (newFields.length) {

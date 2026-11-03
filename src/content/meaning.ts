@@ -200,7 +200,19 @@ export function contextInput(field: FieldDescriptor, nearestLabel?: string, help
 }
 
 /** The decision for a field, with the model's reading of it when there is one. */
+/** Contact fields a machine translation cannot turn into a different question. */
+const MACHINE_TRANSLATION_SAFE_KEYS = new Set<string>(["firstName", "lastName", "fullName", "email", "phone", "linkedin", "github", "website", "portfolio"]);
+
 export function decideWithMeaning(field: FieldDescriptor, profile: Profile, answers: Parameters<typeof decide>[2], page?: PageFacts,
+  meaning?: Meaning): Decision {
+  const d = decideWithMeaningInner(field, profile, answers, page, meaning);
+  if (!field.machineTranslated) return d;
+  if (d.kind === "ask" || d.kind === "skip" || d.kind === "draft") return d;
+  if (d.kind === "profile" && MACHINE_TRANSLATION_SAFE_KEYS.has(d.key)) return d;
+  return field.required ? { kind: "ask", reason: "unknown" } : { kind: "skip", reason: "machine-translated question: answered by you" };
+}
+
+function decideWithMeaningInner(field: FieldDescriptor, profile: Profile, answers: Parameters<typeof decide>[2], page?: PageFacts,
   meaning?: Meaning): Decision {
   const rule = decide(field, profile, answers, page);
 

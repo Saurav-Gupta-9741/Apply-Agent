@@ -1,6 +1,7 @@
 /** Puts values into form controls the way a real user would, so React/Vue forms register them, then reads
  * the value back to verify it stuck. */
 
+import { formatDate } from "../shared/locale/formats";
 import { deepQueryAll, scopeOf } from "./dom";
 import { isDropzone, visibleText, type ExtractedField, type FieldElement } from "./extract";
 import type { ResumeFile } from "../shared/types";
@@ -47,6 +48,10 @@ export function formatDateFor(el: HTMLInputElement | HTMLTextAreaElement, value:
   if (el instanceof HTMLInputElement && el.type === "month") return `${year}-${month}`;
   const textContext = `${el.getAttribute("placeholder") ?? ""} ${el.getAttribute("aria-label") ?? ""} ${hint} ${el.getAttribute("data-automation-id") ?? ""}`;
   const pattern = DATE_PATTERN.exec(textContext);
+  // Japanese forms: "年月日" (e.g. 2026年05月01日). Only when the box itself shows that form.
+  if (!pattern && /年.*月.*日|yyyy年/i.test(textContext)) {
+    return formatDate({ year: Number(year), month: Number(month), day: Number(day) }, "年月日");
+  }
   if (!pattern) {
     if (/\b(mm|month)\b/i.test(textContext) && !/\b(yy|yyyy|year)\b/i.test(textContext)) return month;
     if (/\b(yyyy|year)\b/i.test(textContext) && !/\b(mm|month)\b/i.test(textContext)) return year;

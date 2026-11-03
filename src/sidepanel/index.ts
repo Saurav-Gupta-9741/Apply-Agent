@@ -1,5 +1,6 @@
 /** Side panel UI. Page-derived text (labels, titles) is always inserted as text, never as HTML. */
 
+import { initDiscover } from "./discover";
 import type {
   AnswerEntry, ApplicationRecord, Detection, FeedJob, FieldResult, FitResult, Message, Mode, Profile, ProfileKey, QueueItem,
   QueueStatus, QuickFacts, RunReport, Settings, WorkEntry, UserCorrection, SkillEntry, LanguageEntry,
@@ -2214,6 +2215,9 @@ void loadShortcuts();
 void renderAnswers();
 void renderTracker();
 initTracker(trackerUi, () => void renderTrackerCrm(trackerUi));
+// >>> arena-fix discover
+initDiscover(trackerUi);
+// <<< arena-fix
 initUsageMeter({ toast: (m, t) => toast(m, t ?? ""), showPlan: () => showSection("profile") });
 void (async () => {
   const cached = await chrome.storage.local.get(["feedCache", "feedSource"]);

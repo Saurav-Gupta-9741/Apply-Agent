@@ -24,17 +24,7 @@ const FEATURE_MODULES = [
 
 /** Not wired yet. Each entry must be wired and then REMOVED from this list (its it.fails turns red once it is
  * reachable, so a wired module cannot stay listed). Launch requires this list to be empty. */
-const PENDING_WIRING = new Set<string>([
-  "src/sidepanel/kanban.ts",
-  "src/sidepanel/interview.ts",
-  "src/sidepanel/discover.ts",
-  "src/shared/jobs/feeds.ts",
-  "src/shared/jobs/matching.ts",
-  "src/shared/jobs/rate-limiter.ts",
-  "src/shared/locale/formats.ts",
-  "src/shared/locale/translator.ts",
-  "src/shared/locale/country-rules.ts",
-]);
+const PENDING_WIRING = new Set<string>([]);
 
 const IMPORT_RE = /(?:import|export)\s[^'"]*?from\s*["']([^"']+)["']|import\s*\(\s*["']([^"']+)["']\s*\)|import\s+["']([^"']+)["']/g;
 

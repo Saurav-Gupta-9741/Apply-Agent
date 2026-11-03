@@ -117,6 +117,14 @@
 
     <!-- Jobs ------------------------------------------------------------------------------------------>
     <section id="sec-jobs" class="section" data-title="Jobs" hidden>
+      <!-- >>> arena-fix discover -->
+      <div class="card" id="discover-card">
+        <div class="card-head"><h2>Discover jobs</h2><span class="muted">From companies' own public job boards. Your profile never leaves this browser.</span></div>
+        <button id="discover-run" class="btn btn-primary" type="button">Find matching jobs</button>
+        <p id="discover-status" class="hint" role="status"></p>
+        <div id="discover-list" class="cards"></div>
+      </div>
+      <!-- <<< arena-fix -->
       <div class="card">
         <div class="card-head"><h2>Job feed</h2><span class="muted">Verified jobs from employers' own career sites</span></div>
         <div class="input-row">
@@ -202,6 +210,9 @@
           <option value="Rejected">Rejected</option>
           <option value="Withdrawn">Withdrawn</option>
         </select>
+        <!-- >>> arena-fix board view -->
+        <button id="tracker-view-toggle" class="btn btn-ghost btn-sm" type="button" aria-pressed="false">Board view</button>
+        <!-- <<< arena-fix -->
         <button type="button" id="tracker-export" class="btn btn-secondary btn-sm"><span data-icon="download"></span><span>Export CSV</span></button>
         <!-- >>> L4 competitor import -->
         <label for="tracker-import-file" class="btn btn-secondary btn-sm" style="cursor: pointer; margin: 0;">
@@ -229,6 +240,9 @@
         <div class="stat"><span class="stat-value" data-stat="month">0</span><span class="stat-label">This month</span></div>
       </div>
       <ul id="tracker-list" class="cards"></ul>
+      <!-- >>> arena-fix board view -->
+      <div id="tracker-board" class="kanban-wrap" hidden></div>
+      <!-- <<< arena-fix -->
     </section>
 
     <!-- Answers --------------------------------------------------------------------------------------->

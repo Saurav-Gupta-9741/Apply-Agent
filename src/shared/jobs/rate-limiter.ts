@@ -53,15 +53,11 @@ export class FeedRateLimiter {
     this.checkHandsOff(url);
     const host = this.getHost(url);
     const now = Date.now();
-    const last = this.lastRequestTimes.get(host) ?? 0;
-    const elapsed = now - last;
-
-    if (elapsed < MIN_INTERVAL_PER_HOST_MS) {
-      const waitTime = MIN_INTERVAL_PER_HOST_MS - elapsed;
-      await new Promise((resolve) => setTimeout(resolve, waitTime));
-    }
-
-    this.lastRequestTimes.set(host, Date.now());
+    const last = this.lastRequestTimes.get(host);
+    // Reserve this request's slot BEFORE waiting, so two calls at once can never share one slot.
+    const slot = last === undefined ? now : Math.max(now, last + MIN_INTERVAL_PER_HOST_MS);
+    this.lastRequestTimes.set(host, slot);
+    if (slot > now) await new Promise((resolve) => setTimeout(resolve, slot - now));
   }
 
   public getCached<T>(key: string): T | null {

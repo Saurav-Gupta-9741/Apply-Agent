@@ -6,6 +6,7 @@
  *  - relocation: only the general question "Are you willing to relocate?"
  *  - diversity questions: only where the form offers choices, and only a choice that clearly matches */
 
+import { evaluateEeoPolicy } from "../shared/locale/country-rules";
 import type { ApplicationRecord, Decision, FieldDescriptor, Profile, QuickFacts, SensitiveTopic } from "../shared/types";
 import { canonicalCountries, canWorkIn, countriesIn, extractPlacesInText } from "../shared/countries";
 import { bestOption, normalize, yesNoOption } from "../shared/text";
@@ -558,6 +559,8 @@ export function foreignSubdivision(field: FieldDescriptor, profile: Profile): De
 }
 
 /** The quick answer for this question, if the user gave one and the question clearly is that question. */
+const COUNTRY_ALPHA2: Record<string, string> = { germany: "DE", france: "FR", "united kingdom": "GB", "united states": "US" };
+
 export function factDecision(field: FieldDescriptor, profile: Profile, topic: SensitiveTopic | undefined, page?: PageFacts): Decision | undefined {
   if (!topic) {
     const instructed = nonUsInstruction(field, profile) ?? foreignSubdivision(field, profile);
@@ -685,7 +688,13 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     }
     return undefined;
   }
-  if (topic && ["gender", "race", "veteran", "disability", "pronouns", "sexual_orientation", "transgender", "accommodation"].includes(topic)) return diversityAnswer(field, facts, topic);
+  if (topic && ["gender", "race", "veteran", "disability", "pronouns", "sexual_orientation", "transgender", "accommodation"].includes(topic)) {
+    // Country rules: on a job in Germany or France, diversity questions are left to the user.
+    const jobs = page?.jobCountries ?? [];
+    const alpha2 = jobs.length === 1 ? COUNTRY_ALPHA2[jobs[0]!.toLowerCase()] : undefined;
+    if (evaluateEeoPolicy(topic, alpha2) === "prohibited_or_skip") return undefined;
+    return diversityAnswer(field, facts, topic);
+  }
   if ((topic === "age" || /\b(?:18 years (?:of age )?or older|at least 18|over 18|18 or older)\b/i.test(q)) && facts.over18 && yesNoField(field)) {
     if (/^(are you |do you confirm you are |confirm you are )?(at least 18|18 years (?:of age )?or older|18 or older|over the age of 18)/i.test(q)) {
       const match = field.options.length ? (yesNoOption(field.options, facts.over18) ?? facts.over18) : facts.over18;

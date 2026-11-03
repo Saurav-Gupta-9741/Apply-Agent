@@ -208,6 +208,9 @@ export interface FieldDescriptor {
   originalLabel?: string;
   /** Translated English label when translated by i18n-labels. */
   translatedLabel?: string;
+  /** The English label came from the browser's on-device translator (not the reviewed dictionary): only basic
+   * contact fields may be filled from it; everything else is asked (a machine translation can flip a "not"). */
+  machineTranslated?: boolean;
   control: ControlType;
   required: boolean;
   options: string[];

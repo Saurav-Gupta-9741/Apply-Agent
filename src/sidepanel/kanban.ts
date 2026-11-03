@@ -10,12 +10,15 @@
 import type { TrackerStage } from "../shared/types";
 import type { TrackerEntry } from "./tracker";
 
+/** Every stage has a column: an entry whose stage had no column would disappear from the board. */
 export const KANBAN_COLUMNS: TrackerStage[] = [
   "Saved",
   "Applied",
+  "Assessment",
   "Interview",
   "Offer",
   "Rejected",
+  "Withdrawn",
 ];
 
 export interface JobContact {
@@ -81,7 +84,7 @@ export function renderKanbanCard(entry: TrackerEntry): string {
     : "";
 
   return `
-<div class="kanban-card" role="listitem" tabindex="0" data-id="${escapeHtml(entry.id)}" data-stage="${entry.stage}" aria-label="${escapeHtml(entry.title)} at ${escapeHtml(entry.company)}, currently ${entry.stage}. Press Left or Right Arrow to change stage.">
+<div class="kanban-card" role="listitem" tabindex="0" draggable="true" data-kind="${entry.kind}" data-id="${escapeHtml(entry.id)}" data-stage="${entry.stage}" aria-label="${escapeHtml(entry.title)} at ${escapeHtml(entry.company)}, currently ${entry.stage}. Press Left or Right Arrow to change stage.">
   <div class="kanban-card-header">
     <strong class="kanban-card-title">${escapeHtml(entry.title)}</strong>
     <span class="kanban-card-company">${escapeHtml(entry.company)}</span>
@@ -99,15 +102,17 @@ export function renderKanbanCard(entry: TrackerEntry): string {
 }
 
 /** Calculate next and previous stage for keyboard navigation */
-export function getAdjacentStage(current: TrackerStage, direction: "prev" | "next"): TrackerStage | null {
-  const idx = KANBAN_COLUMNS.indexOf(current);
-  if (idx === -1) return null;
+/** Arrow keys and the arrow buttons step through the main pipeline; Assessment and Withdrawn are reached by drag
+ * and drop (or the stage menu in list view) and step back into the pipeline from there. */
+const STEP_STAGES: TrackerStage[] = ["Saved", "Applied", "Interview", "Offer", "Rejected"];
 
-  if (direction === "prev") {
-    return idx > 0 ? KANBAN_COLUMNS[idx - 1]! : null;
-  } else {
-    return idx < KANBAN_COLUMNS.length - 1 ? KANBAN_COLUMNS[idx + 1]! : null;
-  }
+export function getAdjacentStage(current: TrackerStage, direction: "prev" | "next"): TrackerStage | null {
+  if (current === "Assessment") return direction === "prev" ? "Applied" : "Interview";
+  if (current === "Withdrawn") return direction === "prev" ? "Rejected" : null;
+  const idx = STEP_STAGES.indexOf(current);
+  if (idx === -1) return null;
+  if (direction === "prev") return idx > 0 ? STEP_STAGES[idx - 1]! : null;
+  return idx < STEP_STAGES.length - 1 ? STEP_STAGES[idx + 1]! : null;
 }
 
 /** Handle keyboard navigation event on a kanban card */
