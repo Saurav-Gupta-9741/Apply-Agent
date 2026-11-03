@@ -30,6 +30,8 @@ export interface JobPosting {
   publishedAt?: string;
   descriptionSnippet?: string;
   requirements?: string[];
+  /** The board's own employment type ("Full-time", "Intern", "Contract"), when it gives one. */
+  employmentType?: string;
   salary?: {
     currency?: string;
     min?: number;

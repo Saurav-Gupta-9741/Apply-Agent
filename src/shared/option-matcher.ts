@@ -792,10 +792,14 @@ function parseYearBracket(text: string): Bracket | undefined {
   const unit = "(?:years?|yrs?)";
   let m = new RegExp(`^(?:less than|under|fewer than|<) ?(\\d+(?:\\.\\d+)?|one|a) ?${unit}\\b`).exec(t);
   if (m) return { kind: "less", max: /^\d/.test(m[1]!) ? parseFloat(m[1]!) : 1 };
-  m = new RegExp(`^(?:more than|over|greater than|>) ?${num} ?${unit}\\b`).exec(t);
+  m = new RegExp(`^(?:more than|over|above|greater than|beyond|exceeding|>) ?${num} ?${unit}\\b`).exec(t);
   if (m) return { kind: "plus", min: parseFloat(m[1]!), exclusive: true };
-  m = new RegExp(`^${num} ?(?:-|–|—|to) ?${num} ?\\+? ?${unit}\\b`).exec(t);
+  m = new RegExp(`^${num} ?(?:-|–|—|to) ?${num} ?\\+? ?${unit}\\b`).exec(t)
+    // A bare range ("7-10") on a years-of-experience question is a year bracket too.
+    ?? new RegExp(`^${num} ?(?:-|–|—|to) ?${num}$`).exec(t);
   if (m) return { kind: "range", min: parseFloat(m[1]!), max: parseFloat(m[2]!) };
+  // "Fresher" / "No experience" is exactly zero years.
+  if (/^(fresher|freshers|no (prior |work )?experience|0 experience)\b/.test(t)) return { kind: "single", value: 0 };
   m = new RegExp(`^${num} ?\\+ ?(?:${unit})?`).exec(t) ?? new RegExp(`^${num} ?${unit} ?(?:\\+|or more|and above|or above|plus)`).exec(t);
   if (m) return { kind: "plus", min: parseFloat(m[1]!), exclusive: false };
   m = new RegExp(`^${num} ?${unit}$`).exec(t);

@@ -75,7 +75,9 @@ test("quick answers setup wizard guides user through questions and saves to prof
   await expect(wizard).toBeVisible();
   await expect(wizard.locator(".wizard-step-counter")).toContainText("Question 1 of");
 
-  // Click Next to step 2
+  // Nothing is pre-selected: pick an answer, then Next to step 2 (saved right away)
+  await expect(wizard.locator(".active-pill")).toHaveCount(0);
+  await wizard.locator(".wizard-multi-group .btn", { hasText: "India" }).click();
   await wizard.locator(".wizard-next").click();
   await expect(wizard.locator(".wizard-step-counter")).toContainText("Question 2 of");
 
@@ -89,6 +91,7 @@ test("quick answers setup wizard guides user through questions and saves to prof
 
   // Verify storage was updated
   const stored = await ext.evaluate(() => chrome.storage.local.get("profile"));
-  expect(stored.profile?.facts?.workCountries).toBeDefined();
+  expect(stored.profile?.facts?.workCountries).toBe("India");
+  expect(stored.profile?.facts?.needsFutureSponsorship ?? "").toBe(""); // skipped: never a default
 });
 

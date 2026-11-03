@@ -46,10 +46,10 @@ describe("Step 4: Skills and experience questions from profile", () => {
 
     it("parses hyphenated and colon-delimited years", () => {
       const parsed = parseSkillsInput("Go - 5 yrs; TypeScript: 6 years, Java");
+      // "Java" has no years: it is never given guessed ones (beta 1 saved it as 3 years and filled "3").
       expect(parsed).toEqual([
         { name: "Go", years: 5, level: "Advanced" },
         { name: "TypeScript", years: 6, level: "Advanced" },
-        { name: "Java", years: 3, level: "Intermediate" },
       ]);
     });
   });

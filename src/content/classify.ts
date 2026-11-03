@@ -7,7 +7,7 @@ import {
 import { bestOption, normalize, sameQuestionScore, yesNoOption } from "../shared/text";
 import { parseRequirement } from "../shared/requirements";
 import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion, screeningKey } from "../shared/screening";
-import { factDecision, hasConfirmedApplication, HEARD_ABOUT, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, type PageFacts } from "./facts";
+import { factDecision, hasConfirmedApplication, HEARD_ABOUT, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, educationStatusAnswer, type PageFacts } from "./facts";
 
 /** Secrets and one-time codes: payment cards, passwords, PINs, one-time codes, security questions, captchas and
  * Indian/US/UK identity numbers the main list misses. Checked on the normalized label and name (apostrophes and
@@ -569,6 +569,8 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   }
   const la = languageAnswer(field, profile);
   if (la) return la;
+  const edu = educationStatusAnswer(field, profile);
+  if (edu) return edu;
 
   const sk = skillsExperienceAnswer(field, profile);
   if (sk) return sk;

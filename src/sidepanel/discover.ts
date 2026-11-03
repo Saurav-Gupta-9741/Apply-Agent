@@ -7,6 +7,41 @@ import type { SupportedATS } from "../shared/jobs/types";
 import { currentLicense, isPro } from "../shared/license";
 import { loadProfile } from "../shared/storage";
 import { saveJobFromTab } from "./tracker";
+import { NO_FILTERS, passesFilters, type DiscoverFilters } from "../shared/jobs/job-filters";
+
+const FILTERS_KEY = "applyagent.discoverFilters";
+
+function readFilters(): DiscoverFilters {
+  const f = { ...NO_FILTERS };
+  f.experience = ((document.getElementById("discover-experience") as HTMLSelectElement | null)?.value ?? "") as DiscoverFilters["experience"];
+  f.type = ((document.getElementById("discover-type") as HTMLSelectElement | null)?.value ?? "") as DiscoverFilters["type"];
+  f.remoteOnly = (document.getElementById("discover-remote") as HTMLInputElement | null)?.checked ?? false;
+  return f;
+}
+
+/** The filters the user picked last time (this browser only). */
+function restoreFilters(): void {
+  try {
+    const saved = JSON.parse(localStorage.getItem(FILTERS_KEY) ?? "null") as Partial<DiscoverFilters> | null;
+    if (!saved) return;
+    const exp = document.getElementById("discover-experience") as HTMLSelectElement | null;
+    const type = document.getElementById("discover-type") as HTMLSelectElement | null;
+    const remote = document.getElementById("discover-remote") as HTMLInputElement | null;
+    if (exp && typeof saved.experience === "string") exp.value = saved.experience;
+    if (type && typeof saved.type === "string") type.value = saved.type;
+    if (remote) remote.checked = saved.remoteOnly === true;
+  } catch {
+    /* no saved filters */
+  }
+}
+
+function storeFilters(f: DiscoverFilters): void {
+  try {
+    localStorage.setItem(FILTERS_KEY, JSON.stringify(f));
+  } catch {
+    /* storage unavailable */
+  }
+}
 
 export const FREE_DAILY_MATCH_LIMIT = 20;
 
@@ -127,6 +162,38 @@ export function initDiscover(ui: { toast: (text: string, tone?: "ok" | "warn" | 
   const status = document.getElementById("discover-status");
   const list = document.getElementById("discover-list");
   if (!run || !status || !list) return;
+  restoreFilters();
+  /** The last fetch: changing a filter shows its jobs again without fetching the boards again. */
+  let fetched: { jobs: JobPosting[]; profile: Profile; pro: boolean; daily: number; boards: number; failed: number } | undefined;
+
+  const show = (): void => {
+    if (!fetched) return;
+    const filters = readFilters();
+    storeFilters(filters);
+    const kept = fetched.jobs.filter((j) => passesFilters(j, filters));
+    const { results, reachedLimit } = discoverJobs(kept, fetched.profile, {}, fetched.pro, fetched.daily);
+    list.replaceChildren(...results.map(buildJobCard));
+    const filtered = kept.length < fetched.jobs.length ? ` (${fetched.jobs.length - kept.length} hidden by your filters)` : "";
+    status.textContent = `${results.length} matches from ${fetched.boards - fetched.failed} job boards${fetched.failed ? ` (${fetched.failed} did not answer)` : ""}${filtered}.`
+      + (reachedLimit ? ` Free plan: ${FREE_DAILY_MATCH_LIMIT} matches a day; Pro shows all.` : "");
+    list.querySelectorAll<HTMLButtonElement>(".btn-open-fill").forEach((b) => {
+      b.addEventListener("click", () => { if (b.dataset.url) void chrome.tabs.create({ url: b.dataset.url }); });
+    });
+    list.querySelectorAll<HTMLButtonElement>(".btn-save-tracker").forEach((b) => {
+      const open = b.parentElement?.querySelector<HTMLButtonElement>(".btn-open-fill");
+      b.addEventListener("click", async () => {
+        const r = await saveJobFromTab({ url: open?.dataset.url, title: `${open?.dataset.title ?? ""} - ${open?.dataset.company ?? ""}` });
+        ui.toast(r === "saved" ? "Saved to the tracker" : r === "exists" ? "Already in the tracker" : "Could not save this job");
+      });
+    });
+  };
+  for (const id of ["discover-experience", "discover-type", "discover-remote"]) {
+    document.getElementById(id)?.addEventListener("change", () => {
+      storeFilters(readFilters());
+      show();
+    });
+  }
+
   run.addEventListener("click", async () => {
     // Ask first, inside the click: Chrome only shows the permission prompt during the user's gesture.
     const granted = await chrome.permissions.request({ origins: Object.values(FEED_ORIGINS) }).catch(() => false);
@@ -160,21 +227,10 @@ export function initDiscover(ui: { toast: (text: string, tone?: "ok" | "warn" | 
           failed++;
         }
       }
-      const { results, reachedLimit } = discoverJobs(jobs, profile, {}, pro, daily);
-      await chrome.storage.local.set({ discoverDaily: { day: today, count: daily + results.length } satisfies DailyCount });
-      list.replaceChildren(...results.map(buildJobCard));
-      status.textContent = `${results.length} matches from ${picked.length - failed} job boards${failed ? ` (${failed} did not answer)` : ""}.`
-        + (reachedLimit ? ` Free plan: ${FREE_DAILY_MATCH_LIMIT} matches a day; Pro shows all.` : "");
-      list.querySelectorAll<HTMLButtonElement>(".btn-open-fill").forEach((b) => {
-        b.addEventListener("click", () => { if (b.dataset.url) void chrome.tabs.create({ url: b.dataset.url }); });
-      });
-      list.querySelectorAll<HTMLButtonElement>(".btn-save-tracker").forEach((b) => {
-        const open = b.parentElement?.querySelector<HTMLButtonElement>(".btn-open-fill");
-        b.addEventListener("click", async () => {
-          const r = await saveJobFromTab({ url: open?.dataset.url, title: `${open?.dataset.title ?? ""} - ${open?.dataset.company ?? ""}` });
-          ui.toast(r === "saved" ? "Saved to the tracker" : r === "exists" ? "Already in the tracker" : "Could not save this job");
-        });
-      });
+      const shown = discoverJobs(jobs.filter((j) => passesFilters(j, readFilters())), profile, {}, pro, daily).results.length;
+      await chrome.storage.local.set({ discoverDaily: { day: today, count: daily + shown } satisfies DailyCount });
+      fetched = { jobs, profile, pro, daily, boards: picked.length, failed };
+      show();
     } catch {
       status.textContent = "Could not load jobs right now. Try again later.";
     } finally {

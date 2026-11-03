@@ -20,7 +20,9 @@ const resyncDetector = () => void loadSettings().then((s) => syncDetector(s.dete
 
 const FILL_MENU = "applyagent-fill";
 
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener((details) => {
+  // Beta 1's setup could save its example answers for skipped questions: after an update, ask the user to check.
+  if (details?.reason === "update") void chrome.storage.local.set({ reviewQuickAnswersNotice: true }).catch(() => undefined);
   // Upgrade saved data once per schema version (add-only, with a backup of whatever it changes).
   void runStorageMigration().catch(() => undefined);
   // The icon click is handled below (it opens the panel and tells it to re-read the page).

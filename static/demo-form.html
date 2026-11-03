@@ -91,6 +91,9 @@
     margin-top: 16px;
     text-align: center;
   }
+  .field-error { color: #b91c1c; font-size: 12.5px; margin-top: 4px; }
+  .form-errors { display: none; border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; border-radius: 8px; padding: 10px 14px; margin-bottom: 18px; font-size: 13.5px; }
+  .form-errors ul { margin: 6px 0 0 18px; padding: 0; }
 </style>
 </head>
 <body>
@@ -104,6 +107,7 @@
   <h1>Senior Full Stack Engineer</h1>
   <div class="subtitle">Acme Demo Corp · Bengaluru / Remote · Full-time</div>
 
+  <div id="form-errors" class="form-errors" role="alert"></div>
   <form id="application-form" novalidate>
     <div class="field">
       <label for="first_name">First Name *</label>
@@ -181,12 +185,9 @@
   </div>
 </div>
 
-<script>
-  document.getElementById("application-form").addEventListener("submit", function(e) {
-    e.preventDefault();
-    document.getElementById("application-form").style.display = "none";
-    document.getElementById("success-message").style.display = "block";
-  });
-</script>
+<!-- Extension pages may not run inline scripts, and Chrome lets no extension script into its own pages from
+     outside: so the practice form loads its own handler and ApplyAgent's page script itself. -->
+<script src="demo-form.js"></script>
+<script src="content.js"></script>
 </body>
 </html>

@@ -24,6 +24,8 @@ import { HANDS_OFF_MESSAGE, isHandsOff, platformFor } from "../shared/platforms"
 import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shared/backup";
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
 import { findSuggestedCorrection } from "../shared/corrections";
+import { citySuggestion, KNOWN_CITIES } from "../shared/city-check";
+import { diversityFactFromAnswer, EDUCATION_STATUS_OPTIONS, linkProblem, normalizeLink } from "../shared/quick-answers";
 import { extractTechTerms } from "../shared/techterms";
 import { buildDiagnostic, saveDiagnosticFile } from "../shared/diagnostic";
 import { clockTime, loadPacing, loadPacingState, PACING_BOUNDS, savePacing, statusLine, type PacingSettings } from "../shared/pacing";
@@ -196,6 +198,15 @@ async function loadShortcuts(): Promise<void> {
   hint.textContent = keys.fill || "a shortcut (set one at chrome://extensions/shortcuts)";
 }
 
+/** ApplyAgent's bundled practice form (static/demo-form.html). */
+export function isPracticeForm(url: string): boolean {
+  try {
+    return !!url && url.split(/[?#]/)[0] === chrome.runtime.getURL("demo-form.html");
+  } catch {
+    return false;
+  }
+}
+
 async function activeTab(): Promise<chrome.tabs.Tab | undefined> {
   if (pinnedTabId !== undefined) return chrome.tabs.get(pinnedTabId).catch(() => undefined);
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -249,18 +260,21 @@ async function refreshPage(): Promise<void> {
   const oneTime = !allowed && !!pattern && tab?.id !== undefined && (await hasOneTimeAccess(tab.id));
   const embedded = !allowed && !oneTime && tab?.id !== undefined ? await pingFrames(tab.id) : undefined;
   const unknownPage = !url && !!tab?.id && !embedded;
+  // ApplyAgent's own practice form loads the page script itself (Chrome lets no extension script into its pages).
+  const practice = isPracticeForm(url) && !!embedded;
   const handsOff = (!!pattern && isHandsOff(url)) || !!embedded?.handsOff;
   const canFill = (allowed || oneTime || !!embedded) && !handsOff;
 
-  $("page-host").textContent = pattern ? hostOf(url) : embedded ? `Form from ${hostOf(embedded.url)}` : unknownPage ? "This page" : "No web page";
+  $("page-host").textContent = practice ? "ApplyAgent practice form" : pattern ? hostOf(url) : embedded ? `Form from ${hostOf(embedded.url)}` : unknownPage ? "This page" : "No web page";
   // An address stays on one line; a message ("Click the ApplyAgent icon…") wraps so it can be read in full.
   $("page-url").classList.toggle("truncate", !!pattern);
-  $("page-url").textContent = pattern ? url
+  $("page-url").textContent = practice ? "A safe practice form inside ApplyAgent. Nothing you submit here is sent anywhere."
+    : pattern ? url
     : embedded ? "The application form embedded in this page is on a site you allowed."
     : unknownPage ? `Click the ApplyAgent icon${keys.open ? ` (or press ${keys.open})` : ""} while on this page to use ApplyAgent here.`
     : "Open a job application in this window.";
   const access = $("page-access");
-  access.textContent = handsOff ? "Hands-off" : allowed ? "Allowed" : oneTime ? "This visit" : embedded ? "Form allowed" : pattern ? "Not allowed" : "";
+  access.textContent = handsOff ? "Hands-off" : practice ? "Practice" : allowed ? "Allowed" : oneTime ? "This visit" : embedded ? "Form allowed" : pattern ? "Not allowed" : "";
   access.className = `chip ${handsOff ? "bad" : allowed || embedded ? "ok" : oneTime ? "info" : "warn"}`;
   access.title = oneTime ? "You opened ApplyAgent on this page, so it may work here until you leave it. Allow the site to use it every time." : "";
   $("permission-box").hidden = allowed || !pattern || handsOff;
@@ -411,6 +425,18 @@ chrome.tabs.onUpdated.addListener((id, info) => {
 chrome.runtime.onMessage.addListener((message: Message) => {
   if (message.type === "PANEL_REFRESH") void refreshPage();
   return false;
+});
+// The profile saved from anywhere (Quick Answers setup, onboarding, a resume) redraws the forms showing it, unless
+// the user is typing there: then their Save merges into the stored profile instead (beta 1 wrote an old copy back,
+// so gender and the resume "reverted").
+let profileRedraw: ReturnType<typeof setTimeout> | undefined;
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== "local" || !changes.profile) return;
+  clearTimeout(profileRedraw);
+  profileRedraw = setTimeout(() => {
+    if (!profileDirty && document.getElementById("profile-form")?.childElementCount) void renderProfile();
+    if (!quickDirty && document.getElementById("quick-card")?.childElementCount) void renderQuick();
+  }, 150);
 });
 
 // --- The animated logo ------------------------------------------------------------------------------
@@ -627,6 +653,16 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     busy(save, true);
     // An answer to a question ApplyAgent asked goes straight to the answer bank; only edits of filled fields are corrections.
     await updateAnswers((answers) => upsertAnswer(answers, entry));
+    // A gender, veteran or disability answer also becomes the quick answer (when none is set), so the same question
+    // in other words is answered next time instead of asked again.
+    const fact = diversityFactFromAnswer(topic, value);
+    if (fact) {
+      const current = await loadProfile();
+      if (!current.facts?.[fact.key]) {
+        const facts = { ...EMPTY_FACTS, ...(current.facts ?? {}), [fact.key]: fact.value };
+        await saveProfile({ ...current, facts });
+      }
+    }
 
     // When the user answers an unknown skill question, add the skill to skillsInventory for future forms:
     const skillTerms = extractTechTerms(r.field.label);
@@ -730,6 +766,8 @@ function showReport(report: RunReport | undefined): void {
     ($("fields-box") as HTMLDetailsElement).open = true;
   }
 }
+
+$("back-to-jobs").addEventListener("click", () => showSection("jobs"));
 
 function busy(b: HTMLButtonElement, on: boolean): void {
   b.disabled = on;
@@ -1096,8 +1134,14 @@ function showResume(text: string, hasFile: boolean): void {
   $("resume").closest(".dropzone")?.classList.toggle("has-file", hasFile);
 }
 
+/** True while the user has typed in the Profile form and not saved: a change saved elsewhere (Quick Answers, the
+ * resume) then does not redraw the form under them. */
+let profileDirty = false;
+const LINK_KEYS = new Set<ProfileKey>(["linkedin", "github", "portfolio", "resumeUrl"]);
+
 async function renderProfile(): Promise<void> {
   profile = await loadProfile();
+  profileDirty = false;
   const form = $("profile-form");
   form.replaceChildren();
 
@@ -1123,11 +1167,46 @@ async function renderProfile(): Promise<void> {
   for (const group of PROFILE_GROUPS) {
     const grid = h("div", { class: "form-grid" });
     for (const [key, label, type, full] of group.fields) {
-      const input = h("input", { class: "input", type, name: key, autocomplete: "off" });
+      // Links are typed as text: the browser's own URL check would reject "linkedin.com/in/x"; ApplyAgent checks them.
+      const input = h("input", { class: "input", type: LINK_KEYS.has(key) ? "text" : type, name: key, autocomplete: "off" }) as HTMLInputElement;
       input.value = profile[key] ?? "";
-      grid.append(h("label", { class: `field-label${full ? " span-2" : ""}` }, label, input));
+      const wrap = h("label", { class: `field-label${full ? " span-2" : ""}` }, label, input);
+      if (key === "location") {
+        input.setAttribute("list", "city-suggestions");
+        const note = h("span", { class: "field-note warn", id: "city-note", role: "status" });
+        const check = () => {
+          const better = citySuggestion(input.value);
+          note.textContent = better ? `Did you mean ${better}? Forms get the city exactly as you type it.` : "";
+        };
+        input.addEventListener("input", check);
+        check();
+        wrap.append(note);
+      }
+      if (LINK_KEYS.has(key)) {
+        const note = h("span", { class: "field-note bad", "data-link-note": key, role: "status" });
+        input.addEventListener("input", () => {
+          note.textContent = "";
+          input.removeAttribute("aria-invalid");
+        });
+        wrap.append(note);
+      }
+      grid.append(wrap);
+    }
+    if (group.title === "Experience & education") {
+      const status = h("select", { class: "input", id: "education-status", name: "educationStatus" },
+        h("option", { value: "" }, "Not set (forms will ask)"),
+        h("option", { value: "completed" }, EDUCATION_STATUS_OPTIONS.completed),
+        h("option", { value: "pursuing" }, EDUCATION_STATUS_OPTIONS.pursuing)) as HTMLSelectElement;
+      status.value = profile.educationStatus ?? "";
+      grid.append(h("label", { class: "field-label span-2" }, "Are you still studying?", status,
+        h("span", { class: "muted" }, "Answers \"Are you currently enrolled?\" and \"Have you completed your degree?\". Education level above = highest level you have COMPLETED.")));
     }
     form.append(h("div", { class: "card" }, h("div", { class: "card-head" }, h("h2", {}, group.title)), grid));
+  }
+  if (!document.getElementById("city-suggestions")) {
+    const list = h("datalist", { id: "city-suggestions" });
+    for (const city of KNOWN_CITIES) list.append(h("option", { value: city }));
+    document.body.append(list);
   }
   form.append(skillsCard(profile.skillsInventory ?? [], profile.skillsComplete ?? false));
   form.append(languagesCard(profile.languages ?? [], profile.languagesComplete ?? false));
@@ -1200,10 +1279,10 @@ function workCard(entries: WorkEntry[]): HTMLElement {
 
 function skillsCard(entries: SkillEntry[] = [], isComplete = false): HTMLElement {
   const list = h("div", { class: "stack", id: "skills-list" });
-  const row = (name = "", years = 1, level = "Intermediate") => {
+  const row = (name = "", years: number | "" = "", level = "Intermediate") => {
     const nameInput = h("input", { class: "input", type: "text", "data-skill": "name", placeholder: "Skill name (e.g. Python)", autocomplete: "off" }) as HTMLInputElement;
     nameInput.value = name;
-    const yearsInput = h("input", { class: "input", type: "number", min: "0", max: "50", "data-skill": "years", placeholder: "Years" }) as HTMLInputElement;
+    const yearsInput = h("input", { class: "input", type: "number", min: "0", max: "50", step: "0.5", "data-skill": "years", placeholder: "Years" }) as HTMLInputElement;
     yearsInput.value = String(years);
     const levelSelect = h("select", { class: "input", "data-skill": "level" },
       h("option", { value: "Beginner" }, "Beginner"),
@@ -1247,15 +1326,16 @@ function skillsCard(entries: SkillEntry[] = [], isComplete = false): HTMLElement
 
 function languagesCard(entries: LanguageEntry[] = [], isComplete = false): HTMLElement {
   const list = h("div", { class: "stack", id: "languages-list" });
-  const row = (language = "", proficiency = "Fluent") => {
+  const row = (language = "", proficiency = "") => {
     const langInput = h("input", { class: "input", type: "text", "data-lang": "name", placeholder: "Language (e.g. English)", autocomplete: "off" }) as HTMLInputElement;
     langInput.value = language;
     const profSelect = h("select", { class: "input", "data-lang": "proficiency" },
-      h("option", { value: "Basic" }, "Basic"),
-      h("option", { value: "Conversational" }, "Conversational"),
-      h("option", { value: "Professional" }, "Professional"),
-      h("option", { value: "Fluent" }, "Fluent"),
+      h("option", { value: "" }, "Choose level…"),
       h("option", { value: "Native" }, "Native"),
+      h("option", { value: "Fluent" }, "Fluent"),
+      h("option", { value: "Professional" }, "Advanced (professional)"),
+      h("option", { value: "Conversational" }, "Intermediate (conversational)"),
+      h("option", { value: "Basic" }, "Beginner (basic)"),
     ) as HTMLSelectElement;
     profSelect.value = proficiency;
     const remove = iconButton("trash", "Remove language", true);
@@ -1292,7 +1372,7 @@ function languagesCard(entries: LanguageEntry[] = [], isComplete = false): HTMLE
 function readSkillsInventoryFromUI(): SkillEntry[] {
   return Array.from(document.querySelectorAll<HTMLElement>("#skills-list .skill-row")).map((row) => {
     const name = row.querySelector<HTMLInputElement>("[data-skill='name']")?.value.trim() ?? "";
-    const years = parseInt(row.querySelector<HTMLInputElement>("[data-skill='years']")?.value ?? "0", 10) || 0;
+    const years = parseFloat(row.querySelector<HTMLInputElement>("[data-skill='years']")?.value ?? "") || 0;
     const level = row.querySelector<HTMLSelectElement>("[data-skill='level']")?.value ?? "Intermediate";
     return { name, years, level };
   }).filter((s) => s.name);
@@ -1301,9 +1381,9 @@ function readSkillsInventoryFromUI(): SkillEntry[] {
 function readLanguagesFromUI(): LanguageEntry[] {
   return Array.from(document.querySelectorAll<HTMLElement>("#languages-list .lang-row")).map((row) => {
     const language = row.querySelector<HTMLInputElement>("[data-lang='name']")?.value.trim() ?? "";
-    const proficiency = (row.querySelector<HTMLSelectElement>("[data-lang='proficiency']")?.value ?? "Fluent") as any;
+    const proficiency = (row.querySelector<HTMLSelectElement>("[data-lang='proficiency']")?.value ?? "") as LanguageEntry["proficiency"];
     return { language, proficiency };
-  }).filter((l) => l.language);
+  }).filter((l) => l.language && l.proficiency);
 }
 
 function readWorkHistory(): WorkEntry[] {
@@ -1326,8 +1406,12 @@ $("resume").addEventListener("change", async (event) => {
   const bytes = new Uint8Array(await file.arrayBuffer());
   let binary = "";
   for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-  profile.resume = { name: file.name, type: file.type || "application/octet-stream", dataBase64: btoa(binary) };
-  showResume(`${file.name} · not saved yet`, true);
+  const resume = { name: file.name, type: file.type || "application/octet-stream", dataBase64: btoa(binary) };
+  // Saved now: a resume shown in the panel is always the one forms get (beta 1 kept it unsaved until "Save profile").
+  await saveProfile({ ...(await loadProfile()), resume });
+  profile.resume = resume;
+  showResume(file.name, true);
+  toast("Resume saved");
 
   try {
     toast("Parsing resume...", "ok");
@@ -1340,7 +1424,7 @@ $("resume").addEventListener("change", async (event) => {
         reviewDialog.append(
           createResumeReviewElement(
             parsed,
-            profile,
+            await loadProfile(),
             async (updated) => {
               profile = updated;
               await saveProfile(profile);
@@ -1387,7 +1471,7 @@ if (pasteBtn && pasteDialog) {
         reviewDialog.append(
           createResumeReviewElement(
             parsed,
-            profile,
+            await loadProfile(),
             async (updated) => {
               profile = updated;
               await saveProfile(profile);
@@ -1407,11 +1491,54 @@ if (pasteBtn && pasteDialog) {
   });
 }
 
+/** What stops the Profile form from being saved: a link that isn't one, a skill without years, a language without
+ * a level (ApplyAgent never fills a guessed value). Marks each problem on the form. */
+function profileProblems(): Array<{ text: string; el: HTMLElement }> {
+  const problems: Array<{ text: string; el: HTMLElement }> = [];
+  for (const key of LINK_KEYS) {
+    const input = document.querySelector<HTMLInputElement>(`#profile-form input[name='${key}']`);
+    if (!input) continue;
+    const problem = linkProblem(key as "linkedin" | "github" | "portfolio" | "resumeUrl", input.value);
+    const note = document.querySelector<HTMLElement>(`[data-link-note='${key}']`);
+    if (note) note.textContent = problem ?? "";
+    if (problem) {
+      input.setAttribute("aria-invalid", "true");
+      problems.push({ text: problem, el: input });
+    } else input.removeAttribute("aria-invalid");
+  }
+  document.querySelectorAll<HTMLElement>("#skills-list .skill-row").forEach((row) => {
+    const name = row.querySelector<HTMLInputElement>("[data-skill='name']")?.value.trim() ?? "";
+    const years = row.querySelector<HTMLInputElement>("[data-skill='years']");
+    if (name && years && !years.value.trim()) problems.push({ text: `Add your years of ${name} (0 is fine), or remove it.`, el: years });
+  });
+  document.querySelectorAll<HTMLElement>("#languages-list .lang-row").forEach((row) => {
+    const name = row.querySelector<HTMLInputElement>("[data-lang='name']")?.value.trim() ?? "";
+    const level = row.querySelector<HTMLSelectElement>("[data-lang='proficiency']");
+    if (name && level && !level.value) problems.push({ text: `Choose how well you speak ${name}.`, el: level });
+  });
+  return problems;
+}
+
+$("profile-form").addEventListener("input", () => (profileDirty = true));
+$("profile-form").addEventListener("change", () => (profileDirty = true));
+
 $("save-profile").addEventListener("click", async () => {
+  const problems = profileProblems();
+  if (problems.length) {
+    toast(problems[0]!.text, "bad");
+    problems[0]!.el.focus();
+    return;
+  }
+  // The stored profile, not the copy loaded when the panel opened: answers saved since (Quick Answers setup, the
+  // resume, diversity answers) are kept, and only what this form shows is replaced.
+  profile = await loadProfile();
   for (const key of PROFILE_KEYS) {
     const input = document.querySelector<HTMLInputElement>(`#profile-form input[name='${key}']`);
-    profile[key] = input?.value.trim() ?? "";
+    const value = input?.value.trim() ?? "";
+    profile[key] = LINK_KEYS.has(key) ? normalizeLink(value) : value;
   }
+  const status = document.querySelector<HTMLSelectElement>("#education-status")?.value ?? "";
+  profile.educationStatus = status === "completed" || status === "pursuing" ? status : "";
   const work = readWorkHistory();
   if (work.length) profile.workHistory = work;
   else delete profile.workHistory;
@@ -1428,6 +1555,7 @@ $("save-profile").addEventListener("click", async () => {
   profile.languagesComplete = (document.querySelector<HTMLInputElement>("#languages-complete"))?.checked ?? false;
 
   await saveProfile(profile);
+  profileDirty = false;
   showResume(profile.resume ? profile.resume.name : "Upload your resume (PDF or DOCX, max 5 MB)", !!profile.resume);
   toast("Profile saved");
   if (feedJobs.length) await renderFeed(); // preferences changed: re-rank the jobs
@@ -1482,8 +1610,12 @@ function quickInput(field: QuickField, facts: QuickFacts): HTMLElement {
   return label;
 }
 
+/** Like profileDirty, for the Quick answers card. */
+let quickDirty = false;
+
 async function renderQuick(): Promise<void> {
   const facts = { ...EMPTY_FACTS, ...((await loadProfile()).facts ?? {}) };
+  quickDirty = false;
   const save = button("Save quick answers", { variant: "primary", size: "sm" });
   save.id = "save-quick";
   const declineDiversity = button("Answer all diversity questions with 'Prefer not to say'", { variant: "ghost", size: "sm" });
@@ -1499,26 +1631,32 @@ async function renderQuick(): Promise<void> {
       h("div", { class: "form-grid" }, ...QUICK_DIVERSITY.map((f) => quickInput(f, facts)))),
     h("div", { class: "button-row" }, save));
   card.addEventListener("submit", (e) => e.preventDefault());
+  card.addEventListener("input", () => (quickDirty = true));
+  card.addEventListener("change", () => (quickDirty = true));
   declineDiversity.addEventListener("click", async () => {
     for (const key of ["gender", "hispanic", "race", "veteran", "disability"]) {
       const select = card.querySelector<HTMLSelectElement>(`[data-fact="${key}"]`);
       if (select) select.value = "Decline";
     }
-    const next = { ...EMPTY_FACTS };
+    // Facts this card doesn't show (sponsorship, temporary permits, countries you can't work in) are kept.
+    const current = await loadProfile();
+    const next = { ...EMPTY_FACTS, ...(current.facts ?? {}) };
     card.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-fact]").forEach((el) => {
       (next as Record<string, string>)[el.dataset.fact!] = el.value.trim();
     });
-    const current = await loadProfile();
+    quickDirty = false;
     await saveProfile({ ...current, facts: next });
     profile = { ...profile, facts: next };
     toast("Diversity answers set to 'Prefer not to say'");
   });
   save.addEventListener("click", async () => {
-    const next = { ...EMPTY_FACTS };
+    // Facts this card doesn't show (sponsorship, temporary permits, countries you can't work in) are kept.
+    const current = await loadProfile();
+    const next = { ...EMPTY_FACTS, ...(current.facts ?? {}) };
     card.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-fact]").forEach((el) => {
       (next as Record<string, string>)[el.dataset.fact!] = el.value.trim();
     });
-    const current = await loadProfile();
+    quickDirty = false;
     await saveProfile({ ...current, facts: next });
     profile = { ...profile, facts: next };
     toast("Quick answers saved");
@@ -2289,4 +2427,27 @@ async function checkAndMountOnboarding(): Promise<void> {
 }
 void checkAndMountOnboarding();
 // <<< L5
+
+/** Once after updating from beta 1: its setup could save example answers (e.g. "3 years") for skipped questions. */
+async function showReviewNotice(): Promise<void> {
+  const { reviewQuickAnswersNotice } = await chrome.storage.local.get("reviewQuickAnswersNotice");
+  if (!reviewQuickAnswersNotice) return;
+  const review = button("Review my answers", { variant: "primary", size: "sm" });
+  const dismiss = button("They're correct", { variant: "ghost", size: "sm" });
+  const card = h("div", { class: "card banner warn", id: "review-notice", role: "status" },
+    h("strong", {}, "Please check your saved answers"),
+    h("p", { class: "hint" }, "The first beta could save the setup's example answers (such as 3 years of experience, graduation 2024 or English: Fluent) when a question was skipped. Check Answers → Quick answers and your Profile, and clear anything that isn't yours."),
+    h("div", { class: "button-row" }, review, dismiss));
+  const done = async () => {
+    card.remove();
+    await chrome.storage.local.remove("reviewQuickAnswersNotice");
+  };
+  review.addEventListener("click", () => {
+    showSection("answers");
+    void done();
+  });
+  dismiss.addEventListener("click", () => void done());
+  document.getElementById("sec-apply")?.prepend(card);
+}
+void showReviewNotice();
 

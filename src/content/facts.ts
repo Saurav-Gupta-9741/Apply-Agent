@@ -706,6 +706,25 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
   return undefined;
 }
 
+/** "Are you currently enrolled / a student?" (any studies, no place or programme named). */
+const ENROLLED_QUESTION = /^(are you )?(currently )?(enrolled|an? (current |full time |part time )?(student|enrolled student)|studying|pursuing (a |your )?(degree|studies|education))( (in|at) (a |an )?(degree|degree program|program|programme|college|university|school|course))?( currently| at the moment| right now)?$/;
+/** "Have you completed your degree / studies?" (yours, not a named degree). */
+const COMPLETED_QUESTION = /^(have you )?(completed|finished) (your )?(degree|studies|education|graduation)( yet)?$|^(have you|did you) graduate(d)?$|^are you a graduate$/;
+
+/** Education status answers (Profile.educationStatus). Completion is answered only for someone who finished:
+ * a student may well have completed an earlier degree, so for them the form asks. */
+export function educationStatusAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
+  const status = profile.educationStatus;
+  if (!status || !yesNoField(field) || !answerableLength(field.label)) return undefined;
+  const q = normalize(field.label).replace(/\?$/, "").trim();
+  let value: "Yes" | "No" | undefined;
+  if (ENROLLED_QUESTION.test(q)) value = status === "pursuing" ? "Yes" : "No";
+  else if (COMPLETED_QUESTION.test(q) && status === "completed") value = "Yes";
+  if (!value) return undefined;
+  const match = field.options.length ? yesNoOption(field.options, value) : value;
+  return match ? answer(match, "education status") : undefined;
+}
+
 export function escapeRegex(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

@@ -14,9 +14,18 @@ export interface QuickQuestion {
   why: string;
   kind: "yesno" | "choice" | "multi" | "number" | "text" | "date";
   options?: string[];
+  /** An example shown as a placeholder ("e.g. …"). Never saved as the user's answer. */
   defaultAnswer?: string;
   placeholder?: string;
+  /** A short tip under the question. */
+  hint?: string;
 }
+
+/** The wizard's labels for Profile.educationStatus. */
+export const EDUCATION_STATUS_OPTIONS: Record<"completed" | "pursuing", string> = {
+  completed: "I have completed my studies",
+  pursuing: "I am currently pursuing a degree",
+};
 
 const stats = (quickAnswerStats.stats || {}) as Record<string, { why: string; percent: number }>;
 const statWhy = (id: string, fallback: string): string => stats[id]?.why ?? fallback;
@@ -144,9 +153,18 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     defaultAnswer: "Yes",
   },
   {
+    id: "educationStatus",
+    factKey: "educationStatus",
+    prompt: "Are you still studying?",
+    why: "Forms ask \"Are you currently enrolled?\" and \"Have you completed your degree?\"",
+    kind: "choice",
+    options: [EDUCATION_STATUS_OPTIONS.completed, EDUCATION_STATUS_OPTIONS.pursuing],
+    hint: "Students: pick \"currently pursuing\". Your highest COMPLETED level comes next (e.g. Bachelor's while you study for a Master's).",
+  },
+  {
     id: "highestDegree",
     factKey: "educationLevel",
-    prompt: "Highest completed education level:",
+    prompt: "Highest education level you have completed:",
     why: "Autofills educational qualification fields",
     kind: "choice",
     options: ["Bachelor's Degree", "Master's Degree", "Doctorate (PhD)", "Diploma / Associate", "High School"],
@@ -155,10 +173,10 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
   {
     id: "graduationYear",
     factKey: "graduationYear",
-    prompt: "Year of graduation:",
+    prompt: "Year of graduation (your expected year if you are still studying):",
     why: "Required in academic background sections",
     kind: "text",
-    defaultAnswer: "2024",
+    defaultAnswer: "2026",
   },
   {
     id: "experienceYears",
@@ -166,14 +184,16 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     prompt: "Total years of relevant professional experience:",
     why: "Answers 'How many years of experience do you have?'",
     kind: "number",
-    defaultAnswer: "3",
+    defaultAnswer: "2",
+    hint: "Fresher? Enter 0. Internships count only if you'd list them as experience.",
   },
   {
     id: "languages",
     factKey: "languages",
-    prompt: "Languages and proficiency (e.g. English: Fluent, Hindi: Native):",
+    prompt: "Languages you speak, and how well:",
     why: "Populates multi-language competency questions",
     kind: "text",
+    hint: "Levels: Native, Fluent, Advanced, Intermediate, Beginner.",
     defaultAnswer: "English: Fluent",
   },
   {
@@ -269,31 +289,143 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     why: statWhy("topSkills", "Forms ask about specific tools, languages and skills"),
     kind: "text",
     placeholder: "e.g. Python (4 yrs), React (3 yrs), SQL (4 yrs), AWS (2 yrs)",
+    hint: "Add years in brackets so ApplyAgent can answer \"years of Python?\". Skills without years go to your skills list only.",
     defaultAnswer: "",
   },
 ];
 
-/** Parses a free-text skills list (e.g. "Python (4 yrs), React (3 yrs)") into SkillEntry objects. */
-export function parseSkillsInput(input: string | string[]): SkillEntry[] {
+/** Splits a free-text skills list ("Python (4 yrs), React (3 yrs), Docker") into skills with the years the user
+ * wrote, and skill names written without years. Years are never guessed: a skill without them can't answer
+ * "How many years of Docker?", so it goes to the plain skills list only. */
+export function splitSkillsInput(input: string | string[]): { withYears: SkillEntry[]; withoutYears: string[] } {
   const items = Array.isArray(input) ? input : String(input).split(/[,;\n]+/);
-  const result: SkillEntry[] = [];
+  const withYears: SkillEntry[] = [];
+  const withoutYears: string[] = [];
   for (const item of items) {
     const trimmed = item.trim();
     if (!trimmed) continue;
     const m = trimmed.match(/^([^(:\-–]+)(?:(?:\(|\s*[:\-–]\s*)\s*(\d+(?:\.\d+)?)\s*(?:yrs?|years?)?\s*\)?)?/i);
-    if (m) {
-      const name = m[1]!.trim();
-      const years = m[2] ? parseFloat(m[2]) : 3;
-      if (name) {
-        result.push({
-          name,
-          years,
-          level: years >= 5 ? "Advanced" : years >= 2 ? "Intermediate" : "Beginner",
-        });
-      }
+    if (!m) continue;
+    const name = m[1]!.trim();
+    if (!name) continue;
+    if (!m[2]) {
+      withoutYears.push(name);
+      continue;
     }
+    const years = parseFloat(m[2]);
+    withYears.push({ name, years, level: years >= 5 ? "Advanced" : years >= 2 ? "Intermediate" : "Beginner" });
   }
-  return result;
+  return { withYears, withoutYears };
+}
+
+/** The skills from a free-text list that carry years (see splitSkillsInput). */
+export function parseSkillsInput(input: string | string[]): SkillEntry[] {
+  return splitSkillsInput(input).withYears;
+}
+
+/** Language levels as people write them, mapped to the five levels ApplyAgent stores. */
+const LANGUAGE_LEVELS: Array<[LanguageEntry["proficiency"], string[]]> = [
+  ["Native", ["native", "mother tongue", "first language", "bilingual"]],
+  ["Fluent", ["fluent", "c2"]],
+  ["Professional", ["full professional", "professional", "advanced", "proficient", "business", "c1"]],
+  ["Conversational", ["limited working", "conversational", "intermediate", "working", "b2", "b1"]],
+  ["Basic", ["elementary", "beginner", "basic", "a2", "a1"]],
+];
+
+/** The stored level a word means ("Advanced" → Professional, "Beginner" → Basic), or undefined when it means none. */
+export function languageLevel(text: string): LanguageEntry["proficiency"] | undefined {
+  const t = ` ${text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()} `;
+  for (const [level, words] of LANGUAGE_LEVELS) if (words.some((w) => t.includes(` ${w} `))) return level;
+  return undefined;
+}
+
+/** "English: Fluent, Hindi - native, Tamil (Beginner)" → entries. A language written without a level is reported in
+ * `missingLevel` and never saved with a guessed one. */
+export function parseLanguagesInput(input: string): { entries: LanguageEntry[]; missingLevel: string[] } {
+  const entries: LanguageEntry[] = [];
+  const missingLevel: string[] = [];
+  for (const raw of input.split(/[,;\n]+/)) {
+    const part = raw.trim();
+    if (!part) continue;
+    const level = languageLevel(part);
+    let name = part;
+    if (level) {
+      const words = LANGUAGE_LEVELS.find(([l]) => l === level)![1];
+      for (const w of words) name = name.replace(new RegExp(`\\b${w}\\b`, "i"), " ");
+    }
+    name = name.replace(/[():\-–—/]+/g, " ").replace(/\s+/g, " ").trim();
+    if (!name) continue;
+    if (level) entries.push({ language: name, proficiency: level });
+    else missingLevel.push(name);
+  }
+  return { entries, missingLevel };
+}
+
+const LINK_RULES: Record<string, { re: RegExp; problem: string }> = {
+  linkedin: {
+    re: /^(https?:\/\/)?([a-z]{2,3}\.)?linkedin\.com\/(in|pub)\/[^\s/?#]+\/?([?#]\S*)?$/i,
+    problem: "That isn't a LinkedIn profile link. It looks like linkedin.com/in/your-name.",
+  },
+  github: {
+    re: /^(https?:\/\/)?(www\.)?github\.com\/[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})\/?$/i,
+    problem: "That isn't a GitHub profile link. It looks like github.com/your-username.",
+  },
+  portfolio: {
+    re: /^(https?:\/\/)?[^\s/.]+(\.[^\s/.]+)+(\/\S*)?$/i,
+    problem: "That isn't a web address. It looks like yourname.dev or https://yourname.com.",
+  },
+};
+
+/** What is wrong with a profile link, or undefined when it is fine (an empty link is fine: it is just left out). */
+export function linkProblem(kind: "linkedin" | "github" | "portfolio" | "resumeUrl", value: string): string | undefined {
+  const v = value.trim();
+  if (!v) return undefined;
+  const rule = LINK_RULES[kind === "resumeUrl" ? "portfolio" : kind]!;
+  return rule.re.test(v) ? undefined : rule.problem;
+}
+
+/** A link as forms accept it: "linkedin.com/in/x" becomes "https://linkedin.com/in/x". */
+export function normalizeLink(value: string): string {
+  const v = value.trim();
+  return v && !/^https?:\/\//i.test(v) ? `https://${v}` : v;
+}
+
+/** What is wrong with a wizard answer, or undefined when it can be saved. */
+export function quickAnswerProblem(id: string, value: string | string[]): string | undefined {
+  const v = Array.isArray(value) ? value.join(", ") : value.trim();
+  if (!v) return undefined;
+  if (id === "linkedin" || id === "github" || id === "portfolio") return linkProblem(id, v);
+  if (id === "experienceYears") {
+    const n = Number(v);
+    return /^\d+(\.\d+)?$/.test(v) && n <= 60 ? undefined : "Enter your years as a number: 0 if you are a fresher, or e.g. 2 or 2.5.";
+  }
+  if (id === "graduationYear") return /^(19[5-9]\d|20[0-4]\d)$/.test(v) ? undefined : "Enter a 4-digit year, e.g. 2026 (your expected year if you are still studying).";
+  if (id === "maxOfficeDays") return /^[0-7]$/.test(v) ? undefined : "Enter a number of days from 0 to 7.";
+  if (id === "languages") {
+    const { missingLevel } = parseLanguagesInput(v);
+    return missingLevel.length ? `Choose a level for ${missingLevel.join(", ")}.` : undefined;
+  }
+  return undefined;
+}
+
+/** The answer the profile already holds for a wizard question, in the wizard's own format. */
+export function existingQuickAnswer(profile: Profile, q: QuickQuestion): string | string[] | undefined {
+  let existing: string | undefined;
+  if (q.factKey.startsWith("facts.")) {
+    const val = profile.facts?.[q.factKey.slice("facts.".length) as keyof QuickFacts];
+    if (val !== undefined && val !== null && val !== "") existing = String(val);
+  } else if (q.id === "languages") {
+    if (profile.languages?.length) existing = profile.languages.map((l) => `${l.language}: ${l.proficiency}`).join(", ");
+  } else if (q.id === "educationStatus") {
+    if (profile.educationStatus === "completed" || profile.educationStatus === "pursuing") existing = EDUCATION_STATUS_OPTIONS[profile.educationStatus];
+  } else if (q.id === "topSkills") {
+    if (profile.skillsInventory?.length) existing = profile.skillsInventory.map((s) => `${s.name} (${s.years} yrs)`).join(", ");
+  } else {
+    const val = (profile as unknown as Record<string, unknown>)[q.factKey];
+    if (typeof val === "string" && val !== "") existing = val;
+  }
+  if (existing === undefined) return undefined;
+  return q.kind === "multi" ? existing.split(",").map((s) => s.trim()).filter(Boolean) : existing;
 }
 
 /**
@@ -353,17 +485,9 @@ export function applyQuickAnswers(profile: Profile, answers: Record<string, stri
   if ("languages" in answers) {
     const langStr = getStr("languages");
     if (langStr) {
-      const validProf = ["Native", "Fluent", "Professional", "Conversational", "Basic"];
-      const entries: LanguageEntry[] = langStr.split(",").map((part) => {
-        const [lang, prof] = part.split(":").map((s) => s.trim());
-        const p = (prof && validProf.includes(prof))
-          ? (prof as LanguageEntry["proficiency"])
-          : "Fluent";
-        return { language: lang || part.trim(), proficiency: p };
-      }).filter((e) => e.language);
-      if (entries.length) {
-        next.languages = entries;
-      }
+      // Only languages written with a level; one without is never saved as "Fluent" (the wizard asks for it).
+      const { entries } = parseLanguagesInput(langStr);
+      if (entries.length) next.languages = entries;
     }
   }
   if ("gender" in answers) {
@@ -385,14 +509,25 @@ export function applyQuickAnswers(profile: Profile, answers: Record<string, stri
   }
   if ("pronouns" in answers) next.facts!.pronouns = getStr("pronouns");
   if ("heardFrom" in answers) next.facts!.heardFrom = getStr("heardFrom");
-  if ("linkedin" in answers) next.linkedin = getStr("linkedin");
-  if ("github" in answers) next.github = getStr("github");
-  if ("portfolio" in answers) next.portfolio = getStr("portfolio");
+  if ("linkedin" in answers) next.linkedin = normalizeLink(getStr("linkedin"));
+  if ("github" in answers) next.github = normalizeLink(getStr("github"));
+  if ("portfolio" in answers) next.portfolio = normalizeLink(getStr("portfolio"));
+  if ("educationStatus" in answers) {
+    const v = getStr("educationStatus");
+    next.educationStatus = v === "completed" || v === EDUCATION_STATUS_OPTIONS.completed ? "completed"
+      : v === "pursuing" || v === EDUCATION_STATUS_OPTIONS.pursuing ? "pursuing" : "";
+  }
 
   if ("topSkills" in answers || "skillsInventory" in answers) {
     const raw = answers.topSkills ?? answers.skillsInventory;
     if (raw !== undefined && raw !== null) {
-      const skills = parseSkillsInput(raw);
+      const { withYears: skills, withoutYears } = splitSkillsInput(raw);
+      if (withoutYears.length) {
+        const listed = (next.skills ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+        const known = new Set(listed.map((s) => s.toLowerCase()));
+        for (const name of withoutYears) if (!known.has(name.toLowerCase())) { listed.push(name); known.add(name.toLowerCase()); }
+        next.skills = listed.join(", ");
+      }
       if (skills.length) {
         const existing = [...(next.skillsInventory ?? [])];
         for (const s of skills) {
@@ -409,4 +544,34 @@ export function applyQuickAnswers(profile: Profile, answers: Record<string, stri
   }
 
   return next;
+}
+
+const DECLINE_WORDS = /\b(decline|don ?t wish|do not wish|prefer not|not to (answer|say|disclose|self identify)|choose not|rather not)\b/;
+
+/** The Quick Answers value an answer given on a form means, for the diversity questions forms word in many ways
+ * (gender, veteran, disability). Saved as the user's quick answer so the next wording is answered too; undefined
+ * when the answer's meaning is not clear (it then stays a remembered answer for that wording only). */
+export function diversityFactFromAnswer(topic: string | undefined, answer: string): { key: "gender" | "veteran" | "disability"; value: string } | undefined {
+  const a = answer.toLowerCase().replace(/[’']/g, " ").replace(/[^a-z0-9 -]+/g, " ").replace(/\s+/g, " ").trim();
+  if (!a) return undefined;
+  if (topic === "veteran") {
+    if (DECLINE_WORDS.test(a)) return { key: "veteran", value: "Decline" };
+    if (/^no\b|\bnot a (protected )?veteran\b|\bi am not\b/.test(a)) return { key: "veteran", value: "No" };
+    if (/^yes\b|\bi identify as\b.*\bveteran|\bi am a (protected )?veteran\b/.test(a)) return { key: "veteran", value: "Yes" };
+    return undefined;
+  }
+  if (topic === "disability") {
+    if (DECLINE_WORDS.test(a)) return { key: "disability", value: "Decline" };
+    if (/^no\b|\b(do not|don t) have a disability\b|\bnot disabled\b/.test(a)) return { key: "disability", value: "No" };
+    if (/^yes\b|\bi have a disability\b|\bhave (had )?a disability\b/.test(a)) return { key: "disability", value: "Yes" };
+    return undefined;
+  }
+  if (topic === "gender") {
+    if (DECLINE_WORDS.test(a)) return { key: "gender", value: "Decline" };
+    if (/^(female|woman|f)$/.test(a)) return { key: "gender", value: "Female" };
+    if (/^(male|man|m)$/.test(a)) return { key: "gender", value: "Male" };
+    if (/^non ?-?binary$/.test(a)) return { key: "gender", value: "Non-binary" };
+    return undefined;
+  }
+  return undefined;
 }

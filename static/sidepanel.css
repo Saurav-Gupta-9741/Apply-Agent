@@ -461,3 +461,13 @@ kbd { font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; padding: 
 .job-tags .tag { font-size: 11px; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; }
 .job-card-actions { display: flex; gap: 6px; }
 /* <<< arena-fix */
+
+/* beta 2: inline notes under profile fields, back-to-jobs link */
+.field-note { display: block; font-size: 12px; margin-top: 4px; min-height: 0; }
+.field-note:empty { display: none; }
+.field-note.warn { color: var(--warn, #b45309); }
+.field-note.bad { color: var(--bad, #dc2626); }
+.input[aria-invalid="true"] { border-color: var(--bad, #dc2626); }
+.back-to-jobs { align-self: flex-start; margin-bottom: 6px; gap: 6px; }
+.wizard-hint { font-size: 12px; margin: 0 0 10px 0; }
+.wizard-skip-hint { font-size: 12px; margin: 0 0 8px 0; }

@@ -10,6 +10,32 @@ Workable and similar). It fills only what it is sure about, asks you about the r
 3. Click **Load unpacked** and choose the unzipped folder.
 4. Pin ApplyAgent from the puzzle-piece menu, then click its icon to open the side panel.
 
+## Updating from beta 1
+
+To keep your profile, update **the same folder**: unzip beta 2 into the folder you loaded beta 1 from (replace the
+files), then press **Reload** on ApplyAgent in `chrome://extensions`. Loading beta 2 from a *new* folder makes a
+separate copy that starts empty. (Safest: first export a backup from Profile & plan.) After updating, ApplyAgent asks you once to **check your saved answers**: beta 1's
+setup could save its example answers (e.g. "3 years of experience") for questions you skipped. Please clear anything
+that isn't yours.
+
+## What's new in beta 2 (from your reports)
+
+- **Setup never saves an example answer.** Skip means "ask me on each form". Progress is saved after every question
+  and the setup reopens where you left it.
+- **Practice form works** (onboarding's "Try it"): it fills, names each missing field, and submits after you tick
+  consent yourself.
+- **Your answers no longer revert** (gender, resume): saving one screen never overwrites what another saved.
+- **Resume is saved the moment you choose it.**
+- **Experience over 7 years** fills "7-10", "Above 7 years", "10+"; 0 years fills "Fresher".
+- **Languages:** a level dropdown (Native, Fluent, Advanced, Intermediate, Beginner); "Beginner" is never filled as
+  "Fluent". Skills without years are never given guessed years.
+- **Links are checked** (LinkedIn must be linkedin.com/in/…), and a city typo gets a "Did you mean …?".
+- **Reworded diversity questions:** a gender, veteran or disability answer you give on a form now answers the same
+  question in other words next time.
+- **Education status:** "completed" or "currently pursuing", used for "Are you currently enrolled?" questions.
+- **Jobs:** filters for experience (fresher to senior), job type (full-time, internship, contract…) and remote, and a
+  **Back to jobs** button on the Apply screen.
+
 ## What to try (about 20 minutes)
 
 1. **Profile:** fill your profile and the Quick Answers (notice period, work countries, salary).

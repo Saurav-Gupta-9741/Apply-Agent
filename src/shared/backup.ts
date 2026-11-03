@@ -98,6 +98,8 @@ function readProfile(v: unknown): Profile {
   if (source.skillsComplete === true) profile.skillsComplete = true;
   if (source.languagesComplete === true) profile.languagesComplete = true;
   if (source.workHistoryComplete === true) profile.workHistoryComplete = true;
+  const educationStatus = oneOf(source.educationStatus, ["completed", "pursuing"] as const);
+  if (educationStatus) profile.educationStatus = educationStatus;
   const resume = readResume(source.resume);
   if (resume) profile.resume = resume;
   const work = readWorkHistory(source.workHistory);
@@ -134,6 +136,12 @@ function readFacts(v: unknown): QuickFacts | undefined {
   if (v.transgender !== undefined) f.transgender = oneOf(v.transgender, yesNo);
   if (v.over18 !== undefined) f.over18 = oneOf(v.over18, ["Yes", "No"] as const);
   if (v.age !== undefined) f.age = str(v.age, 10);
+  // Answers the Quick Answers setup saves (beta 1 restored a backup without them).
+  if (v.temporaryWorkCountries !== undefined) f.temporaryWorkCountries = str(v.temporaryWorkCountries, 200);
+  if (v.unauthorizedCountries !== undefined) f.unauthorizedCountries = str(v.unauthorizedCountries, 200);
+  if (v.needsFutureSponsorship !== undefined) f.needsFutureSponsorship = oneOf(v.needsFutureSponsorship, yesNo);
+  if (v.introVideoUrl !== undefined) f.introVideoUrl = str(v.introVideoUrl, 500);
+  if (v.projectUrl !== undefined) f.projectUrl = str(v.projectUrl, 500);
   return f;
 }
 

@@ -98,6 +98,8 @@ export interface Profile {
   postalCode?: string;
   state?: string;
   educationLevel?: string;
+  /** "completed": finished studying. "pursuing": currently studying for a degree. Empty: not said (asked on forms). */
+  educationStatus?: "completed" | "pursuing" | "";
   timezone?: string;
   skillsInventory?: SkillEntry[];
   skillsComplete?: boolean;
@@ -142,7 +144,7 @@ export interface FitResult {
   excluded?: string;
 }
 
-export type ProfileKey = Exclude<keyof Profile, "resume" | "workHistory" | "facts" | "languages" | "skillsInventory" | "skillsComplete" | "languagesComplete" | "workHistoryComplete">;
+export type ProfileKey = Exclude<keyof Profile, "resume" | "workHistory" | "facts" | "languages" | "skillsInventory" | "skillsComplete" | "languagesComplete" | "workHistoryComplete" | "educationStatus">;
 
 /** Questions only the user may answer: the agent never guesses these. */
 export type SensitiveTopic =
