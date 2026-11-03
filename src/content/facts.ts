@@ -129,7 +129,14 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   if (needs && facts.needsFutureSponsorship) {
     yes = facts.needsFutureSponsorship === "Yes";
   } else if (needs) {
-    yes = !canWorkIn(places[0]!, allowed);
+    if (canWorkIn(places[0]!, allowed)) {
+      yes = false;
+    } else if (canWorkIn(places[0]!, tempAllowed) || isExplicitlyUnauth[0]) {
+      yes = true;
+    } else {
+      // Unlisted country: the user may hold a visa there that needs no sponsorship. ASK, same as authorization.
+      return undefined;
+    }
   } else {
     if (can[0]) {
       yes = true;

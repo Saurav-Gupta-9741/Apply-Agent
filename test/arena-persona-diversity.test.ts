@@ -173,6 +173,7 @@ export const PERSONA_UK_DESIGNER: Profile = {
   graduationYear: "2017",
   facts: {
     workCountries: "United Kingdom, EU",
+    unauthorizedCountries: "United States",
     noticePeriod: "3 months",
     currentCtc: "£65,000",
     expectedCtc: "£85,000",

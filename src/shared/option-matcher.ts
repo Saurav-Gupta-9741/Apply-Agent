@@ -816,7 +816,12 @@ function matchYearBracket(candidates: ParsedCandidate[], q: ExperienceQuantity):
     if (b.kind === "less") return t < b.max;
     return false;
   });
-  if (contained.length === 1) return contained[0]!.c;
+  if (contained.length === 1) {
+    // "5" with "3-5 years" and "5+ years": both contain it, so the user decides.
+    const plusAtValue = parsed.some((p) => p.b?.kind === "plus" && !p.b.exclusive && p.b.min === t);
+    if (plusAtValue) return null;
+    return contained[0]!.c;
+  }
   if (contained.length > 1) {
     // Overlapping brackets: if it's a full tiered ATS scale (3+ options with plus/less), standard ATS convention starts at lower bound.
     // Isolated overlapping options (e.g. ["3-5 years", "5-8 years"]) are ambiguous -> ask!
@@ -1151,16 +1156,19 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
     const matchingCityOptions = candidates.filter((c) => {
       const cNorm = c.normalizedCore;
       if (cityCluster.has(cNorm)) return true;
-      const tokens = c.normalized.split(/[\s,/-]+/);
-      return [...cityCluster].some((syn) => tokens.includes(syn));
+      // "Bangalore, India", "Bengaluru (Karnataka)", "Bombay - MH": the city plus where it is. Never "Bangalore Rural"
+      // or "Navi Mumbai", which are other places.
+      const raw = c.raw.trim().toLowerCase();
+      return [...cityCluster].some((syn) => raw.startsWith(syn) && /^\s*(?:,|\(|-|–|\/)/.test(raw.slice(syn.length)));
     });
     const uniqueCityMatch = unique(matchingCityOptions);
     if (uniqueCityMatch) {
       return { option: uniqueCityMatch.raw, stage: "contextual_domain", confidence: 0.98 };
     }
     if (matchingCityOptions.length > 1) {
-      const exactCity = matchingCityOptions.find((c) => c.normalizedCore === wantedNorm);
-      if (exactCity) return { option: exactCity.raw, stage: "exact", confidence: 1.0 };
+      // "Bengaluru" with ["Bangalore", "Bangalore Rural"]: only an option that IS a name of the city counts.
+      const exactCity = matchingCityOptions.filter((c) => cityCluster.has(c.normalizedCore));
+      if (exactCity.length === 1) return { option: exactCity[0]!.raw, stage: "exact", confidence: 1.0 };
       return undefined;
     }
   }

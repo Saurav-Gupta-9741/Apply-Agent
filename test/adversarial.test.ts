@@ -139,9 +139,13 @@ describe("a) work authorization and sponsorship polarity (user can work only in 
     const p = { ...FULL, facts: { ...FULL.facts!, workCountries: "India, EU" } };
     expect(filled(decide(field("Are you authorized to work in Germany?"), p, [], US))).toBe("Yes");
   });
-  it("EU right: 'Will you require sponsorship to work in Switzerland?' with 'India, EU' → Yes (Switzerland is not EU)", () => {
-    const p = { ...FULL, facts: { ...FULL.facts!, workCountries: "India, EU" } };
+  it("EU right: 'Will you require sponsorship to work in Switzerland?' with 'India, EU' + Switzerland not authorized → Yes (Switzerland is not EU)", () => {
+    const p = { ...FULL, facts: { ...FULL.facts!, workCountries: "India, EU", unauthorizedCountries: "Switzerland" } };
     expect(filled(decide(field("Will you require sponsorship to work in Switzerland?"), p, [], US))).toBe("Yes");
+  });
+  it("EU right: sponsorship for Switzerland with 'India, EU' and Switzerland unlisted → ask (EU does not cover it; the user may hold a Swiss permit)", () => {
+    const p = { ...FULL, facts: { ...FULL.facts!, workCountries: "India, EU", unauthorizedCountries: "" } };
+    expect(filled(decide(field("Will you require sponsorship to work in Switzerland?"), p, [], US))).toBeNull();
   });
 
   // other languages: the need is said with a verb the English rule does not know
