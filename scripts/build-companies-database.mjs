@@ -76,65 +76,8 @@ const BASE_COMPANIES = [
   { slug: "starling", name: "Starling Bank", ats: "workable", country: "United Kingdom", industry: "Fintech" },
 ];
 
-// Generate comprehensive dataset to reach 1,000+ companies across regions
-const COUNTRIES = [
-  { name: "United States", industries: ["Enterprise SaaS", "Fintech", "HealthTech", "AI/ML", "Cybersecurity", "E-Commerce", "EdTech"] },
-  { name: "India", industries: ["Fintech", "E-Commerce", "Logistics", "EdTech", "SaaS", "Enterprise IT", "Gaming"] },
-  { name: "United Kingdom", industries: ["Fintech", "HealthTech", "CleanTech", "Consulting", "Creative Media", "AI Research"] },
-  { name: "Germany", industries: ["Automotive Tech", "Industrial IoT", "Fintech", "B2B SaaS", "E-Commerce", "Renewable Energy"] },
-  { name: "France", industries: ["Luxury Goods Tech", "AI Software", "Fintech", "BioTech", "AdTech", "Video Games"] },
-  { name: "Netherlands", industries: ["Fintech", "Semiconductor Tools", "AgriTech", "Logistics Tech", "Cloud Infra"] },
-  { name: "Canada", industries: ["AI Research", "Fintech", "Video Games", "Enterprise Software", "Clean Energy"] },
-  { name: "Japan", industries: ["Robotics", "Consumer Electronics", "Mobile Gaming", "E-Commerce", "Automotive Software"] },
-];
-
-const PREFIXES = [
-  "Apex", "Vertex", "Nova", "Pulse", "Nexus", "Stellar", "Quantum", "Hyper", "Vanguard", "Catalyst",
-  "Omni", "Prism", "Echo", "Aura", "Zenith", "Horizon", "Orbit", "Synergy", "Beacon", "Core",
-  "Atlas", "Aero", "Bio", "Crest", "Delta", "Ember", "Flux", "Forge", "Helix", "Infra",
-  "Krypton", "Loom", "Matrix", "Neo", "Optima", "Pinnacle", "Quartz", "Radiant", "Stratum", "Titan",
-  "Unity", "Vector", "Wave", "Xenon", "Yield", "Zephyr", "Alpha", "Beta", "Gamma", "Sigma"
-];
-
-const SUFFIXES = [
-  "Labs", "Technologies", "Networks", "Systems", "AI", "Software", "Cloud", "Dynamics", "Solutions", "Health",
-  "Security", "Data", "Pay", "Logistics", "Robotics", "Analytics", "Interactive", "Capital", "Media", "Digital"
-];
-
-const allCompanies = [...BASE_COMPANIES];
-const seenSlugs = new Set(allCompanies.map(c => c.slug));
-
-let prefixIdx = 0;
-let suffixIdx = 0;
-let countryIdx = 0;
-let atsIdx = 0;
-
-while (allCompanies.length < 1050) {
-  const prefix = PREFIXES[prefixIdx % PREFIXES.length];
-  const suffix = SUFFIXES[suffixIdx % SUFFIXES.length];
-  const countryObj = COUNTRIES[countryIdx % COUNTRIES.length];
-  const industry = countryObj.industries[(prefixIdx + suffixIdx) % countryObj.industries.length];
-  const ats = ATS_LIST[atsIdx % ATS_LIST.length];
-
-  const name = `${prefix} ${suffix}`;
-  const slug = `${prefix.toLowerCase()}-${suffix.toLowerCase()}-${countryObj.name.toLowerCase().slice(0, 2)}`;
-
-  if (!seenSlugs.has(slug)) {
-    seenSlugs.add(slug);
-    allCompanies.push({
-      slug,
-      name,
-      ats,
-      country: countryObj.name,
-      industry,
-    });
-  }
-
-  prefixIdx++;
-  if (prefixIdx % PREFIXES.length === 0) suffixIdx++;
-  if (suffixIdx % SUFFIXES.length === 0) countryIdx++;
-  atsIdx++;
-}
-
-writeFileSync("static/companies.json", JSON.stringify(allCompanies, null, 2), "utf8");
-console.log(`Generated ${allCompanies.length} curated companies in static/companies.json`);
+// Only hand-picked companies. Every entry stays "unverified" until its public feed has been fetched and returned
+// HTTP 200 with at least one job (Gemini arena-fix Step 2 records verifiedAt + jobCount). Never generate names.
+const companies = BASE_COMPANIES.map((c) => ({ ...c, unverified: true }));
+writeFileSync("static/companies.json", JSON.stringify(companies, null, 2) + "\n", "utf8");
+console.log(`Wrote ${companies.length} hand-picked (unverified) companies to static/companies.json`);
