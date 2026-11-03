@@ -9,6 +9,13 @@ if (!existsSync("dist/manifest.json")) throw new Error("build did not produce di
 mkdirSync("release", { recursive: true });
 const out = `release/applyagent-beta-${version}.zip`;
 rmSync(out, { force: true });
-// Windows 10+ and macOS/Linux all ship tar that writes zip archives.
-execFileSync("tar", ["-a", "-c", "-f", out, "-C", "dist", "."], { stdio: "inherit" });
+// A real .zip with manifest.json at its root. Not "tar": Git Bash's GNU tar ignores -a and writes a tar file
+// named .zip, which Windows cannot open (beta 1 shipped that way first).
+if (process.platform === "win32") {
+  execFileSync("powershell.exe", ["-NoProfile", "-Command", `Compress-Archive -Path 'dist/*' -DestinationPath '${out}' -Force`], { stdio: "inherit" });
+} else {
+  execFileSync("zip", ["-r", "-q", `../${out}`, "."], { cwd: "dist", stdio: "inherit" });
+}
+const head = readFileSync(out).subarray(0, 2).toString("latin1");
+if (head !== "PK") throw new Error(`${out} is not a zip file (starts with ${JSON.stringify(head)})`);
 console.log(`Wrote ${out}`);
