@@ -139,3 +139,46 @@ function escapeHtml(str: string): string {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+
+/** Builds an element with text children only (never parses HTML). */
+function h(tag: string, attrs: Record<string, string> = {}, ...children: Array<Node | string>): HTMLElement {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  for (const c of children) node.append(c);
+  return node;
+}
+
+/** The board as DOM nodes, same structure and classes as renderKanbanBoard (which stays for tests/exports). */
+export function buildKanbanBoard(entries: TrackerEntry[]): HTMLElement {
+  const grouped = groupEntriesByStage(entries);
+  const board = h("div", { class: "kanban-board", role: "application", "aria-label": "Job Application Pipeline" });
+  for (const stage of KANBAN_COLUMNS) {
+    const items = grouped[stage] || [];
+    const list = h("div", { class: "kanban-card-list", role: "list", "data-stage": stage, tabindex: "0", "aria-label": `${stage} list` });
+    if (items.length) items.forEach((item) => list.append(buildKanbanCard(item)));
+    else list.append(h("div", { class: "kanban-empty" }, "No jobs here"));
+    board.append(h("div", { class: "kanban-column", "data-stage": stage, role: "region", "aria-label": `${stage} applications (${items.length})` },
+      h("div", { class: "kanban-column-header" },
+        h("h3", { class: "kanban-column-title" }, stage),
+        h("span", { class: "kanban-column-count", "aria-hidden": "true" }, String(items.length))),
+      list));
+  }
+  return board;
+}
+
+export function buildKanbanCard(entry: TrackerEntry): HTMLElement {
+  const card = h("div", {
+    class: "kanban-card", role: "listitem", tabindex: "0", draggable: "true", "data-kind": entry.kind, "data-id": entry.id, "data-stage": entry.stage,
+    "aria-label": `${entry.title} at ${entry.company}, currently ${entry.stage}. Press Left or Right Arrow to change stage.`,
+  },
+  h("div", { class: "kanban-card-header" },
+    h("strong", { class: "kanban-card-title" }, entry.title),
+    h("span", { class: "kanban-card-company" }, entry.company)));
+  if (entry.followUpAt) card.append(h("div", { class: "kanban-card-meta" }, h("span", { class: "badge badge-date" }, `Follow-up: ${entry.followUpAt}`)));
+  if (entry.notes) card.append(h("p", { class: "kanban-card-notes" }, entry.notes));
+  card.append(h("div", { class: "kanban-card-actions" },
+    h("button", { class: "btn btn-xs btn-stage-prev", type: "button", title: "Move back", "aria-label": "Move back to previous stage" }, "←"),
+    h("button", { class: "btn btn-xs btn-open-prep", type: "button", "data-id": entry.id, title: "Interview prep" }, "Prep"),
+    h("button", { class: "btn btn-xs btn-stage-next", type: "button", title: "Move forward", "aria-label": "Move forward to next stage" }, "→")));
+  return card;
+}

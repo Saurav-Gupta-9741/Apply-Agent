@@ -162,11 +162,11 @@ export function initDiscover(ui: { toast: (text: string, tone?: "ok" | "warn" | 
       }
       const { results, reachedLimit } = discoverJobs(jobs, profile, {}, pro, daily);
       await chrome.storage.local.set({ discoverDaily: { day: today, count: daily + results.length } satisfies DailyCount });
-      list.innerHTML = results.map(renderJobCard).join("\n"); // every value is escaped by renderJobCard
+      list.replaceChildren(...results.map(buildJobCard));
       status.textContent = `${results.length} matches from ${picked.length - failed} job boards${failed ? ` (${failed} did not answer)` : ""}.`
         + (reachedLimit ? ` Free plan: ${FREE_DAILY_MATCH_LIMIT} matches a day; Pro shows all.` : "");
       list.querySelectorAll<HTMLButtonElement>(".btn-open-fill").forEach((b) => {
-        b.addEventListener("click", () => void chrome.tabs.create({ url: b.dataset.url! }));
+        b.addEventListener("click", () => { if (b.dataset.url) void chrome.tabs.create({ url: b.dataset.url }); });
       });
       list.querySelectorAll<HTMLButtonElement>(".btn-save-tracker").forEach((b) => {
         const open = b.parentElement?.querySelector<HTMLButtonElement>(".btn-open-fill");
@@ -181,4 +181,32 @@ export function initDiscover(ui: { toast: (text: string, tone?: "ok" | "warn" | 
       run.disabled = false;
     }
   });
+}
+
+/** Builds an element with text children only (never parses HTML). */
+function h(tag: string, attrs: Record<string, string> = {}, ...children: Array<Node | string>): HTMLElement {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  for (const c of children) node.append(c);
+  return node;
+}
+
+/** A job card as DOM nodes, same structure and classes as renderJobCard. */
+export function buildJobCard(match: JobMatchResult): HTMLElement {
+  const { job, score, why, isEligibleWorkCountry } = match;
+  const badge = score >= 75 ? "badge-high" : score >= 50 ? "badge-mid" : "badge-low";
+  const tags = h("div", { class: "job-tags" });
+  if (job.isRemote) tags.append(h("span", { class: "tag tag-remote" }, "Remote"));
+  if (!isEligibleWorkCountry) tags.append(h("span", { class: "tag tag-warning", title: "Country not listed in your work authorization" }, "Visa Needed"));
+  tags.append(h("span", { class: "tag tag-ats" }, job.ats));
+  return h("div", { class: "job-card", "data-job-id": job.id },
+    h("div", { class: "job-card-header" },
+      h("div", {},
+        h("h4", { class: "job-title" }, job.title),
+        h("div", { class: "job-company" }, `${job.companyName} · `, h("span", { class: "job-loc" }, job.location || "Location unlisted"))),
+      h("div", { class: `job-score ${badge}` }, `${score}%`)),
+    h("div", { class: "job-card-body" }, tags, h("p", { class: "job-why" }, h("strong", {}, "Fit: "), why)),
+    h("div", { class: "job-card-actions" },
+      h("button", { class: "btn btn-sm btn-primary btn-open-fill", type: "button", "data-url": job.url ?? "", "data-title": job.title, "data-company": job.companyName }, "Open & Fill"),
+      h("button", { class: "btn btn-sm btn-secondary btn-save-tracker", type: "button", "data-job-id": job.id }, "Save")));
 }

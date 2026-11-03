@@ -8,7 +8,7 @@ import type { ApplicationRecord, SavedJob, TrackerStage } from "../shared/types"
 import { applicationKey } from "../shared/license";
 import { loadApplications, loadProfile, loadSavedJobs, updateApplications, updateSavedJobs } from "../shared/storage";
 import { icon } from "./icons";
-import { getAdjacentStage, handleKanbanKeyboard, renderKanbanBoard } from "./kanban";
+import { buildKanbanBoard, getAdjacentStage, handleKanbanKeyboard } from "./kanban";
 // >>> L4 competitor import
 import { importCompetitorCsv } from "../shared/import-competitors";
 // <<< L4
@@ -422,7 +422,7 @@ export function setBoardView(on: boolean): void {
 
 /** The kanban board: arrow buttons, Left/Right keys or drag and drop move a job to another stage. */
 function renderBoard(board: HTMLElement, shown: TrackerEntry[], ui: TrackerUi): void {
-  board.innerHTML = renderKanbanBoard(shown); // every value in it is escaped by kanban.ts
+  board.replaceChildren(buildKanbanBoard(shown));
   const byId = new Map(shown.map((e) => [e.id, e]));
   const move = (e: TrackerEntry, stage: TrackerStage | null): void => {
     if (!stage || stage === e.stage) return;

@@ -689,10 +689,11 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     return undefined;
   }
   if (topic && ["gender", "race", "veteran", "disability", "pronouns", "sexual_orientation", "transgender", "accommodation"].includes(topic)) {
-    // Country rules: on a job in Germany or France, diversity questions are left to the user.
+    // Country rules: Germany and France restrict collecting race/ethnicity, so on a job there the user answers it.
+    // Gender (Anrede/civilité) is asked on nearly every German and French form and stays the user's saved answer.
     const jobs = page?.jobCountries ?? [];
     const alpha2 = jobs.length === 1 ? COUNTRY_ALPHA2[jobs[0]!.toLowerCase()] : undefined;
-    if (evaluateEeoPolicy(topic, alpha2) === "prohibited_or_skip") return undefined;
+    if (topic === "race" && evaluateEeoPolicy(topic, alpha2) === "prohibited_or_skip") return undefined;
     return diversityAnswer(field, facts, topic);
   }
   if ((topic === "age" || /\b(?:18 years (?:of age )?or older|at least 18|over 18|18 or older)\b/i.test(q)) && facts.over18 && yesNoField(field)) {
