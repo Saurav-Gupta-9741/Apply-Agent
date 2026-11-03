@@ -1,0 +1,4311 @@
+[
+  {
+    "text": "What is the notice period in your current employment?",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Available to join immediate",
+      "Less than 30 days",
+      "30 days",
+      "Between 30-60 days",
+      "60 days",
+      "90 days",
+      "More than 90 days"
+    ],
+    "company": "groww",
+    "jobUrl": "https://job-boards.eu.greenhouse.io/groww/jobs/4970739101",
+    "location": "Bengaluru-VTP, India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have a relative/ family member working currently in Groww?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "groww",
+    "jobUrl": "https://job-boards.eu.greenhouse.io/groww/jobs/4970739101",
+    "location": "Bengaluru-VTP, India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Have you previously been employed by Groww in any capacity (e.g., full-time, intern, contractor)?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "groww",
+    "jobUrl": "https://job-boards.eu.greenhouse.io/groww/jobs/4970739101",
+    "location": "Bengaluru-VTP, India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you provide your consent for us to conduct your background verification (BGV) and reference checks?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "groww",
+    "jobUrl": "https://job-boards.eu.greenhouse.io/groww/jobs/4970739101",
+    "location": "Bengaluru-VTP, India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Longitude",
+    "required": true,
+    "type": "input_hidden",
+    "options": [],
+    "company": "groww",
+    "jobUrl": "https://job-boards.eu.greenhouse.io/groww/jobs/4970739101",
+    "location": "Bengaluru-VTP, India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Latitude",
+    "required": true,
+    "type": "input_hidden",
+    "options": [],
+    "company": "groww",
+    "jobUrl": "https://job-boards.eu.greenhouse.io/groww/jobs/4970739101",
+    "location": "Bengaluru-VTP, India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please share your portfolio link?",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "groww",
+    "jobUrl": "https://job-boards.eu.greenhouse.io/groww/jobs/5000706101",
+    "location": "Bengaluru, India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please note that this is a contractual role based in Bangalore. Could you please confirm if you are comfortable with these terms?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "groww",
+    "jobUrl": "https://job-boards.eu.greenhouse.io/groww/jobs/5000706101",
+    "location": "Bengaluru, India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your present CTC",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/7925318",
+    "location": "Egypt",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your present location ?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/7925318",
+    "location": "Egypt",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have experience in Search advertising?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/7925318",
+    "location": "Egypt",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Total experience?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/7959734",
+    "location": "Bangalore",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your current compensation?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/7959734",
+    "location": "Bangalore",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your expected compensation?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/7959734",
+    "location": "Bangalore",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "How soon can you join us?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/7959734",
+    "location": "Bangalore",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you comfortable working 5 days from Bangalore office?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/7959734",
+    "location": "Bangalore",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have hands-on, day-to-day experience managing campaigns in Google Ads, Bing Ads/Microsoft Advertising, or SA360? (Yes/No)",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/8169105",
+    "location": "India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Is your current or most recent role primarily client-facing (owning advertiser or agency relationships), rather than backend campaign execution ?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/8169105",
+    "location": "India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "How many years of experience do you have in search engine marketing (SEM) account management, and which platform(s) have you worked in most?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/8169105",
+    "location": "India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Briefly describe the type of client portfolio you've managed (e.g., number of accounts, average account size, enterprise/corporate vs. SMB, single-market vs. cross-border).",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/8169105",
+    "location": "India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Describe a time you identified and pitched a budget upsell or optimization opportunity to a client. What was the outcome?",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/8169105",
+    "location": "India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Describe a time you tried to convince a client to adopt a search/campaign optimization recommendation and they were initially resistant. What was your approach, and how did it play out?",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "inmobi",
+    "jobUrl": "https://job-boards.greenhouse.io/inmobi/jobs/8169105",
+    "location": "India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "How many years of experience selling data protection, storage, and/or cyber security?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "0",
+      "1-3",
+      "4-7",
+      "8+"
+    ],
+    "company": "druva",
+    "jobUrl": "https://www.druva.com/why-druva/explore/careers/jobs/7727374002/?gh_jid=7727374002",
+    "location": "Santa Clara, CA",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you currently located in the Bay Area, California?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes, I am local",
+      "No, but willing to relocate",
+      "No, looking for remote roles at this time"
+    ],
+    "company": "druva",
+    "jobUrl": "https://www.druva.com/why-druva/explore/careers/jobs/7727374002/?gh_jid=7727374002",
+    "location": "Santa Clara, CA",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "VeteranStatus",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "I don't wish to answer",
+      "I identify as one or more of the classifications of a protected veteran",
+      "I am not a protected veteran"
+    ],
+    "company": "druva",
+    "jobUrl": "https://www.druva.com/why-druva/explore/careers/jobs/7727374002/?gh_jid=7727374002",
+    "location": "Santa Clara, CA",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What region would you be working from?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "North America",
+      "India",
+      "EMEA",
+      "APAC",
+      "Other"
+    ],
+    "company": "druva",
+    "jobUrl": "https://www.druva.com/why-druva/explore/careers/jobs/7679725002/?gh_jid=7679725002",
+    "location": "Worldwide",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please type in your answer if you selected \"Current Observe.AI employee\" or \"Other\" ",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "observeai",
+    "jobUrl": "https://www.observe.ai/position?gh_jid=5254531008",
+    "location": "Redwood City, CA (Hybrid)",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Will you now or in the future require visa sponsorship to work in the United States?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "observeai",
+    "jobUrl": "https://www.observe.ai/position?gh_jid=5254531008",
+    "location": "Redwood City, CA (Hybrid)",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "LinkedIn Profile / Website ",
+    "required": false,
+    "type": "textarea",
+    "options": [],
+    "company": "n26",
+    "jobUrl": "https://n26.com/en-eu/careers/positions/8184721?gh_jid=8184721",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "I hereby agree that I have received the notification to candidates acc. to Art. 13 GDPR.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "I Acknowledge"
+    ],
+    "company": "n26",
+    "jobUrl": "https://n26.com/en-eu/careers/positions/8184721?gh_jid=8184721",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Where are you currently based?",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "n26",
+    "jobUrl": "https://n26.com/en-eu/careers/positions/8184721?gh_jid=8184721",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Will you now or in the future require N26 to commence an immigration case in order to employ you? ",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "n26",
+    "jobUrl": "https://n26.com/en-eu/careers/positions/8184721?gh_jid=8184721",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please indicate your notice period in Months",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "n26",
+    "jobUrl": "https://n26.com/en-eu/careers/positions/8184721?gh_jid=8184721",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What are your salary expectations? ",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "n26",
+    "jobUrl": "https://n26.com/en-eu/careers/positions/8184721?gh_jid=8184721",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you able to provide professional references and criminal record checks? \nAs a regulated bank, we need to ask for it prior to your contract signing. ",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "n26",
+    "jobUrl": "https://n26.com/en-eu/careers/positions/8184721?gh_jid=8184721",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have any relatives or domestic partners currently working for N26?\n",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "n26",
+    "jobUrl": "https://n26.com/en-eu/careers/positions/8184721?gh_jid=8184721",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have a valid visa/work permit / EU EEA or CH passport for Germany?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8173479",
+    "location": "Berlin",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you based in, or willing to relocate to Berlin?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8173479",
+    "location": "Berlin",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you speak Greek at a native level ? ",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8173479",
+    "location": "Berlin",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Current or Most Recent Job Title",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8173479",
+    "location": "Berlin",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Current or Most Recent Company",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8173479",
+    "location": "Berlin",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What attracted you to apply to GetYourGuide?",
+    "required": false,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Career growth opportunities",
+      "Alignment with personal values and goals",
+      "Company culture",
+      "Innovative product",
+      "Positive employee reviews",
+      "Competitive salary and benefits",
+      "Work-life balance",
+      "Passion for travel and tourism",
+      "Referral from current employee",
+      "Training and development programs",
+      "Diversity and inclusion initiatives",
+      "Exciting projects",
+      "Location/office environment"
+    ],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8173479",
+    "location": "Berlin",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "How did you hear about GetYourGuide and/or this role?",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Came across a GetYourGuide post on LinkedIn",
+      "Saw a LinkedIn post by a GetYourGuide employee",
+      "Read the ‘Inside GetYourGuide’ newsletter",
+      "Explored the ‘Inside GetYourGuide’ blog",
+      "Listened to an episode of our ‘Behind the Journey’ podcast",
+      "Participated in one of our meetups",
+      "Attended a conference featuring a GetYourGuide speaker",
+      "Interacted with content on Instagram"
+    ],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8173479",
+    "location": "Berlin",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have a the right to work in Mexico?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8225770",
+    "location": "Mexico City",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Will you require any future sponsorship to work in Mexico?",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8225770",
+    "location": "Mexico City",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you based in, or willing to relocate to Mexico City?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8225770",
+    "location": "Mexico City",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Which languages can you speak at a professional level? (Select all that apply)",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "English",
+      "Portuguese",
+      "Spanish"
+    ],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8280763",
+    "location": "Sao Paulo",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have legal eligibility to work in Brazil?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8280763",
+    "location": "Sao Paulo",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "If yes, what type of visa/work permit/passport do you currently hold to allow you to work and live in Brazil?",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8280763",
+    "location": "Sao Paulo",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you based in, or willing to relocate to Sao Paulo?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "getyourguide",
+    "jobUrl": "https://job-boards.greenhouse.io/getyourguide/jobs/8280763",
+    "location": "Sao Paulo",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you eligible to work in the country you have applied to?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "contentful",
+    "jobUrl": "https://job-boards.greenhouse.io/contentful/jobs/8327853",
+    "location": "Munich, Bavaria, Germany",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please specify if your answer was Event/Meetup or Other:",
+    "required": false,
+    "type": "input_text",
+    "options": [],
+    "company": "contentful",
+    "jobUrl": "https://job-boards.greenhouse.io/contentful/jobs/8327853",
+    "location": "Munich, Bavaria, Germany",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you a citizen, national or permanent resident of Iran, Cuba, North Korea or Syria?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "contentful",
+    "jobUrl": "https://job-boards.greenhouse.io/contentful/jobs/8278596",
+    "location": "New York, New York, United States",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you hold an ADDITIONAL citizenship, nationality, or permanent residency of any other country that is NOT Iran, Cuba, Syria or North Korea?",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Yes",
+      "No",
+      "Not Applicable. I am NOT a citizen, national, or permanent resident of Iran, Cuba, North Korea, or Syria"
+    ],
+    "company": "contentful",
+    "jobUrl": "https://job-boards.greenhouse.io/contentful/jobs/8278596",
+    "location": "New York, New York, United States",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "In which country did you obtain citizenship, nationality, or permanent residency first?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "contentful",
+    "jobUrl": "https://job-boards.greenhouse.io/contentful/jobs/8278596",
+    "location": "New York, New York, United States",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your motivation for Adyen and this role?",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/7586281",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you fluent in French as well as English?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/7586281",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have a valid working permit for France?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/7586281",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you live in or around Paris?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/7586281",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Could you please provide an estimate of your preferred annual base salary?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/7586281",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please confirm that your resume is in English",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Confirmed"
+    ],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/7586281",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Point of Data Transfer",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Acknowledge/Confirm"
+    ],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/7586281",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "At Adyen, we strive to create an accessible and inclusive experience for all candidates.\n\nPlease let our team know if you need any adjustments to the recruitment process to make it more accessible and/or inclusive to your needs.",
+    "required": false,
+    "type": "textarea",
+    "options": [],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/7586281",
+    "location": "Paris",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Why are you interested in this position?",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/5359280",
+    "location": "Shanghai",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "How many years of experience do you have in client facing position as Account Management / Customer Success / Sales / Commercial Partnerships or similar?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "0-3 years",
+      "3-7 years",
+      "7+ years"
+    ],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/5359280",
+    "location": "Shanghai",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "How many clients do you manage in your portfolio?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "0-50",
+      "50-100",
+      "100-500",
+      "500-1000",
+      "1000+"
+    ],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/5359280",
+    "location": "Shanghai",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Which industries are your clients in? (click all that applies)",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "E-commerce",
+      "Live-streaming",
+      "OTA",
+      "Gaming",
+      "Manufacturing",
+      "Retail / Fashion",
+      "Automotive",
+      "Oil & Gas",
+      "Education",
+      "Heavy industries",
+      "Banking",
+      "Telecommunications",
+      "Cloud services",
+      "Cyber Security",
+      "Others"
+    ],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/5359280",
+    "location": "Shanghai",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you need visa sponsorship in order to legally work in Shanghai?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/5359280",
+    "location": "Shanghai",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Have you submitted an English CV?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/5359280",
+    "location": "Shanghai",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "How many years of experience do you have with upselling or cross-selling to enterprise clients?",
+    "required": false,
+    "type": "input_text",
+    "options": [],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/7938074",
+    "location": "Kuala Lumpur",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Would you need visa sponsorship in order to work legally in Malaysia?",
+    "required": false,
+    "type": "input_text",
+    "options": [],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/7938074",
+    "location": "Kuala Lumpur",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Why would you like to work at Adyen?",
+    "required": false,
+    "type": "input_text",
+    "options": [],
+    "company": "adyen",
+    "jobUrl": "https://job-boards.greenhouse.io/adyen/jobs/7938074",
+    "location": "Kuala Lumpur",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "🇺🇸 Are you a US tax resident?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "monzo",
+    "jobUrl": "https://job-boards.greenhouse.io/monzo/jobs/7343996",
+    "location": "Barcelona",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "🔐 Keeping your data safe is really important to us. Please take a look at our Candidate Data Privacy Notice (linked below) and confirm that you have.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "monzo",
+    "jobUrl": "https://job-boards.greenhouse.io/monzo/jobs/7343996",
+    "location": "Barcelona",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "If you’d like to, please share your preferred pronouns (eg. they/them/theirs, she/her/hers).",
+    "required": false,
+    "type": "input_text",
+    "options": [],
+    "company": "monzo",
+    "jobUrl": "https://job-boards.greenhouse.io/monzo/jobs/7343996",
+    "location": "Barcelona",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "If you'd like to, please spell out your name how it's pronounced so we know how to say it.",
+    "required": false,
+    "type": "input_text",
+    "options": [],
+    "company": "monzo",
+    "jobUrl": "https://job-boards.greenhouse.io/monzo/jobs/7343996",
+    "location": "Barcelona",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "🛂 Please confirm your Right to Work status in the location where this job is advertised.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "I'm a citizen or have permanent residency",
+      "I have a visa which gives me the permanent right to work",
+      "I have a visa which gives me temporary right to work",
+      "I'd need Monzo to sponsor my visa to work in this location"
+    ],
+    "company": "monzo",
+    "jobUrl": "https://job-boards.greenhouse.io/monzo/jobs/7343996",
+    "location": "Barcelona",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What attracted you to Monzo?",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "monzo",
+    "jobUrl": "https://job-boards.greenhouse.io/monzo/jobs/6635595",
+    "location": "Cardiff, London or Remote (UK)",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What's the most interesting project you've worked on recently?",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "monzo",
+    "jobUrl": "https://job-boards.greenhouse.io/monzo/jobs/6635595",
+    "location": "Cardiff, London or Remote (UK)",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Where would you like to be based?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "London",
+      "UK - Outside London area"
+    ],
+    "company": "monzo",
+    "jobUrl": "https://job-boards.greenhouse.io/monzo/jobs/6635595",
+    "location": "Cardiff, London or Remote (UK)",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you a US person?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "monzo",
+    "jobUrl": "https://job-boards.greenhouse.io/monzo/jobs/6635595",
+    "location": "Cardiff, London or Remote (UK)",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "🇺🇸 Are you a US Person?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "monzo",
+    "jobUrl": "https://job-boards.greenhouse.io/monzo/jobs/8245673",
+    "location": "London; Remote (UK)",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "I consent to Deliveroo retaining my CV for future opportunities in line with our candidate privacy policy linked below.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "I consent to Deliveroo retaining my CV",
+      "I do not consent"
+    ],
+    "company": "deliveroo",
+    "jobUrl": "https://job-boards.greenhouse.io/deliveroo/jobs/8206649",
+    "location": "Paris, France",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What are your salary expectations? For context, the base salary for this role is €31–37K, plus an annual bonus of up to 15%. Is this in line with what you’re looking for?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "deliveroo",
+    "jobUrl": "https://job-boards.greenhouse.io/deliveroo/jobs/8300559",
+    "location": "Rome, Italy",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have Sales experience?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "deliveroo",
+    "jobUrl": "https://job-boards.greenhouse.io/deliveroo/jobs/8300559",
+    "location": "Rome, Italy",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "This role does not involve the use of a company car; are you available to use your own car when needed? All travel expenses will be refunded by the company.",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "deliveroo",
+    "jobUrl": "https://job-boards.greenhouse.io/deliveroo/jobs/8300559",
+    "location": "Rome, Italy",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Where are you currently located? ",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "deliveroo",
+    "jobUrl": "https://job-boards.greenhouse.io/deliveroo/jobs/8279200",
+    "location": "London, United Kingdom - Deliveroo",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your right to work  status in the job location?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "I am a citizen or have indefinite leave to remain.",
+      "I have a visa which allows me to work without being sponsored.",
+      "I would require visa sponsorship by Deliveroo."
+    ],
+    "company": "deliveroo",
+    "jobUrl": "https://job-boards.greenhouse.io/deliveroo/jobs/8279200",
+    "location": "London, United Kingdom - Deliveroo",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Salary expectations, base and total?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "deliveroo",
+    "jobUrl": "https://job-boards.greenhouse.io/deliveroo/jobs/8279200",
+    "location": "London, United Kingdom - Deliveroo",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Can you commit to 3 days in our London officer per week?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "deliveroo",
+    "jobUrl": "https://job-boards.greenhouse.io/deliveroo/jobs/8279200",
+    "location": "London, United Kingdom - Deliveroo",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you available to work from our office?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes, available for on-site work and looking for more face to face time with the team",
+      "Yes, I’m willing to relocate to the office’s location and work on-site",
+      "Yes, I’m available for on-site work, but I will need some flexibility",
+      "No, I’m only looking for a remote role or not willing to relocate."
+    ],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8097315002?gh_jid=8097315002",
+    "location": "London, England, United Kingdom",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you authorised to work in the UK?",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8097315002?gh_jid=8097315002",
+    "location": "London, England, United Kingdom",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your expected compensation? ",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8097315002?gh_jid=8097315002",
+    "location": "London, England, United Kingdom",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please review our Privacy Notice before submitting your application. ",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Confirm"
+    ],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8097315002?gh_jid=8097315002",
+    "location": "London, England, United Kingdom",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please Review our SumUp General Privacy Policy",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Confirm"
+    ],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8097315002?gh_jid=8097315002",
+    "location": "London, England, United Kingdom",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have the right to work in Spain (NIE and SSN)?",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8507799002?gh_jid=8507799002",
+    "location": "Barcelona, Barcelona, Spain",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "This is an office base role, are you okay with this setup?",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8507799002?gh_jid=8507799002",
+    "location": "Barcelona, Barcelona, Spain",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Currículo/CV",
+    "required": true,
+    "type": "input_file",
+    "options": [],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8907622002?gh_jid=8907622002",
+    "location": "São Paulo, São Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Carta de apresentação",
+    "required": true,
+    "type": "input_file",
+    "options": [],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8907622002?gh_jid=8907622002",
+    "location": "São Paulo, São Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Quais são suas expectativas salariais?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Até R$2.000,00",
+      "De R$2.000,00 a R$2.500,00",
+      "De R$2.500,00 a R$3.000,00",
+      "Acima de R$3.000,00"
+    ],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8907622002?gh_jid=8907622002",
+    "location": "São Paulo, São Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Você já trabalhou nas áreas de CX/CS/Suporte? ",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8907622002?gh_jid=8907622002",
+    "location": "São Paulo, São Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Você reside em São Paulo (SP) ou na região metropolitana e possui disponibilidade para comparecer ao nosso escritório, em Pinheiros, para encontros presenciais esporádicos?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8907622002?gh_jid=8907622002",
+    "location": "São Paulo, São Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Por favor, revise nosso Aviso de Privacidade antes de enviar sua candidatura.",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Confirmo"
+    ],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8907622002?gh_jid=8907622002",
+    "location": "São Paulo, São Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Você está de acordo com a nossa política de privacidade?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8907622002?gh_jid=8907622002",
+    "location": "São Paulo, São Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Localização",
+    "required": false,
+    "type": "input_text",
+    "options": [],
+    "company": "sumup",
+    "jobUrl": "https://sumup.com/careers/positions/8907622002?gh_jid=8907622002",
+    "location": "São Paulo, São Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Tell us who you are! Please select one.",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "I am an employee at Trustpilot.",
+      "I am not an employee at Trustpilot."
+    ],
+    "company": "trustpilot",
+    "jobUrl": "https://corporate.trustpilot.com/careers/job/7588014?gh_jid=7588014",
+    "location": "Amsterdam",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your earliest start date?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "trustpilot",
+    "jobUrl": "https://corporate.trustpilot.com/careers/job/7588014?gh_jid=7588014",
+    "location": "Amsterdam",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please select the country you are applying from.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Afghanistan",
+      "Albania",
+      "Algeria",
+      "Andorra",
+      "Angola",
+      "Antigua and Barbuda",
+      "Argentina",
+      "Armenia",
+      "Australia",
+      "Austria",
+      "Azerbaijan",
+      "Bahamas",
+      "Bahrain",
+      "Bangladesh",
+      "Barbados",
+      "Belarus",
+      "Belgium",
+      "Belize",
+      "Benin",
+      "Bhutan",
+      "Bolivia",
+      "Bosnia and Herzegovina",
+      "Botswana",
+      "Brazil",
+      "Brunei",
+      "Bulgaria",
+      "Burkina Faso",
+      "Burundi",
+      "Côte d'Ivoire",
+      "Cabo Verde"
+    ],
+    "company": "trustpilot",
+    "jobUrl": "https://corporate.trustpilot.com/careers/job/7588014?gh_jid=7588014",
+    "location": "Amsterdam",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you need visa sponsorship to work in this location?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "trustpilot",
+    "jobUrl": "https://corporate.trustpilot.com/careers/job/7588014?gh_jid=7588014",
+    "location": "Amsterdam",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your language proficiency in Flemish?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "C2",
+      "C1",
+      "B2",
+      "B1",
+      "A2",
+      "A1"
+    ],
+    "company": "trustpilot",
+    "jobUrl": "https://corporate.trustpilot.com/careers/job/7588014?gh_jid=7588014",
+    "location": "Amsterdam",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your language proficiency in French? ",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "C2",
+      "C1",
+      "B2",
+      "B1",
+      "A2",
+      "A1"
+    ],
+    "company": "trustpilot",
+    "jobUrl": "https://corporate.trustpilot.com/careers/job/7588014?gh_jid=7588014",
+    "location": "Amsterdam",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your German language proficiency? ",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "C2 = native language proficiency",
+      "C1 = professional language skills",
+      "B2 = independent language skills",
+      "B1 = advanced language skills",
+      "A2 = basic knowledge",
+      "A1 = beginner"
+    ],
+    "company": "trustpilot",
+    "jobUrl": "https://corporate.trustpilot.com/careers/job/8236598?gh_jid=8236598",
+    "location": "Hamburg",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your English language proficiency level",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "C2 = native language proficiency",
+      "C1 = professional language skills",
+      "B2 = independent language skills",
+      "B1 = advanced language skills",
+      "A2 = basic knowledge",
+      "A1 = beginner"
+    ],
+    "company": "trustpilot",
+    "jobUrl": "https://corporate.trustpilot.com/careers/job/8236598?gh_jid=8236598",
+    "location": "Hamburg",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "This position is based in our Hamburg office. Are you able to work from our office in Hamburg and be in the office 2/3 days per week?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "trustpilot",
+    "jobUrl": "https://corporate.trustpilot.com/careers/job/8236598?gh_jid=8236598",
+    "location": "Hamburg",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you need a visa to work in this location?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "trustpilot",
+    "jobUrl": "https://corporate.trustpilot.com/careers/job/8236598?gh_jid=8236598",
+    "location": "Hamburg",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your French language proficiency?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "C2 = native language proficiency",
+      "C1 = professional language skills",
+      "B2 = independent language skills",
+      "B1 = advanced language skills",
+      "A2 = basic knowledge",
+      "A1 = beginner"
+    ],
+    "company": "trustpilot",
+    "jobUrl": "https://corporate.trustpilot.com/careers/job/8105352?gh_jid=8105352",
+    "location": "Copenhagen",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you able to work from our office in Copenhagen and be in the office 3 days per week? Do you need to relocate for this?",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "trustpilot",
+    "jobUrl": "https://corporate.trustpilot.com/careers/job/8105352?gh_jid=8105352",
+    "location": "Copenhagen",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What would be your availability to join us?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "typeform",
+    "jobUrl": "https://job-boards.greenhouse.io/typeform/jobs/8184931",
+    "location": "Germany (Remote) ; Ireland (Remote); Netherlands (Remote) ; Portugal (Remote) ; Spain (Remote) ; United Kingdom (Remote) ",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Where are you based? ",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "typeform",
+    "jobUrl": "https://job-boards.greenhouse.io/typeform/jobs/8184931",
+    "location": "Germany (Remote) ; Ireland (Remote); Netherlands (Remote) ; Portugal (Remote) ; Spain (Remote) ; United Kingdom (Remote) ",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Will you now or in the future require sponsorship for employment visa status?\n",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "typeform",
+    "jobUrl": "https://job-boards.greenhouse.io/typeform/jobs/8184931",
+    "location": "Germany (Remote) ; Ireland (Remote); Netherlands (Remote) ; Portugal (Remote) ; Spain (Remote) ; United Kingdom (Remote) ",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please share your online CV or LinkedIn profile with us. ",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "typeform",
+    "jobUrl": "https://job-boards.greenhouse.io/typeform/jobs/8184931",
+    "location": "Germany (Remote) ; Ireland (Remote); Netherlands (Remote) ; Portugal (Remote) ; Spain (Remote) ; United Kingdom (Remote) ",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Typeform GDPR Policy",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "I acknowledge"
+    ],
+    "company": "typeform",
+    "jobUrl": "https://job-boards.greenhouse.io/typeform/jobs/8184931",
+    "location": "Germany (Remote) ; Ireland (Remote); Netherlands (Remote) ; Portugal (Remote) ; Spain (Remote) ; United Kingdom (Remote) ",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have experience selling SaaS?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "typeform",
+    "jobUrl": "https://job-boards.greenhouse.io/typeform/jobs/8208253",
+    "location": "United States (Remote) ",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Nombre",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Apellidos",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Correo electrónico",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Teléfono",
+    "required": false,
+    "type": "input_text",
+    "options": [],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Currículum",
+    "required": true,
+    "type": "input_file",
+    "options": [],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Sabemos que la remuneración es un factor importante para todos. ¿Cuál es tu rango de renta líquida mensual esperada (sin variable), en CLP?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Cuál es tu disponibilidad para incorporarte en caso de avanzar en el proceso?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Inmediata",
+      "1-2 semanas",
+      "1 mes",
+      "> 1 mes"
+    ],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Cuál es tu nivel de inglés?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "A1 – Principiante",
+      "A2 – Básico",
+      "B1 – Intermedio",
+      "B2 – Intermedio alto",
+      "C1 – Avanzado",
+      "C2 – Nativo o bilingüe"
+    ],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Indícanos tu estatus legal/permiso de trabajo actual.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Ciudadano",
+      "Extranjero con permiso de trabajo",
+      "Necesito un sponsorship de visa para trabajar",
+      "Otra"
+    ],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "En Cabify ofrecemos un modelo de trabajo híbrido, con 3 días presenciales en la oficina y 2 días trabajando desde casa. ¿Estás de acuerdo con este esquema?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Has colaborado antes con Cabify, eres titular de licencias VTC, accionista o propietario de flotas de vehículos VTC, o tienes previsto mantener otras actividades externas (empleo, asesoría, docencia, emprendimiento) si te unes al equipo?\n",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Eres actualmente (o has sido en los últimos 5 años) funcionario/a público/a en cargos de decisión, o tienes un vínculo directo con alguien que sea Persona Políticamente Expuesta (PEP)? (Nota: No incluye perfiles de salud, educación o seguridad).\n",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Tienes alguna relación (familiar, sentimental o de amistad) con empleados de Cabify, de la competencia, o con personas que sean titulares de licencias VTC o propietarias de flotas de vehículos VTC? (Incluye si has sido recomendado por alguien interno).\n",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Eres accionista, directivo o desarrollas tecnología/software para empresas que sean competidoras, proveedoras o socios de negocio o clientes B2B de Cabify en cualquiera de nuestros mercados?\n",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8895021002",
+    "location": "Santiago",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Cuentas con experiencia en labores de servicio al cliente? En caso afirmativo, indica cuánto tiempo de experiencia tienes.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "No cuento con experiencia.",
+      "Menos de 6 meses.",
+      "Entre 6 y 11 meses.",
+      "Entre 1 y 2 años.",
+      "Entre 2 y 3 años.",
+      "Más de 3 años."
+    ],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8658794002",
+    "location": "Bogotá",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Con cuál(es) de las siguientes categorías de discapacidad cuentas? Puedes seleccionar una o varias opciones.",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Auditiva",
+      "Física",
+      "Intelectual",
+      "Sordoceguera",
+      "Visual",
+      "Trastorno del espectro autista (TEA)",
+      "Psicosocial",
+      "Múltiple",
+      "Ninguna de las anteriores"
+    ],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8658794002",
+    "location": "Bogotá",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Cuentas con el Certificado de Discapacidad expedido conforme a los lineamientos del Ministerio de Salud y Protección Social de Colombia?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Sí",
+      "No",
+      "El certificado se encuentra en trámite"
+    ],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8658794002",
+    "location": "Bogotá",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Requieres algún ajuste razonable o apoyo durante el proceso de selección o para el desempeño del cargo?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8658794002",
+    "location": "Bogotá",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Sabemos que la remuneración es un factor importante para todos. ¿Podrías indicarnos tu rango de expectativas salariales mensuales sin variable (en PEN)?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8581941002",
+    "location": "Lima",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Uno de nuestros almacenes esta ubicado en Chorillos ¿Tienes forma de trasladarte?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Si, vivo cerca de la zona",
+      "Si, cuento con carro propio",
+      "Si, cuento con moto propia",
+      "Si, cuento con bicicleta",
+      "Utilizo transporte publico"
+    ],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8581941002",
+    "location": "Lima",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Tienes posibilidad de trabajar en horarios rotativos?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Si, tengo disponibilidad total (mañana, tarde y noches) ",
+      "Si, pero solo puedo en mañanas y tardes",
+      "Tengo disponibilidad para trabajar con un horario fijo"
+    ],
+    "company": "cabify",
+    "jobUrl": "https://job-boards.greenhouse.io/cabify/jobs/8581941002",
+    "location": "Lima",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you hold a security clearance?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "None",
+      "Public Trust",
+      "Secret",
+      "Top Secret",
+      "TS/SCI",
+      "TS/SCI with CI Polygraph",
+      "TS/SCI with FS Polygraph",
+      "Other"
+    ],
+    "company": "celonis",
+    "jobUrl": "https://job-boards.greenhouse.io/celonis/jobs/7799840003?gh_jid=7799840003",
+    "location": "Remote, US, Washington DC",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Voornaam",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8038010?gh_jid=8038010",
+    "location": "Bleiswijk, South Holland, Netherlands",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Achternaam",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8038010?gh_jid=8038010",
+    "location": "Bleiswijk, South Holland, Netherlands",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Telefoon",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8038010?gh_jid=8038010",
+    "location": "Bleiswijk, South Holland, Netherlands",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Sollicitatiebrief",
+    "required": false,
+    "type": "input_file",
+    "options": [],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8038010?gh_jid=8038010",
+    "location": "Bleiswijk, South Holland, Netherlands",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Deze functie kan uitsluitend in loondienst worden vervuld en niet als ZZP-opdracht. Is dit voor jou akkoord?\n",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8038010?gh_jid=8038010",
+    "location": "Bleiswijk, South Holland, Netherlands",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Wat is jouw salarisindicatie per maand op basis van een fulltime werkweek van 40 uur, inclusief 8% vakantiegeld?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8038010?gh_jid=8038010",
+    "location": "Bleiswijk, South Holland, Netherlands",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Wat zou voor jou een geschikte startdatum zijn?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8038010?gh_jid=8038010",
+    "location": "Bleiswijk, South Holland, Netherlands",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Heb je een werkvergunning of visum nodig om in dit land te kunnen werken?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8038010?gh_jid=8038010",
+    "location": "Bleiswijk, South Holland, Netherlands",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "In welk land woon je momenteel?",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Afghanistan",
+      "Albania",
+      "Algeria",
+      "Andorra",
+      "Angola",
+      "Antigua and Barbuda",
+      "Argentina",
+      "Armenia",
+      "Australia",
+      "Austria",
+      "Azerbaijan",
+      "Bahamas",
+      "Bahrain",
+      "Bangladesh",
+      "Barbados",
+      "Belarus",
+      "Belgium",
+      "Belize",
+      "Benin",
+      "Bhutan",
+      "Bolivia",
+      "Bosnia and Herzegovina",
+      "Botswana",
+      "Brazil",
+      "Brunei",
+      "Bulgaria",
+      "Burkina Faso",
+      "Burundi",
+      "Côte d'Ivoire",
+      "Cabo Verde"
+    ],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8038010?gh_jid=8038010",
+    "location": "Bleiswijk, South Holland, Netherlands",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Met welk gender voel je je het meest verbonden?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Man",
+      "Woman",
+      "Non-Binary",
+      "Prefer Not to Disclose"
+    ],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8038010?gh_jid=8038010",
+    "location": "Bleiswijk, South Holland, Netherlands",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Via welk kanaal ben je met deze vacature in aanraking gekomen?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "HelloFresh Careers site",
+      "HelloFresh employee",
+      "Promoted Ad on Instagram/Facebook",
+      "Promoted Ad on LinkedIn",
+      "Indeed",
+      "LinkedIn",
+      "Career Event",
+      "Other"
+    ],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8038010?gh_jid=8038010",
+    "location": "Bleiswijk, South Holland, Netherlands",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "LinkedIn Profiel",
+    "required": false,
+    "type": "input_text",
+    "options": [],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8038010?gh_jid=8038010",
+    "location": "Bleiswijk, South Holland, Netherlands",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Interview Recording and AI Notetaker — Notice",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "I consent to the recording and AI transcription of my interview.",
+      "I do not consent. (We will not use the notetaker for your interview.)"
+    ],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8038010?gh_jid=8038010",
+    "location": "Bleiswijk, South Holland, Netherlands",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you authorized to work lawfully in the United States?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8220529?gh_jid=8220529",
+    "location": "Phoenix, AZ, United States",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Will you now or in the future require HelloFresh to commence (\"sponsor\") an immigration case in order to employ you (for example, H1-B or other employment-based immigration case) \n",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8220529?gh_jid=8220529",
+    "location": "Phoenix, AZ, United States",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "California Consumer Privacy Act Notice to Applicants and Employees (US ONLY)",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8220529?gh_jid=8220529",
+    "location": "Phoenix, AZ, United States",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Have you been previously employed by HelloFresh?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8220529?gh_jid=8220529",
+    "location": "Phoenix, AZ, United States",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have a spouse, partner, or any immediate family members working for HelloFresh, Factor, GreenChef or Every Plate? If so, specify the name & relationship here:",
+    "required": false,
+    "type": "input_text",
+    "options": [],
+    "company": "hellofresh",
+    "jobUrl": "https://careers.hellofresh.com/global/en/job/8220529?gh_jid=8220529",
+    "location": "Phoenix, AZ, United States",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your English Level (Basic, Intermediate and Advanced)? ",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "wildlifestudios",
+    "jobUrl": "https://job-boards.greenhouse.io/wildlifestudios/jobs/8908816002",
+    "location": "São Paulo",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Salary Growth Expectations",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "wildlifestudios",
+    "jobUrl": "https://job-boards.greenhouse.io/wildlifestudios/jobs/8912839002",
+    "location": "São Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you eligible to work in the country you're applying for?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6234888004",
+    "location": "Rio de Janeiro; São Paulo, Sao Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "On Data Privacy",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Acknowledge"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6234888004",
+    "location": "Rio de Janeiro; São Paulo, Sao Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have any family members currently working at VTEX? If so, please list their names and their positions.",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6234888004",
+    "location": "Rio de Janeiro; São Paulo, Sao Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have any close friends or relatives who are Public Officers? If so, please list their names and their position in their government agency. (Private)",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6234888004",
+    "location": "Rio de Janeiro; São Paulo, Sao Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you agree that this interview may be transcribed using artificial intelligence tools? | Você concorda que esta entrevista poderá ter sua transcrição gerada por ferramentas de inteligência artificial?\n",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes, I agree",
+      "No, I disagree"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6234888004",
+    "location": "Rio de Janeiro; São Paulo, Sao Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you a person with disability (PwD/PCD)? ",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6234888004",
+    "location": "Rio de Janeiro; São Paulo, Sao Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "How would you rate your english proficiency level?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "None",
+      "Basic",
+      "Intermidiate",
+      "Advanced",
+      "Fluent"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6234888004",
+    "location": "Rio de Janeiro; São Paulo, Sao Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Você tem disponibilidade de trabalhar de forma híbrida no escritório do RJ ou SP?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Sim",
+      "Não"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6234888004",
+    "location": "Rio de Janeiro; São Paulo, Sao Paulo, Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have any special needs that we should be aware of in order to accommodate you during the recruitment process? Feel free to specify which one in affirmative case.",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6218060004",
+    "location": "Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you comfortable working in teams that primarily operate in English?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6218060004",
+    "location": "Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have any close friends or relatives who are Public Officers? If so, please list their names and their position in their government agency.",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6218060004",
+    "location": "Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you agree that this interview may be transcribed using artificial intelligence tools? | Você concorda que esta entrevista poderá ter sua transcrição gerada por ferramentas de inteligência artificial?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes, I agree",
+      "No, I disagree"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6218060004",
+    "location": "Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you fluent  in Portuguese?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6218060004",
+    "location": "Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you based in Brazil?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6218060004",
+    "location": "Brazil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please, select your English proficiency:",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Basis",
+      "Intermediate",
+      "Advanced",
+      "Fluent/Native",
+      "None"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6098704004",
+    "location": "Barcelona",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please, select your Spanish proficiency:",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Basis",
+      "Intermediate",
+      "Advanced",
+      "Fluent/Native",
+      "None"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6098704004",
+    "location": "Barcelona",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please, select your Italian proficiency:",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Basis",
+      "Intermediate",
+      "Advanced",
+      "Fluent/Native",
+      "None"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6098704004",
+    "location": "Barcelona",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please, select your French proficiency:",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Basis",
+      "Intermediate",
+      "Advanced",
+      "Fluent/Native",
+      "None"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6098704004",
+    "location": "Barcelona",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you based in Barcelona (or nearby), or open to relocating for this role?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No, but I'm open to relocate",
+      "No"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6098704004",
+    "location": "Barcelona",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your total ANNUAL compensation expectation? Of this amount, how much do you expect for base salary and for variable compensation? (In Euros)",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6098704004",
+    "location": "Barcelona",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Have you applied for this position in less than 4 months?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6098704004",
+    "location": "Barcelona",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Confidentiality Notice",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "I certify that I read, understood, and agree to the confidentiality terms established for this open position.",
+      "I certify that I am unaware of the confidentiality terms established for this open position."
+    ],
+    "company": "vtex",
+    "jobUrl": "https://job-boards.greenhouse.io/vtex/jobs/6098704004",
+    "location": "Barcelona",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Você possui alguma deficiência/neurodiversidade?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Sim",
+      "Não",
+      "Não sei informar",
+      "Prefiro não informar"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Qual seu tipo de deficiência?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Visual",
+      "Auditiva",
+      "Intelectual",
+      "Mental",
+      "Psicossocial",
+      "Física",
+      "Múltiplas (ou Múltipla)",
+      "Reabilitado(a) pelo INSS",
+      "Não sei informar",
+      "Prefiro não informar"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Anexe aqui seu laudo médico atualizado.",
+    "required": true,
+    "type": "input_file",
+    "options": [],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Para garantirmos um processo seletivo justo e acessível, você gostaria de sinalizar alguma necessidade de acessibilidade?",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Intérprete de língua de sinais;",
+      "Legenda;",
+      "Ampliação de tempo para provas e entrevistas;",
+      "Envio de textos em formatos acessíveis (Word, fonte ampliada, leitura simples);",
+      "Adaptação do formato da entrevista (ex: escrita em vez de oral);",
+      "Adaptação do Case aplicado no melhor formato (de slides para doc ou vice-versa, ou outro recurso necessário) e/ou com tempo a mais (PcDs têm direito à ⅓ a mais de tempo, conforme previsto na legislação);",
+      "Descrição de imagens e autodescrição;",
+      "Pausas extras durante entrevistas ou dinâmicas;",
+      "Linguagem simplificada.",
+      "Não se aplica."
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Qual é a sua nacionalidade?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Afghan",
+      "Albanian",
+      "Algerian",
+      "Andorran",
+      "Angolan",
+      "Antiguan or Barbudan",
+      "Argentinian",
+      "Armenian",
+      "Australian",
+      "Austrian",
+      "Azerbaijani",
+      "Bahamian",
+      "Bahraini",
+      "Bangladeshi",
+      "Barbadian",
+      "Belarusian",
+      "Belgian",
+      "Belizean",
+      "Beninese",
+      "Bhutanese",
+      "Bolivian",
+      "Bosnian or Herzegovinian",
+      "Botswanan",
+      "Brazilian",
+      "Bruneian",
+      "Bulgarian",
+      "Burkinabe",
+      "Burundian",
+      "Cabo Verdean",
+      "Cambodian"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Você está legalmente autorizado(a) a trabalhar no país onde a vaga está localizada?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Se sim, qual a validade? (Se você não for estrangeiro(a), coloque N/A)",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Caso se sinta confortável para compartilhar com a gente, qual é a sua pretensão salarial para esta posição?",
+    "required": false,
+    "type": "input_text",
+    "options": [],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Por favor, compartilhe quais pronomes você utiliza.",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Ela / Dela",
+      "Ele / Dele",
+      "Elu / Delu",
+      "Prefiro não responder"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Você possui experiência prévia atuando no suporte, inteligência ou operações (Sales Ops / PnP) colado a equipes comerciais B2B?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Sim, tenho experiência direta em Sales Ops / Planejamento e Performance para times comerciais B2B",
+      "Sim, tenho experiência em planejamento/operações, mas em outras frentes (ex.: financeiro, atendimento, cobrança).",
+      "Não tenho experiência prévia com times comerciais ou operações."
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Como você classifica seu nível de conhecimento e prática em Google Sheets ou Excel para análise de produtividade?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Avançado: Domino tabelas dinâmicas e fórmulas avançadas como ÍNDICE/CORRESP e REGEX para cruzar e analisar bases complexas.",
+      "Intermediário: Uso com frequência tabelas dinâmicas e fórmulas intermediárias (ex.: SOMASE, CONT.SE, PROCV).",
+      "Básico: Realizo apenas cálculos simples e formatações básicas"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Qual é o seu nível de experiência prática com ferramentas de CRM (especialmente Salesforce ou HubSpot)?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Avançado: Já atuei realizando ajustes estruturais, automações, gestão/organização de bases de dados e criação de relatórios/dashboards diretamente no CRM.",
+      "Intermediário: Utilizo CRM diariamente para gestão de pipeline, extração de dados e consultas.",
+      "Básico / Nenhuma: Conheço apenas conceitos gerais ou não tenho experiência prática."
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Qual é o seu nível de autonomia com a linguagem SQL para extração e consulta de dados?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Conhecimento prático/básico: Consigo construir queries fundamentais (SELECT, WHERE, JOIN, GROUP BY) para extrair e cruzar dados autonomamente.",
+      "Nível conceitual/iniciante: Entendo a lógica do banco de dados, mas ainda estou aprendendo a construir queries.",
+      "Não tenho conhecimento em SQL."
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Descreva brevemente uma experiência recente em que você utilizou dados, planilhas ou ferramentas (CRM, automações ou inteligência artificial) para otimizar um processo comercial, melhorar a geração de leads (outbound) ou apoiar a definição de metas. Qual foi a sua atuação e o resultado gerado?",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4433716009",
+    "location": "Brasil",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Tiene alguna discapacidad o neurodiversidad?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Sí",
+      "No",
+      "No sé / No puedo informar",
+      "Prefiero no informar"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4330619009",
+    "location": "Argentina",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Cuál es su tipo de discapacidad?",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Visual",
+      "Auditiva",
+      "Intelectual",
+      "Mental",
+      "Psicosocial",
+      "Física",
+      "Múltiples",
+      "Trabajador(a) Rehabilitado(a)",
+      "No sé / No puedo informar",
+      "Prefiero no informar"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4330619009",
+    "location": "Argentina",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Para garantizar un proceso de selección justo y accesible, ¿le gustaría señalar alguna necesidad de accesibilidad?",
+    "required": false,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Intérprete de lenguaje de señas;",
+      "Subtítulos;",
+      "Tiempo adicional para pruebas y entrevistas;",
+      "Envío de textos en formatos accesibles (Word, fuente ampliada, lectura simple);",
+      "Adaptación del formato de la entrevista (ej: escrita en lugar de oral);",
+      "Adaptación del caso práctico al mejor formato (de diapositivas a documento o viceversa, u otro recurso necesario) y/o con tiempo adicional;",
+      "Descripción de imágenes y autodescripción;",
+      "Pausas extras durante entrevistas o dinámicas;",
+      "Lenguaje simplificado;",
+      "No aplica."
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4330619009",
+    "location": "Argentina",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Cuál es tu nacionalidad?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Afghan",
+      "Albanian",
+      "Algerian",
+      "Andorran",
+      "Angolan",
+      "Antiguan or Barbudan",
+      "Argentinian",
+      "Armenian",
+      "Australian",
+      "Austrian",
+      "Azerbaijani",
+      "Bahamian",
+      "Bahraini",
+      "Bangladeshi",
+      "Barbadian",
+      "Belarusian",
+      "Belgian",
+      "Belizean",
+      "Beninese",
+      "Bhutanese",
+      "Bolivian",
+      "Bosnian or Herzegovinian",
+      "Botswanan",
+      "Brazilian",
+      "Bruneian",
+      "Bulgarian",
+      "Burkinabe",
+      "Burundian",
+      "Cabo Verdean",
+      "Cambodian"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4330619009",
+    "location": "Argentina",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Está usted legalmente autorizado(a) para trabajar en el país donde se encuentra la vacante?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4330619009",
+    "location": "Argentina",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Si la respuesta es sí, ¿cuál es la validez? (Si no es extranjero(a), ponga N/A)",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4330619009",
+    "location": "Argentina",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "CUIL:",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4330619009",
+    "location": "Argentina",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Cuál es tu nivel de inglés? \n",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Básico:Entiendo frases sencillas y puedo responder en situaciones muy básicas.",
+      "Intermedio: Puedo manejar conversaciones diarias y comprender contenido escrito general, pero tengo dificultades con discusiones o presentaciones complejas.",
+      "Avanzado:Me siento cómodo/a en la mayoría de los entornos profesionales, incluyendo discusiones técnicas y reuniones de equipo, pero liderar presentaciones grandes aún puede ser un desafío.",
+      "Fluido / Nativo: Me comunico sin esfuerzo en todos los contextos profesionales, incluyendo negociaciones complejas y presentaciones de alto nivel."
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4330619009",
+    "location": "Argentina",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Cuál es tu expectativa salarial para esta posición?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4330619009",
+    "location": "Argentina",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Por favor, comparte qué pronombres utilizas.",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Ella /Su",
+      "Él /Su",
+      "Elle /Suye",
+      "Prefiero no responder"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4330619009",
+    "location": "Argentina",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Ubicación",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4330619009",
+    "location": "Argentina",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Tienes alguna discapacidad o neurodiversidad?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Sí",
+      "No",
+      "No sé / No puedo informar",
+      "Prefiero no informar"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4361108009",
+    "location": "Mexico City, Mexico City, Mexico",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Cuál es tu tipo de discapacidad?",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Visual",
+      "Auditiva",
+      "Intelectual",
+      "Mental",
+      "Psicosocial",
+      "Física",
+      "Múltiples",
+      "Trabajador(a) Rehabilitado(a)",
+      "No sé / No puedo informar",
+      "Prefiero no informar"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4361108009",
+    "location": "Mexico City, Mexico City, Mexico",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Para garantizar un proceso de selección justo y accesible, ¿te gustaría hacernos saber de alguna necesidad de accesibilidad?",
+    "required": false,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Intérprete de lenguaje de señas;",
+      "Subtítulos;",
+      "Tiempo adicional para pruebas y entrevistas;",
+      "Envío de textos en formatos accesibles (Word, fuente ampliada, lectura simple);",
+      "Adaptación del formato de la entrevista (ej: escrita en lugar de oral);",
+      "Adaptación del caso práctico al mejor formato (de diapositivas a documento o viceversa, u otro recurso necesario) y/o con tiempo adicional;",
+      "Descripción de imágenes y autodescripción;",
+      "Pausas extras durante entrevistas o dinámicas;",
+      "Lenguaje simplificado;",
+      "No aplica."
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4361108009",
+    "location": "Mexico City, Mexico City, Mexico",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Posees autorización legal para trabajar en el país donde se encuentra la vacante?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4361108009",
+    "location": "Mexico City, Mexico City, Mexico",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "CURP",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4361108009",
+    "location": "Mexico City, Mexico City, Mexico",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "¿Cuál es tu expectativa salarial para esta posición? Mensual bruto en mxn",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4361108009",
+    "location": "Mexico City, Mexico City, Mexico",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Por favor, comparte cuáles pronombres utilizas.",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Ella",
+      "Él",
+      "Elle",
+      "Prefiero no responder"
+    ],
+    "company": "quintoandar",
+    "jobUrl": "https://job-boards.greenhouse.io/quintoandar/jobs/4361108009",
+    "location": "Mexico City, Mexico City, Mexico",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your country of residence?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "xendit",
+    "jobUrl": "https://job-boards.greenhouse.io/xendit/jobs/7813473003",
+    "location": "Hong Kong",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Will you require visa sponsorship in the country in which this position is located?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "xendit",
+    "jobUrl": "https://job-boards.greenhouse.io/xendit/jobs/7813473003",
+    "location": "Hong Kong",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "If you are comfortable in doing so, please share your current monthly gross salary",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "xendit",
+    "jobUrl": "https://job-boards.greenhouse.io/xendit/jobs/7813473003",
+    "location": "Hong Kong",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "If you are comfortable in doing so, please share your expected monthly gross salary",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "xendit",
+    "jobUrl": "https://job-boards.greenhouse.io/xendit/jobs/7813473003",
+    "location": "Hong Kong",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you related to, or do you have a close personal relationship with, anyone currently working at Xendit? If so, please provide their name and your relationship to them.",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "xendit",
+    "jobUrl": "https://job-boards.greenhouse.io/xendit/jobs/7813473003",
+    "location": "Hong Kong",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "How many years of experience working in management consulting, corporate development or strategy at a high-growth technology or financial services company, and programme leadership at a payments, banking, or fintech business?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "xendit",
+    "jobUrl": "https://job-boards.greenhouse.io/xendit/jobs/7984045003",
+    "location": "Hong Kong; Singapore, Singapore",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "How many years of experience do you have leading end-to-end market expansion or international entry?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "xendit",
+    "jobUrl": "https://job-boards.greenhouse.io/xendit/jobs/7984045003",
+    "location": "Hong Kong; Singapore, Singapore",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "How many years of experience do you have leading complex, cross-functional programs to a hard launch date (designing the plan and landing it)?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "xendit",
+    "jobUrl": "https://job-boards.greenhouse.io/xendit/jobs/7984045003",
+    "location": "Hong Kong; Singapore, Singapore",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "名",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "paypay",
+    "jobUrl": "https://job-boards.greenhouse.io/paypay/jobs/5818643004",
+    "location": "Hybrid",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "姓",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "paypay",
+    "jobUrl": "https://job-boards.greenhouse.io/paypay/jobs/5818643004",
+    "location": "Hybrid",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "電子メール",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "paypay",
+    "jobUrl": "https://job-boards.greenhouse.io/paypay/jobs/5818643004",
+    "location": "Hybrid",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "電話",
+    "required": false,
+    "type": "input_text",
+    "options": [],
+    "company": "paypay",
+    "jobUrl": "https://job-boards.greenhouse.io/paypay/jobs/5818643004",
+    "location": "Hybrid",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "履歴書/CV",
+    "required": true,
+    "type": "input_file",
+    "options": [],
+    "company": "paypay",
+    "jobUrl": "https://job-boards.greenhouse.io/paypay/jobs/5818643004",
+    "location": "Hybrid",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "カバーレター",
+    "required": false,
+    "type": "input_file",
+    "options": [],
+    "company": "paypay",
+    "jobUrl": "https://job-boards.greenhouse.io/paypay/jobs/5818643004",
+    "location": "Hybrid",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "履歴書は、上記の履歴書へ。\n職務経歴書は上記のカバーレター(cover letter)へ添付してください。 \nまたもし追加の添付資料（ポートフォリオなど）がありました際はこちらをご使用ください。",
+    "required": false,
+    "type": "input_file",
+    "options": [],
+    "company": "paypay",
+    "jobUrl": "https://job-boards.greenhouse.io/paypay/jobs/5818643004",
+    "location": "Hybrid",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "補足事項",
+    "required": false,
+    "type": "textarea",
+    "options": [],
+    "company": "paypay",
+    "jobUrl": "https://job-boards.greenhouse.io/paypay/jobs/5818643004",
+    "location": "Hybrid",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "下記のURLより、採用応募者のプライバシーポリシーを確認のうえ、同意いただきますようお願いいたします。",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "同意する"
+    ],
+    "company": "paypay",
+    "jobUrl": "https://job-boards.greenhouse.io/paypay/jobs/5818643004",
+    "location": "Hybrid",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "From where do you intend to work? ",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "figma",
+    "jobUrl": "https://boards.greenhouse.io/figma/jobs/5426468004?gh_jid=5426468004",
+    "location": "San Francisco, CA • New York, NY • United States",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you authorized to work in the country for which you applied? ",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "figma",
+    "jobUrl": "https://boards.greenhouse.io/figma/jobs/5426468004?gh_jid=5426468004",
+    "location": "San Francisco, CA • New York, NY • United States",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Have you ever worked for Figma before, as an employee or a contractor/consultant? ",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "figma",
+    "jobUrl": "https://boards.greenhouse.io/figma/jobs/5426468004?gh_jid=5426468004",
+    "location": "San Francisco, CA • New York, NY • United States",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "How did your hear about this position?",
+    "required": true,
+    "type": "input_text",
+    "options": [],
+    "company": "airbnb",
+    "jobUrl": "https://careers.airbnb.com/positions/8306554?gh_jid=8306554",
+    "location": "Canada",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you legally authorized to work in the country where the job is located?\n",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes, I am currently legally authorized to work in the country where the job is located.",
+      "No, I am not currently legally authorized to work in the country where the job is located."
+    ],
+    "company": "airbnb",
+    "jobUrl": "https://careers.airbnb.com/positions/8306554?gh_jid=8306554",
+    "location": "Canada",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Airbnb Candidate Privacy Policy",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "I acknowledge that I have read and understood the Airbnb Candidate Privacy Policy."
+    ],
+    "company": "airbnb",
+    "jobUrl": "https://careers.airbnb.com/positions/8306554?gh_jid=8306554",
+    "location": "Canada",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you currently subject to any non-compete or non-solicitation agreement that would impact your ability to work at Airbnb or prevent you from accepting a job offer from Airbnb? ",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "airbnb",
+    "jobUrl": "https://careers.airbnb.com/positions/8306554?gh_jid=8306554",
+    "location": "Canada",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Candidate AI Usage Attestation:",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "I agree"
+    ],
+    "company": "airbnb",
+    "jobUrl": "https://careers.airbnb.com/positions/8306554?gh_jid=8306554",
+    "location": "Canada",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Why have you chosen to apply to Airbnb?",
+    "required": true,
+    "type": "textarea",
+    "options": [],
+    "company": "airbnb",
+    "jobUrl": "https://careers.airbnb.com/positions/8345532?gh_jid=8345532",
+    "location": "Japan",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you based in Japan?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "airbnb",
+    "jobUrl": "https://careers.airbnb.com/positions/8345532?gh_jid=8345532",
+    "location": "Japan",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "This role requires advanced fluency in English and Japanese language, both spoken and written. Please select your level of proficiency for both language.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Native / Professional working proficiency",
+      "Limited Working proficiency"
+    ],
+    "company": "airbnb",
+    "jobUrl": "https://careers.airbnb.com/positions/8345532?gh_jid=8345532",
+    "location": "Japan",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Consent to Privacy Notice (Japan)",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "I have read and consent to the Privacy Notice."
+    ],
+    "company": "airbnb",
+    "jobUrl": "https://careers.airbnb.com/positions/8345532?gh_jid=8345532",
+    "location": "Japan",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you legally authorized to work in the country in which you are applying?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "databricks",
+    "jobUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=8805655002",
+    "location": "Tokyo, Japan",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you now or will you in the future need sponsorship for employment visa status in the country in which you are applying?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "databricks",
+    "jobUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=8805655002",
+    "location": "Tokyo, Japan",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you currently or have you previously worked for Databricks in the past?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "No",
+      "Yes - I currently work at Databricks",
+      "Yes - Previous Full-Time Employee",
+      "Yes - Previous Contractor",
+      "Yes - Previous Intern"
+    ],
+    "company": "databricks",
+    "jobUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=8805655002",
+    "location": "Tokyo, Japan",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you possess business fluency in Japanese? ",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "databricks",
+    "jobUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=8805655002",
+    "location": "Tokyo, Japan",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have end to end sales experience? (from prospecting to closing deals)",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "databricks",
+    "jobUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=6918763002",
+    "location": "Bengaluru, India; Mumbai, India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have experience selling Cloud Tech and/or Data& AI products?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "databricks",
+    "jobUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=6918763002",
+    "location": "Bengaluru, India; Mumbai, India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "This is an Individual Contributor role, are you comfortable with that?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "databricks",
+    "jobUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=6918763002",
+    "location": "Bengaluru, India; Mumbai, India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please confirm whether any of the below applies to you.  Select all that apply.\n\nNote: This information will only be used to ensure compliance with U.S. sanctions and export controls.",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Citizen or permanent resident of Cuba, Iran, North Korea, or Syria",
+      "Ordinarily a resident of Cuba, Iran, North Korea, Syria or the Crimea, Donetsk, Luhansk, Zaporizhzhia, or Kherson regions of Ukraine",
+      "Ordinarily a resident of Russia or Belarus and not willing to relocate for a Databricks role",
+      "None of the above"
+    ],
+    "company": "databricks",
+    "jobUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=6918763002",
+    "location": "Bengaluru, India; Mumbai, India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "If you selected a response to the prior question other than “none of the above,” please confirm whether any of the following also applies to you.  Select all that apply.\n\n",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "U.S. citizen",
+      "U.S. non-citizen national",
+      "U.S. permanent resident (Green Card holder)",
+      "Individual granted asylum in the U.S.",
+      "Individual granted refugee status in the U.S.",
+      "Individual granted citizenship in a country other than Cuba, Iran, North Korea, or Syria",
+      "Individual granted permanent residency in a country other than Cuba, Iran, North Korea, or Syria",
+      "None of these apply to me",
+      "Not applicable (i.e., I selected “none of the above” for the prior question)"
+    ],
+    "company": "databricks",
+    "jobUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=6918763002",
+    "location": "Bengaluru, India; Mumbai, India",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you legally work authorized to work in the US?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "robinhood",
+    "jobUrl": "https://boards.greenhouse.io/robinhood/jobs/8319304?t=gh_src=&gh_jid=8319304",
+    "location": "Denver, CO; Westlake, TX",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Will you now (or in the future) require visa sponsorship in order to work in the US?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "robinhood",
+    "jobUrl": "https://boards.greenhouse.io/robinhood/jobs/8319304?t=gh_src=&gh_jid=8319304",
+    "location": "Denver, CO; Westlake, TX",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Have you ever worked for Robinhood as an employee, intern or contractor? Note that providing false or misleading information may result in disqualification from the hiring process.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "I currently work at Robinhood as a full-time employee or intern",
+      "I have previously worked at Robinhood as a full-time employee or intern (Hoodie Alumni)",
+      "I currently work at Robinhood in a contractor role",
+      "I have previously worked at Robinhood in a contractor role",
+      "I have never worked at Robinhood"
+    ],
+    "company": "robinhood",
+    "jobUrl": "https://boards.greenhouse.io/robinhood/jobs/8319304?t=gh_src=&gh_jid=8319304",
+    "location": "Denver, CO; Westlake, TX",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you willing to work from the office(s) listed on the job description?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "robinhood",
+    "jobUrl": "https://boards.greenhouse.io/robinhood/jobs/8319304?t=gh_src=&gh_jid=8319304",
+    "location": "Denver, CO; Westlake, TX",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you have:\na) any Personal/Familial Relationships (current Robinhood employees or employees of Robinhood’s vendors); \nb) any Outside Business Activities that you wish to continue; \nc) any investment that is greater than 5% of the outstanding shares of a publicly-traded company;\nd) any investment in a private company that has a business relationship or that is a current competitor of Robinhood; or \ne) any Intellectual Property Ownership (patents, trademarks, copyrights) that you wish to retain and/or create/develop while at Robinhood?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "robinhood",
+    "jobUrl": "https://boards.greenhouse.io/robinhood/jobs/8319304?t=gh_src=&gh_jid=8319304",
+    "location": "Denver, CO; Westlake, TX",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "If you answered \"Yes\" to the above question, please provide additional information here:",
+    "required": false,
+    "type": "input_text",
+    "options": [],
+    "company": "robinhood",
+    "jobUrl": "https://boards.greenhouse.io/robinhood/jobs/8319304?t=gh_src=&gh_jid=8319304",
+    "location": "Denver, CO; Westlake, TX",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Robinhood adheres to applicable laws and regulations in relation to government officials given inherent bribery and/or corruption risk. A government official is any person that performs a public function on any level or acts in any official capacity on behalf of a government or government owned entity. \na)  Do you currently hold or have you held, within the last 5 years, a position as a government official?\nb)  Have you been referred or recommended for this position by a government official?\nc)  Are you related to or have a close personal relationship with a government official?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "robinhood",
+    "jobUrl": "https://boards.greenhouse.io/robinhood/jobs/8319304?t=gh_src=&gh_jid=8319304",
+    "location": "Denver, CO; Westlake, TX",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "After onboarding, in-person attendance is required at least 3 days per week.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes, I can meet these requirements.",
+      "No, I cannot meet these requirements."
+    ],
+    "company": "robinhood",
+    "jobUrl": "https://boards.greenhouse.io/robinhood/jobs/8319304?t=gh_src=&gh_jid=8319304",
+    "location": "Denver, CO; Westlake, TX",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "This role requires in-person attendance at either our Denver, CO or Westlake, TX office.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes, I can meet these requirements.",
+      "No, I cannot meet these requirements."
+    ],
+    "company": "robinhood",
+    "jobUrl": "https://boards.greenhouse.io/robinhood/jobs/8319304?t=gh_src=&gh_jid=8319304",
+    "location": "Denver, CO; Westlake, TX",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Have you used Robinhood?",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "robinhood",
+    "jobUrl": "https://boards.greenhouse.io/robinhood/jobs/8305772?t=gh_src=&gh_jid=8305772",
+    "location": "Bellevue, WA; Menlo Park, CA; New York, NY",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "What is your preferred office location?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Menlo Park, CA",
+      "New York, NY",
+      "Bellevue, WA",
+      "Toronto, Canada"
+    ],
+    "company": "robinhood",
+    "jobUrl": "https://boards.greenhouse.io/robinhood/jobs/8305772?t=gh_src=&gh_jid=8305772",
+    "location": "Bellevue, WA; Menlo Park, CA; New York, NY",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you a US citizen or lawful permanent resident?",
+    "required": false,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "robinhood",
+    "jobUrl": "https://boards.greenhouse.io/robinhood/jobs/6669758?t=gh_src=&gh_jid=6669758",
+    "location": "New York, NY",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please indicate whether you are either a citizen or resident of any of the following countries: Cuba, Iran, North Korea, Syria or Crimea Region of Ukraine.\n",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "twilio",
+    "jobUrl": "https://job-boards.greenhouse.io/twilio/jobs/8249615",
+    "location": "Remote - US",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "By clicking the \"Acknowledge\" button, you acknowledge that Twilio processes data in accordance with the Twilio Applicant Privacy Policy.",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Acknowledge"
+    ],
+    "company": "twilio",
+    "jobUrl": "https://job-boards.greenhouse.io/twilio/jobs/8249615",
+    "location": "Remote - US",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "By checking this box, I confirm I have read, reviewed and understood the guidelines outlined in the Candidate AI Responsible Use Policy. I affirm that all the information and materials I submit throughout my application and candidacy will reflect my own work and experience.",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Acknowledge"
+    ],
+    "company": "twilio",
+    "jobUrl": "https://job-boards.greenhouse.io/twilio/jobs/8249615",
+    "location": "Remote - US",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "I certify that the information provided in this application is true and correct to the best of my knowledge. I understand that any false statements or omissions may result in disqualification from employment consideration or, if employed, in termination.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "datadog",
+    "jobUrl": "https://careers.datadoghq.com/detail/8257324/?gh_jid=8257324",
+    "location": "New York, New York, USA",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "I understand my application will be processed in accordance with Datadog’s Candidate Privacy Policy.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "datadog",
+    "jobUrl": "https://careers.datadoghq.com/detail/8257324/?gh_jid=8257324",
+    "location": "New York, New York, USA",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you legally authorised to work full-time in the country where this job is based?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes, no restriction.",
+      "Yes, but I will need sponsorship in the future.",
+      "No, I need sponsorship now."
+    ],
+    "company": "datadog",
+    "jobUrl": "https://careers.datadoghq.com/detail/8257324/?gh_jid=8257324",
+    "location": "New York, New York, USA",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "In what cities are you available to work?",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Amsterdam",
+      "Atlanta",
+      "Bangalore",
+      "Barcelona",
+      "Barueri São Paulo",
+      "Bordeaux",
+      "Boston",
+      "Chicago",
+      "Copenhagen",
+      "Denver",
+      "Dubai",
+      "Dublin",
+      "Grenoble",
+      "Hamburg",
+      "Jakarta",
+      "Lisbon",
+      "London",
+      "Lyon",
+      "Madrid",
+      "Melbourne",
+      "Mexico City",
+      "Montpellier",
+      "Mumbai",
+      "Nantes",
+      "New York City",
+      "Nice",
+      "Osaka",
+      "Paris",
+      "Pittsburgh",
+      "Remote"
+    ],
+    "company": "datadog",
+    "jobUrl": "https://careers.datadoghq.com/detail/8257324/?gh_jid=8257324",
+    "location": "New York, New York, USA",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Please select all the languages you speak fluently.",
+    "required": true,
+    "type": "multi_value_multi_select",
+    "options": [
+      "Arabic",
+      "Bahasa Indonesia",
+      "Bulgarian",
+      "Cantonese",
+      "Croatian",
+      "Czech",
+      "Danish",
+      "Dutch",
+      "English",
+      "Estonian",
+      "Finnish",
+      "French",
+      "German",
+      "Greek",
+      "Hebrew",
+      "Hindi",
+      "Hungarian",
+      "Italian",
+      "Japanese",
+      "Korean",
+      "Latvian",
+      "Lithuanian",
+      "Malay",
+      "Mandarin",
+      "Norwegian",
+      "Polish",
+      "Portuguese",
+      "Portuguese (Brazilian)",
+      "Romanian",
+      "Russian"
+    ],
+    "company": "datadog",
+    "jobUrl": "https://careers.datadoghq.com/detail/8257324/?gh_jid=8257324",
+    "location": "New York, New York, USA",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you located in the Netherlands? ",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "grafanalabs",
+    "jobUrl": "https://job-boards.greenhouse.io/grafanalabs/jobs/6116452004",
+    "location": "Netherlands (Remote)",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Which of the following best describes you?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "I am an AI or automated program",
+      "I am a human being"
+    ],
+    "company": "grafanalabs",
+    "jobUrl": "https://job-boards.greenhouse.io/grafanalabs/jobs/6116452004",
+    "location": "Netherlands (Remote)",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Do you speak fluent Arabic?",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "grafanalabs",
+    "jobUrl": "https://job-boards.greenhouse.io/grafanalabs/jobs/6116471004",
+    "location": "Spain (Remote)",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "Are you located in Spain? ",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "grafanalabs",
+    "jobUrl": "https://job-boards.greenhouse.io/grafanalabs/jobs/6116471004",
+    "location": "Spain (Remote)",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "By agreeing here: \n(1) I certify that the information I provided to Asana in connection with my application for employment is accurate and truthful; and\n(2) I acknowledge and agree that I have carefully read the mutual Applicant Arbitration Agreement set out below and agree to be bound by it",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "asana",
+    "jobUrl": "https://www.asana.com/jobs/apply/8194380?gh_jid=8194380",
+    "location": "San Francisco",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  },
+  {
+    "text": "I acknowledge this role follows an office-centric hybrid schedule that requires in-office work on Monday, Tuesday, and Thursday in Warsaw.",
+    "required": true,
+    "type": "multi_value_single_select",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "company": "asana",
+    "jobUrl": "https://www.asana.com/jobs/apply/8092044?gh_jid=8092044",
+    "location": "Warsaw",
+    "intent": null,
+    "needsReview": true,
+    "source": "greenhouse boards-api, fetched"
+  }
+]
