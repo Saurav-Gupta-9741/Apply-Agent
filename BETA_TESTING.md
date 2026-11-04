@@ -28,6 +28,15 @@ it to**. Switching to it once looks like a new extension to Chrome, so:
 3. In beta 4's first screen choose **"Used ApplyAgent before? Restore from a backup file"** and pick that file.
 4. Turn on **Keep an automatic backup on this PC** (Backup & move), so a reinstall never loses anything again.
 
+## What's new in 1.0.6: several applications in several tabs
+
+- The panel always shows the tab in front of you. Switch tabs and you see that page's form, never the fields or
+  questions of the application in the other tab.
+- Each tab keeps its own result: come back to a tab and its filled fields and questions are shown again, without
+  filling again. A tab that moves on to another page starts fresh.
+- One fill runs at a time. If you switch tabs while ApplyAgent is filling, it finishes in the tab it started in,
+  tells you when it is done, and the tab you are on is never touched. Press Fill there once it has finished.
+
 ## What's new in 1.0.5: the right option in every dropdown
 
 - Checked against 66 real dropdowns with their traps. Fixed: "Native" chose "Full professional"; "C" chose "C++";

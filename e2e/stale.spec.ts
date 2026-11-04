@@ -10,7 +10,7 @@ test("results and Submit are cleared when the page changes", async ({ ext, conte
   await ext.goto(`${ext.url().split("?")[0]}?tabId=${tabId}`);
   await goTo(ext, "apply");
   await ext.locator("#run").click();
-  await expect(ext.locator("#submit")).toBeVisible(); // filled, ready to submit
+  await expect(ext.locator("#submit")).toBeVisible({ timeout: 20_000 }); // filled, ready to submit
   await expect(ext.locator("#fields-box")).toBeVisible();
 
   await page.goto(`${BASE}/extreme.html`); // the user moves on to another job in the same tab

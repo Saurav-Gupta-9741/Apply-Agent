@@ -192,7 +192,15 @@ function setCount(name: string, value: number, attention = false): void {
 
 // --- Apply: current page & site permission -----------------------------------------------------------
 /** The tab the panel acts on: the active tab, or (when opened as a page, e.g. in tests) ?tabId=<id>. */
-const pinnedTabId = Number(new URLSearchParams(location.search).get("tabId")) || undefined;
+const pageParams = new URLSearchParams(location.search);
+const pinnedTabId = Number(pageParams.get("tabId")) || undefined;
+/** Tests: follow the active tab of this window, the way the side panel follows the active tab of its own window. */
+const followWindowId = Number(pageParams.get("window")) || undefined;
+/** The window this panel belongs to: switching tabs in another window never changes what it shows. */
+let panelWindowId: number | undefined = followWindowId;
+if (followWindowId === undefined && pinnedTabId === undefined) {
+  void chrome.windows.getCurrent().then((w) => (panelWindowId = w.id)).catch(() => undefined);
+}
 
 /** The keyboard shortcuts as this user has them (they can change them, and a Mac shows ⌥⇧F). */
 const keys = { fill: "Alt+Shift+F", open: "Alt+Shift+A" };
@@ -219,7 +227,7 @@ export function isPracticeForm(url: string): boolean {
 
 async function activeTab(): Promise<chrome.tabs.Tab | undefined> {
   if (pinnedTabId !== undefined) return chrome.tabs.get(pinnedTabId).catch(() => undefined);
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const [tab] = await chrome.tabs.query(followWindowId !== undefined ? { active: true, windowId: followWindowId } : { active: true, currentWindow: true });
   return tab;
 }
 
@@ -262,8 +270,11 @@ async function pingFrames(tabId: number): Promise<FramePing | undefined> {
 
 /** Without the "tabs" permission Chrome shows a tab's address only on allowed sites, or after the user opened
  * ApplyAgent on that page (icon, shortcut or right-click). Everything below works from what is known. */
+let pageCheck = 0;
 async function refreshPage(): Promise<void> {
+  const mine = ++pageCheck;
   const tab = await activeTab();
+  if (tab?.id !== undefined && tab.id !== shownTabId && pinnedTabId === undefined) showTab(tab.id, tab.url ?? "");
   const url = tab?.url ?? "";
   const pattern = url ? originPattern(url) : null;
   const allowed = pattern ? await chrome.permissions.contains({ origins: [pattern] }) : false;
@@ -274,6 +285,7 @@ async function refreshPage(): Promise<void> {
   const practice = isPracticeForm(url) && !!embedded;
   const handsOff = (!!pattern && isHandsOff(url)) || !!embedded?.handsOff;
   const canFill = (allowed || oneTime || !!embedded) && !handsOff;
+  if (mine !== pageCheck) return; // the user moved to another tab meanwhile: that tab's check paints the panel
 
   $("page-host").textContent = practice ? "ApplyAgent practice form" : pattern ? hostOf(url) : embedded ? `Form from ${hostOf(embedded.url)}` : unknownPage ? "This page" : "No web page";
   // An address stays on one line; a message ("Click the ApplyAgent icon…") wraps so it can be read in full.
@@ -288,15 +300,16 @@ async function refreshPage(): Promise<void> {
   access.className = `chip ${handsOff ? "bad" : allowed || embedded ? "ok" : oneTime ? "info" : "warn"}`;
   access.title = oneTime ? "You opened ApplyAgent on this page, so it may work here until you leave it. Allow the site to use it every time." : "";
   $("permission-box").hidden = allowed || !pattern || handsOff;
-  ($("run") as HTMLButtonElement).disabled = !canFill;
-  ($("preview") as HTMLButtonElement).disabled = !canFill;
+  // One fill at a time: while one runs in another tab, this tab's Fill waits for it.
+  ($("run") as HTMLButtonElement).disabled = !canFill || agentRunning;
+  ($("preview") as HTMLButtonElement).disabled = !canFill || agentRunning;
   void renderUsageMeter({ toast: (m, t) => toast(m, t ?? ""), showPlan: () => showSection("profile") });
   void renderFitCard(tab?.id, canFill, () => showSection("profile"));
-  await renderDetection(tab, handsOff, embedded);
+  await renderDetection(tab, handsOff, embedded, () => mine === pageCheck);
 }
 
 /** What the silent detector found on this tab, or why ApplyAgent stays out of it. */
-async function renderDetection(tab: chrome.tabs.Tab | undefined, handsOff: boolean, embedded?: FramePing): Promise<void> {
+async function renderDetection(tab: chrome.tabs.Tab | undefined, handsOff: boolean, embedded?: FramePing, current: () => boolean = () => true): Promise<void> {
   const box = $("detect-box");
   const openButton = $("open-application") as HTMLButtonElement;
   openButton.hidden = true;
@@ -314,6 +327,7 @@ async function renderDetection(tab: chrome.tabs.Tab | undefined, handsOff: boole
   const key = tab?.id !== undefined ? `detect:${tab.id}` : "";
   const stored = key ? ((await chrome.storage.session.get(key))[key] as { detection?: Detection } | undefined) : undefined;
   const d = stored?.detection;
+  if (!current()) return;
   if (!d || d.kind === "other") {
     box.hidden = true;
     return;
@@ -374,7 +388,7 @@ async function sendUntilForm(message: Message, tries = 4): Promise<RunReport | u
 /** No form on this page: if it is a job description with an Apply button, open the application and try there. */
 async function viaApplicationPage(message: Message, report: RunReport | undefined): Promise<RunReport | undefined> {
   if (report && (report.fields.length || report.status !== "not_a_form")) return report;
-  setStatus("This is the job description. Opening the application form…", "info");
+  runStatus("This is the job description. Opening the application form…", "info");
   // The page we open is the application: no second guess about it (its own "Apply" button may still show).
   return (await openApplicationForm()) ? sendUntilForm(message.type === "RUN" ? { ...message, continuing: true } : message) : report;
 }
@@ -404,6 +418,56 @@ $("allow-site").addEventListener("click", async () => {
 /** True while Fill, Preview or Submit runs: a multi-step application may load new pages meanwhile. */
 let agentRunning = false;
 
+/** Each tab's last result (round 5: several applications open at once). Switching tabs shows that tab's own
+ * fields and questions, never another application's; a tab that loads a new page loses its result. */
+type TabResult = { report: RunReport | undefined; url: string; preview?: boolean };
+const tabResults = new Map<number, TabResult>();
+/** The tab whose page and results the panel shows now. */
+let shownTabId: number | undefined = pinnedTabId;
+
+/** The same page, ignoring the part after # (an address Chrome hides is taken as the same). */
+function samePage(a: string, b: string): boolean {
+  return !a || !b || a.split("#")[0] === b.split("#")[0];
+}
+
+/** A status line from a Fill, Preview or Submit: shown only while the panel shows that run's tab. */
+function runStatus(text: string, tone: Tone = "info"): void {
+  if (runTabId === undefined || runTabId === shownTabId) setStatus(text, tone);
+}
+
+/** Show this tab in the panel: its own last result if its page is still the same, else nothing yet. */
+function showTab(tabId: number, url: string): void {
+  shownTabId = tabId;
+  clearReport();
+  const saved = tabResults.get(tabId);
+  if (saved && !samePage(saved.url, url)) tabResults.delete(tabId);
+  else if (saved) {
+    showReport(saved.report, tabId, saved.preview);
+    if (!saved.preview && wantsConsent(saved.report)) void loadConsent(tabId);
+  }
+  if (agentRunning && runTabId !== undefined && runTabId !== tabId && !tabResults.has(tabId)) {
+    setStatus("ApplyAgent is filling an application in another tab. Press Fill here when it has finished (a few seconds).", "info");
+  }
+}
+
+/** The page lost its result (it loaded a new page or closed): forget it, and clear the panel if it shows it. */
+function forgetTab(tabId: number): void {
+  tabResults.delete(tabId);
+  if (tabId === shownTabId) clearReport();
+}
+
+/** Consent boxes are listed after a fill that did not end the application. */
+function wantsConsent(report: RunReport | undefined): boolean {
+  return !!report && !report.challenge && report.status !== "submitted_confirmed" && report.status !== "submitted_unconfirmed" && report.status !== "not_a_form";
+}
+
+/** Only one Fill, Preview or Submit at a time, so no step can ever land on another application. */
+function oneAtATime(): boolean {
+  if (!agentRunning) return true;
+  toast("Wait a moment: ApplyAgent is still filling another tab.", "warn");
+  return false;
+}
+
 /** A result belongs to the page it was made on. When the user moves to another tab or page, it is cleared, so the
  * panel never shows one job's answers on another job, and Submit can never act on a page that was not reviewed. */
 function clearReport(): void {
@@ -419,18 +483,25 @@ function clearReport(): void {
   clearConsent();
 }
 
-chrome.tabs.onActivated.addListener(() => {
-  if (pinnedTabId === undefined && !agentRunning) clearReport();
+chrome.tabs.onActivated.addListener((info) => {
+  if (panelWindowId !== undefined && info.windowId !== panelWindowId) return; // a tab in another window
+  if (pinnedTabId === undefined) showTab(info.tabId, "");
   void refreshPage();
 });
+chrome.tabs.onRemoved.addListener((id) => tabResults.delete(id));
 /** Page loads per tab ("loading" is reported even where the address is not), to notice a step that loaded a new page. */
 const navigations = new Map<number, number>();
 chrome.tabs.onUpdated.addListener((id, info) => {
   if (info.status === "loading") {
     navigations.set(id, (navigations.get(id) ?? 0) + 1);
-    if (!agentRunning) void activeTab().then((tab) => tab?.id === id && clearReport());
+    // A step of a running Fill may load a new page in its own tab: that result is still coming.
+    if (!(agentRunning && id === runTabId)) forgetTab(id);
+  } else if (info.url && !(agentRunning && id === runTabId)) {
+    // The address changed without a page load (one-page sites): a different page is a different form.
+    const saved = tabResults.get(id);
+    if (saved && !samePage(saved.url, info.url)) forgetTab(id);
   }
-  if (info.url || info.status === "complete") void refreshPage();
+  if ((info.url || info.status === "complete") && (id === shownTabId || shownTabId === undefined)) void refreshPage();
 });
 chrome.runtime.onMessage.addListener((message: Message) => {
   if (message.type === "PANEL_REFRESH") void refreshPage();
@@ -733,9 +804,10 @@ function renderQuestions(report: RunReport): void {
 /** The last run on this page, for "Report a problem". */
 let lastReport: { report: RunReport | undefined; url: string; tabId?: number } | undefined;
 
-function showReport(report: RunReport | undefined): void {
-  const tabId = runTabId;
-  void activeTab().then((tab) => (lastReport = { report, url: report?.url ?? tab?.url ?? "", tabId: tabId ?? tab?.id }));
+function showReport(report: RunReport | undefined, tabId: number | undefined, preview = false): void {
+  if (tabId !== undefined) tabResults.set(tabId, { report, url: report?.url ?? tabResults.get(tabId)?.url ?? "", preview });
+  if (tabId !== undefined && shownTabId !== undefined && tabId !== shownTabId) return; // another tab: kept for when it is shown
+  lastReport = { report, url: report?.url ?? "", tabId };
   $("report-problem").hidden = false;
   const exportDiagBtn = document.getElementById("export-diagnostics");
   if (exportDiagBtn) exportDiagBtn.hidden = false;
@@ -778,6 +850,15 @@ function showReport(report: RunReport | undefined): void {
     default:
       setStatus("No application form found on this page.", "warn");
   }
+  if (preview) {
+    ($("submit") as HTMLButtonElement).hidden = true; // a preview never leads straight to submitting
+    $("questions").replaceChildren();
+    const fill = report.fields.filter((f) => f.status === "filled").length;
+    const ask = report.fields.filter((f) => f.status === "needs_user").length;
+    setStatus(`Preview: would fill ${fill} field${fill === 1 ? "" : "s"} and ask you ${ask} question${ask === 1 ? "" : "s"}. Nothing was typed or uploaded. Open "Field details" to see each one.`, "info");
+    ($("fields-box") as HTMLDetailsElement).open = true;
+    return;
+  }
   const reviews = report.fields.filter((f) => f.review).length;
   if (reviews && report.status !== "submitted_confirmed") {
     setStatus(`${$("status").textContent ?? ""} ${reviews} value${reviews === 1 ? "" : "s"} pre-filled by the site differ${reviews === 1 ? "s" : ""} from your profile: check ${reviews === 1 ? "it" : "them"} in Field details before submitting.`, "warn");
@@ -796,15 +877,16 @@ const MAX_PAGE_STEPS = 6;
 
 
 async function run(): Promise<void> {
+  if (!oneAtATime()) return;
   // Over the free allowance, still fill (useful) but never auto-submit.
   const runMode = mode() === "auto" && !(await canSubmit()) ? "review" : mode();
   busy($("run"), true);
   ($("submit") as HTMLButtonElement).hidden = true; // no Submit while a fill is under way
   markState("working");
-  setStatus("Reading the form and filling what it knows…", "info");
   agentRunning = true;
   const tabId = (await activeTab())?.id ?? -1;
   runTabId = tabId;
+  runStatus("Reading the form and filling what it knows…", "info");
   const submittedBefore = (await pendingSubmission(tabId))?.id;
   try {
     // One-time access ends when the page changes: a next step on a site that is not allowed is out of reach.
@@ -832,28 +914,38 @@ async function run(): Promise<void> {
       // The agent pressed Submit (auto mode) and the site's answer loaded: never fill that page.
       const submitted = await pendingSubmission(tabId);
       if (submitted && submitted.id !== submittedBefore) {
-        setStatus("Submitted. Waiting for the employer's confirmation: check the tab or your email.", "info");
+        runStatus("Submitted. Waiting for the employer's confirmation: check the tab or your email.", "info");
         return;
       }
-      setStatus("Moved to the next step. Filling it…", "info");
+      runStatus("Moved to the next step. Filling it…", "info");
       report = await send({ type: "RUN", mode: runMode, continuing: true, fillOnly: true });
     }
     if (!report && moved && oneTimeOnly) {
-      setStatus(`The next step opened on a new page. Click the ApplyAgent icon there${keys.fill ? ` (or press ${keys.fill})` : ""} to continue, or allow the site so it continues by itself.`, "warn");
+      runStatus(`The next step opened on a new page. Click the ApplyAgent icon there${keys.fill ? ` (or press ${keys.fill})` : ""} to continue, or allow the site so it continues by itself.`, "warn");
       return;
     }
-    showReport(report);
+    showReport(report, tabId);
     // After a fill: the consent boxes on the page, for the user to read and decide one by one.
-    if (report && !report.challenge && report.status !== "submitted_confirmed" && report.status !== "submitted_unconfirmed" && report.status !== "not_a_form") {
-      await loadConsent(tabId);
-    }
+    if (tabId === shownTabId && wantsConsent(report)) await loadConsent(tabId);
   } finally {
     agentRunning = false;
     runTabId = undefined;
     busy($("run"), false);
     markState("idle");
+    afterRunElsewhere(tabId);
     await refreshPage();
   }
+}
+
+/** A run finished in a tab the user left: say so, and redraw the tab they are on (its own result, if any). */
+function afterRunElsewhere(tabId: number): void {
+  if (shownTabId === undefined || tabId === shownTabId) return;
+  void chrome.tabs.get(tabId).then((t) => {
+    const where = hostOf(t.url ?? tabResults.get(tabId)?.url ?? "") || "the other tab";
+    toast(`Finished on ${where}. Switch back to that tab to see what was filled.`);
+  }).catch(() => undefined);
+  // The tab on show had only the "filling another tab" line: clear it (its own result, if any, stays as it is).
+  if (!tabResults.has(shownTabId)) setStatus("");
 }
 
 $("run").addEventListener("click", () => void run());
@@ -880,29 +972,26 @@ chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "session" && changes.panelRun?.newValue) void runRequested();
 });
 $("preview").addEventListener("click", async () => {
+  if (!oneAtATime()) return;
   busy($("preview"), true);
   markState("working");
   agentRunning = true;
-  runTabId = (await activeTab())?.id;
+  const tabId = (await activeTab())?.id;
+  runTabId = tabId;
   try {
     const report = await viaApplicationPage({ type: "SCAN" }, await send({ type: "SCAN" }));
-    showReport(report);
-    ($("submit") as HTMLButtonElement).hidden = true; // a preview never leads straight to submitting
-    $("questions").replaceChildren();
-    if (report) {
-      const fill = report.fields.filter((f) => f.status === "filled").length;
-      const ask = report.fields.filter((f) => f.status === "needs_user").length;
-      setStatus(`Preview: would fill ${fill} field${fill === 1 ? "" : "s"} and ask you ${ask} question${ask === 1 ? "" : "s"}. Nothing was typed or uploaded. Open "Field details" to see each one.`, "info");
-      ($("fields-box") as HTMLDetailsElement).open = true;
-    }
+    showReport(report, tabId, !!report);
   } finally {
     agentRunning = false;
     runTabId = undefined;
     busy($("preview"), false);
     markState("idle");
+    if (tabId !== undefined) afterRunElsewhere(tabId);
+    await refreshPage();
   }
 });
 $("submit").addEventListener("click", async () => {
+  if (!oneAtATime()) return;
   if (!(await canSubmit())) return;
   // Submit only the application that was filled and reviewed, in its own tab.
   const filledTab = lastReport?.tabId;
@@ -916,12 +1005,14 @@ $("submit").addEventListener("click", async () => {
   setStatus("Submitting and waiting for the employer's confirmation…", "info");
   agentRunning = true;
   try {
-    showReport(await send({ type: "SUBMIT" }));
+    showReport(await send({ type: "SUBMIT" }), filledTab);
   } finally {
     agentRunning = false;
     runTabId = undefined;
     busy($("submit"), false);
     markState("idle");
+    afterRunElsewhere(filledTab);
+    await refreshPage();
   }
 });
 

@@ -71,6 +71,12 @@ Status: **Fixed** (in a released build, with a test), **Not a bug** (works as de
 | 4.14 | Is exactly the right option chosen in a dropdown? | Fixed (found 2 wrong picks, 1 wrong fallback, 1 unchecked step) | Checked against 66 real dropdowns with their traps. Wrong before: language "Native" chose "Full professional"; skill "C" chose "C++" (symbols were ignored); a Basic / Conversational speaker could be filled as "Fluent" (fallback). Unchecked: a custom dropdown only had to show *something*, not the chosen option. Now: five language levels; "+" and "#" count; no fluent fallback; the dropdown must show the chosen option, else it is reported ("The list on the page shows X: choose the right one there") and listed under Needs your answer; auto-submit waits on any failed field. Also now chosen: "I don't wish to answer", "Employee Referral", "Company Careers Page", "Professional working". Rule kept: when unsure, leave it for you (asked, never guessed) |
 | 4.11 | The on-device model in Discover (said in round 3) | Not done, by decision | A plain role table gives a reason you can read for every point; the model would give a number nobody can explain |
 
+## Round 5: several applications open at once (2026-11-05) → 1.0.6
+
+| # | Flaw reported | Status | What changed |
+|---|---|---|---|
+| 5.1 | With several application tabs open, the panel must show the current tab's form and never the previous tab's fields | Fixed (4 flaws found) | (1) A fill still running when you switched tabs showed its result, and its status lines, on the new tab: now each result is kept for its own tab and shown only there. (2) Saving an answer while another tab was filling started a second fill at the same time, which could send a step to the wrong tab: one fill at a time, with a clear message. (3) Coming back to a tab lost its result: each tab's result is kept until that tab loads another page or closes. (4) Switching quickly could let a slow page check paint the previous tab's page info: only the latest check paints. Tabs in another Chrome window no longer change the panel |
+
 ## Still open
 
 | Item | Why open |
