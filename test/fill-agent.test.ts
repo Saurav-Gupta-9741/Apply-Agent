@@ -61,7 +61,7 @@ describe("fillCombobox", () => {
     });
     const clicked: string[] = [];
     document.addEventListener("click", (e) => clicked.push((e.target as HTMLElement).textContent ?? ""));
-    expect(await fillCombobox(box, "Pune, Maharashtra, India")).toEqual({ ok: true });
+    expect(await fillCombobox(box, "Pune, Maharashtra, India")).toMatchObject({ ok: true, chosen: "Pune, Maharashtra, India" });
     expect(clicked).toEqual(["Pune, Maharashtra, India"]);
   });
 });

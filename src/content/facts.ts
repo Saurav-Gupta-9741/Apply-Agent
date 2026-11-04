@@ -1064,7 +1064,8 @@ export function languageAnswer(field: FieldDescriptor, profile: Profile): Decisi
   }
 
   if (field.options.length) {
-    const match = bestOption(field.options, entry.proficiency, 0.6) ?? field.options.find((o) => /fluent|proficient|native|c1|c2|advanced/i.test(o));
+    // No fallback to a "fluent" option: a Basic or Conversational speaker must never be filled as Fluent (round 4).
+    const match = bestOption(field.options, entry.proficiency, 0.6);
     if (match) return answer(match, "language");
   }
   return answer(entry.proficiency, "language");

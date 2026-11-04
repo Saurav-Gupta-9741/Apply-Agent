@@ -588,7 +588,9 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
       : appliedBefore ? "Company-specific: answer on the page."
         : sensitive ? "Sensitive question: only you answer this."
           : r.decision.kind === "ask" && r.decision.reason === "missing_profile_value" ? "Missing from your saved profile."
-            : r.status === "failed" ? "Could not fill on page." : "New question: saved for future forms.";
+            : r.status === "failed"
+              ? (/^the list shows/.test(r.detail ?? "") ? `${r.detail!.replace(/^the list/, "The list on the page")}: choose the right one there.` : "Could not fill on page: please choose it there.")
+              : "New question: saved for future forms.";
   const whyRow = h("span", { class: "question-why" });
   whyRow.append(icon(youOnly ? "lock" : appliedBefore ? "lock" : sensitive ? "shield" : upload ? "upload" : "info", 14), h("span", {}, why));
   const card = h("div", { class: `question${sensitive || youOnly || appliedBefore ? " sensitive" : ""}` },
@@ -707,7 +709,9 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
 function renderQuestions(report: RunReport): void {
   const box = $("questions");
   box.replaceChildren();
-  const pending = report.fields.filter((f) => f.status === "needs_user" || (f.status === "failed" && f.field.required));
+  // Every field that could not be filled is shown, required or not: a dropdown that ended on another option shows a
+  // wrong answer on the page until the user fixes it (round 4).
+  const pending = report.fields.filter((f) => f.status === "needs_user" || f.status === "failed");
   if (!pending.length) return;
   box.append(h("p", { class: "section-label" }, `Needs your answer · ${pending.length}`));
   const corrections = cachedCorrections;

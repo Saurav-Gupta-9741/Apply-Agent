@@ -10,6 +10,8 @@ import { bestOption, cleanLabel, cssAttr, normalize } from "../shared/text";
 export interface FillOutcome {
   ok: boolean;
   detail?: string;
+  /** The option that was picked from a list, to check that the list shows it. */
+  chosen?: string;
 }
 
 export function fire(el: Element, type: string): void {
@@ -393,7 +395,7 @@ async function pickFromList(owner: HTMLElement, value: string, timeoutMs: number
     const match = bestOption(labels, value);
     if (match) {
       choose(options[labels.indexOf(match)]!);
-      return { ok: true, detail: match === value ? undefined : `chose "${match}"` };
+      return { ok: true, detail: match === value ? undefined : `chose "${match}"`, chosen: match };
     }
     seen = labels.length ? labels : seen;
     await sleep(120);
@@ -437,5 +439,10 @@ export async function fillDropdown(el: HTMLElement, value: string, timeoutMs = 4
   if (!picked.ok) return picked;
   await sleep(120);
   const shown = dropdownValue(el);
-  return shown ? picked : { ok: false, detail: "choice did not stick" };
+  if (!shown) return { ok: false, detail: "choice did not stick" };
+  // It must show the option that was chosen (round 4): a widget that ends on another option is a wrong answer.
+  const chosen = picked.chosen ?? value;
+  const n = (s: string) => normalize(s).replace(/\s+/g, "");
+  const same = n(shown) === n(chosen) || n(shown).includes(n(chosen)) || n(chosen).includes(n(shown));
+  return same ? picked : { ok: false, detail: `the list shows "${shown}", not "${chosen}"` };
 }

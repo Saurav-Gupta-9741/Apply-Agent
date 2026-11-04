@@ -28,6 +28,15 @@ it to**. Switching to it once looks like a new extension to Chrome, so:
 3. In beta 4's first screen choose **"Used ApplyAgent before? Restore from a backup file"** and pick that file.
 4. Turn on **Keep an automatic backup on this PC** (Backup & move), so a reinstall never loses anything again.
 
+## What's new in 1.0.5: the right option in every dropdown
+
+- Checked against 66 real dropdowns with their traps. Fixed: "Native" chose "Full professional"; "C" chose "C++";
+  a Basic or Conversational speaker could be filled as "Fluent".
+- A dropdown must show the option ApplyAgent chose. If the site shows another one, it is not counted as filled: you
+  see "The list on the page shows X: choose the right one there" under Needs your answer, and Auto-submit waits.
+- Now also chosen correctly: "I don't wish to answer", "Employee Referral", "Company Careers Page",
+  "Professional working". When unsure, it still leaves the choice to you.
+
 ## Updating to beta 5 (1.0.4)
 
 Nothing to do: unzip it over your beta 4 folder (or any folder) and press **Reload** (or **Load unpacked**). Your

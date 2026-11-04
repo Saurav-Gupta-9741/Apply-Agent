@@ -87,9 +87,17 @@ export enum WorkplaceBucket {
 }
 
 export enum FluencyBucket {
+  NATIVE = "NATIVE",
   FLUENT = "FLUENT",
+  PROFESSIONAL = "PROFESSIONAL",
   INTERMEDIATE = "INTERMEDIATE",
   BASIC = "BASIC",
+}
+
+/** Where a source-of-hire option points ("How did you hear about us?"). */
+export enum SourceBucket {
+  REFERRAL = "REFERRAL",
+  COMPANY_SITE = "COMPANY_SITE",
 }
 
 export enum PolarityBucket {
@@ -216,6 +224,7 @@ const GENDER_PATTERNS: Record<GenderBucket, RegExp[]> = {
   ],
   [GenderBucket.DECLINE]: [
     /\b(decline|prefer not to say|prefer not to disclose|decline to self identify|decline to state|i do not wish to answer|choose not to disclose|do not wish to specify|opt out)\b/i,
+    /\b(dont|do not) (wish|want) to (answer|say|disclose|specify|self identify|identify)\b|\b(rather not|prefer not to answer)\b/i,
   ],
 };
 
@@ -283,11 +292,19 @@ const WORKPLACE_PATTERNS: Record<WorkplaceBucket, RegExp[]> = {
 };
 
 const FLUENCY_PATTERNS: Record<FluencyBucket, RegExp[]> = {
+  // Checked in this order. LinkedIn's scale: Elementary < Limited working < Professional working < Full professional
+  // < Native or bilingual.
+  [FluencyBucket.NATIVE]: [
+    /\b(native|bilingual|mother tongue|first language)\b/i,
+  ],
   [FluencyBucket.FLUENT]: [
-    /\b(fluent|native|bilingual|full professional|proficient|c2|c1|mother tongue|native bilingual|professional working proficiency)\b/i,
+    /\b(fluent|full professional|proficient|c2|c1|advanced)\b/i,
+  ],
+  [FluencyBucket.PROFESSIONAL]: [
+    /\b(professional working|professional)\b/i,
   ],
   [FluencyBucket.INTERMEDIATE]: [
-    /\b(intermediate|conversational|b2|b1|limited working proficiency|working proficiency)\b/i,
+    /\b(intermediate|conversational|b2|b1|limited working|working proficiency)\b/i,
   ],
   [FluencyBucket.BASIC]: [
     /\b(basic|beginner|elementary|a2|a1|novice)\b/i,
@@ -310,6 +327,7 @@ const POLARITY_PATTERNS: Record<PolarityBucket, RegExp[]> = {
   [PolarityBucket.DECLINE]: [
     /^(decline|prefer not to say|prefer not to disclose|choose not to disclose|i do not wish to answer|do not wish to answer|opt out)\b/i,
     /\b(decline to self identify|decline to state)\b/i,
+    /\b(dont|do not) (wish|want) to (answer|say|disclose|specify|self identify|identify)\b|\b(rather not say|prefer not to answer)\b/i,
   ],
 };
 
@@ -460,6 +478,7 @@ export interface ClassifiedDomain {
   race?: RaceBucket;
   workplace?: WorkplaceBucket;
   fluency?: FluencyBucket;
+  source?: SourceBucket;
   polarity?: PolarityBucket;
   seniority?: SeniorityBucket;
   country?: CountryInfo;
@@ -599,6 +618,12 @@ export function classifyText(text: string): ClassifiedDomain {
       res.fluency = bucket;
       break;
     }
+  }
+
+  // Source of hire
+  if (/\b(referral|referred|refer(red)? by)\b/.test(norm)) res.source = SourceBucket.REFERRAL;
+  else if (/\b(company (web ?site|site|careers?)|careers? (page|site|website|portal)|our (web ?site|careers)|corporate (web ?site|careers)|official (web ?site|careers))\b/.test(norm)) {
+    res.source = SourceBucket.COMPANY_SITE;
   }
 
   // Polarity
@@ -1028,18 +1053,22 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
   const wantedStems = meaningfulStems(wantedTrimmed);
 
   const candidates: ParsedCandidate[] = options.map(parseCandidate);
+  // normalize() drops symbols, so "C", "C++" and "C#" read the same: only options with the same symbols compare.
+  const symbols = (s: string) => s.replace(/[^+#]/g, "");
+  const wantedSymbols = symbols(wantedTrimmed);
+  const sameSymbols = (c: ParsedCandidate) => symbols(c.trimmed) === wantedSymbols;
 
   // STAGE 1: Exact match first: an option that IS the wanted value always beats a tier, bracket or bucket
   // ("30 days" beats "Less than 30 days", "3 years" beats "1 year").
   const rawExact = candidates.find((c) => c.trimmed.toLowerCase() === wantedTrimmed.toLowerCase());
   if (rawExact) return { option: rawExact.raw, stage: "exact", confidence: 1.0 };
-  const normExact = candidates.find((c) => c.normalized === wantedNorm);
+  const normExact = candidates.find((c) => c.normalized === wantedNorm && sameSymbols(c));
   if (normExact) return { option: normExact.raw, stage: "exact", confidence: 1.0 };
   // Same text apart from spaces/punctuation ("JavaScript" / "Java Script", "nodejs" / "Node.js"). This is the ONLY
   // spelling tolerance: no edit-distance matching (Iran ≠ Iraq, Niger ≠ Nigeria, Austria ≠ Australia).
   const wantedCompact = wantedNorm.replace(/ /g, "");
   if (wantedCompact.length >= 4) {
-    const compact = unique(candidates.filter((c) => c.normalized.replace(/ /g, "") === wantedCompact));
+    const compact = unique(candidates.filter((c) => c.normalized.replace(/ /g, "") === wantedCompact && sameSymbols(c)));
     if (compact) return { option: compact.raw, stage: "exact", confidence: 0.99 };
   }
 
@@ -1179,21 +1208,21 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
 
   // 1c. Code exact match (e.g. "MBA" matches "(MBA)", "BS" matches "(B.S.)", "UK" matches "(UK)")
   if (wantedCleanCode && wantedCleanCode.length >= 2) {
-    const codeMatch = candidates.find((c) => c.cleanCode === wantedCleanCode);
+    const codeMatch = candidates.find((c) => c.cleanCode === wantedCleanCode && sameSymbols(c));
     if (codeMatch && !hasSemanticConflict(wantedClassified, codeMatch.classified)) {
       return { option: codeMatch.raw, stage: "code_stripped", confidence: 0.99 };
     }
   }
 
   // 1d. Core label exact match (e.g. "IN - India" core "India" matches "India")
-  const coreExact = candidates.find((c) => c.normalizedCore === wantedNorm);
+  const coreExact = candidates.find((c) => c.normalizedCore === wantedNorm && sameSymbols(c));
   if (coreExact && !hasSemanticConflict(wantedClassified, coreExact.classified)) {
     return { option: coreExact.raw, stage: "code_stripped", confidence: 0.99 };
   }
 
   // 1e. Subpart exact match (e.g. "Contract / Freelance" subpart "Freelance" matches "Freelance")
   const subpartExact = candidates.find((c) => {
-    return c.subParts.some((part) => normalize(part) === wantedNorm);
+    return c.subParts.some((part) => normalize(part) === wantedNorm && symbols(part) === wantedSymbols);
   });
   if (subpartExact && !hasSemanticConflict(wantedClassified, subpartExact.classified)) {
     return { option: subpartExact.raw, stage: "code_stripped", confidence: 0.98 };
@@ -1337,11 +1366,22 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
 
   // 3h. Fluency mapping
   if (wantedClassified.fluency) {
-    const targetFluency = wantedClassified.fluency;
-    const fluencyMatch = validCandidates.find((c) => c.classified.fluency === targetFluency);
+    const at = (level: FluencyBucket) => validCandidates.filter((c) => c.classified.fluency === level);
+    const pick = (list: ParsedCandidate[]) => unique(list) ?? unique(list.filter((c) => c.stems.has([...wantedStems][0] ?? "")));
+    const levels = at(wantedClassified.fluency);
+    const fluencyMatch = pick(levels)
+      // A native speaker on a scale with no "native" option: the one top level ("Fluent"), never a lower one.
+      ?? (wantedClassified.fluency === FluencyBucket.NATIVE && !levels.length ? unique(at(FluencyBucket.FLUENT)) : undefined);
     if (fluencyMatch) {
       return { option: fluencyMatch.raw, stage: "contextual_domain", confidence: 0.95 };
     }
+    if (candidates.some((c) => c.classified.fluency)) return undefined; // a level scale, but no certain level: ask
+  }
+
+  // 3i. Source of hire: "Referral" is "Employee Referral", "Company Website" is "Company Careers Page".
+  if (wantedClassified.source) {
+    const match = unique(validCandidates.filter((c) => c.classified.source === wantedClassified.source));
+    if (match) return { option: match.raw, stage: "contextual_domain", confidence: 0.93 };
   }
 
   // STAGE 4: Prefix at a clear separator ("No" → "No, I do not"; "India (+91)" → "India"). Never a suffix

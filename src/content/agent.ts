@@ -539,8 +539,9 @@ export async function runOnce(doc: Document, ctx: AgentContext, beforeSubmit?: B
     const action = root ? adapter.action(root) : null;
     if (action?.kind !== "next") {
       if (ctx.mode !== "auto") return done(filled);
-      // Auto-submit only when nothing at all is left for the user: no question open, required or not.
-      if (filled.fields.some((f) => f.status === "needs_user")) return done({ ...filled, status: "needs_user" });
+      // Auto-submit only when nothing at all is left for the user: no question open and no field that failed (a
+      // dropdown that ended on another option would send a wrong answer), required or not.
+      if (filled.fields.some((f) => f.status === "needs_user" || f.status === "failed")) return done({ ...filled, status: "needs_user" });
       const submitted = await submitForm(doc, 20000, beforeSubmit);
       return done({ ...submitted, fields: filled.fields });
     }
