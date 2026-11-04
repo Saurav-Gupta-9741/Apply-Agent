@@ -50,16 +50,15 @@ const PROFILE_WITH_CITY = { ...PROFILE, location: "Pune" };
 const FAST = { stepTimeoutMs: 3000 };
 
 describe("multi-step applications", () => {
-  it("review mode: fills every step, presses Next/Continue, stops at the final Submit without pressing it", async () => {
+  it("review mode: fills this page only and never presses Next/Continue (round 4: the form moved on by itself)", async () => {
     const wizard = mountWizard();
-    const report = await runOnce(document, { profile: PROFILE_WITH_CITY, answers: [], mode: "review", ...FAST });
+    const report = await runOnce(document, { profile: PROFILE_WITH_CITY, answers: [], mode: "review", fillOnly: true, ...FAST });
     expect(report.status).toBe("ready_to_submit");
-    expect(report.steps).toBe(3);
+    expect(report.nextStep).toBe(true);
+    expect(report.steps).toBeUndefined();
     expect(wizard.submits()).toBe(0);
-    expect((document.getElementById("ct") as HTMLInputElement).value).toBe("Pune");
-    const labels = report.fields.map((f) => f.field.label);
-    expect(labels).toEqual(expect.arrayContaining(["First name", "Phone number", "City"]));
-    expect(report.fields.find((f) => f.field.label === "First name")?.detail).toMatch(/^Step 1/);
+    expect(document.getElementById("ct")).toBeNull(); // still on step 1: the City step was never opened
+    expect(report.fields.map((f) => f.field.label)).toContain("First name");
   });
 
   it("auto mode: registers the submission once, only at the last step, and reports the confirmation", async () => {

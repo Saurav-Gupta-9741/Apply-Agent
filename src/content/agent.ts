@@ -64,6 +64,9 @@ export interface AgentContext {
   pauseBetweenFieldsMs?: number;
   /** Stop at once when the page shows a robot check or a rate-limit message (on unless switched off). */
   stopOnChallenge?: boolean;
+  /** The side panel's "Fill this application", on a form the user has open: fill this page only, never press Next
+   * (the queue, working in background tabs, moves through the steps and stops before the final Submit). */
+  fillOnly?: boolean;
 }
 
 /** The run stops here: the site shows a robot check or says it is limiting requests. Never solved, never bypassed. */
@@ -275,7 +278,50 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
 }
 
 /** Fill everything the agent is allowed to fill. Never overwrites a value already present. */
+/** While a fill runs, nothing may send or move the form on. Opening a custom dropdown can click a plain <button>
+ * inside the form, and a button with no type is a Submit button; a page script may also submit on a value change.
+ * Clicks still reach the page (the dropdown opens); only the submit itself is cancelled. */
+function guardSubmits(doc: Document): () => void {
+  const isSubmitter = (el: Element | null): boolean => {
+    const b = el?.closest("button, input[type='submit'], input[type='image']");
+    if (!b) return false;
+    if (b instanceof HTMLButtonElement) return b.type === "submit" && !!b.form;
+    return !!(b as HTMLInputElement).form;
+  };
+  const onSubmit = (e: Event) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  };
+  const onClick = (e: Event) => {
+    if (isSubmitter(e.target as Element | null)) e.preventDefault();
+  };
+  doc.addEventListener("submit", onSubmit, true);
+  doc.addEventListener("click", onClick, true);
+  return () => {
+    doc.removeEventListener("submit", onSubmit, true);
+    doc.removeEventListener("click", onClick, true);
+  };
+}
+
+/** Required fields that are still empty on the page right now (whatever the fill thought). */
+export function emptyRequired(root: HTMLElement): string[] {
+  return extractFields(root)
+    .filter((f) => f.descriptor.required && f.descriptor.control !== "file" && !currentValue(f))
+    .map((f) => f.descriptor.label || f.descriptor.name || "a required field");
+}
+
 export async function fillForm(doc: Document, context: AgentContext): Promise<RunReport> {
+  const release = guardSubmits(doc);
+  try {
+    return await fillFormUnguarded(doc, context);
+  } finally {
+    // The page's own reactions to the last values (a re-render, a validation) settle before the guard goes.
+    await sleep(50);
+    release();
+  }
+}
+
+async function fillFormUnguarded(doc: Document, context: AgentContext): Promise<RunReport> {
   // Where the job is, read once: it answers "Will you require sponsorship to work here?" (see facts.ts).
   const ctx: AgentContext = { ...context, page: context.page ?? { jobCountries: jobCountries(doc), url: doc.location?.href ?? "", applications: context.applications } };
   const { adapter, root } = locate(doc);
@@ -395,6 +441,10 @@ export async function submitForm(doc: Document, timeoutMs = 20000, beforeSubmit?
     return { ...report, status: "needs_user", errors: ["This isn't the last step yet. Press Fill to continue to the next step."] };
   }
   const button = action.button;
+  // Every required field must hold a value on the page itself, whatever the fill reported (round 4: a form was
+  // sent with required fields still empty). Then the browser's own checks.
+  const empty = emptyRequired(root);
+  if (empty.length) return { ...report, status: "needs_user", errors: [`Still empty: ${empty.slice(0, 6).join("; ")}${empty.length > 6 ? ` and ${empty.length - 6} more` : ""}. Fill them, then submit.`] };
   // The browser silently refuses to submit an invalid form, so check first and say exactly what is missing.
   const invalid = invalidFields(root);
   if (invalid.length) return { ...report, status: "needs_user", errors: invalid };
@@ -474,7 +524,14 @@ export async function runOnce(doc: Document, ctx: AgentContext, beforeSubmit?: B
     const filled = await fillForm(doc, ctx);
     const done = (r: RunReport): RunReport => ({ ...r, fields: [...earlier, ...r.fields], steps: step > 1 ? step : undefined });
     // A form without any field is only ever a later step of this run (a "Review" page), never a place to start.
-    if (step === 1 && filled.status === "ready_to_submit" && !filled.fields.length) return done({ ...filled, status: "not_a_form" });
+    if (step === 1 && filled.status === "ready_to_submit" && !filled.fields.length) {
+      // The last "Review" page of a multi-page application the user moved to themselves: nothing to fill, and the
+      // panel offers Submit for the user to press (review mode only; auto mode never starts on such a page).
+      const { adapter, root } = locate(doc);
+      const action = root ? adapter.action(root) : null;
+      if (ctx.mode !== "auto" && action?.kind === "submit") return done(filled);
+      return done({ ...filled, status: "not_a_form" });
+    }
     if (filled.status !== "ready_to_submit") return done(filled);
     // Pre-filled values that disagree with the profile: the user checks them before anything moves on.
     if (filled.fields.some((f) => f.review)) return done(filled);
@@ -482,9 +539,14 @@ export async function runOnce(doc: Document, ctx: AgentContext, beforeSubmit?: B
     const action = root ? adapter.action(root) : null;
     if (action?.kind !== "next") {
       if (ctx.mode !== "auto") return done(filled);
+      // Auto-submit only when nothing at all is left for the user: no question open, required or not.
+      if (filled.fields.some((f) => f.status === "needs_user")) return done({ ...filled, status: "needs_user" });
       const submitted = await submitForm(doc, 20000, beforeSubmit);
       return done({ ...submitted, fields: filled.fields });
     }
+    // The panel's Fill fills this page only. The user checks it and presses Next on the page (that button can send
+    // the application on some sites, and moving on hides the page before the user has seen what was filled).
+    if (ctx.fillOnly) return done({ ...filled, nextStep: true });
     if (step >= MAX_STEPS) {
       return done({ ...filled, status: "needs_user", errors: [`Stopped after ${MAX_STEPS} steps. Check the form, then press Fill again.`] });
     }

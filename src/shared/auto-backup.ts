@@ -9,7 +9,7 @@ import { loadAnswers, loadApplications, loadProfile, loadSettings } from "./stor
 export const AUTO_BACKUP_KEY = "autoBackup";
 export const AUTO_BACKUP_ALARM = "auto-backup";
 export const AUTO_BACKUP_FILE = "ApplyAgent/applyagent-backup.json";
-const WATCHED = new Set(["profile", "answers", "applications", "settings"]);
+const WATCHED = new Set(["profile", "answers", "applications", "settings", "myCompanies"]);
 const DELAY_MS = 2 * 60_000;
 const MIN_GAP_MS = 60 * 60_000;
 
@@ -57,7 +57,11 @@ export async function runAutoBackup(force = false): Promise<string | undefined> 
   if (!(await hasDownloads()) || !chrome.downloads) return "Chrome has not allowed ApplyAgent to save files. Turn automatic backup on again.";
   const profile = await loadProfile();
   if (!profile.firstName && !profile.email && !profile.resume) return undefined; // nothing worth keeping yet
-  const backup = makeBackup({ profile, answers: await loadAnswers(), applications: await loadApplications(), settings: await loadSettings() });
+  const { myCompanies } = await chrome.storage.local.get("myCompanies");
+  const backup = makeBackup({
+    profile, answers: await loadAnswers(), applications: await loadApplications(), settings: await loadSettings(),
+    companies: Array.isArray(myCompanies) ? myCompanies : [],
+  });
   try {
     const url = `data:application/json;base64,${base64(new TextEncoder().encode(JSON.stringify(backup)))}`;
     await chrome.downloads.download({ url, filename: AUTO_BACKUP_FILE, conflictAction: "overwrite", saveAs: false });

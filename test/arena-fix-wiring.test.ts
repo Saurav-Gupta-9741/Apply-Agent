@@ -7,7 +7,8 @@ import { EMPTY_PROFILE } from "../src/shared/storage";
 import { FeedRateLimiter } from "../src/shared/jobs/rate-limiter";
 import { clearTranslationCache, translateFieldsOnDevice } from "../src/shared/locale/translator";
 import { KANBAN_COLUMNS, renderKanbanBoard } from "../src/sidepanel/kanban";
-import { pickCompanies } from "../src/sidepanel/discover";
+import { rankCompanies } from "../src/shared/jobs/companies";
+import { searchProfile } from "../src/shared/jobs/matching";
 import type { FieldDescriptor, Profile } from "../src/shared/types";
 import { PROFILE } from "./fixtures";
 
@@ -112,13 +113,15 @@ describe("feed rate limiter", () => {
 });
 
 describe("Discover company choice", () => {
-  it("puts verified companies first, then the user's country", () => {
+  it("puts the user's own companies first, leaves out unverified ones, then ranks by field and country", () => {
     const all = [
-      { slug: "a", name: "A", ats: "greenhouse", country: "India", industry: "", unverified: true },
-      { slug: "b", name: "B", ats: "greenhouse", country: "Germany", industry: "" },
-      { slug: "c", name: "C", ats: "lever", country: "India", industry: "" },
-      { slug: "d", name: "D", ats: "workday", country: "India", industry: "" },
+      { slug: "a", name: "A", ats: "greenhouse", country: "India", industry: "", unverified: true, jobCount: 50 },
+      { slug: "b", name: "B", ats: "greenhouse", country: "Germany", industry: "", jobCount: 40, hires: { DE: 40 }, families: { software: 30 } },
+      { slug: "c", name: "C", ats: "lever", country: "India", industry: "", jobCount: 40, hires: { IN: 35 }, families: { software: 30 } },
+      { slug: "s", name: "S", ats: "lever", country: "India", industry: "", jobCount: 40, hires: { IN: 40 }, families: { sales: 40 } },
     ] as never;
-    expect(pickCompanies(all, "India").map((c) => c.slug)).toEqual(["c", "b", "a"]);
+    const sp = searchProfile({ ...EMPTY_PROFILE, country: "India", targetRoles: "Software Engineer" });
+    const mine = [{ ats: "ashby" as const, slug: "mine", name: "Mine", addedAt: "", source: "" }];
+    expect(rankCompanies(all, mine, sp).map((c) => c.slug)).toEqual(["mine", "c", "b", "s"]);
   });
 });

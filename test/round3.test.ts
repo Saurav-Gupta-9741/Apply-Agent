@@ -156,7 +156,7 @@ describe("repeating work-experience sections", () => {
 });
 
 describe("a wizard that ends on a Review step with no fields", () => {
-  it("presses Next into the Review step, recognises it, and stops ready to submit", async () => {
+  it("review mode: fills the page and leaves 'Save and Continue' to the user", async () => {
     mount(`<h1>Engineer</h1><form id="w" novalidate><div id="s">
       <label for="fn">First name *</label><input id="fn" required>
       <label for="em">Email *</label><input id="em" type="email" required>
@@ -165,9 +165,11 @@ describe("a wizard that ends on a Review step with no fields", () => {
       e.preventDefault();
       setTimeout(() => (document.getElementById("s")!.innerHTML = `<h2>Review</h2><p>Check, then submit.</p><button type="submit">Submit</button>`), 100);
     }, { once: true });
-    const report = await runOnce(document, { profile: PROFILE, answers: [], mode: "review", stepTimeoutMs: 3000 });
+    const report = await runOnce(document, { profile: PROFILE, answers: [], mode: "review", fillOnly: true, stepTimeoutMs: 3000 });
     expect(report.status).toBe("ready_to_submit");
-    expect(report.steps).toBe(2);
+    expect(report.nextStep).toBe(true);
+    expect(document.getElementById("fn")).not.toBeNull(); // not moved on
+    expect((document.getElementById("fn") as HTMLInputElement).value).toBe(PROFILE.firstName);
   });
 
   it("a page holding only a Submit button is never a place to start", async () => {

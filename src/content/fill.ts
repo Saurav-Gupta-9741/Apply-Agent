@@ -398,7 +398,10 @@ async function pickFromList(owner: HTMLElement, value: string, timeoutMs: number
     seen = labels.length ? labels : seen;
     await sleep(120);
   }
-  owner.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, composed: true }));
+  // Close the list on the field itself only. A bubbling Escape reaches the page, and pop-up application forms
+  // close on Escape: the user's form would vanish (round 4 report). Leaving the field closes most lists too.
+  owner.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: false, composed: false }));
+  owner.blur();
   return { ok: false, detail: seen.length ? `no option matches "${value}"` : "options did not appear" };
 }
 

@@ -121,11 +121,12 @@
     <section id="sec-jobs" class="section" data-title="Jobs" hidden>
       <!-- >>> arena-fix discover -->
       <div class="card" id="discover-card">
-        <div class="card-head"><h2>Discover jobs</h2><span class="muted">From companies' own public job boards. Your profile never leaves this browser.</span></div>
+        <div class="card-head"><h2>Discover jobs</h2><span class="muted">From companies' own job boards, matched to your profile on this computer. Nothing about you is sent.</span></div>
+        <div id="discover-for" class="discover-for" aria-live="polite"></div>
         <div class="discover-filters form-grid" id="discover-filters">
           <label class="field-label">Experience
             <select id="discover-experience" class="input">
-              <option value="">Any experience</option>
+              <option value="">Right for my experience (from Profile)</option>
               <option value="fresher">Fresher / internship (0–1 yrs)</option>
               <option value="junior">Junior (1–3 yrs)</option>
               <option value="mid">Mid-level (3–6 yrs)</option>
@@ -140,28 +141,49 @@
               <option value="contract">Contract</option>
               <option value="temporary">Temporary</option>
             </select></label>
-          <label class="check-label span-2"><input type="checkbox" id="discover-remote"> Remote only</label>
+          <label class="field-label">Order
+            <select id="discover-sort" class="input">
+              <option value="best">Best match first</option>
+              <option value="new">Newest first</option>
+            </select></label>
+          <div class="discover-checks">
+            <label class="check-label"><input type="checkbox" id="discover-remote"> Remote only</label>
+            <label class="check-label" title="Hides jobs in countries you did not list in Answers → Work authorization, and remote jobs open only to other countries"><input type="checkbox" id="discover-canwork" checked> Only where I can work</label>
+          </div>
         </div>
-        <button id="discover-run" class="btn btn-primary" type="button">Find matching jobs</button>
+        <div class="button-row">
+          <button id="discover-run" class="btn btn-primary" type="button">Find matching jobs</button>
+          <button id="discover-more" class="btn btn-secondary" type="button" hidden>Check more companies</button>
+        </div>
         <p id="discover-status" class="hint" role="status"></p>
         <div id="discover-list" class="cards"></div>
+        <details id="discover-companies" class="details discover-companies">
+          <summary><span>Add a company you want to work for</span><span id="company-count" class="muted"></span></summary>
+          <p class="hint">Paste its careers page or job-board link, for example <span class="mono">careers.company.com</span> or <span class="mono">jobs.lever.co/company</span>. ApplyAgent reads that page once to find the company's job board, then checks it first in every search.</p>
+          <div class="input-row">
+            <input type="url" id="company-url" class="input" placeholder="https://careers.company.com" aria-label="Careers page link" autocomplete="off" />
+            <button id="company-add" class="btn btn-secondary" type="button">Add</button>
+          </div>
+          <p id="company-status" class="hint" role="status"></p>
+          <ul id="company-list" class="company-list"></ul>
+        </details>
       </div>
       <!-- <<< arena-fix -->
-      <div class="card">
-        <div class="card-head"><h2>Job feed</h2><span class="muted">Verified jobs from employers' own career sites</span></div>
+      <details id="feed-box" class="card details">
+        <summary><span>Advanced: load a job feed file</span><span class="muted">for feeds made by JobReach or another tool</span></summary>
         <div class="input-row">
           <input type="url" id="feed-url" class="input" placeholder="https://…/feed.json" aria-label="Feed URL" />
           <button id="feed-load" class="btn btn-secondary">Load</button>
         </div>
         <label class="file-btn"><input type="file" id="feed-file" accept=".json" /><span data-icon="upload" data-size="16"></span><span>Import a feed file</span></label>
-      </div>
+      </details>
       <div id="feed-stats" class="stats" hidden>
         <div class="stat"><span class="stat-value" data-stat="jobs">0</span><span class="stat-label">Jobs</span></div>
         <div class="stat"><span class="stat-value" data-stat="matches">0</span><span class="stat-label">Matches</span></div>
         <div class="stat"><span class="stat-value accent" data-stat="good">0</span><span class="stat-label">Great fit</span></div>
         <div class="stat"><span class="stat-value" data-stat="filtered">0</span><span class="stat-label">Filtered</span></div>
       </div>
-      <p id="feed-summary" class="hint">Load a feed, then set your target roles and locations in Profile to rank the jobs.</p>
+      <p id="feed-summary" class="hint" hidden>Load a feed, then set your target roles and locations in Profile to rank the jobs.</p>
       <ul id="feed-list" class="cards"></ul>
       <div id="feed-actions" class="action-bar" hidden>
         <button id="feed-add-selected" class="btn btn-secondary">Add selected</button>
@@ -286,8 +308,8 @@
           <button id="buy-usd" class="btn btn-secondary btn-sm">Pay by card · $9</button>
           <button id="buy-founder" class="btn btn-secondary btn-sm">Founder Pass · $49</button>
         </div>
-        <p class="hint">One-time payment. Never renews automatically.</p>
-        <div class="input-row">
+        <p id="plan-payment-hint" class="hint" hidden>One-time payment. Never renews automatically.</p>
+        <div id="license-row" class="input-row" hidden>
           <input type="text" id="license-key" class="input mono" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" aria-label="Licence key" />
           <button id="activate" class="btn btn-secondary"><span data-icon="key" data-size="16"></span><span>Activate</span></button>
         </div>

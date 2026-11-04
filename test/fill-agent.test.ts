@@ -127,7 +127,7 @@ describe("submitForm", () => {
     mount();
     const report = await submitForm(document, 1000);
     expect(report.status).toBe("needs_user");
-    expect(report.errors.some((e) => e.startsWith("First Name"))).toBe(true);
+    expect(report.errors.some((e) => /^Still empty: .*First Name/.test(e))).toBe(true); // checked before the browser's own validation
   });
 
   it("registers the submission first, then reports success only with a confirmation", async () => {

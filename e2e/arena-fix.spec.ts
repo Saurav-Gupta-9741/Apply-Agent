@@ -60,7 +60,7 @@ test("Discover reads public job boards and saves a match to the tracker", async 
   await ext.evaluate(() => { (chrome.permissions as unknown as { request: () => Promise<boolean> }).request = async () => true; });
   await goTo(ext, "jobs");
   await ext.locator("#discover-run").click();
-  await expect(ext.locator("#discover-status")).toContainText("matches from", { timeout: 100_000 });
+  await expect(ext.locator("#discover-status")).toContainText(/match(es)? from/, { timeout: 100_000 });
   const card = ext.locator("#discover-list .job-card").first();
   await expect(card).toContainText("Backend Engineer");
   await card.locator(".btn-save-tracker").click();

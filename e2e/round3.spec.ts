@@ -76,10 +76,18 @@ test("Workday-style: sign-in wall, then Save and Continue through dropdowns, typ
   await page.getByRole("button", { name: "Sign In" }).click();
   await expect(page.locator("#given")).toBeVisible();
 
-  await ext.locator("#run").click();
-  await expect(ext.locator("#status")).toContainText("Completed 2 steps", { timeout: 60_000 });
+  // Each page: Fill fills it, the user presses Save and Continue themselves (Fill never moves the form on).
+  for (let n = 0; n < 2; n++) {
+    await ext.locator("#run").click();
+    await expect(ext.locator("#status")).toContainText("This page is filled", { timeout: 60_000 });
+    await expect(page.locator("#submits")).toHaveText("0"); // nothing sent
+    await page.getByRole("button", { name: "Save and Continue" }).click(); // the user moves on
+    await expect(page.locator("[role='alert']")).toHaveCount(0);
+  }
   await expect(page.getByRole("heading", { name: "Review" })).toBeVisible();
-  await expect(page.locator("#submits")).toHaveText("0"); // review mode: nothing sent yet
+  await ext.locator("#run").click();
+  await expect(ext.locator("#status")).toContainText("Every required field is filled", { timeout: 60_000 });
+  await expect(page.locator("#submits")).toHaveText("0"); // not sent
 
   await ext.locator("#submit").click();
   await expect(ext.locator("#status")).toContainText("Applied");

@@ -8,6 +8,8 @@ import {
 } from "./types";
 import { EMPTY_PROFILE } from "./storage";
 import { clampSettings } from "../background/queue";
+import type { MyCompany } from "./jobs/companies";
+import type { SupportedATS } from "./jobs/types";
 
 export const BACKUP_FORMAT = "applyagent-backup";
 
@@ -19,6 +21,8 @@ export interface Backup {
   answers: AnswerEntry[];
   applications: ApplicationRecord[];
   settings: Settings;
+  /** Companies the user added in Discover (optional: backups made before round 4 have none). */
+  companies?: MyCompany[];
 }
 
 const TOPICS = new Set<SensitiveTopic>([
@@ -30,7 +34,7 @@ const MAX_TEXT = 5000;
 /** The resume limit is 5 MB; base64 makes it a third larger. */
 const MAX_RESUME_BASE64 = Math.ceil((5 * 1024 * 1024 * 4) / 3) + 16;
 
-export function makeBackup(data: Omit<Backup, "format" | "version" | "exportedAt">, now = new Date()): Backup {
+export function makeBackup(data: Omit<Backup, "format" | "version" | "exportedAt" | "companies"> & { companies?: MyCompany[] }, now = new Date()): Backup {
   return {
     format: BACKUP_FORMAT,
     version: 1,
@@ -40,7 +44,29 @@ export function makeBackup(data: Omit<Backup, "format" | "version" | "exportedAt
     // Screenshots stay out: they are large, and the confirmation text is the proof.
     applications: data.applications.filter((a) => a.status !== "in_progress").map(({ screenshotKey: _, ...rest }) => rest),
     settings: data.settings,
+    ...(data.companies?.length ? { companies: data.companies } : {}),
   };
+}
+
+const ATS_NAMES = new Set<SupportedATS>(["greenhouse", "lever", "ashby", "smartrecruiters", "recruitee", "personio", "workable"]);
+
+function readCompanies(v: unknown): MyCompany[] {
+  if (!Array.isArray(v)) return [];
+  return v.slice(0, 40).flatMap((c): MyCompany[] => {
+    if (!isObject(c) || !ATS_NAMES.has(c.ats as SupportedATS)) return [];
+    const slug = str(c.slug, 100);
+    if (!/^[A-Za-z0-9._%-]+$/.test(slug)) return [];
+    const addedAt = Number.isNaN(Date.parse(str(c.addedAt))) ? new Date(0).toISOString() : str(c.addedAt, 40);
+    const jobCount = typeof c.jobCount === "number" && c.jobCount >= 0 ? Math.floor(c.jobCount) : undefined;
+    return [{ ats: c.ats as SupportedATS, slug, name: str(c.name, 120) || slug, addedAt, source: str(c.source, 500), ...(jobCount !== undefined ? { jobCount } : {}) }];
+  });
+}
+
+/** Restored companies join the current list; one entry per job board. */
+export function mergeCompanies(current: MyCompany[], incoming: MyCompany[]): MyCompany[] {
+  const key = (c: MyCompany) => `${c.ats}:${c.slug.toLowerCase()}`;
+  const seen = new Set(current.map(key));
+  return [...current, ...incoming.filter((c) => !seen.has(key(c)))].slice(0, 40);
 }
 
 const str = (v: unknown, max = MAX_TEXT): string => (typeof v === "string" ? v.slice(0, max) : "");
@@ -199,6 +225,7 @@ export function readBackup(raw: unknown): Backup | string {
     answers: readAnswers(raw.answers),
     applications: readApplications(raw.applications),
     settings: clampSettings(isObject(raw.settings) ? (raw.settings as Partial<Settings>) : {}),
+    companies: readCompanies(raw.companies),
   };
 }
 

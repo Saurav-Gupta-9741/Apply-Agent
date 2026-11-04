@@ -21,7 +21,9 @@ import { NEVER_REMEMBER, type PendingQuestion } from "../shared/types";
 import { findAnswer, questionKey } from "../content/classify";
 import { isAppliedBeforeQuestion } from "../content/facts";
 import { HANDS_OFF_MESSAGE, isHandsOff, platformFor } from "../shared/platforms";
-import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shared/backup";
+import { makeBackup, mergeAnswers, mergeApplications, mergeCompanies, readBackup } from "../shared/backup";
+import { loadMyCompanies } from "./discover";
+import { MY_COMPANIES_KEY } from "../shared/jobs/companies";
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
 import { findSuggestedCorrection } from "../shared/corrections";
 import { KNOWN_CITIES } from "../shared/city-check";
@@ -752,6 +754,10 @@ function showReport(report: RunReport | undefined): void {
       setStatus("Submitted, but the site showed no confirmation. Check the page; the tracker marks it 'needs check'.", "warn");
       break;
     case "ready_to_submit":
+      if (report.nextStep) {
+        setStatus("This page is filled. Check it, press Next (or Continue) on the page yourself, then press Fill again for the next page. ApplyAgent never moves the form on or sends it.", "ok");
+        break;
+      }
       setStatus(`${report.steps ? `Completed ${report.steps - 1} step${report.steps === 2 ? "" : "s"} and reached the last one. ` : ""}Every required field is filled. Review the form on the page, then submit.`, "ok");
       ($("submit") as HTMLButtonElement).hidden = false;
       break;
@@ -801,13 +807,14 @@ async function run(): Promise<void> {
     const oneTimeOnly = $("page-access").textContent === "This visit";
     let loads = navigations.get(tabId) ?? 0;
     let moved = false;
-    let report = await send({ type: "RUN", mode: runMode });
+    // fillOnly: this page only. The panel never presses Next for the user (round 4 report: the form moved on / closed).
+    let report = await send({ type: "RUN", mode: runMode, fillOnly: true });
     // No form, and the page did not move on by itself (a "Next" that loads a new page is handled below):
     // it may be the job description, so open the application first. Opening it is not a step of it.
     // Chrome reports a page load a moment after the old page stops answering: wait for it before deciding.
     if (!report) await sleep(900);
     if (!report && (navigations.get(tabId) ?? 0) === loads) {
-      report = await viaApplicationPage({ type: "RUN", mode: runMode }, report);
+      report = await viaApplicationPage({ type: "RUN", mode: runMode, fillOnly: true }, report);
       loads = navigations.get(tabId) ?? 0;
     }
     // Some multi-step applications load a whole new page per step, which ends the agent on the old page:
@@ -825,7 +832,7 @@ async function run(): Promise<void> {
         return;
       }
       setStatus("Moved to the next step. Filling it…", "info");
-      report = await send({ type: "RUN", mode: runMode, continuing: true });
+      report = await send({ type: "RUN", mode: runMode, continuing: true, fillOnly: true });
     }
     if (!report && moved && oneTimeOnly) {
       setStatus(`The next step opened on a new page. Click the ApplyAgent icon there${keys.fill ? ` (or press ${keys.fill})` : ""} to continue, or allow the site so it continues by itself.`, "warn");
@@ -2238,6 +2245,8 @@ async function renderFeed(): Promise<void> {
   for (const [key, value] of Object.entries(stats)) document.querySelector(`[data-stat='${key}']`)!.textContent = value.toLocaleString();
   $("feed-stats").hidden = feedJobs.length === 0;
   setCount("jobs", good);
+  $("feed-summary").hidden = feedJobs.length === 0;
+  if (feedJobs.length) ($("feed-box") as HTMLDetailsElement).open = true;
   $("feed-summary").textContent = !feedJobs.length
     ? "Load a feed, then set your target roles and locations in Profile to rank the jobs."
     : matches.length
@@ -2384,6 +2393,7 @@ void renderAutoBackup();
 $("export-backup").addEventListener("click", async () => {
   const backup = makeBackup({
     profile: await loadProfile(), answers: await loadAnswers(), applications: await loadApplications(), settings: await loadSettings(),
+    companies: await loadMyCompanies(),
   });
   const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" }));
   const link = h("a", { href: url, download: `applyagent-backup-${backup.exportedAt.slice(0, 10)}.json` });
@@ -2417,6 +2427,7 @@ $("import-backup").addEventListener("change", async (event) => {
   await updateAnswers((answers) => mergeAnswers(answers, backup.answers));
   await updateApplications((records) => mergeApplications(records, backup.applications));
   await saveSettings(backup.settings);
+  if (backup.companies?.length) await chrome.storage.local.set({ [MY_COMPANIES_KEY]: mergeCompanies(await loadMyCompanies(), backup.companies) });
   await renderProfile();
   await renderSetup();
   toast(`Restored: profile, ${backup.answers.length} answers, ${backup.applications.length} applications`);
@@ -2456,9 +2467,14 @@ async function renderPlan(): Promise<void> {
   const pill = $("plan-pill");
   const badge = $("plan-badge");
   const meter = $("plan-meter");
+  // The licence key box and the payment line only appear when there is something to buy and activate. In the beta
+  // (and any build without a licence server) a key box that cannot work would only confuse people.
+  const canBuy = licensingConfigured();
+  $("plan-payment-hint").hidden = !canBuy;
+  $("license-row").hidden = !canBuy;
 
   if (BETA_ALL_FREE) {
-    $("plan-status").textContent = "Beta · every feature is free while we test. Thank you for helping!";
+    $("plan-status").textContent = "Beta · every feature is free while we test. There is nothing to buy or activate. Thank you for helping!";
     pill.textContent = "Beta";
     pill.className = "plan-pill";
     badge.textContent = "Beta";
@@ -2487,7 +2503,7 @@ async function renderPlan(): Promise<void> {
     meter.style.width = "100%";
     meter.parentElement!.classList.remove("low");
   }
-  $("buy-row").hidden = !licensingConfigured();
+  $("buy-row").hidden = !canBuy;
   const { licenseKey } = await chrome.storage.local.get("licenseKey");
   if (typeof licenseKey === "string") ($("license-key") as HTMLInputElement).value = licenseKey;
 }
@@ -2538,7 +2554,7 @@ void renderAnswers();
 void renderTracker();
 initTracker(trackerUi, () => void renderTrackerCrm(trackerUi));
 // >>> arena-fix discover
-initDiscover(trackerUi);
+initDiscover({ ...trackerUi, openProfile: () => showSection("profile") });
 // <<< arena-fix
 initUsageMeter({ toast: (m, t) => toast(m, t ?? ""), showPlan: () => showSection("profile") });
 void (async () => {

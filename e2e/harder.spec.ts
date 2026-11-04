@@ -12,15 +12,29 @@ async function pinPanel(ext: Page, page: Page): Promise<number> {
   return tabId;
 }
 
-test("multi-step application in one page: every step filled, Next pressed, stops before the final Submit", async ({ ext, context }) => {
+test("multi-step application: Fill fills one page and never presses Next; the user moves on, Fill again, then Submit", async ({ ext, context }) => {
   await setStorage(ext, { profile: PROFILE, answers: ANSWERS });
   const page = await context.newPage();
   await page.goto(`${BASE}/wizard.html`);
   await pinPanel(ext, page);
 
+  // Round 4 report: the form moved on / closed by itself after Fill. Now Fill only fills this page.
   await ext.locator("#run").click();
-  await expect(ext.locator("#status")).toContainText("Completed 2 steps", { timeout: 20_000 });
+  await expect(ext.locator("#status")).toContainText("This page is filled", { timeout: 20_000 });
+  await expect(page.locator("#step-no")).toHaveText("1");
+  await expect(ext.locator("#submit")).toBeHidden();
+  expect(await page.evaluate(() => sessionStorage.getItem("wizardSubmits"))).toBeNull();
+
+  await page.getByRole("button", { name: "Next" }).click(); // the user moves on
+  await expect(page.locator("#step-no")).toHaveText("2");
+  await ext.locator("#run").click();
+  await expect(ext.locator("#status")).toContainText("This page is filled", { timeout: 20_000 });
+  await expect(page.locator("#step-no")).toHaveText("2");
+
+  await page.getByRole("button", { name: "Continue" }).click();
   await expect(page.locator("#step-no")).toHaveText("3");
+  await ext.locator("#run").click();
+  await expect(ext.locator("#status")).toContainText("Every required field is filled", { timeout: 20_000 });
   await expect(page.locator("#ct")).toHaveValue("Pune");
   expect(await page.evaluate(() => sessionStorage.getItem("wizardSubmits"))).toBeNull(); // review mode: not sent
 
@@ -30,14 +44,18 @@ test("multi-step application in one page: every step filled, Next pressed, stops
   await expect(ext.locator("[data-count='tracker']")).toHaveText("1");
 });
 
-test("multi-step application with a new page per step: the panel carries on to the next page", async ({ ext, context }) => {
+test("multi-step application with a new page per step: Fill fills page 1 and stays; the user moves on; Fill fills page 2", async ({ ext, context }) => {
   await setStorage(ext, { profile: PROFILE, answers: ANSWERS });
   const page = await context.newPage();
   await page.goto(`${BASE}/step1.html`);
   await pinPanel(ext, page);
 
   await ext.locator("#run").click();
+  await expect(ext.locator("#status")).toContainText("This page is filled", { timeout: 20_000 });
+  expect(page.url()).toContain("step1.html"); // never moved on by ApplyAgent
+  await page.locator("button[type='submit'], input[type='submit']").first().click(); // the user presses Next
   await page.waitForURL(/step2\.html/);
+  await ext.locator("#run").click();
   await expect(ext.locator("#status")).toContainText("Every required field is filled", { timeout: 20_000 });
   await expect(page.locator("#ct")).toHaveValue("Pune");
   expect(page.url()).toContain("fn=Asha"); // step 1 really was filled before moving on

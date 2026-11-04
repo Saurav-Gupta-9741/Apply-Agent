@@ -23,6 +23,39 @@ export function getFeedUrl(ats: SupportedATS, slug: string): string {
   }
 }
 
+const DESCRIPTION_MAX = 6000;
+
+const ENTITIES: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", ndash: "–", mdash: "—", rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“", bull: "•", hellip: "…" };
+function decodeEntities(text: string): string {
+  return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e: string) => {
+    if (e[0] === "#") {
+      const code = e[1] === "x" || e[1] === "X" ? Number.parseInt(e.slice(2), 16) : Number.parseInt(e.slice(1), 10);
+      return Number.isFinite(code) && code > 0 && code < 0x110000 ? String.fromCodePoint(code) : m;
+    }
+    return ENTITIES[e.toLowerCase()] ?? m;
+  });
+}
+
+/** A job description (HTML, sometimes HTML-escaped as Greenhouse sends it) as plain text for matching. Never
+ * inserted into the page: it is only searched for skills and years. */
+export function htmlToText(html: string | undefined, max = DESCRIPTION_MAX): string {
+  if (!html || typeof html !== "string") return "";
+  let t = html;
+  if (/&lt;\/?[a-z]/i.test(t)) t = decodeEntities(t); // escaped HTML: unescape once to get the tags back
+  t = t.replace(/<(script|style)[\s\S]*?<\/\1>/gi, " ")
+    .replace(/<\/(p|div|li|h\d|tr|ul|ol)>|<br\s*\/?>/gi, "\n")
+    .replace(/<li[^>]*>/gi, "\n• ")
+    .replace(/<[^>]+>/g, " ");
+  return decodeEntities(t).replace(/[ \t\f\v\u00a0]+/g, " ").replace(/\s*\n\s*/g, "\n").trim().slice(0, max);
+}
+
+function snippet(text: string): string | undefined {
+  const t = text.replace(/\s+/g, " ").trim();
+  return t ? t.slice(0, 300) : undefined;
+}
+
+const prettySlug = (slug: string): string => slug.replace(/[-_]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
 /** Check if a location string indicates remote work */
 export function isRemoteLocation(loc: string, title?: string): boolean {
   const norm = `${loc} ${title ?? ""}`.toLowerCase();
@@ -37,18 +70,20 @@ export function parseGreenhouseFeed(json: any, slug: string, companyName: string
   return jobs.map((j: any) => {
     const locName = j.location?.name ?? "";
     const isRemote = isRemoteLocation(locName, j.title);
+    const description = htmlToText(j.content);
     return {
       id: `gh-${j.id}`,
       companySlug: slug,
-      companyName,
+      companyName: companyName || (typeof j.company_name === "string" && j.company_name.trim()) || prettySlug(slug),
       ats: "greenhouse",
       title: j.title || "Untitled Role",
       location: locName,
       isRemote,
       department: j.departments?.[0]?.name,
       url: j.absolute_url || `https://boards.greenhouse.io/${slug}/jobs/${j.id}`,
-      publishedAt: j.updated_at,
-      descriptionSnippet: j.content ? j.content.replace(/<[^>]+>/g, " ").slice(0, 300).trim() : undefined,
+      publishedAt: j.first_published || j.updated_at,
+      descriptionSnippet: snippet(description),
+      description: description || undefined,
     };
   });
 }
@@ -61,10 +96,13 @@ export function parseLeverFeed(json: any, slug: string, companyName: string): Jo
     const locName = j.categories?.location ?? "";
     const workplaceType = j.workplaceType || "";
     const isRemote = workplaceType.toLowerCase() === "remote" || isRemoteLocation(locName, j.text);
+    const lists = Array.isArray(j.lists) ? j.lists.map((l: any) => `${l?.text ?? ""}\n${htmlToText(l?.content)}`).join("\n") : "";
+    const description = [typeof j.descriptionPlain === "string" ? j.descriptionPlain : htmlToText(j.description), lists, typeof j.additionalPlain === "string" ? j.additionalPlain : ""]
+      .filter(Boolean).join("\n").slice(0, DESCRIPTION_MAX);
     return {
       id: `lever-${j.id}`,
       companySlug: slug,
-      companyName,
+      companyName: companyName || prettySlug(slug),
       ats: "lever",
       title: j.text || "Untitled Role",
       location: locName,
@@ -73,7 +111,8 @@ export function parseLeverFeed(json: any, slug: string, companyName: string): Jo
       employmentType: j.categories?.commitment || undefined,
       url: j.hostedUrl || `https://jobs.lever.co/${slug}/${j.id}`,
       publishedAt: j.createdAt ? new Date(j.createdAt).toISOString() : undefined,
-      descriptionSnippet: j.descriptionPlain ? j.descriptionPlain.slice(0, 300).trim() : undefined,
+      descriptionSnippet: snippet(description),
+      description: description || undefined,
       salary: j.salaryRange
         ? {
             currency: j.salaryRange.currency,
@@ -94,10 +133,11 @@ export function parseAshbyFeed(json: any, slug: string, companyName: string): Jo
   return jobs.map((j: any) => {
     const locName = j.location || j.address?.postalAddress?.addressLocality || "";
     const isRemote = j.isRemote || isRemoteLocation(locName, j.title);
+    const description = (typeof j.descriptionPlain === "string" ? j.descriptionPlain : htmlToText(j.descriptionHtml)).slice(0, DESCRIPTION_MAX);
     return {
       id: `ashby-${j.id}`,
       companySlug: slug,
-      companyName,
+      companyName: companyName || prettySlug(slug),
       ats: "ashby",
       title: j.title || "Untitled Role",
       location: locName,
@@ -106,7 +146,8 @@ export function parseAshbyFeed(json: any, slug: string, companyName: string): Jo
       employmentType: j.employmentType || undefined,
       url: j.jobUrl || `https://jobs.ashbyhq.com/${slug}/${j.id}`,
       publishedAt: j.publishedAt,
-      descriptionSnippet: j.descriptionPlain ? j.descriptionPlain.slice(0, 300).trim() : undefined,
+      descriptionSnippet: snippet(description),
+      description: description || undefined,
       salary: j.compensationTier
         ? {
             currency: j.compensationTier.currencyCode,
@@ -132,7 +173,7 @@ export function parseSmartRecruitersFeed(json: any, slug: string, companyName: s
     return {
       id: `sr-${j.id}`,
       companySlug: slug,
-      companyName,
+      companyName: companyName || (typeof j.company?.name === "string" && j.company.name.trim()) || prettySlug(slug),
       ats: "smartrecruiters",
       title: j.name || "Untitled Role",
       location: locName,
@@ -154,10 +195,11 @@ export function parseRecruiteeFeed(json: any, slug: string, companyName: string)
   return offers.map((j: any) => {
     const locName = j.location || (j.city ? `${j.city}, ${j.country}` : "");
     const isRemote = j.remote || isRemoteLocation(locName, j.title);
+    const description = `${htmlToText(j.description)}\n${htmlToText(j.requirements)}`.trim().slice(0, DESCRIPTION_MAX);
     return {
       id: `recruitee-${j.id}`,
       companySlug: slug,
-      companyName,
+      companyName: companyName || (typeof j.company_name === "string" && j.company_name.trim()) || prettySlug(slug),
       ats: "recruitee",
       title: j.title || "Untitled Role",
       location: locName,
@@ -167,7 +209,8 @@ export function parseRecruiteeFeed(json: any, slug: string, companyName: string)
       employmentType: j.employment_type_code || undefined,
       url: j.careers_url || `https://${slug}.recruitee.com/o/${j.slug}`,
       publishedAt: j.created_at,
-      descriptionSnippet: j.description ? j.description.replace(/<[^>]+>/g, " ").slice(0, 300).trim() : undefined,
+      descriptionSnippet: snippet(description),
+      description: description || undefined,
     };
   });
 }
@@ -185,7 +228,7 @@ export function parseWorkableFeed(json: any, slug: string, companyName: string):
     return {
       id: `workable-${j.shortcode || j.id}`,
       companySlug: slug,
-      companyName,
+      companyName: companyName || (typeof json?.name === "string" && json.name.trim()) || prettySlug(slug),
       ats: "workable",
       title: j.title || "Untitled Role",
       location: locName,
@@ -210,17 +253,20 @@ export function parsePersonioXml(xmlText: string, slug: string, companyName: str
     const office = block.match(/<office>([\s\S]*?)<\/office>/i)?.[1]?.trim() ?? "";
     const dept = block.match(/<department>([\s\S]*?)<\/department>/i)?.[1]?.trim();
     const isRemote = isRemoteLocation(office, name);
+    const description = htmlToText([...block.matchAll(/<value>([\s\S]*?)<\/value>/gi)].map((m) => (m[1] ?? "").replace(/^\s*<!\[CDATA\[|\]\]>\s*$/g, "")).join("\n"));
 
     postings.push({
       id: `personio-${id}`,
       companySlug: slug,
-      companyName,
+      companyName: companyName || prettySlug(slug),
       ats: "personio",
       title: name,
       location: office,
       isRemote,
       department: dept,
       url: `https://${slug}.jobs.personio.de/job/${id}`,
+      descriptionSnippet: snippet(description),
+      description: description || undefined,
     });
   }
 

@@ -49,8 +49,26 @@ Status: **Fixed** (in a released build, with a test), **Not a bug** (works as de
 | 3.1 | Profile data lost every time the extension was loaded again | Fixed | Cause: Chrome gives an unpacked extension a new identity per folder, and removing it deletes its data. Beta builds now have a fixed identity (same data in any folder); optional automatic backup file on the PC; "Restore from a backup" on the first screen. No data is sent anywhere (no account, no cloud sync, by decision) |
 | 3.2 | No example of what to type in each Profile field | Fixed | Every field has an example placeholder and says which form questions it answers |
 | 3.3 | (found while fixing) First-run screen copied name, email and phone from the resume without asking | Fixed | It saves the file and asks, like the Profile upload; pasted text opens the review |
-| 3.4 | Discover not based on the profile / resume; match % unclear; few companies; can't add a company's careers page | Open | Planned next round: search from profile + resume, explained match %, ~500 companies, add by careers-page URL |
+| 3.4 | Discover not based on the profile / resume; match % unclear; few companies; can't add a company's careers page | Fixed in beta 5 | See round 4 |
 | 3.5 | "Account setup" so data is always saved | Not done, by decision | An account means storing data on a server; replaced by the fixed identity + backup file (data stays on the PC) |
+
+## Round 4: Discover and the Plan card (2026-11-04) → beta 5 (1.0.4)
+
+| # | Flaw reported | Status | What changed |
+|---|---|---|---|
+| 4.1 | Plan card showed a licence key box and "One-time payment" in the beta, where nothing can be bought | Fixed | Key box and payment line appear only when licensing is set up; the beta says there is nothing to buy or activate |
+| 4.2 | Jobs not fetched from the profile / resume | Fixed | Matching uses Target roles, else current title, work history or field of study (shown on screen with its source); experience, student status, cities, countries you may work in, skills |
+| 4.3 | Experience level not matched | Fixed | Years asked in the description **or the title** ("Exp- 4-6 Years"); two or more years over yours, senior or team-lead roles for freshers are left out and counted |
+| 4.4 | Match % not explained (a flat 30%) | Fixed | Role 40 + Skills 25 + Experience 20 + Location 15, each with its reason; skills read from the full job description; missing skills listed |
+| 4.5 | Only 54 companies | Fixed | 340 companies, each verified on its own job board, with a hiring profile (countries, remote, role families, entry level) |
+| 4.6 | "Train a model" to pick companies from the resume | Done differently | No training data exists, so companies are ranked on the device from their hiring profile against yours (field, where you can work, entry level). Transparent and testable |
+| 4.7 | Crawl companies' career pages | Fixed (polite) | Paste a careers page: read once after robots.txt, its job board found and checked first in every search. No crawling of job sites |
+| 4.8 | (found in a live check) Jobs in Bucharest / Taiwan shown as places an India-only student can work | Fixed | 60 more tech-hub cities mapped to their countries; unknown places score low and say so |
+| 4.9 | (found in a live check) "Credit Risk Analyst" scored like a machine-learning role | Fixed | Analytics is its own field, related to (not the same as) data science |
+| 4.10 | (found while fixing) Reopened results could show a different % (descriptions were not kept) | Fixed | The shown jobs are kept with their descriptions |
+| 4.12 | Pressing **Fill this application** on a partly filled form filled it, then **the application form closed** | Fixed | Four causes, all closed: (1) closing a dropdown sent an Escape key to the whole page, and pop-up application forms close on Escape: it now stays on the dropdown; (2) the panel's Fill pressed the form's Next / Continue by itself on multi-page forms (on some sites that sends the application): Fill now fills **this page only** and says "press Next yourself, then Fill again"; (3) a dropdown built from a plain button inside a form acts as a Submit button: every submit is blocked while a fill runs; (4) the "Apply" opener could match a "Submit application" button: it never does now |
+| 4.13 | Must not submit while mandatory fields are empty | Fixed | Before any submit (Auto-submit or the panel's Submit) every required field is re-read on the page; if any is empty it stops and names them ("Still empty: …"). Auto-submit also waits while any question to you is open, even an optional one |
+| 4.11 | The on-device model in Discover (said in round 3) | Not done, by decision | A plain role table gives a reason you can read for every point; the model would give a number nobody can explain |
 
 ## Still open
 

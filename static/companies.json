@@ -1,542 +1,9298 @@
 [
-  {
-    "slug": "figma",
-    "name": "Figma",
-    "ats": "greenhouse",
-    "country": "United States",
-    "industry": "Design Software",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:12:49.209Z",
-    "jobCount": 141
+ {
+  "slug": "1password",
+  "name": "1Password",
+  "ats": "ashby",
+  "country": "Canada",
+  "industry": "Security",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 75,
+  "hires": {
+   "US": 60,
+   "CA": 51,
+   "GB": 8,
+   "DE": 1,
+   "AU": 1
   },
-  {
-    "slug": "stripe",
-    "name": "Stripe",
-    "ats": "greenhouse",
-    "country": "United States",
-    "industry": "Fintech",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:12:51.270Z",
-    "jobCount": 739
+  "remote": 74,
+  "families": {
+   "sales": 21,
+   "software": 20,
+   "marketing": 8,
+   "data": 7,
+   "product": 8,
+   "operations": 1,
+   "legal": 2,
+   "support": 3,
+   "design": 1
   },
-  {
-    "slug": "airbnb",
-    "name": "Airbnb",
-    "ats": "greenhouse",
-    "country": "United States",
-    "industry": "Hospitality",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:12:53.284Z",
-    "jobCount": 212
+  "entry": 3
+ },
+ {
+  "slug": "abnormalsecurity",
+  "name": "Abnormal Security",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Security",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 85,
+  "hires": {
+   "US": 46,
+   "AU": 1,
+   "GB": 10,
+   "CA": 2,
+   "IE": 6,
+   "SG": 3,
+   "SE": 2,
+   "NL": 1,
+   "JP": 2,
+   "IN": 11,
+   "BR": 1
   },
-  {
-    "slug": "discord",
-    "name": "Discord",
-    "ats": "greenhouse",
-    "country": "United States",
-    "industry": "Communications",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:12:55.269Z",
-    "jobCount": 40
+  "remote": 72,
+  "families": {
+   "sales": 21,
+   "data": 15,
+   "software": 20,
+   "support": 4,
+   "operations": 3,
+   "product": 2,
+   "marketing": 4,
+   "finance": 3,
+   "legal": 1
   },
-  {
-    "slug": "databricks",
-    "name": "Databricks",
-    "ats": "greenhouse",
-    "country": "United States",
-    "industry": "Data & AI",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:12:57.306Z",
-    "jobCount": 910
+  "entry": 0
+ },
+ {
+  "slug": "abridge",
+  "name": "Abridge",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 37,
+  "hires": {
+   "US": 6
   },
-  {
-    "slug": "gitlab",
-    "name": "GitLab",
-    "ats": "greenhouse",
-    "country": "United States",
-    "industry": "Developer Tools",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:12:59.364Z",
-    "jobCount": 234
+  "remote": 33,
+  "families": {
+   "data": 4,
+   "design": 1,
+   "software": 3,
+   "marketing": 2,
+   "operations": 5,
+   "people": 3,
+   "support": 3,
+   "finance": 1,
+   "legal": 2
   },
-  {
-    "slug": "gusto",
-    "name": "Gusto",
-    "ats": "greenhouse",
-    "country": "United States",
-    "industry": "Payroll & HR",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:13:01.300Z",
-    "jobCount": 84
+  "entry": 1
+ },
+ {
+  "slug": "acorns",
+  "name": "Acorns",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 13,
+  "hires": {
+   "US": 1
   },
-  {
-    "slug": "samsara",
-    "name": "Samsara",
-    "ats": "greenhouse",
-    "country": "United States",
-    "industry": "IoT",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:13:03.307Z",
-    "jobCount": 330
+  "remote": 12,
+  "families": {
+   "marketing": 5,
+   "software": 2,
+   "data": 2,
+   "operations": 2,
+   "sales": 2
   },
-  {
-    "slug": "instacart",
-    "name": "Instacart",
-    "ats": "greenhouse",
-    "country": "United States",
-    "industry": "E-Commerce",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:13:05.307Z",
-    "jobCount": 94
+  "entry": 1
+ },
+ {
+  "slug": "adyen",
+  "name": "Adyen",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 239,
+  "hires": {
+   "FR": 4,
+   "ES": 4,
+   "DE": 6,
+   "GB": 8,
+   "NL": 78,
+   "SE": 3,
+   "BR": 5,
+   "SG": 18,
+   "US": 90,
+   "JP": 6,
+   "AU": 3,
+   "CA": 3,
+   "PL": 1,
+   "MX": 1,
+   "IN": 3
   },
-  {
-    "slug": "twitch",
-    "name": "Twitch",
-    "ats": "greenhouse",
-    "country": "United States",
-    "industry": "Media Streaming",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:13:09.326Z",
-    "jobCount": 55
+  "remote": 0,
+  "families": {
+   "sales": 42,
+   "finance": 10,
+   "legal": 17,
+   "data": 31,
+   "marketing": 10,
+   "software": 59,
+   "product": 13,
+   "operations": 5,
+   "support": 2,
+   "design": 3,
+   "people": 1
   },
-  {
-    "slug": "chime",
-    "name": "Chime",
-    "ats": "greenhouse",
-    "country": "United States",
-    "industry": "Fintech",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:13:11.330Z",
-    "jobCount": 74
+  "entry": 0
+ },
+ {
+  "slug": "affirm",
+  "name": "Affirm",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 237,
+  "hires": {
+   "US": 104,
+   "ES": 16,
+   "PL": 17,
+   "GB": 17,
+   "CA": 83
   },
-  {
-    "slug": "spotify",
-    "name": "Spotify",
-    "ats": "lever",
-    "country": "Sweden",
-    "industry": "Music Streaming",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:13:27.885Z",
-    "jobCount": 86
+  "remote": 229,
+  "families": {
+   "data": 31,
+   "legal": 4,
+   "design": 3,
+   "sales": 5,
+   "software": 135,
+   "product": 22,
+   "finance": 2,
+   "marketing": 5,
+   "operations": 8,
+   "support": 2,
+   "people": 1
   },
-  {
-    "slug": "palantir",
-    "name": "Palantir",
-    "ats": "lever",
-    "country": "United States",
-    "industry": "Data Analytics",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:13:32.786Z",
-    "jobCount": 305
+  "entry": 7
+ },
+ {
+  "slug": "agoda",
+  "name": "Agoda",
+  "ats": "greenhouse",
+  "country": "Singapore",
+  "industry": "Travel",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 304,
+  "hires": {
+   "JP": 26,
+   "IN": 10,
+   "US": 10,
+   "SG": 6
   },
-  {
-    "slug": "zeta",
-    "name": "Zeta",
-    "ats": "lever",
-    "country": "India",
-    "industry": "Banking Tech",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:13:57.870Z",
-    "jobCount": 31
+  "remote": 0,
+  "families": {
+   "people": 17,
+   "sales": 38,
+   "data": 59,
+   "software": 34,
+   "operations": 20,
+   "marketing": 25,
+   "legal": 4,
+   "finance": 9,
+   "product": 5,
+   "design": 10,
+   "support": 4
   },
-  {
-    "slug": "paytm",
-    "name": "Paytm",
-    "ats": "lever",
-    "country": "India",
-    "industry": "Fintech",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:01.807Z",
-    "jobCount": 199
+  "entry": 2
+ },
+ {
+  "slug": "airbnb",
+  "name": "Airbnb",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Hospitality",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 210,
+  "hires": {
+   "JP": 6,
+   "CA": 17,
+   "US": 107,
+   "SG": 6,
+   "MX": 6,
+   "IE": 7,
+   "IN": 10,
+   "GB": 9,
+   "BR": 12,
+   "ES": 4,
+   "DE": 2,
+   "FR": 7,
+   "AU": 2
   },
-  {
-    "slug": "airwallex",
-    "name": "Airwallex",
-    "ats": "ashby",
-    "country": "Australia",
-    "industry": "Fintech",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:08.593Z",
-    "jobCount": 478
+  "remote": 22,
+  "families": {
+   "legal": 6,
+   "operations": 11,
+   "marketing": 15,
+   "software": 45,
+   "data": 41,
+   "sales": 4,
+   "product": 8,
+   "finance": 1,
+   "support": 9,
+   "design": 3
   },
-  {
-    "slug": "linear",
-    "name": "Linear",
-    "ats": "ashby",
-    "country": "United States",
-    "industry": "Issue Tracking",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:10.151Z",
-    "jobCount": 31
+  "entry": 0
+ },
+ {
+  "slug": "airbyte",
+  "name": "Airbyte",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Data Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 9,
+  "hires": {
+   "US": 6,
+   "CA": 3
   },
-  {
-    "slug": "replit",
-    "name": "Replit",
-    "ats": "ashby",
-    "country": "United States",
-    "industry": "Cloud IDE",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:12.169Z",
-    "jobCount": 34
+  "remote": 9,
+  "families": {
+   "software": 7,
+   "finance": 1,
+   "sales": 1
   },
-  {
-    "slug": "ramp",
-    "name": "Ramp",
-    "ats": "ashby",
-    "country": "United States",
-    "industry": "Corporate Cards",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:14.217Z",
-    "jobCount": 170
+  "entry": 0
+ },
+ {
+  "slug": "airtable",
+  "name": "Airtable",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 5,
+  "hires": {
+   "US": 5
   },
-  {
-    "slug": "synthesia",
-    "name": "Synthesia",
-    "ats": "ashby",
-    "country": "United Kingdom",
-    "industry": "AI Video",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:20.394Z",
-    "jobCount": 33
+  "remote": 4,
+  "families": {
+   "sales": 4
   },
-  {
-    "slug": "elevenlabs",
-    "name": "ElevenLabs",
-    "ats": "ashby",
-    "country": "United States",
-    "industry": "AI Audio",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:22.459Z",
-    "jobCount": 146
+  "entry": 0
+ },
+ {
+  "slug": "airwallex",
+  "name": "Airwallex",
+  "ats": "ashby",
+  "country": "Australia",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 482,
+  "hires": {
+   "CA": 8,
+   "SG": 114,
+   "US": 119,
+   "NL": 15,
+   "IN": 7,
+   "AU": 34,
+   "GB": 53,
+   "FR": 8,
+   "JP": 5,
+   "MX": 4,
+   "DE": 9,
+   "BR": 3,
+   "SE": 1,
+   "IL": 5,
+   "ES": 3,
+   "AE": 3
   },
-  {
-    "slug": "cursor",
-    "name": "Cursor (Anysphere)",
-    "ats": "ashby",
-    "country": "United States",
-    "industry": "AI Editor",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:24.200Z",
-    "jobCount": 123
+  "remote": 185,
+  "families": {
+   "marketing": 31,
+   "data": 47,
+   "product": 9,
+   "design": 9,
+   "sales": 148,
+   "software": 107,
+   "operations": 41,
+   "support": 6,
+   "legal": 23,
+   "people": 4,
+   "finance": 13
   },
-  {
-    "slug": "bluecrux",
-    "name": "Bluecrux",
-    "ats": "recruitee",
-    "country": "Belgium",
-    "industry": "Supply Chain",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:27.288Z",
-    "jobCount": 34
+  "entry": 0
+ },
+ {
+  "slug": "alan",
+  "name": "Alan",
+  "ats": "ashby",
+  "country": "France",
+  "industry": "Insurance",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 135,
+  "hires": {
+   "FR": 92,
+   "ES": 20,
+   "NL": 1,
+   "CA": 4
   },
-  {
-    "slug": "miaplatform",
-    "name": "Mia-Platform",
-    "ats": "recruitee",
-    "country": "Italy",
-    "industry": "Cloud Tech",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:29.718Z",
-    "jobCount": 5
+  "remote": 114,
+  "families": {
+   "data": 11,
+   "sales": 28,
+   "marketing": 6,
+   "operations": 15,
+   "software": 22,
+   "legal": 4,
+   "design": 2,
+   "people": 2,
+   "finance": 4
   },
-  {
-    "slug": "sahl",
-    "name": "Sahl",
-    "ats": "recruitee",
-    "country": "Egypt",
-    "industry": "Fintech",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:32.117Z",
-    "jobCount": 6
+  "entry": 12
+ },
+ {
+  "slug": "alchemy",
+  "name": "Alchemy",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Crypto",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 19,
+  "hires": {
+   "US": 16
   },
-  {
-    "slug": "bunq",
-    "name": "bunq",
-    "ats": "recruitee",
-    "country": "Netherlands",
-    "industry": "Neobank",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:35.156Z",
-    "jobCount": 27
+  "remote": 19,
+  "families": {
+   "finance": 3,
+   "sales": 3,
+   "software": 7,
+   "design": 1,
+   "product": 1,
+   "marketing": 1,
+   "data": 2
   },
-  {
-    "slug": "bolderapps",
-    "name": "Bolder Apps",
-    "ats": "workable",
-    "country": "United Kingdom",
-    "industry": "Mobile Apps",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:44.104Z",
-    "jobCount": 36
+  "entry": 0
+ },
+ {
+  "slug": "alephalpha",
+  "name": "Aleph Alpha",
+  "ats": "ashby",
+  "country": "Germany",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 4,
+  "hires": {},
+  "remote": 4,
+  "families": {
+   "data": 4
   },
-  {
-    "slug": "revisionz",
-    "name": "Revisionz",
-    "ats": "workable",
-    "country": "Canada",
-    "industry": "Consulting",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:46.115Z",
-    "jobCount": 6
+  "entry": 0
+ },
+ {
+  "slug": "algolia",
+  "name": "Algolia",
+  "ats": "greenhouse",
+  "country": "France",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 26,
+  "hires": {
+   "FR": 14,
+   "GB": 6,
+   "NL": 2,
+   "US": 1,
+   "DE": 2,
+   "AU": 1
   },
-  {
-    "slug": "groww",
-    "name": "Groww",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:52.533Z",
-    "jobCount": 9
+  "remote": 4,
+  "families": {
+   "sales": 10,
+   "software": 10,
+   "data": 3
   },
-  {
-    "slug": "inmobi",
-    "name": "Inmobi",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:54.414Z",
-    "jobCount": 82
+  "entry": 0
+ },
+ {
+  "slug": "amplitude",
+  "name": "Amplitude",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 49,
+  "hires": {
+   "US": 27,
+   "IN": 1,
+   "SG": 2,
+   "GB": 1,
+   "NL": 1,
+   "CA": 2,
+   "BR": 2,
+   "DE": 1
   },
-  {
-    "slug": "druva",
-    "name": "Druva",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:56.448Z",
-    "jobCount": 28
+  "remote": 37,
+  "families": {
+   "data": 6,
+   "marketing": 6,
+   "support": 2,
+   "software": 14,
+   "design": 2,
+   "sales": 13,
+   "operations": 1
   },
-  {
-    "slug": "observeai",
-    "name": "Observeai",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:14:58.475Z",
-    "jobCount": 9
+  "entry": 0
+ },
+ {
+  "slug": "andela",
+  "name": "Andela",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Staffing",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 12,
+  "hires": {
+   "GB": 3
   },
-  {
-    "slug": "n26",
-    "name": "N26",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:00.471Z",
-    "jobCount": 28
+  "remote": 12,
+  "families": {
+   "software": 2,
+   "operations": 1,
+   "marketing": 6,
+   "product": 1
   },
-  {
-    "slug": "getyourguide",
-    "name": "Getyourguide",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:02.492Z",
-    "jobCount": 68
+  "entry": 0
+ },
+ {
+  "slug": "angellist",
+  "name": "AngelList",
+  "ats": "lever",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 34,
+  "hires": {
+   "US": 32
   },
-  {
-    "slug": "contentful",
-    "name": "Contentful",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:04.460Z",
-    "jobCount": 29
+  "remote": 2,
+  "families": {
+   "software": 8,
+   "operations": 5,
+   "sales": 3,
+   "finance": 4,
+   "legal": 1,
+   "people": 2,
+   "design": 3,
+   "product": 2,
+   "marketing": 1
   },
-  {
-    "slug": "adyen",
-    "name": "Adyen",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:06.487Z",
-    "jobCount": 241
+  "entry": 0
+ },
+ {
+  "slug": "anthropic",
+  "name": "Anthropic",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 682,
+  "hires": {
+   "US": 539,
+   "SG": 11,
+   "IE": 9,
+   "GB": 44,
+   "AU": 11,
+   "JP": 16,
+   "IN": 6,
+   "DE": 16,
+   "FR": 11,
+   "CA": 3,
+   "ES": 1,
+   "CH": 5
   },
-  {
-    "slug": "monzo",
-    "name": "Monzo",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:08.480Z",
-    "jobCount": 61
+  "remote": 60,
+  "families": {
+   "finance": 18,
+   "data": 176,
+   "sales": 74,
+   "people": 10,
+   "operations": 22,
+   "software": 199,
+   "marketing": 20,
+   "legal": 16,
+   "product": 38,
+   "support": 16,
+   "design": 6
   },
-  {
-    "slug": "deliveroo",
-    "name": "Deliveroo",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:10.526Z",
-    "jobCount": 202
+  "entry": 0
+ },
+ {
+  "slug": "anyscale",
+  "name": "Anyscale",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 22,
+  "hires": {
+   "US": 17,
+   "IN": 5
   },
-  {
-    "slug": "sumup",
-    "name": "Sumup",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:12.494Z",
-    "jobCount": 355
+  "remote": 7,
+  "families": {
+   "sales": 2,
+   "software": 12,
+   "data": 7,
+   "legal": 1
   },
-  {
-    "slug": "trustpilot",
-    "name": "Trustpilot",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:14.496Z",
-    "jobCount": 45
+  "entry": 0
+ },
+ {
+  "slug": "apolloio",
+  "name": "Apollo.io",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 52,
+  "hires": {
+   "IN": 6,
+   "GB": 5,
+   "US": 39,
+   "CA": 1,
+   "PL": 1
   },
-  {
-    "slug": "typeform",
-    "name": "Typeform",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:16.540Z",
-    "jobCount": 11
+  "remote": 25,
+  "families": {
+   "sales": 17,
+   "finance": 2,
+   "data": 5,
+   "legal": 1,
+   "operations": 2,
+   "people": 4,
+   "software": 12
   },
-  {
-    "slug": "cabify",
-    "name": "Cabify",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:18.511Z",
-    "jobCount": 57
+  "entry": 0
+ },
+ {
+  "slug": "arcadia",
+  "name": "Arcadia",
+  "ats": "lever",
+  "country": "United States",
+  "industry": "Energy",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 16,
+  "hires": {
+   "US": 11
   },
-  {
-    "slug": "celonis",
-    "name": "Celonis",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:20.531Z",
-    "jobCount": 226
+  "remote": 15,
+  "families": {
+   "support": 2,
+   "data": 7,
+   "sales": 3,
+   "operations": 1,
+   "software": 1,
+   "product": 1
   },
-  {
-    "slug": "hellofresh",
-    "name": "Hellofresh",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:22.538Z",
-    "jobCount": 378
+  "entry": 0
+ },
+ {
+  "slug": "asana",
+  "name": "Asana",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 110,
+  "hires": {
+   "CA": 26,
+   "US": 41,
+   "PL": 19,
+   "JP": 5,
+   "DE": 3,
+   "AU": 1,
+   "IE": 3,
+   "SG": 1,
+   "GB": 2
   },
-  {
-    "slug": "wildlifestudios",
-    "name": "Wildlifestudios",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:26.524Z",
-    "jobCount": 15
+  "remote": 5,
+  "families": {
+   "data": 18,
+   "software": 28,
+   "legal": 1,
+   "sales": 11,
+   "finance": 1,
+   "operations": 4,
+   "support": 10,
+   "design": 4,
+   "product": 8,
+   "people": 3,
+   "marketing": 3
   },
-  {
-    "slug": "vtex",
-    "name": "Vtex",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:28.532Z",
-    "jobCount": 31
+  "entry": 0
+ },
+ {
+  "slug": "ashby",
+  "name": "Ashby",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "HR Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 71,
+  "hires": {
+   "FR": 1,
+   "US": 37,
+   "GB": 8,
+   "DE": 2,
+   "CA": 5,
+   "AU": 4,
+   "PT": 2,
+   "SG": 1
   },
-  {
-    "slug": "quintoandar",
-    "name": "Quintoandar",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:30.541Z",
-    "jobCount": 98
+  "remote": 71,
+  "families": {
+   "software": 29,
+   "sales": 9,
+   "design": 2,
+   "operations": 1,
+   "support": 16,
+   "marketing": 2,
+   "data": 2
   },
-  {
-    "slug": "xendit",
-    "name": "Xendit",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:32.548Z",
-    "jobCount": 19
+  "entry": 0
+ },
+ {
+  "slug": "atlan",
+  "name": "Atlan",
+  "ats": "ashby",
+  "country": "India",
+  "industry": "Data & AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 6,
+  "hires": {
+   "IN": 4,
+   "US": 2
   },
-  {
-    "slug": "paypay",
-    "name": "Paypay",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:34.551Z",
-    "jobCount": 85
+  "remote": 5,
+  "families": {
+   "data": 1,
+   "sales": 2,
+   "software": 3
   },
-  {
-    "slug": "robinhood",
-    "name": "Robinhood",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:38.572Z",
-    "jobCount": 161
+  "entry": 0
+ },
+ {
+  "slug": "attentive",
+  "name": "Attentive",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 25,
+  "hires": {
+   "US": 23,
+   "AU": 1,
+   "GB": 1
   },
-  {
-    "slug": "twilio",
-    "name": "Twilio",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:40.567Z",
-    "jobCount": 133
+  "remote": 0,
+  "families": {
+   "support": 3,
+   "sales": 3,
+   "data": 8,
+   "software": 7,
+   "product": 1
   },
-  {
-    "slug": "datadog",
-    "name": "Datadog",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:42.627Z",
-    "jobCount": 404
+  "entry": 0
+ },
+ {
+  "slug": "babbel",
+  "name": "Babbel",
+  "ats": "ashby",
+  "country": "Germany",
+  "industry": "Edtech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 10,
+  "hires": {
+   "DE": 8,
+   "US": 2
   },
-  {
-    "slug": "grafanalabs",
-    "name": "Grafanalabs",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:44.587Z",
-    "jobCount": 124
+  "remote": 10,
+  "families": {
+   "data": 4,
+   "software": 3,
+   "marketing": 2
   },
-  {
-    "slug": "asana",
-    "name": "Asana",
-    "ats": "greenhouse",
-    "country": "Multiple",
-    "industry": "",
-    "unverified": false,
-    "verifiedAt": "2026-11-03T07:15:46.601Z",
-    "jobCount": 108
-  }
+  "entry": 1
+ },
+ {
+  "slug": "backmarket",
+  "name": "Back Market",
+  "ats": "ashby",
+  "country": "France",
+  "industry": "E-commerce",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 32,
+  "hires": {
+   "FR": 19,
+   "JP": 3,
+   "ES": 4
+  },
+  "remote": 16,
+  "families": {
+   "operations": 2,
+   "data": 8,
+   "finance": 1,
+   "software": 3,
+   "design": 1,
+   "sales": 2,
+   "people": 1,
+   "product": 2,
+   "marketing": 3
+  },
+  "entry": 17
+ },
+ {
+  "slug": "backblaze",
+  "name": "Backblaze",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Cloud Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 35,
+  "hires": {
+   "GB": 1,
+   "US": 20,
+   "MX": 11,
+   "IN": 2
+  },
+  "remote": 34,
+  "families": {
+   "data": 6,
+   "software": 15,
+   "sales": 1,
+   "operations": 2,
+   "product": 6,
+   "marketing": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "bandwidth",
+  "name": "Bandwidth",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Communications",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 25,
+  "hires": {
+   "US": 21,
+   "GB": 4
+  },
+  "remote": 0,
+  "families": {
+   "data": 2,
+   "sales": 6,
+   "support": 2,
+   "software": 7,
+   "product": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "benchling",
+  "name": "Benchling",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Biotech Software",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 51,
+  "hires": {
+   "US": 39,
+   "CH": 6,
+   "GB": 5
+  },
+  "remote": 49,
+  "families": {
+   "software": 10,
+   "finance": 2,
+   "data": 3,
+   "sales": 11,
+   "product": 4,
+   "support": 3,
+   "marketing": 2,
+   "operations": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "benevity",
+  "name": "Benevity",
+  "ats": "ashby",
+  "country": "Canada",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 20,
+  "hires": {
+   "CA": 18,
+   "GB": 1
+  },
+  "remote": 19,
+  "families": {
+   "software": 4,
+   "marketing": 4,
+   "sales": 1,
+   "data": 2,
+   "finance": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "betterment",
+  "name": "Betterment",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 27,
+  "hires": {
+   "US": 27
+  },
+  "remote": 0,
+  "families": {
+   "marketing": 3,
+   "sales": 2,
+   "legal": 1,
+   "design": 2,
+   "product": 2,
+   "operations": 4,
+   "software": 6,
+   "finance": 1,
+   "data": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "billcom",
+  "name": "Bill.com",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 42,
+  "hires": {
+   "US": 42
+  },
+  "remote": 0,
+  "families": {
+   "sales": 9,
+   "finance": 6,
+   "data": 12,
+   "software": 5,
+   "design": 1,
+   "product": 4,
+   "marketing": 2,
+   "people": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "blablacar",
+  "name": "BlaBlaCar",
+  "ats": "lever",
+  "country": "France",
+  "industry": "Mobility",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 7,
+  "hires": {
+   "FR": 6,
+   "BR": 1
+  },
+  "remote": 0,
+  "families": {
+   "software": 3,
+   "data": 2,
+   "product": 1,
+   "marketing": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "block",
+  "name": "Block",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 203,
+  "hires": {
+   "CA": 13,
+   "US": 138,
+   "AU": 30,
+   "GB": 14,
+   "JP": 7,
+   "SG": 1
+  },
+  "remote": 0,
+  "families": {
+   "marketing": 6,
+   "support": 5,
+   "sales": 97,
+   "data": 17,
+   "legal": 5,
+   "operations": 10,
+   "software": 33,
+   "finance": 5,
+   "people": 1,
+   "product": 3
+  },
+  "entry": 2
+ },
+ {
+  "slug": "bluecrux",
+  "name": "Bluecrux",
+  "ats": "recruitee",
+  "country": "Belgium",
+  "industry": "Supply Chain",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 34,
+  "hires": {
+   "ES": 5,
+   "US": 3,
+   "PL": 2,
+   "AU": 1,
+   "IE": 1
+  },
+  "remote": 1,
+  "families": {
+   "operations": 9,
+   "data": 6,
+   "sales": 2,
+   "support": 3,
+   "software": 2,
+   "marketing": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "bolderapps",
+  "name": "Bolder Apps",
+  "ats": "workable",
+  "country": "United Kingdom",
+  "industry": "Mobile Apps",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 36,
+  "hires": {
+   "MX": 6,
+   "US": 3,
+   "BR": 1,
+   "GB": 1
+  },
+  "remote": 35,
+  "families": {
+   "software": 16,
+   "data": 1,
+   "sales": 1,
+   "product": 6,
+   "design": 5
+  },
+  "entry": 1
+ },
+ {
+  "slug": "braze",
+  "name": "Braze",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 367,
+  "hires": {
+   "DE": 5,
+   "GB": 23,
+   "FR": 7,
+   "JP": 12,
+   "US": 264,
+   "AE": 3,
+   "AU": 7,
+   "MX": 2,
+   "SG": 3,
+   "CA": 20,
+   "BR": 17
+  },
+  "remote": 1,
+  "families": {
+   "sales": 120,
+   "software": 81,
+   "data": 37,
+   "marketing": 31,
+   "support": 15,
+   "operations": 12,
+   "legal": 1,
+   "product": 8,
+   "people": 6,
+   "finance": 7
+  },
+  "entry": 1
+ },
+ {
+  "slug": "brex",
+  "name": "Brex",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 270,
+  "hires": {
+   "US": 217,
+   "CA": 36,
+   "BR": 16
+  },
+  "remote": 1,
+  "families": {
+   "sales": 49,
+   "finance": 4,
+   "marketing": 30,
+   "data": 22,
+   "people": 11,
+   "software": 59,
+   "operations": 22,
+   "support": 10,
+   "legal": 9,
+   "product": 20,
+   "design": 9
+  },
+  "entry": 0
+ },
+ {
+  "slug": "bunq",
+  "name": "bunq",
+  "ats": "recruitee",
+  "country": "Netherlands",
+  "industry": "Neobank",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 25,
+  "hires": {
+   "NL": 17,
+   "GB": 1
+  },
+  "remote": 0,
+  "families": {
+   "data": 3,
+   "product": 2,
+   "operations": 1,
+   "legal": 3,
+   "software": 1,
+   "people": 1
+  },
+  "entry": 3
+ },
+ {
+  "slug": "cabify",
+  "name": "Cabify",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 52,
+  "hires": {
+   "ES": 21
+  },
+  "remote": 0,
+  "families": {
+   "data": 11,
+   "sales": 7,
+   "operations": 4,
+   "support": 3,
+   "finance": 1,
+   "marketing": 2,
+   "people": 3,
+   "legal": 1,
+   "software": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "calendly",
+  "name": "Calendly",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 7,
+  "hires": {
+   "US": 7
+  },
+  "remote": 5,
+  "families": {
+   "software": 2,
+   "operations": 1,
+   "marketing": 1,
+   "data": 1,
+   "product": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "calm",
+  "name": "Calm",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Healthtech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 1,
+  "hires": {
+   "US": 1
+  },
+  "remote": 1,
+  "families": {
+   "design": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "careem",
+  "name": "Careem",
+  "ats": "greenhouse",
+  "country": "United Arab Emirates",
+  "industry": "Mobility",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 11,
+  "hires": {
+   "AE": 4
+  },
+  "remote": 0,
+  "families": {
+   "sales": 6,
+   "software": 3,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "carta",
+  "name": "Carta",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 78,
+  "hires": {
+   "US": 40,
+   "GB": 17,
+   "SG": 7,
+   "AU": 4,
+   "JP": 1,
+   "CA": 11,
+   "BR": 2
+  },
+  "remote": 0,
+  "families": {
+   "sales": 15,
+   "finance": 11,
+   "legal": 13,
+   "support": 2,
+   "marketing": 6,
+   "data": 3,
+   "operations": 2,
+   "software": 9
+  },
+  "entry": 2
+ },
+ {
+  "slug": "celonis",
+  "name": "Celonis",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 222,
+  "hires": {
+   "US": 50,
+   "DE": 58,
+   "GB": 20,
+   "ES": 28,
+   "IN": 25,
+   "CA": 2,
+   "NL": 9,
+   "SE": 4,
+   "JP": 4,
+   "FR": 8,
+   "AE": 2,
+   "CH": 3
+  },
+  "remote": 18,
+  "families": {
+   "sales": 26,
+   "data": 48,
+   "software": 76,
+   "product": 3,
+   "finance": 3,
+   "operations": 10,
+   "marketing": 6
+  },
+  "entry": 12
+ },
+ {
+  "slug": "cerebras",
+  "name": "Cerebras",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Semiconductors",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 116,
+  "hires": {
+   "US": 98,
+   "CA": 22,
+   "IN": 6,
+   "AE": 1
+  },
+  "remote": 73,
+  "families": {
+   "software": 53,
+   "data": 38,
+   "finance": 4,
+   "sales": 1,
+   "legal": 1,
+   "operations": 4,
+   "product": 1
+  },
+  "entry": 4
+ },
+ {
+  "slug": "checkr",
+  "name": "Checkr",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "HR Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 37,
+  "hires": {
+   "US": 37
+  },
+  "remote": 1,
+  "families": {
+   "legal": 2,
+   "support": 2,
+   "operations": 3,
+   "finance": 2,
+   "sales": 2,
+   "software": 5,
+   "design": 3,
+   "people": 1,
+   "data": 5,
+   "product": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "chime",
+  "name": "Chime",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 72,
+  "hires": {
+   "US": 72
+  },
+  "remote": 2,
+  "families": {
+   "data": 17,
+   "legal": 3,
+   "operations": 4,
+   "marketing": 11,
+   "finance": 3,
+   "design": 3,
+   "software": 19,
+   "product": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "circle",
+  "name": "Circle",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Crypto",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 8,
+  "hires": {
+   "US": 2
+  },
+  "remote": 8,
+  "families": {
+   "marketing": 2,
+   "sales": 1,
+   "data": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "circleci",
+  "name": "CircleCI",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 14,
+  "hires": {
+   "US": 13,
+   "GB": 5,
+   "CA": 6,
+   "MX": 4
+  },
+  "remote": 8,
+  "families": {
+   "marketing": 1,
+   "design": 1,
+   "operations": 1,
+   "software": 8,
+   "sales": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "clearco",
+  "name": "Clearco",
+  "ats": "ashby",
+  "country": "Canada",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 5,
+  "hires": {
+   "CA": 5
+  },
+  "remote": 3,
+  "families": {
+   "sales": 3,
+   "finance": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "clerk",
+  "name": "Clerk",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 2,
+  "hires": {
+   "US": 1
+  },
+  "remote": 2,
+  "families": {
+   "design": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "clickhouse",
+  "name": "ClickHouse",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Databases",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 210,
+  "hires": {
+   "US": 76,
+   "IL": 2,
+   "ES": 4,
+   "DE": 14,
+   "CA": 6,
+   "SG": 17,
+   "NL": 14,
+   "IN": 10,
+   "JP": 7,
+   "AU": 8,
+   "GB": 8,
+   "MX": 2,
+   "SE": 1,
+   "AE": 2,
+   "PT": 1,
+   "FR": 1
+  },
+  "remote": 136,
+  "families": {
+   "software": 104,
+   "data": 28,
+   "operations": 4,
+   "product": 14,
+   "sales": 23,
+   "marketing": 8,
+   "people": 2,
+   "finance": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "clickup",
+  "name": "ClickUp",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 47,
+  "hires": {
+   "AU": 2,
+   "US": 30,
+   "PL": 3,
+   "IE": 6,
+   "GB": 2
+  },
+  "remote": 47,
+  "families": {
+   "software": 23,
+   "operations": 1,
+   "sales": 11,
+   "product": 3,
+   "data": 5,
+   "design": 1,
+   "finance": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "cloudflare",
+  "name": "Cloudflare",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Cloud Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 467,
+  "hires": {
+   "SG": 1,
+   "JP": 1,
+   "PT": 1
+  },
+  "remote": 2,
+  "families": {
+   "sales": 143,
+   "data": 47,
+   "finance": 5,
+   "operations": 16,
+   "software": 193,
+   "legal": 2,
+   "design": 2,
+   "product": 16,
+   "people": 5,
+   "marketing": 3
+  },
+  "entry": 6
+ },
+ {
+  "slug": "cockroachlabs",
+  "name": "Cockroach Labs",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Databases",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 9,
+  "hires": {
+   "US": 5,
+   "IN": 1,
+   "AU": 1,
+   "GB": 1
+  },
+  "remote": 1,
+  "families": {
+   "finance": 1,
+   "people": 1,
+   "marketing": 1,
+   "software": 3,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "cognition",
+  "name": "Cognition",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 107,
+  "hires": {
+   "JP": 9,
+   "US": 55,
+   "SG": 8,
+   "GB": 12,
+   "IN": 3,
+   "DE": 1,
+   "AU": 5,
+   "BR": 4,
+   "MX": 2
+  },
+  "remote": 21,
+  "families": {
+   "people": 7,
+   "software": 30,
+   "operations": 7,
+   "data": 14,
+   "sales": 9,
+   "legal": 1,
+   "marketing": 6,
+   "support": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "cohere",
+  "name": "Cohere",
+  "ats": "ashby",
+  "country": "Canada",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 117,
+  "hires": {
+   "CA": 42,
+   "GB": 14,
+   "US": 32,
+   "FR": 4,
+   "DE": 4,
+   "JP": 3,
+   "SG": 2,
+   "AE": 4,
+   "SE": 2
+  },
+  "remote": 104,
+  "families": {
+   "software": 32,
+   "data": 28,
+   "sales": 17,
+   "operations": 2,
+   "product": 3,
+   "marketing": 4,
+   "support": 4,
+   "legal": 1,
+   "design": 1,
+   "people": 3
+  },
+  "entry": 3
+ },
+ {
+  "slug": "coinbase",
+  "name": "Coinbase",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Crypto",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 278,
+  "hires": {
+   "US": 183,
+   "CA": 9,
+   "AE": 4,
+   "GB": 11,
+   "AU": 1,
+   "IE": 2,
+   "IN": 12,
+   "BR": 3,
+   "SG": 7,
+   "IL": 1
+  },
+  "remote": 201,
+  "families": {
+   "finance": 11,
+   "operations": 20,
+   "data": 48,
+   "legal": 13,
+   "product": 16,
+   "marketing": 5,
+   "support": 42,
+   "software": 80,
+   "sales": 4,
+   "people": 3,
+   "design": 3
+  },
+  "entry": 27
+ },
+ {
+  "slug": "collibra",
+  "name": "Collibra",
+  "ats": "greenhouse",
+  "country": "Belgium",
+  "industry": "Data & AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 26,
+  "hires": {
+   "US": 15,
+   "GB": 3,
+   "AU": 1,
+   "PL": 1
+  },
+  "remote": 11,
+  "families": {
+   "support": 1,
+   "data": 8,
+   "legal": 1,
+   "sales": 4,
+   "software": 2,
+   "people": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "consensys",
+  "name": "Consensys",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Crypto",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 7,
+  "hires": {
+   "US": 1
+  },
+  "remote": 5,
+  "families": {
+   "software": 4,
+   "sales": 1,
+   "data": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "contentful",
+  "name": "Contentful",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 29,
+  "hires": {
+   "DE": 4,
+   "GB": 12,
+   "US": 9,
+   "AU": 1,
+   "FR": 3
+  },
+  "remote": 0,
+  "families": {
+   "software": 5,
+   "sales": 22,
+   "design": 1,
+   "data": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "contentsquare",
+  "name": "ContentSquare",
+  "ats": "lever",
+  "country": "France",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 25,
+  "hires": {
+   "FR": 6,
+   "GB": 4,
+   "AU": 1,
+   "US": 7,
+   "ES": 1,
+   "NL": 1,
+   "SG": 2
+  },
+  "remote": 8,
+  "families": {
+   "operations": 3,
+   "data": 3,
+   "marketing": 1,
+   "sales": 13,
+   "finance": 1,
+   "software": 1
+  },
+  "entry": 2
+ },
+ {
+  "slug": "coreweave",
+  "name": "CoreWeave",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Cloud Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 306,
+  "hires": {
+   "US": 287,
+   "CA": 2,
+   "GB": 5,
+   "JP": 1
+  },
+  "remote": 3,
+  "families": {
+   "finance": 21,
+   "sales": 11,
+   "data": 67,
+   "legal": 10,
+   "software": 111,
+   "design": 1,
+   "operations": 14,
+   "people": 5,
+   "product": 11,
+   "marketing": 2
+  },
+  "entry": 1
+ },
+ {
+  "slug": "coursera",
+  "name": "Coursera",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Edtech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 32,
+  "hires": {
+   "SG": 3,
+   "IN": 7,
+   "US": 7,
+   "IE": 4,
+   "GB": 1,
+   "BR": 1,
+   "AE": 1,
+   "MX": 1,
+   "JP": 2,
+   "CA": 4
+  },
+  "remote": 0,
+  "families": {
+   "data": 7,
+   "marketing": 2,
+   "sales": 6,
+   "finance": 2,
+   "support": 1,
+   "software": 3,
+   "design": 1,
+   "product": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "cred",
+  "name": "CRED",
+  "ats": "lever",
+  "country": "India",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 13,
+  "hires": {
+   "IN": 12
+  },
+  "remote": 0,
+  "families": {
+   "sales": 2,
+   "software": 2,
+   "marketing": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "cresta",
+  "name": "Cresta",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 89,
+  "hires": {
+   "US": 50,
+   "AU": 7,
+   "CA": 15,
+   "IN": 2,
+   "GB": 7,
+   "ES": 2,
+   "DE": 3
+  },
+  "remote": 71,
+  "families": {
+   "finance": 1,
+   "data": 32,
+   "software": 23,
+   "design": 1,
+   "operations": 3,
+   "sales": 18,
+   "marketing": 7
+  },
+  "entry": 5
+ },
+ {
+  "slug": "cribl",
+  "name": "Cribl",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Data Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 77,
+  "hires": {
+   "US": 47,
+   "AU": 2,
+   "FR": 1,
+   "NL": 1,
+   "DE": 3,
+   "GB": 5,
+   "ES": 1,
+   "SG": 3,
+   "JP": 1,
+   "CA": 1,
+   "PL": 1,
+   "AE": 1
+  },
+  "remote": 77,
+  "families": {
+   "sales": 30,
+   "software": 27,
+   "support": 1,
+   "product": 1,
+   "operations": 2,
+   "legal": 1,
+   "data": 7
+  },
+  "entry": 0
+ },
+ {
+  "slug": "cultureamp",
+  "name": "Culture Amp",
+  "ats": "greenhouse",
+  "country": "Australia",
+  "industry": "HR Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 32,
+  "hires": {
+   "AU": 14,
+   "GB": 4,
+   "US": 9,
+   "DE": 5
+  },
+  "remote": 0,
+  "families": {
+   "people": 2,
+   "sales": 9,
+   "support": 7,
+   "marketing": 3,
+   "software": 2,
+   "operations": 1,
+   "design": 1,
+   "data": 6,
+   "finance": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "cursor",
+  "name": "Cursor (Anysphere)",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI Editor",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 117,
+  "hires": {
+   "US": 57,
+   "SG": 11,
+   "AU": 8,
+   "GB": 3,
+   "JP": 8,
+   "DE": 1,
+   "IN": 5
+  },
+  "remote": 52,
+  "families": {
+   "software": 42,
+   "sales": 29,
+   "data": 12,
+   "marketing": 8,
+   "people": 1,
+   "operations": 3,
+   "product": 1,
+   "design": 1,
+   "support": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "databricks",
+  "name": "Databricks",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Data & AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 921,
+  "hires": {
+   "JP": 28,
+   "IN": 88,
+   "SG": 35,
+   "US": 406,
+   "GB": 54,
+   "DE": 32,
+   "AU": 22,
+   "CH": 10,
+   "FR": 20,
+   "CA": 27,
+   "SE": 13,
+   "IE": 2,
+   "ES": 6,
+   "NL": 32,
+   "AE": 1,
+   "BR": 9,
+   "IL": 4,
+   "MX": 2
+  },
+  "remote": 80,
+  "families": {
+   "sales": 154,
+   "data": 121,
+   "finance": 15,
+   "product": 38,
+   "marketing": 18,
+   "software": 338,
+   "legal": 13,
+   "people": 6,
+   "operations": 8,
+   "design": 3
+  },
+  "entry": 24
+ },
+ {
+  "slug": "datadog",
+  "name": "Datadog",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 394,
+  "hires": {
+   "US": 211,
+   "FR": 33,
+   "JP": 35,
+   "IN": 8,
+   "AU": 12,
+   "NL": 21,
+   "IE": 19,
+   "SG": 19,
+   "IL": 4,
+   "BR": 11,
+   "ES": 6,
+   "GB": 18,
+   "SE": 2,
+   "PT": 1,
+   "MX": 4,
+   "DE": 2,
+   "CA": 1,
+   "PL": 1
+  },
+  "remote": 55,
+  "families": {
+   "data": 41,
+   "support": 19,
+   "sales": 132,
+   "software": 79,
+   "product": 20,
+   "marketing": 10,
+   "people": 11,
+   "design": 8,
+   "operations": 6,
+   "finance": 2,
+   "legal": 2
+  },
+  "entry": 6
+ },
+ {
+  "slug": "dataiku",
+  "name": "Dataiku",
+  "ats": "greenhouse",
+  "country": "France",
+  "industry": "Data & AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 16,
+  "hires": {
+   "US": 7,
+   "JP": 2,
+   "GB": 3,
+   "DE": 1,
+   "NL": 1,
+   "FR": 5,
+   "ES": 1
+  },
+  "remote": 12,
+  "families": {
+   "software": 5,
+   "sales": 7,
+   "marketing": 1,
+   "data": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "dave",
+  "name": "Dave",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 9,
+  "hires": {
+   "US": 9
+  },
+  "remote": 9,
+  "families": {
+   "data": 3,
+   "marketing": 2,
+   "operations": 1,
+   "legal": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "deepl",
+  "name": "DeepL",
+  "ats": "ashby",
+  "country": "Germany",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 9,
+  "hires": {
+   "GB": 7,
+   "US": 2
+  },
+  "remote": 6,
+  "families": {
+   "marketing": 3,
+   "sales": 1,
+   "data": 1,
+   "software": 2,
+   "finance": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "deliveroo",
+  "name": "Deliveroo",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 198,
+  "hires": {
+   "FR": 13,
+   "GB": 126,
+   "IE": 3,
+   "AE": 13,
+   "IN": 8,
+   "DE": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 56,
+   "marketing": 17,
+   "software": 42,
+   "data": 16,
+   "operations": 12,
+   "people": 3,
+   "product": 10,
+   "design": 7,
+   "legal": 2,
+   "finance": 2
+  },
+  "entry": 4
+ },
+ {
+  "slug": "dialpad",
+  "name": "Dialpad",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Communications",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 11,
+  "hires": {
+   "US": 4,
+   "JP": 1
+  },
+  "remote": 1,
+  "families": {
+   "sales": 9,
+   "legal": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "discord",
+  "name": "Discord",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Communications",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 31,
+  "hires": {
+   "US": 25,
+   "PT": 1
+  },
+  "remote": 11,
+  "families": {
+   "legal": 2,
+   "data": 7,
+   "software": 12,
+   "product": 3,
+   "finance": 1,
+   "design": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "dlocal",
+  "name": "dLocal",
+  "ats": "lever",
+  "country": "Uruguay",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 19,
+  "hires": {
+   "SG": 1,
+   "ES": 7,
+   "BR": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 4,
+   "software": 3,
+   "legal": 3,
+   "data": 5,
+   "people": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "docker",
+  "name": "Docker",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 49,
+  "hires": {
+   "CA": 10,
+   "US": 28,
+   "GB": 9,
+   "AU": 2
+  },
+  "remote": 47,
+  "families": {
+   "software": 23,
+   "product": 5,
+   "data": 8,
+   "sales": 6,
+   "marketing": 1,
+   "people": 1,
+   "design": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "doctolib",
+  "name": "Doctolib",
+  "ats": "ashby",
+  "country": "France",
+  "industry": "Healthtech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 154,
+  "hires": {
+   "DE": 62,
+   "FR": 59,
+   "NL": 2
+  },
+  "remote": 151,
+  "families": {
+   "sales": 27,
+   "data": 27,
+   "support": 9,
+   "software": 34,
+   "marketing": 10,
+   "design": 2,
+   "operations": 6,
+   "product": 3,
+   "people": 2
+  },
+  "entry": 14
+ },
+ {
+  "slug": "drata",
+  "name": "Drata",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Security",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 26,
+  "hires": {
+   "US": 19,
+   "MX": 2,
+   "GB": 3
+  },
+  "remote": 26,
+  "families": {
+   "software": 10,
+   "sales": 5,
+   "product": 2,
+   "marketing": 2,
+   "operations": 1,
+   "data": 1,
+   "support": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "dremio",
+  "name": "Dremio",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Data Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 7,
+  "hires": {
+   "US": 2,
+   "PT": 4
+  },
+  "remote": 5,
+  "families": {
+   "software": 5
+  },
+  "entry": 0
+ },
+ {
+  "slug": "dropbox",
+  "name": "Dropbox",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Cloud Software",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 31,
+  "hires": {
+   "US": 13,
+   "MX": 3,
+   "JP": 1,
+   "PL": 3,
+   "CA": 7,
+   "IE": 2,
+   "GB": 1,
+   "AU": 2
+  },
+  "remote": 31,
+  "families": {
+   "sales": 4,
+   "software": 10,
+   "support": 1,
+   "operations": 1,
+   "product": 4,
+   "marketing": 5
+  },
+  "entry": 0
+ },
+ {
+  "slug": "druva",
+  "name": "Druva",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 29,
+  "hires": {
+   "US": 12,
+   "GB": 1,
+   "IN": 13,
+   "IE": 2
+  },
+  "remote": 1,
+  "families": {
+   "sales": 4,
+   "software": 16,
+   "support": 1,
+   "product": 1,
+   "people": 1,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "duolingo",
+  "name": "Duolingo",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Edtech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 54,
+  "hires": {
+   "US": 40,
+   "IN": 1,
+   "JP": 2,
+   "GB": 2
+  },
+  "remote": 2,
+  "families": {
+   "sales": 3,
+   "data": 7,
+   "legal": 1,
+   "people": 2,
+   "marketing": 5,
+   "operations": 3,
+   "product": 8,
+   "software": 14,
+   "design": 4
+  },
+  "entry": 6
+ },
+ {
+  "slug": "elastic",
+  "name": "Elastic",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Databases",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 423,
+  "hires": {
+   "US": 125,
+   "IN": 15,
+   "GB": 29,
+   "DE": 8,
+   "CH": 8,
+   "ES": 40,
+   "PL": 23,
+   "IE": 25,
+   "CA": 38,
+   "SG": 2,
+   "AE": 2,
+   "JP": 7,
+   "NL": 3,
+   "FR": 1,
+   "AU": 5,
+   "MX": 2,
+   "PT": 24,
+   "BR": 3,
+   "IL": 2
+  },
+  "remote": 0,
+  "families": {
+   "sales": 67,
+   "data": 34,
+   "software": 231,
+   "product": 23,
+   "finance": 3,
+   "marketing": 8
+  },
+  "entry": 1
+ },
+ {
+  "slug": "elevenlabs",
+  "name": "ElevenLabs",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI Audio",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 145,
+  "hires": {
+   "IN": 4,
+   "US": 33,
+   "JP": 2,
+   "GB": 28,
+   "PL": 5,
+   "AE": 5,
+   "DE": 4,
+   "SG": 4,
+   "BR": 3,
+   "AU": 2,
+   "SE": 5,
+   "FR": 1,
+   "CH": 1,
+   "MX": 4
+  },
+  "remote": 124,
+  "families": {
+   "sales": 48,
+   "software": 32,
+   "operations": 7,
+   "people": 3,
+   "finance": 5,
+   "legal": 3,
+   "data": 6,
+   "marketing": 8,
+   "product": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "epicgames",
+  "name": "Epic Games",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Gaming",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 138,
+  "hires": {
+   "US": 56,
+   "GB": 8,
+   "CA": 23,
+   "BR": 9,
+   "PT": 9
+  },
+  "remote": 0,
+  "families": {
+   "marketing": 7,
+   "data": 25,
+   "product": 9,
+   "software": 26,
+   "design": 23,
+   "legal": 2,
+   "people": 1
+  },
+  "entry": 19
+ },
+ {
+  "slug": "epidemic-sound",
+  "name": "Epidemic Sound",
+  "ats": "ashby",
+  "country": "Sweden",
+  "industry": "Media",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 28,
+  "hires": {
+   "SE": 22,
+   "GB": 2,
+   "DE": 1
+  },
+  "remote": 27,
+  "families": {
+   "software": 9,
+   "support": 6,
+   "data": 4,
+   "sales": 3,
+   "operations": 1,
+   "legal": 1,
+   "marketing": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "esri",
+  "name": "Esri",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Data & AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 482,
+  "hires": {
+   "US": 415,
+   "ES": 1,
+   "FR": 2,
+   "IN": 3,
+   "DE": 5,
+   "GB": 1,
+   "SG": 5,
+   "NL": 4,
+   "CA": 1
+  },
+  "remote": 14,
+  "families": {
+   "finance": 3,
+   "sales": 81,
+   "software": 198,
+   "data": 47,
+   "support": 4,
+   "people": 4,
+   "marketing": 12,
+   "operations": 3,
+   "product": 5,
+   "design": 6
+  },
+  "entry": 1
+ },
+ {
+  "slug": "expensify",
+  "name": "Expensify",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 4,
+  "hires": {
+   "US": 1
+  },
+  "remote": 4,
+  "families": {
+   "sales": 3,
+   "software": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "faculty",
+  "name": "Faculty",
+  "ats": "ashby",
+  "country": "United Kingdom",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 86,
+  "hires": {
+   "GB": 86
+  },
+  "remote": 85,
+  "families": {
+   "data": 41,
+   "software": 13,
+   "design": 3,
+   "people": 1,
+   "finance": 1,
+   "sales": 1,
+   "marketing": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "faire",
+  "name": "Faire",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "E-commerce",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 65,
+  "hires": {
+   "US": 49,
+   "CA": 13,
+   "GB": 3
+  },
+  "remote": 1,
+  "families": {
+   "sales": 1,
+   "data": 25,
+   "software": 14,
+   "marketing": 9,
+   "operations": 5,
+   "design": 2,
+   "product": 3,
+   "legal": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "farfetch",
+  "name": "Farfetch",
+  "ats": "ashby",
+  "country": "United Kingdom",
+  "industry": "E-commerce",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 49,
+  "hires": {
+   "PT": 34,
+   "MX": 1,
+   "GB": 11,
+   "US": 3
+  },
+  "remote": 1,
+  "families": {
+   "software": 10,
+   "support": 7,
+   "sales": 1,
+   "marketing": 1,
+   "operations": 5,
+   "data": 2,
+   "legal": 3,
+   "product": 1,
+   "finance": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "fastly",
+  "name": "Fastly",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Cloud Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 52,
+  "hires": {
+   "US": 42,
+   "GB": 3,
+   "FR": 1,
+   "IN": 1,
+   "AU": 2,
+   "SG": 2,
+   "JP": 1
+  },
+  "remote": 3,
+  "families": {
+   "legal": 2,
+   "marketing": 4,
+   "software": 20,
+   "sales": 3,
+   "operations": 2,
+   "finance": 1,
+   "data": 7,
+   "people": 1,
+   "product": 3,
+   "design": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "figma",
+  "name": "Figma",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Design Software",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 145,
+  "hires": {
+   "US": 94,
+   "IN": 5,
+   "DE": 8,
+   "GB": 20,
+   "SG": 3,
+   "BR": 3,
+   "JP": 3,
+   "FR": 3,
+   "AU": 3,
+   "IL": 2
+  },
+  "remote": 0,
+  "families": {
+   "sales": 40,
+   "data": 27,
+   "design": 9,
+   "support": 6,
+   "software": 25,
+   "marketing": 5,
+   "legal": 2,
+   "people": 4,
+   "product": 5,
+   "operations": 1,
+   "finance": 1
+  },
+  "entry": 10
+ },
+ {
+  "slug": "figureai",
+  "name": "Figure AI",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Robotics",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 101,
+  "hires": {
+   "BR": 8,
+   "US": 86,
+   "MX": 4
+  },
+  "remote": 0,
+  "families": {
+   "operations": 11,
+   "data": 18,
+   "software": 41,
+   "finance": 2,
+   "design": 1,
+   "people": 2
+  },
+  "entry": 13
+ },
+ {
+  "slug": "fireblocks",
+  "name": "Fireblocks",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Crypto",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 26,
+  "hires": {
+   "US": 8,
+   "GB": 7,
+   "JP": 4,
+   "AE": 2,
+   "SG": 2,
+   "DE": 1
+  },
+  "remote": 0,
+  "families": {
+   "software": 10,
+   "sales": 12
+  },
+  "entry": 0
+ },
+ {
+  "slug": "five9",
+  "name": "Five9",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Communications",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 84,
+  "hires": {
+   "IN": 23,
+   "US": 41,
+   "PT": 6,
+   "GB": 1
+  },
+  "remote": 37,
+  "families": {
+   "people": 5,
+   "sales": 15,
+   "software": 37,
+   "data": 5,
+   "finance": 4,
+   "design": 1,
+   "operations": 1,
+   "legal": 1,
+   "marketing": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "fivetran",
+  "name": "Fivetran",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Data Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 156,
+  "hires": {
+   "US": 97,
+   "IE": 12,
+   "AU": 2,
+   "CA": 9,
+   "IN": 20,
+   "JP": 2,
+   "GB": 4,
+   "DE": 4,
+   "SE": 1,
+   "NL": 1
+  },
+  "remote": 38,
+  "families": {
+   "sales": 20,
+   "software": 54,
+   "data": 22,
+   "marketing": 17,
+   "finance": 4,
+   "operations": 4,
+   "design": 4,
+   "product": 10,
+   "people": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "flatironhealth",
+  "name": "Flatiron Health",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Healthtech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 25,
+  "hires": {
+   "US": 4,
+   "GB": 4,
+   "JP": 2,
+   "DE": 1
+  },
+  "remote": 4,
+  "families": {
+   "sales": 4,
+   "marketing": 3,
+   "software": 7,
+   "product": 2,
+   "operations": 1,
+   "support": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "flix",
+  "name": "Flix",
+  "ats": "greenhouse",
+  "country": "Germany",
+  "industry": "Travel",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 147,
+  "hires": {
+   "US": 8,
+   "GB": 2,
+   "PT": 12,
+   "IN": 26,
+   "DE": 49,
+   "PL": 20,
+   "MX": 5,
+   "ES": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 8,
+   "data": 25,
+   "operations": 14,
+   "software": 20,
+   "support": 4,
+   "finance": 9,
+   "legal": 1,
+   "people": 1,
+   "product": 2,
+   "marketing": 4
+  },
+  "entry": 4
+ },
+ {
+  "slug": "formlabs",
+  "name": "Formlabs",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Hardware",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 238,
+  "hires": {
+   "US": 170,
+   "DE": 11,
+   "JP": 2
+  },
+  "remote": 0,
+  "families": {
+   "software": 74,
+   "operations": 8,
+   "legal": 3,
+   "marketing": 16,
+   "people": 6,
+   "support": 9,
+   "data": 19,
+   "finance": 3,
+   "sales": 19,
+   "design": 5,
+   "product": 9
+  },
+  "entry": 28
+ },
+ {
+  "slug": "forto",
+  "name": "Forto",
+  "ats": "ashby",
+  "country": "Germany",
+  "industry": "Logistics",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 9,
+  "hires": {
+   "DE": 7,
+   "PL": 1
+  },
+  "remote": 2,
+  "families": {
+   "operations": 2,
+   "sales": 4,
+   "data": 1,
+   "software": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "fullstory",
+  "name": "FullStory",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 11,
+  "hires": {
+   "US": 8,
+   "GB": 2
+  },
+  "remote": 9,
+  "families": {
+   "software": 2,
+   "data": 2,
+   "sales": 4,
+   "legal": 1,
+   "marketing": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "gainsight",
+  "name": "Gainsight",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 19,
+  "hires": {
+   "US": 9,
+   "IN": 4,
+   "PL": 3
+  },
+  "remote": 19,
+  "families": {
+   "software": 5,
+   "data": 2,
+   "marketing": 2,
+   "finance": 1,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "gemini",
+  "name": "Gemini",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Crypto",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 29,
+  "hires": {
+   "US": 25,
+   "SG": 2
+  },
+  "remote": 12,
+  "families": {
+   "marketing": 3,
+   "design": 3,
+   "legal": 2,
+   "support": 1,
+   "operations": 2,
+   "sales": 1,
+   "software": 12,
+   "product": 2,
+   "data": 2
+  },
+  "entry": 6
+ },
+ {
+  "slug": "getyourguide",
+  "name": "Getyourguide",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 69,
+  "hires": {
+   "DE": 55,
+   "BR": 2,
+   "US": 2,
+   "CH": 6,
+   "MX": 1,
+   "JP": 1,
+   "NL": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 10,
+   "operations": 5,
+   "marketing": 2,
+   "software": 14,
+   "finance": 3,
+   "product": 4,
+   "data": 11,
+   "people": 2,
+   "design": 4
+  },
+  "entry": 1
+ },
+ {
+  "slug": "ginkgobioworks",
+  "name": "Ginkgo Bioworks",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Biotech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 20,
+  "hires": {
+   "US": 17
+  },
+  "remote": 1,
+  "families": {
+   "data": 3,
+   "legal": 1,
+   "software": 10,
+   "product": 1
+  },
+  "entry": 4
+ },
+ {
+  "slug": "gitlab",
+  "name": "GitLab",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 240,
+  "hires": {
+   "US": 114,
+   "CA": 67,
+   "GB": 44,
+   "PL": 14,
+   "IN": 34,
+   "IE": 11,
+   "ES": 7,
+   "AU": 8,
+   "SG": 10,
+   "DE": 14,
+   "NL": 5,
+   "FR": 6,
+   "IL": 5,
+   "JP": 4,
+   "BR": 5,
+   "MX": 2,
+   "SE": 1,
+   "CH": 1,
+   "AE": 2
+  },
+  "remote": 211,
+  "families": {
+   "data": 20,
+   "software": 85,
+   "sales": 57,
+   "support": 6,
+   "finance": 1,
+   "operations": 8,
+   "marketing": 5,
+   "legal": 1,
+   "people": 3,
+   "product": 12
+  },
+  "entry": 0
+ },
+ {
+  "slug": "glance",
+  "name": "Glance",
+  "ats": "greenhouse",
+  "country": "India",
+  "industry": "Consumer Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 34,
+  "hires": {
+   "IN": 21,
+   "US": 6,
+   "JP": 7
+  },
+  "remote": 0,
+  "families": {
+   "data": 9,
+   "sales": 3,
+   "marketing": 4,
+   "design": 7,
+   "operations": 2,
+   "product": 3,
+   "software": 3,
+   "finance": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "gocardless",
+  "name": "GoCardless",
+  "ats": "greenhouse",
+  "country": "United Kingdom",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 29,
+  "hires": {
+   "PT": 10,
+   "GB": 8,
+   "AU": 1,
+   "US": 1
+  },
+  "remote": 0,
+  "families": {
+   "finance": 4,
+   "legal": 2,
+   "operations": 1,
+   "data": 9,
+   "software": 9,
+   "marketing": 1,
+   "people": 1,
+   "sales": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "gorgias",
+  "name": "Gorgias",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 16,
+  "hires": {
+   "CA": 6,
+   "FR": 3,
+   "AU": 1
+  },
+  "remote": 8,
+  "families": {
+   "sales": 3,
+   "data": 8,
+   "software": 5
+  },
+  "entry": 0
+ },
+ {
+  "slug": "grafanalabs",
+  "name": "Grafanalabs",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 123,
+  "hires": {
+   "NL": 3,
+   "US": 46,
+   "ES": 13,
+   "SE": 9,
+   "JP": 2,
+   "CA": 18,
+   "DE": 9,
+   "IE": 7,
+   "GB": 11,
+   "IN": 2,
+   "FR": 1,
+   "IL": 1
+  },
+  "remote": 123,
+  "families": {
+   "sales": 22,
+   "data": 9,
+   "software": 64,
+   "marketing": 8,
+   "finance": 2,
+   "product": 9
+  },
+  "entry": 0
+ },
+ {
+  "slug": "graphcore",
+  "name": "Graphcore",
+  "ats": "greenhouse",
+  "country": "United Kingdom",
+  "industry": "Semiconductors",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 203,
+  "hires": {
+   "GB": 114,
+   "IN": 25,
+   "US": 40,
+   "PL": 15
+  },
+  "remote": 0,
+  "families": {
+   "data": 29,
+   "operations": 6,
+   "software": 140,
+   "design": 4,
+   "finance": 1,
+   "product": 1
+  },
+  "entry": 29
+ },
+ {
+  "slug": "greenhouse",
+  "name": "Greenhouse",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "HR Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 20,
+  "hires": {
+   "GB": 2,
+   "US": 4,
+   "IE": 5,
+   "AU": 1
+  },
+  "remote": 9,
+  "families": {
+   "legal": 1,
+   "sales": 7,
+   "support": 2,
+   "product": 1,
+   "software": 5
+  },
+  "entry": 0
+ },
+ {
+  "slug": "groww",
+  "name": "Groww",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 9,
+  "hires": {
+   "IN": 9
+  },
+  "remote": 0,
+  "families": {
+   "finance": 1,
+   "marketing": 2,
+   "legal": 1,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "gusto",
+  "name": "Gusto",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Payroll & HR",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 81,
+  "hires": {
+   "US": 81,
+   "CA": 5
+  },
+  "remote": 8,
+  "families": {
+   "data": 17,
+   "sales": 7,
+   "marketing": 4,
+   "people": 2,
+   "software": 27,
+   "operations": 2,
+   "product": 3,
+   "legal": 1,
+   "design": 4,
+   "finance": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "gymshark",
+  "name": "Gymshark",
+  "ats": "greenhouse",
+  "country": "United Kingdom",
+  "industry": "E-commerce",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 11,
+  "hires": {
+   "US": 5,
+   "GB": 5
+  },
+  "remote": 0,
+  "families": {
+   "software": 2,
+   "sales": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "harvey",
+  "name": "Harvey",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 376,
+  "hires": {
+   "US": 250,
+   "GB": 32,
+   "CA": 13,
+   "DE": 12,
+   "AU": 12,
+   "IE": 20,
+   "IN": 9,
+   "SG": 2,
+   "MX": 4,
+   "ES": 2,
+   "FR": 4,
+   "SE": 1,
+   "JP": 1
+  },
+  "remote": 296,
+  "families": {
+   "software": 116,
+   "support": 24,
+   "legal": 9,
+   "sales": 59,
+   "operations": 13,
+   "design": 16,
+   "people": 15,
+   "product": 16,
+   "data": 31,
+   "marketing": 21
+  },
+  "entry": 0
+ },
+ {
+  "slug": "hellofresh",
+  "name": "Hellofresh",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 386,
+  "hires": {
+   "NL": 17,
+   "US": 101,
+   "DE": 83,
+   "GB": 30,
+   "PL": 28,
+   "CA": 81,
+   "AU": 13,
+   "FR": 13,
+   "CH": 4,
+   "SE": 2,
+   "IE": 4
+  },
+  "remote": 0,
+  "families": {
+   "operations": 46,
+   "marketing": 26,
+   "software": 34,
+   "data": 23,
+   "design": 4,
+   "legal": 3,
+   "people": 12,
+   "finance": 8,
+   "sales": 9,
+   "product": 2
+  },
+  "entry": 15
+ },
+ {
+  "slug": "helpscout",
+  "name": "Help Scout",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 6,
+  "hires": {
+   "US": 5
+  },
+  "remote": 6,
+  "families": {
+   "marketing": 2,
+   "design": 1,
+   "sales": 1,
+   "people": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "helsing",
+  "name": "Helsing",
+  "ats": "greenhouse",
+  "country": "Germany",
+  "industry": "Defense",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 158,
+  "hires": {
+   "GB": 32,
+   "DE": 112,
+   "FR": 11,
+   "ES": 8,
+   "US": 13,
+   "SE": 2
+  },
+  "remote": 0,
+  "families": {
+   "finance": 5,
+   "data": 13,
+   "marketing": 2,
+   "software": 84,
+   "design": 3,
+   "support": 1,
+   "operations": 7,
+   "product": 2,
+   "sales": 1,
+   "people": 1
+  },
+  "entry": 3
+ },
+ {
+  "slug": "hevodata",
+  "name": "Hevo Data",
+  "ats": "lever",
+  "country": "India",
+  "industry": "Data & AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 42,
+  "hires": {
+   "IN": 41,
+   "US": 1
+  },
+  "remote": 1,
+  "families": {
+   "sales": 7,
+   "software": 16,
+   "data": 1,
+   "marketing": 3,
+   "finance": 1,
+   "product": 1,
+   "design": 2,
+   "people": 3,
+   "operations": 1
+  },
+  "entry": 2
+ },
+ {
+  "slug": "hex",
+  "name": "Hex",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Data & AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 40,
+  "hires": {
+   "US": 40
+  },
+  "remote": 40,
+  "families": {
+   "software": 12,
+   "data": 5,
+   "sales": 9,
+   "product": 2,
+   "people": 3,
+   "design": 2,
+   "operations": 2,
+   "marketing": 1
+  },
+  "entry": 2
+ },
+ {
+  "slug": "honeycomb",
+  "name": "Honeycomb",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 22,
+  "hires": {
+   "US": 14,
+   "CA": 8
+  },
+  "remote": 22,
+  "families": {
+   "sales": 3,
+   "data": 3,
+   "marketing": 2,
+   "software": 10,
+   "people": 1,
+   "product": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "hootsuite",
+  "name": "Hootsuite",
+  "ats": "greenhouse",
+  "country": "Canada",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 4,
+  "hires": {
+   "MX": 2,
+   "CA": 1,
+   "JP": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 2,
+   "operations": 1,
+   "data": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "hopper",
+  "name": "Hopper",
+  "ats": "ashby",
+  "country": "Canada",
+  "industry": "Travel",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 18,
+  "hires": {
+   "BR": 1,
+   "MX": 1,
+   "CA": 5,
+   "US": 3,
+   "ES": 1,
+   "GB": 1
+  },
+  "remote": 18,
+  "families": {
+   "support": 1,
+   "product": 5,
+   "data": 6,
+   "operations": 5
+  },
+  "entry": 0
+ },
+ {
+  "slug": "illumio",
+  "name": "Illumio",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Security",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 65,
+  "hires": {
+   "US": 49,
+   "GB": 1,
+   "DE": 2,
+   "NL": 1,
+   "SG": 1,
+   "AE": 1,
+   "FR": 2,
+   "JP": 2,
+   "SE": 1
+  },
+  "remote": 16,
+  "families": {
+   "software": 25,
+   "marketing": 2,
+   "sales": 9,
+   "design": 3,
+   "product": 2,
+   "support": 2,
+   "data": 6,
+   "finance": 1,
+   "operations": 2
+  },
+  "entry": 2
+ },
+ {
+  "slug": "imply",
+  "name": "Imply",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Databases",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 5,
+  "hires": {
+   "US": 5
+  },
+  "remote": 0,
+  "families": {
+   "product": 1,
+   "sales": 1,
+   "software": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "improbable",
+  "name": "Improbable",
+  "ats": "ashby",
+  "country": "United Kingdom",
+  "industry": "Gaming",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 4,
+  "hires": {},
+  "remote": 4,
+  "families": {
+   "marketing": 2,
+   "software": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "inflectionai",
+  "name": "Inflection AI",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 4,
+  "hires": {
+   "US": 4
+  },
+  "remote": 0,
+  "families": {
+   "data": 2,
+   "software": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "influxdata",
+  "name": "InfluxData",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Databases",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 8,
+  "hires": {
+   "GB": 4,
+   "US": 2,
+   "CA": 1
+  },
+  "remote": 8,
+  "families": {
+   "finance": 1,
+   "sales": 5,
+   "software": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "inmobi",
+  "name": "Inmobi",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 81,
+  "hires": {
+   "IN": 47,
+   "US": 17,
+   "AE": 1,
+   "GB": 2,
+   "DE": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 19,
+   "data": 16,
+   "design": 2,
+   "operations": 5,
+   "product": 1,
+   "marketing": 12,
+   "legal": 5,
+   "finance": 2,
+   "software": 4,
+   "people": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "insitro",
+  "name": "Insitro",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Biotech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 15,
+  "hires": {
+   "US": 15
+  },
+  "remote": 4,
+  "families": {
+   "software": 3,
+   "data": 5,
+   "legal": 1,
+   "finance": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "instacart",
+  "name": "Instacart",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "E-Commerce",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 87,
+  "hires": {
+   "US": 85,
+   "CA": 30,
+   "IL": 2
+  },
+  "remote": 85,
+  "families": {
+   "sales": 9,
+   "operations": 4,
+   "legal": 3,
+   "data": 19,
+   "software": 14,
+   "marketing": 6,
+   "support": 3,
+   "people": 1,
+   "product": 5,
+   "finance": 2,
+   "design": 4
+  },
+  "entry": 0
+ },
+ {
+  "slug": "isaraerospace",
+  "name": "Isar Aerospace",
+  "ats": "greenhouse",
+  "country": "Germany",
+  "industry": "Aerospace",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 138,
+  "hires": {
+   "SE": 13,
+   "DE": 113,
+   "CA": 6
+  },
+  "remote": 0,
+  "families": {
+   "software": 51,
+   "sales": 1,
+   "operations": 7,
+   "people": 5,
+   "support": 1,
+   "data": 4,
+   "legal": 2,
+   "design": 2,
+   "marketing": 1,
+   "finance": 2,
+   "product": 1
+  },
+  "entry": 3
+ },
+ {
+  "slug": "iterable",
+  "name": "Iterable",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 14,
+  "hires": {
+   "US": 6,
+   "PT": 7,
+   "AU": 1
+  },
+  "remote": 14,
+  "families": {
+   "finance": 5,
+   "software": 3,
+   "data": 4,
+   "sales": 1,
+   "design": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "jamcity",
+  "name": "Jam City",
+  "ats": "lever",
+  "country": "United States",
+  "industry": "Gaming",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 15,
+  "hires": {
+   "US": 11
+  },
+  "remote": 1,
+  "families": {
+   "data": 2,
+   "product": 1,
+   "design": 2,
+   "people": 1,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "jetbrains",
+  "name": "JetBrains",
+  "ats": "greenhouse",
+  "country": "Czech Republic",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 39,
+  "hires": {
+   "US": 3,
+   "GB": 11,
+   "DE": 28,
+   "NL": 20,
+   "ES": 24,
+   "PL": 28
+  },
+  "remote": 16,
+  "families": {
+   "software": 16,
+   "finance": 2,
+   "data": 6,
+   "design": 3,
+   "marketing": 2,
+   "legal": 1,
+   "sales": 1,
+   "product": 3
+  },
+  "entry": 1
+ },
+ {
+  "slug": "jfrog",
+  "name": "JFrog",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 72,
+  "hires": {
+   "US": 29,
+   "IL": 22,
+   "GB": 3,
+   "IN": 6,
+   "FR": 1,
+   "ES": 3,
+   "SG": 1,
+   "AU": 1,
+   "DE": 2
+  },
+  "remote": 8,
+  "families": {
+   "finance": 1,
+   "sales": 14,
+   "data": 7,
+   "software": 20,
+   "operations": 3,
+   "product": 8,
+   "marketing": 2,
+   "legal": 1,
+   "people": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "justworks",
+  "name": "Justworks",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "HR Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 106,
+  "hires": {
+   "US": 94,
+   "CA": 5,
+   "MX": 3
+  },
+  "remote": 14,
+  "families": {
+   "sales": 14,
+   "support": 6,
+   "software": 17,
+   "data": 18,
+   "operations": 7,
+   "product": 11,
+   "marketing": 10,
+   "people": 4,
+   "finance": 5,
+   "legal": 2,
+   "design": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "kavak",
+  "name": "Kavak",
+  "ats": "lever",
+  "country": "Mexico",
+  "industry": "Automotive",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 4,
+  "hires": {
+   "MX": 3,
+   "BR": 1
+  },
+  "remote": 0,
+  "families": {
+   "data": 1,
+   "software": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "khanacademy",
+  "name": "Khan Academy",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Edtech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 4,
+  "hires": {
+   "US": 4,
+   "CA": 4
+  },
+  "remote": 4,
+  "families": {
+   "marketing": 1,
+   "data": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "klaviyo",
+  "name": "Klaviyo",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 156,
+  "hires": {
+   "GB": 9,
+   "IE": 6,
+   "US": 128,
+   "SG": 4,
+   "AU": 8,
+   "DE": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 40,
+   "data": 36,
+   "marketing": 9,
+   "support": 3,
+   "software": 40,
+   "operations": 3,
+   "product": 5,
+   "design": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "koho",
+  "name": "Koho",
+  "ats": "ashby",
+  "country": "Canada",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 8,
+  "hires": {},
+  "remote": 8,
+  "families": {
+   "design": 3,
+   "software": 2,
+   "legal": 1,
+   "finance": 1,
+   "product": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "komodohealth",
+  "name": "Komodo Health",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Healthtech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 23,
+  "hires": {
+   "US": 19,
+   "IN": 4
+  },
+  "remote": 0,
+  "families": {
+   "sales": 5,
+   "data": 6,
+   "software": 6,
+   "product": 1,
+   "support": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "kong",
+  "name": "Kong",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 103,
+  "hires": {
+   "US": 38,
+   "CA": 2,
+   "IN": 13,
+   "FR": 4,
+   "AU": 1,
+   "GB": 13,
+   "SG": 1,
+   "ES": 1,
+   "AE": 4,
+   "NL": 2,
+   "SE": 2,
+   "CH": 1,
+   "DE": 1
+  },
+  "remote": 69,
+  "families": {
+   "software": 33,
+   "sales": 32,
+   "data": 13,
+   "support": 4,
+   "legal": 1,
+   "product": 2,
+   "marketing": 2,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "kustomer",
+  "name": "Kustomer",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 1,
+  "hires": {},
+  "remote": 1,
+  "families": {
+   "software": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "labelbox",
+  "name": "Labelbox",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 10,
+  "hires": {
+   "US": 9,
+   "IN": 1
+  },
+  "remote": 2,
+  "families": {
+   "software": 2,
+   "data": 4,
+   "people": 1,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "lambda",
+  "name": "Lambda",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Cloud Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 93,
+  "hires": {
+   "US": 78,
+   "IN": 1,
+   "MX": 1
+  },
+  "remote": 81,
+  "families": {
+   "software": 35,
+   "data": 24,
+   "finance": 6,
+   "product": 6,
+   "legal": 3,
+   "marketing": 2,
+   "design": 2,
+   "operations": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "langchain",
+  "name": "LangChain",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 105,
+  "hires": {
+   "US": 83,
+   "GB": 14,
+   "DE": 1,
+   "SE": 1,
+   "NL": 2,
+   "SG": 3,
+   "AU": 1
+  },
+  "remote": 42,
+  "families": {
+   "software": 28,
+   "sales": 35,
+   "data": 15,
+   "product": 1,
+   "people": 3,
+   "operations": 3,
+   "design": 1,
+   "marketing": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "lattice",
+  "name": "Lattice",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "HR Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 7,
+  "hires": {
+   "CA": 4,
+   "US": 3
+  },
+  "remote": 7,
+  "families": {
+   "software": 3,
+   "product": 4
+  },
+  "entry": 0
+ },
+ {
+  "slug": "launchdarkly",
+  "name": "LaunchDarkly",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 44,
+  "hires": {
+   "IN": 4,
+   "US": 25,
+   "GB": 8,
+   "IE": 4,
+   "SG": 2,
+   "AU": 1
+  },
+  "remote": 24,
+  "families": {
+   "software": 7,
+   "sales": 17,
+   "data": 6,
+   "operations": 2,
+   "marketing": 2,
+   "support": 3,
+   "finance": 1,
+   "product": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "ledger",
+  "name": "Ledger",
+  "ats": "ashby",
+  "country": "France",
+  "industry": "Crypto",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 13,
+  "hires": {
+   "GB": 2,
+   "FR": 11
+  },
+  "remote": 11,
+  "families": {
+   "sales": 1,
+   "product": 1,
+   "software": 2,
+   "data": 2,
+   "operations": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "lightmatter",
+  "name": "Lightmatter",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Semiconductors",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 59,
+  "hires": {
+   "CA": 15,
+   "US": 46
+  },
+  "remote": 0,
+  "families": {
+   "software": 34,
+   "data": 1,
+   "sales": 1,
+   "product": 3,
+   "design": 2
+  },
+  "entry": 1
+ },
+ {
+  "slug": "lightspeed",
+  "name": "Lightspeed",
+  "ats": "ashby",
+  "country": "Canada",
+  "industry": "E-commerce",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 10,
+  "hires": {
+   "US": 10
+  },
+  "remote": 0,
+  "families": {
+   "software": 6,
+   "design": 1,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "linear",
+  "name": "Linear",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Issue Tracking",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 31,
+  "hires": {
+   "GB": 1,
+   "AU": 1,
+   "SG": 5
+  },
+  "remote": 31,
+  "families": {
+   "software": 10,
+   "product": 2,
+   "support": 5,
+   "sales": 3,
+   "data": 2,
+   "design": 3,
+   "marketing": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "llamaindex",
+  "name": "LlamaIndex",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 4,
+  "hires": {
+   "US": 4
+  },
+  "remote": 4,
+  "families": {
+   "software": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "lovable",
+  "name": "Lovable",
+  "ats": "ashby",
+  "country": "Sweden",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 79,
+  "hires": {
+   "SE": 45,
+   "GB": 20,
+   "US": 13
+  },
+  "remote": 8,
+  "families": {
+   "data": 14,
+   "software": 26,
+   "design": 3,
+   "finance": 3,
+   "product": 4,
+   "sales": 6,
+   "marketing": 6,
+   "legal": 1,
+   "operations": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "lucidmotors",
+  "name": "Lucid Motors",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "EV",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 454,
+  "hires": {
+   "US": 343,
+   "NL": 8,
+   "FR": 3,
+   "CA": 2,
+   "DE": 10,
+   "GB": 1
+  },
+  "remote": 0,
+  "families": {
+   "software": 157,
+   "operations": 22,
+   "data": 10,
+   "marketing": 26,
+   "finance": 3,
+   "legal": 1,
+   "sales": 23,
+   "design": 4,
+   "people": 2,
+   "product": 8
+  },
+  "entry": 0
+ },
+ {
+  "slug": "lyft",
+  "name": "Lyft",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Mobility",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 177,
+  "hires": {
+   "MX": 8,
+   "US": 91,
+   "CA": 76
+  },
+  "remote": 1,
+  "families": {
+   "finance": 5,
+   "data": 50,
+   "software": 43,
+   "legal": 8,
+   "operations": 17,
+   "product": 12,
+   "design": 4,
+   "marketing": 7,
+   "sales": 4,
+   "support": 2,
+   "people": 2
+  },
+  "entry": 19
+ },
+ {
+  "slug": "magic",
+  "name": "Magic",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 10,
+  "hires": {
+   "US": 10
+  },
+  "remote": 0,
+  "families": {
+   "software": 2,
+   "design": 1,
+   "people": 1,
+   "sales": 1,
+   "marketing": 1,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "mapbox",
+  "name": "Mapbox",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 34,
+  "hires": {
+   "JP": 4,
+   "DE": 7,
+   "US": 1,
+   "GB": 3,
+   "PL": 3
+  },
+  "remote": 19,
+  "families": {
+   "sales": 2,
+   "data": 10,
+   "legal": 1,
+   "software": 13,
+   "product": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "marshmallow",
+  "name": "Marshmallow",
+  "ats": "ashby",
+  "country": "United Kingdom",
+  "industry": "Insurance",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 13,
+  "hires": {
+   "GB": 12
+  },
+  "remote": 9,
+  "families": {
+   "data": 6,
+   "operations": 2
+  },
+  "entry": 1
+ },
+ {
+  "slug": "medium",
+  "name": "Medium",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Media",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 2,
+  "hires": {
+   "US": 2
+  },
+  "remote": 2,
+  "families": {
+   "software": 1,
+   "design": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "meesho",
+  "name": "Meesho",
+  "ats": "lever",
+  "country": "India",
+  "industry": "E-commerce",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 54,
+  "hires": {
+   "IN": 53
+  },
+  "remote": 0,
+  "families": {
+   "data": 11,
+   "finance": 6,
+   "marketing": 2,
+   "operations": 4,
+   "software": 4,
+   "product": 4,
+   "design": 1,
+   "people": 4,
+   "legal": 1,
+   "sales": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "mercury",
+  "name": "Mercury",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 76,
+  "hires": {
+   "US": 76,
+   "CA": 58
+  },
+  "remote": 69,
+  "families": {
+   "sales": 8,
+   "marketing": 3,
+   "support": 1,
+   "software": 19,
+   "data": 7,
+   "operations": 4,
+   "people": 4,
+   "design": 5,
+   "legal": 3,
+   "product": 8
+  },
+  "entry": 0
+ },
+ {
+  "slug": "miaplatform",
+  "name": "Mia-Platform",
+  "ats": "recruitee",
+  "country": "Italy",
+  "industry": "Cloud Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 5,
+  "hires": {},
+  "remote": 0,
+  "families": {
+   "software": 2,
+   "product": 1,
+   "support": 1,
+   "marketing": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "mindtickle",
+  "name": "Mindtickle",
+  "ats": "lever",
+  "country": "India",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 20,
+  "hires": {
+   "IN": 18,
+   "US": 2
+  },
+  "remote": 2,
+  "families": {
+   "sales": 2,
+   "data": 1,
+   "software": 7,
+   "product": 1,
+   "design": 3,
+   "marketing": 2,
+   "legal": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "mintlify",
+  "name": "Mintlify",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 14,
+  "hires": {
+   "US": 14
+  },
+  "remote": 0,
+  "families": {
+   "design": 1,
+   "support": 2,
+   "sales": 3,
+   "software": 7
+  },
+  "entry": 0
+ },
+ {
+  "slug": "mirakl",
+  "name": "Mirakl",
+  "ats": "greenhouse",
+  "country": "France",
+  "industry": "E-commerce",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 28,
+  "hires": {
+   "FR": 24,
+   "DE": 2,
+   "US": 4,
+   "GB": 3,
+   "ES": 2,
+   "AU": 2,
+   "MX": 2
+  },
+  "remote": 1,
+  "families": {
+   "sales": 10,
+   "data": 2,
+   "design": 1,
+   "marketing": 1,
+   "support": 2,
+   "people": 2,
+   "legal": 3,
+   "operations": 3,
+   "software": 2
+  },
+  "entry": 9
+ },
+ {
+  "slug": "miro",
+  "name": "Miro",
+  "ats": "ashby",
+  "country": "Netherlands",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 21,
+  "hires": {
+   "DE": 1,
+   "AU": 1,
+   "JP": 6,
+   "US": 9,
+   "NL": 3,
+   "GB": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 12,
+   "support": 1,
+   "marketing": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "mixpanel",
+  "name": "Mixpanel",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 42,
+  "hires": {
+   "SG": 8,
+   "IN": 4,
+   "GB": 4,
+   "US": 22,
+   "AU": 1,
+   "MX": 1
+  },
+  "remote": 8,
+  "families": {
+   "sales": 7,
+   "legal": 1,
+   "software": 13,
+   "support": 3,
+   "product": 3,
+   "data": 3,
+   "people": 1,
+   "finance": 4
+  },
+  "entry": 0
+ },
+ {
+  "slug": "modal",
+  "name": "Modal",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Cloud Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 42,
+  "hires": {
+   "US": 37,
+   "SE": 4,
+   "GB": 1
+  },
+  "remote": 2,
+  "families": {
+   "data": 5,
+   "operations": 5,
+   "software": 10,
+   "sales": 2,
+   "people": 3,
+   "design": 1,
+   "marketing": 2,
+   "legal": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "mollie",
+  "name": "Mollie",
+  "ats": "ashby",
+  "country": "Netherlands",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 51,
+  "hires": {
+   "GB": 4,
+   "PT": 10,
+   "NL": 18,
+   "FR": 1,
+   "ES": 1,
+   "DE": 1,
+   "PL": 2,
+   "SE": 2
+  },
+  "remote": 20,
+  "families": {
+   "marketing": 1,
+   "software": 16,
+   "support": 8,
+   "legal": 1,
+   "sales": 7,
+   "data": 5,
+   "finance": 2,
+   "people": 1,
+   "product": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "moneybox",
+  "name": "Moneybox",
+  "ats": "ashby",
+  "country": "United Kingdom",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 15,
+  "hires": {
+   "GB": 13
+  },
+  "remote": 3,
+  "families": {
+   "data": 4,
+   "finance": 2,
+   "software": 2,
+   "marketing": 1,
+   "support": 1,
+   "product": 1,
+   "operations": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "mongodb",
+  "name": "MongoDB",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Databases",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 361,
+  "hires": {
+   "US": 108,
+   "IE": 55,
+   "IN": 80,
+   "AU": 12,
+   "CA": 16,
+   "IL": 7,
+   "CH": 2,
+   "SG": 8,
+   "JP": 9,
+   "GB": 9,
+   "ES": 2,
+   "MX": 14,
+   "FR": 5,
+   "SE": 2,
+   "DE": 9,
+   "PL": 3,
+   "AE": 1,
+   "BR": 5
+  },
+  "remote": 0,
+  "families": {
+   "software": 112,
+   "sales": 65,
+   "people": 8,
+   "legal": 3,
+   "support": 18,
+   "marketing": 9,
+   "operations": 9,
+   "data": 29,
+   "finance": 6,
+   "product": 17
+  },
+  "entry": 3
+ },
+ {
+  "slug": "moniepoint",
+  "name": "Moniepoint",
+  "ats": "greenhouse",
+  "country": "Nigeria",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 143,
+  "hires": {
+   "GB": 9,
+   "PT": 11,
+   "PL": 15,
+   "ES": 15,
+   "IN": 5
+  },
+  "remote": 82,
+  "families": {
+   "data": 21,
+   "people": 6,
+   "software": 43,
+   "finance": 3,
+   "sales": 1,
+   "legal": 1,
+   "support": 8,
+   "marketing": 4,
+   "design": 12,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "monzo",
+  "name": "Monzo",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 57,
+  "hires": {
+   "ES": 9,
+   "GB": 47,
+   "IE": 4
+  },
+  "remote": 41,
+  "families": {
+   "software": 14,
+   "data": 16,
+   "design": 2,
+   "finance": 4,
+   "marketing": 4,
+   "sales": 1,
+   "operations": 2,
+   "product": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "motional",
+  "name": "Motional",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Autonomy",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 78,
+  "hires": {
+   "US": 67,
+   "SG": 10
+  },
+  "remote": 34,
+  "families": {
+   "software": 46,
+   "data": 18,
+   "product": 3,
+   "operations": 1,
+   "marketing": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "n26",
+  "name": "N26",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 37,
+  "hires": {
+   "FR": 3,
+   "ES": 15,
+   "DE": 21
+  },
+  "remote": 0,
+  "families": {
+   "operations": 3,
+   "finance": 11,
+   "legal": 6,
+   "data": 4,
+   "software": 2,
+   "people": 2,
+   "product": 2
+  },
+  "entry": 1
+ },
+ {
+  "slug": "neo4j",
+  "name": "Neo4j",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Databases",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 65,
+  "hires": {
+   "US": 10,
+   "IN": 5,
+   "BR": 1,
+   "AU": 3,
+   "GB": 22,
+   "DE": 1
+  },
+  "remote": 21,
+  "families": {
+   "data": 13,
+   "sales": 12,
+   "software": 34,
+   "finance": 1,
+   "marketing": 1,
+   "legal": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "netlify",
+  "name": "Netlify",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 3,
+  "hires": {},
+  "remote": 3,
+  "families": {
+   "marketing": 1,
+   "data": 1,
+   "people": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "netskope",
+  "name": "Netskope",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Security",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 119,
+  "hires": {
+   "FR": 1,
+   "IN": 19,
+   "AU": 3,
+   "MX": 3,
+   "PT": 3,
+   "US": 35,
+   "GB": 4,
+   "CH": 2,
+   "JP": 7,
+   "DE": 8,
+   "CA": 2,
+   "ES": 2,
+   "NL": 1,
+   "AE": 1,
+   "BR": 2
+  },
+  "remote": 0,
+  "families": {
+   "data": 17,
+   "sales": 47,
+   "software": 44,
+   "finance": 1,
+   "people": 2,
+   "marketing": 2,
+   "product": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "newrelic",
+  "name": "New Relic",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 49,
+  "hires": {
+   "DE": 2,
+   "US": 19,
+   "JP": 13,
+   "IE": 3,
+   "IN": 2,
+   "ES": 5,
+   "CA": 2,
+   "GB": 1,
+   "AU": 2
+  },
+  "remote": 0,
+  "families": {
+   "sales": 18,
+   "software": 8,
+   "data": 1,
+   "finance": 2,
+   "design": 1,
+   "legal": 1,
+   "marketing": 1,
+   "operations": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "nextdoor",
+  "name": "Nextdoor",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Social Media",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 20,
+  "hires": {
+   "US": 12
+  },
+  "remote": 8,
+  "families": {
+   "sales": 1,
+   "marketing": 3,
+   "design": 4,
+   "data": 1,
+   "product": 2,
+   "software": 5
+  },
+  "entry": 0
+ },
+ {
+  "slug": "nice",
+  "name": "Nice",
+  "ats": "greenhouse",
+  "country": "Israel",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 133,
+  "hires": {
+   "CA": 1,
+   "JP": 4,
+   "DE": 6,
+   "US": 43,
+   "AU": 6,
+   "IN": 15,
+   "GB": 35,
+   "IL": 12,
+   "SG": 3,
+   "NL": 1,
+   "ES": 2,
+   "BR": 1,
+   "SE": 1
+  },
+  "remote": 48,
+  "families": {
+   "sales": 27,
+   "data": 23,
+   "finance": 3,
+   "software": 35,
+   "support": 9,
+   "people": 1,
+   "operations": 4,
+   "product": 3,
+   "marketing": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "ninjavan",
+  "name": "Ninja Van",
+  "ats": "lever",
+  "country": "Singapore",
+  "industry": "Logistics",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 143,
+  "hires": {
+   "SG": 13
+  },
+  "remote": 0,
+  "families": {
+   "sales": 37,
+   "operations": 11,
+   "support": 2,
+   "software": 1,
+   "finance": 5,
+   "people": 4,
+   "marketing": 5,
+   "data": 2,
+   "legal": 1
+  },
+  "entry": 27
+ },
+ {
+  "slug": "nium",
+  "name": "Nium",
+  "ats": "lever",
+  "country": "Singapore",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 26,
+  "hires": {
+   "BR": 1,
+   "US": 5,
+   "SG": 5,
+   "IN": 11,
+   "MX": 1,
+   "GB": 2
+  },
+  "remote": 1,
+  "families": {
+   "sales": 4,
+   "product": 3,
+   "legal": 6,
+   "operations": 3,
+   "finance": 4,
+   "data": 4
+  },
+  "entry": 0
+ },
+ {
+  "slug": "notion",
+  "name": "Notion",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 146,
+  "hires": {
+   "US": 76,
+   "JP": 20,
+   "IE": 25,
+   "DE": 3,
+   "AU": 2,
+   "GB": 5,
+   "FR": 8,
+   "IN": 2
+  },
+  "remote": 86,
+  "families": {
+   "data": 11,
+   "sales": 18,
+   "software": 24,
+   "operations": 5,
+   "marketing": 4,
+   "people": 11,
+   "product": 6,
+   "support": 13,
+   "finance": 5,
+   "legal": 1,
+   "design": 1
+  },
+  "entry": 7
+ },
+ {
+  "slug": "nubank",
+  "name": "Nubank",
+  "ats": "ashby",
+  "country": "Brazil",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 103,
+  "hires": {
+   "US": 35,
+   "CA": 6,
+   "BR": 32,
+   "DE": 1,
+   "CH": 1
+  },
+  "remote": 85,
+  "families": {
+   "data": 29,
+   "software": 36,
+   "design": 5,
+   "operations": 3,
+   "marketing": 3,
+   "legal": 5,
+   "finance": 5,
+   "people": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "nuro",
+  "name": "Nuro",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Autonomy",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 93,
+  "hires": {
+   "US": 87
+  },
+  "remote": 0,
+  "families": {
+   "legal": 2,
+   "software": 47,
+   "data": 28,
+   "sales": 1,
+   "finance": 1,
+   "product": 4,
+   "people": 1,
+   "operations": 2
+  },
+  "entry": 2
+ },
+ {
+  "slug": "observeai",
+  "name": "Observeai",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 10,
+  "hires": {
+   "IN": 5,
+   "US": 4,
+   "CA": 1
+  },
+  "remote": 1,
+  "families": {
+   "data": 3,
+   "sales": 2,
+   "legal": 1,
+   "design": 1,
+   "software": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "okta",
+  "name": "Okta",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Security",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 391,
+  "hires": {
+   "ES": 3,
+   "GB": 8,
+   "JP": 8,
+   "CA": 72,
+   "SG": 7,
+   "IE": 18,
+   "US": 146,
+   "IN": 103,
+   "FR": 3,
+   "DE": 3,
+   "AU": 9,
+   "PL": 3,
+   "IL": 2,
+   "MX": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 80,
+   "data": 40,
+   "software": 162,
+   "marketing": 10,
+   "support": 3,
+   "people": 6,
+   "operations": 16,
+   "legal": 2,
+   "product": 18,
+   "design": 11,
+   "finance": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "openai",
+  "name": "OpenAI",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 813,
+  "hires": {
+   "US": 609,
+   "IE": 18,
+   "FR": 9,
+   "DE": 10,
+   "JP": 29,
+   "SG": 36,
+   "AU": 11,
+   "IN": 6,
+   "GB": 26,
+   "ES": 2,
+   "BR": 8,
+   "SE": 2,
+   "AE": 3,
+   "CH": 2
+  },
+  "remote": 560,
+  "families": {
+   "software": 300,
+   "data": 193,
+   "product": 30,
+   "marketing": 41,
+   "operations": 28,
+   "support": 6,
+   "finance": 19,
+   "sales": 17,
+   "legal": 10,
+   "design": 15,
+   "people": 5
+  },
+  "entry": 0
+ },
+ {
+  "slug": "oura",
+  "name": "Oura",
+  "ats": "greenhouse",
+  "country": "Finland",
+  "industry": "Consumer Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 96,
+  "hires": {
+   "US": 81,
+   "GB": 7,
+   "SG": 1
+  },
+  "remote": 30,
+  "families": {
+   "finance": 9,
+   "software": 25,
+   "sales": 2,
+   "operations": 2,
+   "marketing": 3,
+   "legal": 3,
+   "support": 1,
+   "product": 14,
+   "data": 14,
+   "design": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "outreach",
+  "name": "Outreach",
+  "ats": "lever",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 19,
+  "hires": {
+   "US": 12,
+   "GB": 2,
+   "IN": 5
+  },
+  "remote": 12,
+  "families": {
+   "sales": 3,
+   "operations": 1,
+   "product": 1,
+   "data": 6,
+   "software": 4,
+   "people": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "oyster",
+  "name": "Oyster",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "HR Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 22,
+  "hires": {
+   "ES": 3,
+   "US": 1,
+   "MX": 1
+  },
+  "remote": 17,
+  "families": {
+   "data": 5,
+   "people": 1,
+   "support": 1,
+   "product": 1,
+   "sales": 2,
+   "marketing": 2,
+   "software": 2,
+   "legal": 1,
+   "finance": 2,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "paddle",
+  "name": "Paddle",
+  "ats": "ashby",
+  "country": "United Kingdom",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 15,
+  "hires": {
+   "GB": 13,
+   "US": 1,
+   "CA": 1
+  },
+  "remote": 15,
+  "families": {
+   "software": 4,
+   "product": 1,
+   "data": 4,
+   "sales": 1,
+   "marketing": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "pagerduty",
+  "name": "PagerDuty",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 49,
+  "hires": {
+   "US": 38,
+   "GB": 1,
+   "CA": 7,
+   "PT": 2
+  },
+  "remote": 12,
+  "families": {
+   "sales": 14,
+   "marketing": 1,
+   "support": 2,
+   "design": 1,
+   "software": 8,
+   "operations": 4,
+   "data": 6,
+   "people": 2,
+   "finance": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "palantir",
+  "name": "Palantir",
+  "ats": "lever",
+  "country": "United States",
+  "industry": "Data Analytics",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 307,
+  "hires": {
+   "SG": 4,
+   "US": 167,
+   "GB": 42,
+   "PL": 2,
+   "JP": 3,
+   "ES": 1,
+   "FR": 2,
+   "AU": 2,
+   "AE": 1
+  },
+  "remote": 1,
+  "families": {
+   "software": 179,
+   "data": 21,
+   "operations": 7,
+   "legal": 5,
+   "finance": 12,
+   "people": 7,
+   "design": 13,
+   "sales": 1,
+   "product": 5
+  },
+  "entry": 84
+ },
+ {
+  "slug": "patreon",
+  "name": "Patreon",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Media",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 20,
+  "hires": {
+   "US": 16,
+   "PT": 1
+  },
+  "remote": 13,
+  "families": {
+   "data": 1,
+   "software": 9,
+   "design": 3,
+   "finance": 2,
+   "operations": 1
+  },
+  "entry": 3
+ },
+ {
+  "slug": "paypay",
+  "name": "Paypay",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 83,
+  "hires": {},
+  "remote": 2,
+  "families": {
+   "data": 8,
+   "software": 12,
+   "design": 4,
+   "product": 3,
+   "finance": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "paytm",
+  "name": "Paytm",
+  "ats": "lever",
+  "country": "India",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 201,
+  "hires": {
+   "AE": 2,
+   "IN": 170,
+   "CA": 2
+  },
+  "remote": 2,
+  "families": {
+   "data": 17,
+   "operations": 12,
+   "software": 7,
+   "sales": 22,
+   "marketing": 23,
+   "finance": 11,
+   "support": 1,
+   "design": 2,
+   "people": 12,
+   "legal": 3,
+   "product": 15
+  },
+  "entry": 6
+ },
+ {
+  "slug": "peloton",
+  "name": "Peloton",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Consumer Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 49,
+  "hires": {
+   "US": 17,
+   "CA": 1,
+   "PL": 5,
+   "GB": 3
+  },
+  "remote": 0,
+  "families": {
+   "software": 14,
+   "legal": 1,
+   "data": 6,
+   "finance": 2,
+   "design": 1,
+   "product": 2,
+   "people": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "pendo",
+  "name": "Pendo",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 25,
+  "hires": {
+   "US": 15,
+   "DE": 2,
+   "IL": 4,
+   "GB": 2
+  },
+  "remote": 2,
+  "families": {
+   "sales": 4,
+   "software": 12,
+   "data": 6,
+   "marketing": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "perplexity",
+  "name": "Perplexity",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 137,
+  "hires": {
+   "US": 117,
+   "GB": 6,
+   "DE": 2
+  },
+  "remote": 62,
+  "families": {
+   "sales": 9,
+   "software": 40,
+   "marketing": 9,
+   "legal": 5,
+   "data": 35,
+   "support": 4,
+   "product": 5,
+   "design": 5,
+   "people": 3,
+   "finance": 3,
+   "operations": 3
+  },
+  "entry": 6
+ },
+ {
+  "slug": "pinecone",
+  "name": "Pinecone",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Databases",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 6,
+  "hires": {
+   "US": 6
+  },
+  "remote": 4,
+  "families": {
+   "software": 4,
+   "marketing": 1,
+   "data": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "pinterest",
+  "name": "Pinterest",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Social Media",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 168,
+  "hires": {
+   "US": 133,
+   "GB": 7,
+   "BR": 2,
+   "CA": 11,
+   "JP": 1,
+   "MX": 1,
+   "SG": 9,
+   "NL": 2,
+   "IE": 5,
+   "CH": 2,
+   "AU": 1,
+   "FR": 2,
+   "SE": 1
+  },
+  "remote": 77,
+  "families": {
+   "marketing": 11,
+   "sales": 19,
+   "data": 51,
+   "design": 4,
+   "operations": 2,
+   "product": 16,
+   "software": 34,
+   "finance": 1,
+   "support": 1,
+   "legal": 4,
+   "people": 1
+  },
+  "entry": 12
+ },
+ {
+  "slug": "plaid",
+  "name": "Plaid",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 138,
+  "hires": {
+   "US": 129,
+   "GB": 8
+  },
+  "remote": 126,
+  "families": {
+   "software": 35,
+   "sales": 21,
+   "data": 32,
+   "design": 1,
+   "marketing": 5,
+   "operations": 7,
+   "product": 4,
+   "finance": 2,
+   "legal": 3,
+   "people": 5
+  },
+  "entry": 0
+ },
+ {
+  "slug": "planetscale",
+  "name": "PlanetScale",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Databases",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 12,
+  "hires": {
+   "US": 7
+  },
+  "remote": 7,
+  "families": {
+   "data": 1,
+   "design": 1,
+   "product": 1,
+   "software": 6,
+   "marketing": 1,
+   "legal": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "pleo",
+  "name": "Pleo",
+  "ats": "ashby",
+  "country": "Denmark",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 43,
+  "hires": {
+   "PT": 14,
+   "GB": 18,
+   "NL": 3,
+   "DE": 2,
+   "ES": 2
+  },
+  "remote": 35,
+  "families": {
+   "support": 5,
+   "sales": 15,
+   "product": 2,
+   "legal": 1,
+   "software": 5,
+   "data": 4,
+   "people": 1,
+   "marketing": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "pocketfm",
+  "name": "Pocket FM",
+  "ats": "lever",
+  "country": "India",
+  "industry": "Media",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 14,
+  "hires": {
+   "JP": 5,
+   "IN": 2,
+   "MX": 4,
+   "BR": 3
+  },
+  "remote": 12,
+  "families": {
+   "software": 1,
+   "data": 2,
+   "marketing": 3,
+   "finance": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "polyai",
+  "name": "PolyAI",
+  "ats": "greenhouse",
+  "country": "United Kingdom",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 4,
+  "hires": {
+   "US": 1,
+   "GB": 3
+  },
+  "remote": 0,
+  "families": {
+   "sales": 1,
+   "data": 1,
+   "marketing": 1,
+   "product": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "poolside",
+  "name": "Poolside",
+  "ats": "ashby",
+  "country": "France",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 3,
+  "hires": {
+   "GB": 1
+  },
+  "remote": 3,
+  "families": {
+   "software": 2,
+   "people": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "poshmark",
+  "name": "Poshmark",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "E-commerce",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 20,
+  "hires": {
+   "US": 16,
+   "IN": 4
+  },
+  "remote": 9,
+  "families": {
+   "software": 4,
+   "data": 2,
+   "product": 1,
+   "design": 2,
+   "marketing": 2,
+   "finance": 2,
+   "sales": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "primer",
+  "name": "Primer",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 21,
+  "hires": {
+   "US": 6
+  },
+  "remote": 8,
+  "families": {
+   "software": 3,
+   "product": 1,
+   "design": 2,
+   "operations": 1
+  },
+  "entry": 3
+ },
+ {
+  "slug": "qonto",
+  "name": "Qonto",
+  "ats": "ashby",
+  "country": "France",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 51,
+  "hires": {
+   "FR": 32,
+   "DE": 8,
+   "ES": 6
+  },
+  "remote": 47,
+  "families": {
+   "operations": 4,
+   "product": 4,
+   "software": 11,
+   "data": 9,
+   "marketing": 4,
+   "finance": 1,
+   "support": 1,
+   "sales": 2,
+   "design": 1
+  },
+  "entry": 3
+ },
+ {
+  "slug": "qualtrics",
+  "name": "Qualtrics",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 97,
+  "hires": {
+   "DE": 4,
+   "US": 80,
+   "JP": 1,
+   "SG": 1,
+   "GB": 2,
+   "MX": 5,
+   "PL": 2
+  },
+  "remote": 23,
+  "families": {
+   "sales": 38,
+   "data": 20,
+   "design": 8,
+   "marketing": 3,
+   "product": 4,
+   "software": 9,
+   "operations": 1,
+   "finance": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "quintoandar",
+  "name": "Quintoandar",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 98,
+  "hires": {
+   "MX": 11,
+   "BR": 43,
+   "PT": 2
+  },
+  "remote": 0,
+  "families": {
+   "sales": 7,
+   "data": 16,
+   "legal": 2,
+   "marketing": 9,
+   "operations": 9,
+   "finance": 1,
+   "software": 11,
+   "people": 1,
+   "product": 1,
+   "design": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "quora",
+  "name": "Quora",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Social Media",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 9,
+  "hires": {},
+  "remote": 9,
+  "families": {
+   "software": 3,
+   "data": 5,
+   "product": 1
+  },
+  "entry": 3
+ },
+ {
+  "slug": "railway",
+  "name": "Railway",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Cloud Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 7,
+  "hires": {
+   "US": 1
+  },
+  "remote": 7,
+  "families": {
+   "software": 7
+  },
+  "entry": 0
+ },
+ {
+  "slug": "raisin",
+  "name": "Raisin",
+  "ats": "greenhouse",
+  "country": "Germany",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 30,
+  "hires": {
+   "DE": 21,
+   "GB": 6,
+   "US": 5,
+   "ES": 1
+  },
+  "remote": 0,
+  "families": {
+   "operations": 9,
+   "sales": 2,
+   "marketing": 1,
+   "support": 2,
+   "design": 2,
+   "data": 3,
+   "people": 1
+  },
+  "entry": 5
+ },
+ {
+  "slug": "ramp",
+  "name": "Ramp",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Corporate Cards",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 168,
+  "hires": {
+   "US": 138,
+   "CA": 7,
+   "SE": 1,
+   "GB": 11
+  },
+  "remote": 151,
+  "families": {
+   "software": 33,
+   "sales": 32,
+   "finance": 7,
+   "design": 7,
+   "marketing": 5,
+   "product": 4,
+   "support": 1,
+   "operations": 10,
+   "data": 17,
+   "people": 5,
+   "legal": 5
+  },
+  "entry": 5
+ },
+ {
+  "slug": "reddit",
+  "name": "Reddit",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Social Media",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 163,
+  "hires": {
+   "NL": 6,
+   "US": 131,
+   "GB": 11,
+   "CA": 12,
+   "IE": 3
+  },
+  "remote": 131,
+  "families": {
+   "sales": 13,
+   "data": 53,
+   "legal": 1,
+   "marketing": 2,
+   "software": 61,
+   "finance": 4,
+   "product": 10,
+   "operations": 1,
+   "design": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "redis",
+  "name": "Redis",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Databases",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 31,
+  "hires": {
+   "IN": 3,
+   "GB": 6,
+   "CA": 3,
+   "AE": 1,
+   "US": 11,
+   "IL": 1,
+   "DE": 2,
+   "MX": 1
+  },
+  "remote": 27,
+  "families": {
+   "support": 2,
+   "sales": 16,
+   "software": 5,
+   "product": 1,
+   "marketing": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "render",
+  "name": "Render",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Cloud Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 36,
+  "hires": {
+   "US": 33,
+   "CA": 3
+  },
+  "remote": 36,
+  "families": {
+   "software": 25,
+   "data": 3,
+   "design": 2,
+   "product": 1,
+   "marketing": 1,
+   "sales": 3,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "replit",
+  "name": "Replit",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Cloud IDE",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 34,
+  "hires": {
+   "US": 29,
+   "GB": 2,
+   "SG": 1
+  },
+  "remote": 34,
+  "families": {
+   "software": 20,
+   "marketing": 3,
+   "sales": 2,
+   "operations": 1,
+   "finance": 1,
+   "data": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "resend",
+  "name": "Resend",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 14,
+  "hires": {},
+  "remote": 14,
+  "families": {
+   "software": 13,
+   "sales": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "revisionz",
+  "name": "Revisionz",
+  "ats": "workable",
+  "country": "Canada",
+  "industry": "Consulting",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 6,
+  "hires": {
+   "CA": 3,
+   "US": 3
+  },
+  "remote": 0,
+  "families": {
+   "sales": 6
+  },
+  "entry": 0
+ },
+ {
+  "slug": "riotgames",
+  "name": "Riot Games",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Gaming",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 185,
+  "hires": {
+   "US": 83,
+   "DE": 5,
+   "SG": 16,
+   "IE": 3,
+   "AU": 17,
+   "JP": 2
+  },
+  "remote": 0,
+  "families": {
+   "marketing": 7,
+   "software": 74,
+   "data": 18,
+   "product": 11,
+   "design": 16,
+   "operations": 3,
+   "finance": 5,
+   "people": 1,
+   "legal": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "ripple",
+  "name": "Ripple",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Crypto",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 112,
+  "hires": {
+   "SG": 8,
+   "US": 65,
+   "CA": 3,
+   "GB": 21,
+   "AU": 5,
+   "AE": 2,
+   "BR": 4,
+   "IE": 3
+  },
+  "remote": 0,
+  "families": {
+   "sales": 8,
+   "data": 14,
+   "support": 5,
+   "product": 8,
+   "operations": 8,
+   "software": 27,
+   "finance": 6,
+   "legal": 2,
+   "design": 1,
+   "people": 1,
+   "marketing": 4
+  },
+  "entry": 0
+ },
+ {
+  "slug": "ro",
+  "name": "Ro",
+  "ats": "lever",
+  "country": "United States",
+  "industry": "Healthtech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 52,
+  "hires": {
+   "US": 52
+  },
+  "remote": 12,
+  "families": {
+   "data": 3,
+   "marketing": 2,
+   "operations": 5,
+   "legal": 1,
+   "software": 14
+  },
+  "entry": 0
+ },
+ {
+  "slug": "robinhood",
+  "name": "Robinhood",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 159,
+  "hires": {
+   "US": 130,
+   "CA": 17,
+   "GB": 6
+  },
+  "remote": 0,
+  "families": {
+   "software": 58,
+   "legal": 6,
+   "marketing": 4,
+   "operations": 4,
+   "product": 13,
+   "data": 18,
+   "sales": 2,
+   "finance": 6,
+   "people": 2,
+   "design": 9
+  },
+  "entry": 2
+ },
+ {
+  "slug": "roblox",
+  "name": "Roblox",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Gaming",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 270,
+  "hires": {
+   "US": 249,
+   "IN": 9,
+   "NL": 1,
+   "SG": 2,
+   "BR": 1,
+   "GB": 1,
+   "CA": 1
+  },
+  "remote": 5,
+  "families": {
+   "data": 45,
+   "design": 8,
+   "product": 9,
+   "software": 162,
+   "operations": 9,
+   "marketing": 7,
+   "sales": 1,
+   "people": 5,
+   "finance": 1,
+   "legal": 3,
+   "support": 1
+  },
+  "entry": 7
+ },
+ {
+  "slug": "rocketlab",
+  "name": "Rocket Lab",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Aerospace",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 558,
+  "hires": {
+   "US": 425,
+   "CA": 6,
+   "DE": 1
+  },
+  "remote": 0,
+  "families": {
+   "finance": 3,
+   "data": 33,
+   "software": 328,
+   "sales": 14,
+   "operations": 19,
+   "legal": 2,
+   "design": 5,
+   "support": 5,
+   "people": 10,
+   "product": 15
+  },
+  "entry": 86
+ },
+ {
+  "slug": "rohlik",
+  "name": "Rohlik",
+  "ats": "ashby",
+  "country": "Czech Republic",
+  "industry": "Quick Commerce",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 98,
+  "hires": {
+   "DE": 33,
+   "US": 2,
+   "GB": 1
+  },
+  "remote": 43,
+  "families": {
+   "software": 10,
+   "sales": 5,
+   "data": 3,
+   "operations": 4,
+   "finance": 4,
+   "people": 1,
+   "product": 2,
+   "marketing": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "rover",
+  "name": "Rover",
+  "ats": "lever",
+  "country": "United States",
+  "industry": "Marketplace",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 33,
+  "hires": {
+   "US": 14,
+   "ES": 18
+  },
+  "remote": 8,
+  "families": {
+   "data": 6,
+   "product": 4,
+   "finance": 2,
+   "software": 7,
+   "marketing": 3,
+   "operations": 1,
+   "design": 1,
+   "legal": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "rubrik",
+  "name": "Rubrik",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Cloud Software",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 154,
+  "hires": {
+   "FR": 3,
+   "DE": 2,
+   "SE": 1,
+   "GB": 12,
+   "US": 58,
+   "IN": 32,
+   "JP": 10,
+   "AU": 5,
+   "IE": 1,
+   "IL": 1,
+   "SG": 1,
+   "NL": 1
+  },
+  "remote": 16,
+  "families": {
+   "sales": 44,
+   "data": 18,
+   "software": 30,
+   "operations": 3,
+   "product": 11,
+   "marketing": 6,
+   "finance": 4,
+   "design": 2,
+   "people": 5,
+   "support": 2
+  },
+  "entry": 7
+ },
+ {
+  "slug": "runway",
+  "name": "Runway",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 3,
+  "hires": {},
+  "remote": 3,
+  "families": {
+   "software": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "sahl",
+  "name": "Sahl",
+  "ats": "recruitee",
+  "country": "Egypt",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 7,
+  "hires": {},
+  "remote": 0,
+  "families": {
+   "finance": 1,
+   "marketing": 2,
+   "operations": 1,
+   "software": 2
+  },
+  "entry": 1
+ },
+ {
+  "slug": "samsara",
+  "name": "Samsara",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "IoT",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 324,
+  "hires": {
+   "DE": 6,
+   "FR": 3,
+   "US": 172,
+   "CA": 30,
+   "GB": 17,
+   "MX": 11,
+   "IN": 5,
+   "NL": 2,
+   "PL": 3
+  },
+  "remote": 275,
+  "families": {
+   "sales": 79,
+   "data": 36,
+   "design": 8,
+   "software": 78,
+   "support": 33,
+   "product": 8,
+   "operations": 2,
+   "people": 5,
+   "marketing": 3,
+   "finance": 3
+  },
+  "entry": 14
+ },
+ {
+  "slug": "satispay",
+  "name": "Satispay",
+  "ats": "ashby",
+  "country": "Italy",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 81,
+  "hires": {
+   "ES": 4
+  },
+  "remote": 80,
+  "families": {
+   "software": 17,
+   "legal": 5,
+   "sales": 2,
+   "operations": 8,
+   "product": 7,
+   "data": 13,
+   "finance": 4,
+   "people": 2
+  },
+  "entry": 4
+ },
+ {
+  "slug": "scaleai",
+  "name": "Scale AI",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 166,
+  "hires": {
+   "US": 120,
+   "GB": 28,
+   "MX": 3,
+   "CA": 4,
+   "AE": 2,
+   "IN": 1
+  },
+  "remote": 0,
+  "families": {
+   "marketing": 6,
+   "data": 46,
+   "software": 45,
+   "sales": 6,
+   "finance": 4,
+   "product": 10,
+   "operations": 5,
+   "legal": 3,
+   "design": 7
+  },
+  "entry": 8
+ },
+ {
+  "slug": "scaleway",
+  "name": "Scaleway",
+  "ats": "lever",
+  "country": "France",
+  "industry": "Cloud Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 34,
+  "hires": {
+   "PL": 2,
+   "FR": 28,
+   "SE": 1
+  },
+  "remote": 2,
+  "families": {
+   "sales": 6,
+   "software": 10,
+   "marketing": 1,
+   "support": 2,
+   "operations": 2,
+   "data": 3,
+   "people": 1,
+   "product": 3,
+   "design": 1
+  },
+  "entry": 2
+ },
+ {
+  "slug": "scopely",
+  "name": "Scopely",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Gaming",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 175,
+  "hires": {
+   "IN": 11,
+   "JP": 13,
+   "ES": 69,
+   "CA": 9,
+   "US": 38,
+   "MX": 9,
+   "GB": 15,
+   "IE": 8,
+   "PT": 1,
+   "CH": 1,
+   "IL": 1
+  },
+  "remote": 0,
+  "families": {
+   "data": 16,
+   "legal": 3,
+   "design": 21,
+   "marketing": 20,
+   "software": 39,
+   "finance": 4,
+   "operations": 9,
+   "product": 7,
+   "sales": 3,
+   "people": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "sentry",
+  "name": "Sentry",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 39,
+  "hires": {
+   "US": 26,
+   "CA": 8,
+   "NL": 1
+  },
+  "remote": 38,
+  "families": {
+   "data": 4,
+   "software": 30,
+   "support": 2,
+   "marketing": 1,
+   "finance": 1
+  },
+  "entry": 2
+ },
+ {
+  "slug": "shakepay",
+  "name": "Shakepay",
+  "ats": "greenhouse",
+  "country": "Canada",
+  "industry": "Crypto",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 9,
+  "hires": {
+   "CA": 9
+  },
+  "remote": 8,
+  "families": {
+   "operations": 2,
+   "data": 2,
+   "software": 2,
+   "people": 1,
+   "design": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "shieldai",
+  "name": "Shield AI",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Defense",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 691,
+  "hires": {
+   "US": 463,
+   "AU": 32,
+   "IN": 15,
+   "DE": 2,
+   "JP": 6,
+   "GB": 27,
+   "AE": 4,
+   "NL": 1,
+   "PL": 3,
+   "ES": 3,
+   "SG": 2
+  },
+  "remote": 18,
+  "families": {
+   "software": 452,
+   "product": 23,
+   "finance": 15,
+   "data": 32,
+   "sales": 21,
+   "marketing": 11,
+   "operations": 20,
+   "people": 9,
+   "support": 6,
+   "design": 9,
+   "legal": 3
+  },
+  "entry": 27
+ },
+ {
+  "slug": "sigmacomputing",
+  "name": "Sigma Computing",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Data & AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 77,
+  "hires": {
+   "US": 64,
+   "GB": 8,
+   "AU": 2
+  },
+  "remote": 4,
+  "families": {
+   "data": 12,
+   "support": 12,
+   "sales": 14,
+   "software": 30,
+   "legal": 1,
+   "operations": 2,
+   "people": 1
+  },
+  "entry": 7
+ },
+ {
+  "slug": "singlestore",
+  "name": "SingleStore",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Databases",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 40,
+  "hires": {
+   "IN": 9,
+   "US": 25,
+   "GB": 2,
+   "FR": 1,
+   "PT": 4
+  },
+  "remote": 0,
+  "families": {
+   "data": 1,
+   "sales": 12,
+   "software": 24,
+   "marketing": 1
+  },
+  "entry": 4
+ },
+ {
+  "slug": "skydio",
+  "name": "Skydio",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Robotics",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 194,
+  "hires": {
+   "US": 126,
+   "CH": 13,
+   "SG": 1,
+   "JP": 3,
+   "CA": 1
+  },
+  "remote": 143,
+  "families": {
+   "data": 17,
+   "software": 107,
+   "people": 4,
+   "support": 2,
+   "finance": 1,
+   "legal": 3,
+   "operations": 4,
+   "design": 2,
+   "product": 10,
+   "sales": 5,
+   "marketing": 1
+  },
+  "entry": 27
+ },
+ {
+  "slug": "smartsheet",
+  "name": "Smartsheet",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 75,
+  "hires": {
+   "US": 36,
+   "IN": 22,
+   "SG": 1,
+   "AU": 2,
+   "DE": 4,
+   "GB": 6
+  },
+  "remote": 17,
+  "families": {
+   "sales": 14,
+   "data": 17,
+   "software": 22,
+   "design": 4,
+   "support": 1,
+   "finance": 1,
+   "operations": 4,
+   "people": 2,
+   "product": 2
+  },
+  "entry": 1
+ },
+ {
+  "slug": "snorkelai",
+  "name": "Snorkel AI",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 43,
+  "hires": {
+   "US": 43
+  },
+  "remote": 11,
+  "families": {
+   "finance": 3,
+   "marketing": 2,
+   "legal": 2,
+   "data": 16,
+   "people": 2,
+   "software": 8,
+   "operations": 2,
+   "design": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "snowflake",
+  "name": "Snowflake",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Data & AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 369,
+  "hires": {
+   "US": 156,
+   "MX": 5,
+   "DE": 7,
+   "IL": 3,
+   "JP": 15,
+   "IN": 11,
+   "GB": 20,
+   "AU": 12,
+   "PL": 10,
+   "CA": 7,
+   "CH": 6,
+   "SG": 7,
+   "FR": 8,
+   "NL": 6,
+   "IE": 10,
+   "SE": 2,
+   "BR": 3
+  },
+  "remote": 171,
+  "families": {
+   "software": 148,
+   "sales": 75,
+   "data": 68,
+   "product": 15,
+   "design": 4,
+   "marketing": 14,
+   "legal": 3,
+   "finance": 2,
+   "operations": 1,
+   "people": 3
+  },
+  "entry": 8
+ },
+ {
+  "slug": "snyk",
+  "name": "Snyk",
+  "ats": "ashby",
+  "country": "United Kingdom",
+  "industry": "Security",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 37,
+  "hires": {
+   "US": 21,
+   "BR": 1,
+   "PT": 3,
+   "CH": 2,
+   "NL": 1,
+   "GB": 6
+  },
+  "remote": 28,
+  "families": {
+   "software": 6,
+   "finance": 2,
+   "sales": 2,
+   "design": 1,
+   "product": 1,
+   "marketing": 1,
+   "people": 2,
+   "support": 4,
+   "data": 2,
+   "legal": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "sofi",
+  "name": "SoFi",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 56,
+  "hires": {
+   "US": 49
+  },
+  "remote": 1,
+  "families": {
+   "data": 12,
+   "design": 3,
+   "marketing": 3,
+   "product": 3,
+   "software": 9,
+   "finance": 4,
+   "legal": 4,
+   "operations": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "sorare",
+  "name": "Sorare",
+  "ats": "ashby",
+  "country": "France",
+  "industry": "Gaming",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 3,
+  "hires": {
+   "FR": 3
+  },
+  "remote": 0,
+  "families": {
+   "marketing": 1,
+   "software": 2
+  },
+  "entry": 1
+ },
+ {
+  "slug": "spacex",
+  "name": "SpaceX",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Aerospace",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 2886,
+  "hires": {
+   "US": 2781
+  },
+  "remote": 17,
+  "families": {
+   "finance": 13,
+   "sales": 74,
+   "software": 1420,
+   "data": 235,
+   "design": 25,
+   "operations": 94,
+   "marketing": 28,
+   "legal": 17,
+   "support": 27,
+   "product": 1,
+   "people": 55
+  },
+  "entry": 60
+ },
+ {
+  "slug": "spotify",
+  "name": "Spotify",
+  "ats": "lever",
+  "country": "Sweden",
+  "industry": "Music Streaming",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 84,
+  "hires": {
+   "US": 25,
+   "GB": 36,
+   "CA": 2,
+   "DE": 1,
+   "JP": 2,
+   "SE": 9,
+   "AU": 1,
+   "BR": 1,
+   "AE": 1,
+   "FR": 1,
+   "SG": 1
+  },
+  "remote": 28,
+  "families": {
+   "sales": 11,
+   "software": 22,
+   "data": 25,
+   "marketing": 5,
+   "product": 8,
+   "legal": 1,
+   "operations": 2,
+   "design": 2,
+   "people": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "sproutsocial",
+  "name": "Sprout Social",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 26,
+  "hires": {
+   "US": 16,
+   "GB": 1,
+   "IE": 2,
+   "PL": 4,
+   "CA": 2
+  },
+  "remote": 20,
+  "families": {
+   "sales": 9,
+   "operations": 1,
+   "data": 4,
+   "marketing": 3,
+   "product": 4,
+   "software": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "squarespace",
+  "name": "Squarespace",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 23,
+  "hires": {
+   "US": 17,
+   "IE": 4
+  },
+  "remote": 2,
+  "families": {
+   "software": 9,
+   "marketing": 3,
+   "finance": 2,
+   "data": 3,
+   "operations": 1,
+   "product": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "stabilityai",
+  "name": "Stability AI",
+  "ats": "greenhouse",
+  "country": "United Kingdom",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 1,
+  "hires": {
+   "US": 1
+  },
+  "remote": 0,
+  "families": {
+   "software": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "starburst",
+  "name": "Starburst",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Data Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 36,
+  "hires": {
+   "US": 19,
+   "IN": 6,
+   "CA": 1,
+   "DE": 1,
+   "PL": 4
+  },
+  "remote": 0,
+  "families": {
+   "data": 5,
+   "marketing": 2,
+   "sales": 7,
+   "software": 14,
+   "finance": 1,
+   "people": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "starling-bank",
+  "name": "Starling Bank",
+  "ats": "workable",
+  "country": "United Kingdom",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 118,
+  "hires": {
+   "GB": 113,
+   "US": 2,
+   "AU": 3
+  },
+  "remote": 4,
+  "families": {
+   "software": 47,
+   "sales": 3,
+   "design": 3,
+   "support": 8,
+   "operations": 7,
+   "finance": 2,
+   "people": 3,
+   "data": 15,
+   "legal": 5,
+   "product": 1,
+   "marketing": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "stockx",
+  "name": "StockX",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "E-commerce",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 33,
+  "hires": {
+   "US": 22,
+   "IN": 9,
+   "NL": 2
+  },
+  "remote": 5,
+  "families": {
+   "data": 4,
+   "marketing": 4,
+   "operations": 6,
+   "software": 7
+  },
+  "entry": 0
+ },
+ {
+  "slug": "strava",
+  "name": "Strava",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Consumer Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 27,
+  "hires": {
+   "US": 3,
+   "GB": 2,
+   "IE": 1
+  },
+  "remote": 26,
+  "families": {
+   "data": 7,
+   "software": 8,
+   "design": 1,
+   "marketing": 3,
+   "operations": 2,
+   "finance": 2,
+   "product": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "stripe",
+  "name": "Stripe",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 757,
+  "hires": {
+   "IE": 93,
+   "US": 279,
+   "GB": 55,
+   "AU": 17,
+   "JP": 9,
+   "SG": 49,
+   "DE": 10,
+   "NL": 1,
+   "FR": 4,
+   "IL": 2,
+   "PL": 4,
+   "MX": 28,
+   "SE": 2,
+   "ES": 7,
+   "CA": 61,
+   "IN": 46,
+   "BR": 3
+  },
+  "remote": 115,
+  "families": {
+   "software": 173,
+   "data": 83,
+   "sales": 181,
+   "marketing": 29,
+   "product": 59,
+   "finance": 16,
+   "operations": 53,
+   "legal": 5,
+   "people": 15,
+   "support": 21,
+   "design": 24
+  },
+  "entry": 34
+ },
+ {
+  "slug": "substack",
+  "name": "Substack",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Media",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 18,
+  "hires": {
+   "US": 17,
+   "GB": 1
+  },
+  "remote": 18,
+  "families": {
+   "data": 1,
+   "software": 4,
+   "sales": 3,
+   "product": 2,
+   "people": 1,
+   "marketing": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "sumologic",
+  "name": "Sumo Logic",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 17,
+  "hires": {
+   "US": 3,
+   "IN": 9,
+   "SG": 1,
+   "GB": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 7,
+   "data": 1,
+   "product": 2,
+   "software": 7
+  },
+  "entry": 0
+ },
+ {
+  "slug": "sumup",
+  "name": "Sumup",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 351,
+  "hires": {
+   "ES": 11,
+   "GB": 76,
+   "BR": 42,
+   "DE": 45,
+   "IE": 16,
+   "FR": 40,
+   "PT": 3,
+   "US": 8,
+   "NL": 5,
+   "SE": 1,
+   "MX": 1,
+   "PL": 5
+  },
+  "remote": 0,
+  "families": {
+   "sales": 108,
+   "data": 14,
+   "software": 33,
+   "marketing": 8,
+   "design": 6,
+   "support": 3,
+   "finance": 9,
+   "operations": 11,
+   "product": 3
+  },
+  "entry": 3
+ },
+ {
+  "slug": "supabase",
+  "name": "Supabase",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 69,
+  "hires": {
+   "US": 5,
+   "GB": 1
+  },
+  "remote": 69,
+  "families": {
+   "data": 8,
+   "software": 42,
+   "sales": 2,
+   "product": 5,
+   "marketing": 2,
+   "support": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "supercell",
+  "name": "Supercell",
+  "ats": "ashby",
+  "country": "Finland",
+  "industry": "Gaming",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 36,
+  "hires": {
+   "GB": 3
+  },
+  "remote": 4,
+  "families": {
+   "sales": 1,
+   "marketing": 3,
+   "software": 6,
+   "design": 6,
+   "product": 3,
+   "data": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "surveymonkey",
+  "name": "SurveyMonkey",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 19,
+  "hires": {
+   "IN": 6,
+   "CA": 9,
+   "AU": 1
+  },
+  "remote": 19,
+  "families": {
+   "software": 4,
+   "marketing": 2,
+   "sales": 5,
+   "product": 2,
+   "data": 2,
+   "support": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "swile",
+  "name": "Swile",
+  "ats": "lever",
+  "country": "France",
+  "industry": "HR Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 31,
+  "hires": {
+   "BR": 7,
+   "FR": 17
+  },
+  "remote": 6,
+  "families": {
+   "legal": 2,
+   "software": 16,
+   "sales": 6,
+   "data": 2,
+   "product": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "synthesia",
+  "name": "Synthesia",
+  "ats": "ashby",
+  "country": "United Kingdom",
+  "industry": "AI Video",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 30,
+  "hires": {
+   "US": 7,
+   "DE": 3,
+   "GB": 12,
+   "FR": 2
+  },
+  "remote": 30,
+  "families": {
+   "software": 10,
+   "sales": 3,
+   "marketing": 5,
+   "design": 3,
+   "data": 3,
+   "product": 3,
+   "support": 2,
+   "people": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "tailscale",
+  "name": "Tailscale",
+  "ats": "greenhouse",
+  "country": "Canada",
+  "industry": "Security",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 63,
+  "hires": {
+   "GB": 3,
+   "CA": 29,
+   "US": 30,
+   "SG": 1
+  },
+  "remote": 54,
+  "families": {
+   "data": 5,
+   "legal": 4,
+   "sales": 14,
+   "software": 26,
+   "marketing": 2,
+   "design": 2,
+   "product": 2,
+   "people": 4
+  },
+  "entry": 0
+ },
+ {
+  "slug": "tamara",
+  "name": "Tamara",
+  "ats": "greenhouse",
+  "country": "Saudi Arabia",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 42,
+  "hires": {
+   "AE": 13,
+   "IN": 5
+  },
+  "remote": 0,
+  "families": {
+   "finance": 3,
+   "operations": 4,
+   "data": 6,
+   "legal": 3,
+   "software": 3,
+   "people": 1,
+   "product": 1
+  },
+  "entry": 3
+ },
+ {
+  "slug": "tanium",
+  "name": "Tanium",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Security",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 60,
+  "hires": {
+   "US": 47,
+   "JP": 6,
+   "CH": 1,
+   "GB": 1,
+   "MX": 1,
+   "DE": 1,
+   "FR": 1,
+   "CA": 1,
+   "PL": 1
+  },
+  "remote": 19,
+  "families": {
+   "data": 3,
+   "sales": 9,
+   "software": 20,
+   "marketing": 5,
+   "product": 2,
+   "people": 1
+  },
+  "entry": 5
+ },
+ {
+  "slug": "taskrabbit",
+  "name": "TaskRabbit",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Marketplace",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 21,
+  "hires": {
+   "US": 15,
+   "ES": 1,
+   "PL": 1,
+   "GB": 4
+  },
+  "remote": 1,
+  "families": {
+   "data": 6,
+   "marketing": 2,
+   "operations": 1,
+   "sales": 1,
+   "software": 4,
+   "design": 2,
+   "product": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "temporal",
+  "name": "Temporal",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 79,
+  "hires": {
+   "US": 63,
+   "IN": 2,
+   "FR": 2,
+   "DE": 3,
+   "GB": 7,
+   "SG": 2
+  },
+  "remote": 79,
+  "families": {
+   "marketing": 5,
+   "software": 35,
+   "sales": 14,
+   "data": 5,
+   "finance": 3,
+   "product": 5,
+   "operations": 1,
+   "legal": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "tenstorrent",
+  "name": "Tenstorrent",
+  "ats": "greenhouse",
+  "country": "Canada",
+  "industry": "Semiconductors",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 127,
+  "hires": {
+   "US": 70,
+   "SG": 3,
+   "JP": 9,
+   "PL": 3,
+   "CA": 42,
+   "IN": 6,
+   "ES": 4,
+   "DE": 5,
+   "AU": 1,
+   "CH": 1
+  },
+  "remote": 0,
+  "families": {
+   "data": 28,
+   "software": 58,
+   "sales": 3,
+   "finance": 3,
+   "design": 4,
+   "operations": 9,
+   "people": 3,
+   "product": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "thinkific",
+  "name": "Thinkific",
+  "ats": "ashby",
+  "country": "Canada",
+  "industry": "Edtech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 2,
+  "hires": {
+   "CA": 2
+  },
+  "remote": 1,
+  "families": {
+   "sales": 1,
+   "product": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "thought-machine",
+  "name": "Thought Machine",
+  "ats": "ashby",
+  "country": "United Kingdom",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 30,
+  "hires": {
+   "GB": 11,
+   "PT": 14,
+   "SG": 3,
+   "US": 1
+  },
+  "remote": 24,
+  "families": {
+   "software": 23,
+   "product": 1,
+   "finance": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "thumbtack",
+  "name": "Thumbtack",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Marketplace",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 35,
+  "hires": {
+   "US": 15
+  },
+  "remote": 34,
+  "families": {
+   "operations": 4,
+   "data": 10,
+   "product": 6,
+   "people": 1,
+   "software": 5,
+   "marketing": 4,
+   "finance": 2,
+   "design": 1,
+   "sales": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "thunes",
+  "name": "Thunes",
+  "ats": "greenhouse",
+  "country": "Singapore",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 44,
+  "hires": {
+   "SG": 7,
+   "AE": 1,
+   "AU": 1,
+   "ES": 17,
+   "US": 4,
+   "GB": 6,
+   "FR": 2,
+   "BR": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 4,
+   "data": 8,
+   "legal": 3,
+   "marketing": 4,
+   "operations": 4,
+   "finance": 4,
+   "software": 10
+  },
+  "entry": 1
+ },
+ {
+  "slug": "tiger-analytics",
+  "name": "Tiger Analytics",
+  "ats": "workable",
+  "country": "India",
+  "industry": "Data & AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 242,
+  "hires": {
+   "CA": 41,
+   "US": 188,
+   "MX": 8,
+   "IN": 4,
+   "ES": 1
+  },
+  "remote": 138,
+  "families": {
+   "data": 136,
+   "marketing": 5,
+   "software": 18,
+   "finance": 3,
+   "product": 7,
+   "sales": 11,
+   "people": 5,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "toast",
+  "name": "Toast",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 347,
+  "hires": {
+   "AU": 7,
+   "US": 217,
+   "IE": 24,
+   "IN": 21,
+   "CA": 17,
+   "MX": 2,
+   "GB": 7
+  },
+  "remote": 54,
+  "families": {
+   "sales": 217,
+   "data": 14,
+   "software": 60,
+   "marketing": 4,
+   "finance": 4,
+   "people": 3,
+   "product": 8,
+   "legal": 1,
+   "design": 2,
+   "operations": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "togetherai",
+  "name": "Together AI",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 86,
+  "hires": {
+   "IN": 5,
+   "US": 65,
+   "NL": 12,
+   "SG": 1,
+   "GB": 4
+  },
+  "remote": 2,
+  "families": {
+   "data": 17,
+   "software": 40,
+   "legal": 2,
+   "marketing": 7,
+   "finance": 2,
+   "sales": 3,
+   "people": 3
+  },
+  "entry": 16
+ },
+ {
+  "slug": "toptal",
+  "name": "Toptal",
+  "ats": "lever",
+  "country": "United States",
+  "industry": "Staffing",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 28,
+  "hires": {
+   "CA": 13,
+   "US": 10
+  },
+  "remote": 28,
+  "families": {
+   "sales": 13,
+   "data": 3,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "tractable",
+  "name": "Tractable",
+  "ats": "ashby",
+  "country": "United Kingdom",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 5,
+  "hires": {
+   "US": 5
+  },
+  "remote": 2,
+  "families": {
+   "software": 3,
+   "operations": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "truelayer",
+  "name": "Truelayer",
+  "ats": "greenhouse",
+  "country": "United Kingdom",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 4,
+  "hires": {
+   "GB": 2,
+   "IE": 2
+  },
+  "remote": 0,
+  "families": {
+   "support": 1,
+   "finance": 2,
+   "data": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "trustpilot",
+  "name": "Trustpilot",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 45,
+  "hires": {
+   "NL": 4,
+   "DE": 3,
+   "GB": 18,
+   "US": 6,
+   "AU": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 13,
+   "support": 5,
+   "data": 6,
+   "operations": 2,
+   "marketing": 2,
+   "product": 6,
+   "design": 3,
+   "software": 6
+  },
+  "entry": 0
+ },
+ {
+  "slug": "turing",
+  "name": "Turing",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Staffing",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 42,
+  "hires": {
+   "US": 27,
+   "BR": 6,
+   "IN": 7
+  },
+  "remote": 4,
+  "families": {
+   "data": 20,
+   "finance": 1,
+   "design": 1,
+   "software": 11,
+   "operations": 1,
+   "product": 1,
+   "marketing": 1,
+   "sales": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "twilio",
+  "name": "Twilio",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 130,
+  "hires": {
+   "US": 55,
+   "IN": 9,
+   "MX": 6,
+   "IE": 11,
+   "GB": 17,
+   "BR": 2,
+   "AU": 3,
+   "JP": 2,
+   "CA": 8,
+   "SG": 5,
+   "ES": 2
+  },
+  "remote": 129,
+  "families": {
+   "sales": 28,
+   "software": 35,
+   "data": 16,
+   "marketing": 5,
+   "finance": 2,
+   "operations": 12,
+   "legal": 1,
+   "product": 11,
+   "people": 2,
+   "design": 1,
+   "support": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "twitch",
+  "name": "Twitch",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Media Streaming",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 58,
+  "hires": {
+   "US": 55,
+   "BR": 1,
+   "AU": 1,
+   "ES": 1
+  },
+  "remote": 0,
+  "families": {
+   "data": 2,
+   "marketing": 3,
+   "software": 22,
+   "operations": 4,
+   "sales": 3,
+   "product": 11,
+   "design": 4
+  },
+  "entry": 2
+ },
+ {
+  "slug": "typeface",
+  "name": "Typeface",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 18,
+  "hires": {
+   "GB": 1,
+   "US": 13
+  },
+  "remote": 2,
+  "families": {
+   "sales": 3,
+   "data": 1,
+   "product": 3,
+   "software": 7,
+   "design": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "typeform",
+  "name": "Typeform",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 11,
+  "hires": {
+   "GB": 7,
+   "DE": 5,
+   "IE": 5,
+   "NL": 5,
+   "ES": 4,
+   "PT": 5,
+   "US": 4
+  },
+  "remote": 11,
+  "families": {
+   "data": 5,
+   "software": 2,
+   "sales": 3,
+   "marketing": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "udemy",
+  "name": "Udemy",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Edtech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 3,
+  "hires": {
+   "US": 1,
+   "JP": 1
+  },
+  "remote": 1,
+  "families": {
+   "people": 1,
+   "software": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "uipath",
+  "name": "UiPath",
+  "ats": "ashby",
+  "country": "Romania",
+  "industry": "Automation",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 103,
+  "hires": {
+   "IN": 8,
+   "GB": 9,
+   "JP": 4,
+   "US": 11,
+   "BR": 2,
+   "ES": 1,
+   "MX": 2,
+   "AE": 1,
+   "AU": 3,
+   "FR": 1,
+   "CA": 2
+  },
+  "remote": 44,
+  "families": {
+   "data": 14,
+   "sales": 27,
+   "software": 30,
+   "product": 8,
+   "design": 1,
+   "finance": 1,
+   "support": 2,
+   "marketing": 1,
+   "operations": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "upstart",
+  "name": "Upstart",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 84,
+  "hires": {
+   "US": 84
+  },
+  "remote": 76,
+  "families": {
+   "sales": 4,
+   "support": 1,
+   "data": 16,
+   "marketing": 3,
+   "software": 30,
+   "people": 1,
+   "finance": 1,
+   "legal": 2,
+   "operations": 3,
+   "product": 4
+  },
+  "entry": 1
+ },
+ {
+  "slug": "upwork",
+  "name": "Upwork",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Marketplace",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 6,
+  "hires": {
+   "US": 1,
+   "CA": 2,
+   "PT": 2
+  },
+  "remote": 1,
+  "families": {
+   "marketing": 1,
+   "operations": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "vanta",
+  "name": "Vanta",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Security",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 83,
+  "hires": {
+   "IE": 9,
+   "GB": 17,
+   "CA": 7,
+   "US": 5,
+   "JP": 2,
+   "AU": 1
+  },
+  "remote": 76,
+  "families": {
+   "sales": 29,
+   "software": 26,
+   "data": 12,
+   "design": 3,
+   "product": 4,
+   "marketing": 3,
+   "legal": 2,
+   "support": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "veeva",
+  "name": "Veeva",
+  "ats": "lever",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 859,
+  "hires": {
+   "US": 376,
+   "FR": 21,
+   "DE": 52,
+   "CH": 4,
+   "JP": 19,
+   "ES": 58,
+   "GB": 65,
+   "SE": 4,
+   "SG": 5,
+   "NL": 1,
+   "PL": 24,
+   "PT": 12,
+   "IE": 4,
+   "CA": 28,
+   "IN": 23,
+   "AU": 1,
+   "IL": 5
+  },
+  "remote": 708,
+  "families": {
+   "sales": 16,
+   "data": 136,
+   "software": 70,
+   "operations": 52,
+   "marketing": 89,
+   "product": 80,
+   "support": 39,
+   "finance": 2,
+   "people": 8,
+   "design": 1
+  },
+  "entry": 36
+ },
+ {
+  "slug": "vercel",
+  "name": "Vercel",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 88,
+  "hires": {
+   "DE": 6,
+   "GB": 14,
+   "AU": 4,
+   "US": 71,
+   "IN": 1
+  },
+  "remote": 7,
+  "families": {
+   "sales": 20,
+   "marketing": 3,
+   "software": 31,
+   "finance": 4,
+   "data": 6,
+   "legal": 2,
+   "people": 4,
+   "design": 2,
+   "product": 5,
+   "operations": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "verkada",
+  "name": "Verkada",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Security",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 335,
+  "hires": {
+   "GB": 18,
+   "US": 265,
+   "FR": 3,
+   "JP": 5,
+   "MX": 8,
+   "SE": 1,
+   "AU": 10,
+   "CA": 6,
+   "PL": 4,
+   "DE": 1,
+   "IE": 1,
+   "SG": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 94,
+   "data": 13,
+   "software": 129,
+   "product": 14,
+   "marketing": 35,
+   "operations": 12,
+   "legal": 5,
+   "design": 5,
+   "people": 5,
+   "finance": 1
+  },
+  "entry": 12
+ },
+ {
+  "slug": "vonage",
+  "name": "Vonage",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Communications",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 25,
+  "hires": {
+   "GB": 3,
+   "AU": 1,
+   "PL": 5,
+   "JP": 1,
+   "MX": 1,
+   "IN": 3,
+   "US": 3,
+   "ES": 4
+  },
+  "remote": 10,
+  "families": {
+   "data": 3,
+   "software": 8,
+   "support": 1,
+   "sales": 6,
+   "product": 2
+  },
+  "entry": 1
+ },
+ {
+  "slug": "vtex",
+  "name": "Vtex",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 31,
+  "hires": {
+   "BR": 19,
+   "ES": 3,
+   "US": 5,
+   "MX": 1,
+   "PL": 1
+  },
+  "remote": 0,
+  "families": {
+   "data": 3,
+   "software": 10,
+   "operations": 1,
+   "sales": 6,
+   "product": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "waabi",
+  "name": "Waabi",
+  "ats": "lever",
+  "country": "Canada",
+  "industry": "Autonomy",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 92,
+  "hires": {
+   "CA": 33,
+   "US": 71
+  },
+  "remote": 16,
+  "families": {
+   "data": 16,
+   "finance": 2,
+   "marketing": 3,
+   "software": 37,
+   "sales": 1,
+   "product": 5,
+   "legal": 1,
+   "operations": 1
+  },
+  "entry": 3
+ },
+ {
+  "slug": "walkme",
+  "name": "WalkMe",
+  "ats": "lever",
+  "country": "Israel",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 25,
+  "hires": {
+   "SE": 1,
+   "US": 7,
+   "IL": 8,
+   "JP": 3,
+   "DE": 3,
+   "GB": 2,
+   "AU": 1
+  },
+  "remote": 1,
+  "families": {
+   "sales": 4,
+   "software": 4,
+   "data": 2,
+   "design": 1,
+   "product": 1,
+   "support": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "wallapop",
+  "name": "Wallapop",
+  "ats": "greenhouse",
+  "country": "Spain",
+  "industry": "E-commerce",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 4,
+  "hires": {
+   "ES": 4
+  },
+  "remote": 0,
+  "families": {
+   "product": 3,
+   "data": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "warp",
+  "name": "Warp",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Developer Tools",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 18,
+  "hires": {
+   "US": 18
+  },
+  "remote": 1,
+  "families": {
+   "sales": 6,
+   "software": 4,
+   "operations": 1,
+   "finance": 2,
+   "marketing": 1,
+   "design": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "wasabi",
+  "name": "Wasabi",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Cloud Infrastructure",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 11,
+  "hires": {
+   "US": 10,
+   "SG": 1
+  },
+  "remote": 0,
+  "families": {
+   "data": 4,
+   "sales": 1,
+   "software": 2,
+   "finance": 1,
+   "operations": 1,
+   "product": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "watershed",
+  "name": "Watershed",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Climate",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 39,
+  "hires": {
+   "DE": 2,
+   "GB": 6,
+   "MX": 9,
+   "US": 23
+  },
+  "remote": 21,
+  "families": {
+   "sales": 7,
+   "data": 9,
+   "software": 8,
+   "finance": 3,
+   "operations": 2,
+   "design": 1,
+   "support": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "waymo",
+  "name": "Waymo",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Autonomy",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 369,
+  "hires": {
+   "US": 309,
+   "PL": 10,
+   "GB": 18,
+   "JP": 5,
+   "DE": 7,
+   "ES": 3,
+   "SG": 3,
+   "CA": 1,
+   "IN": 4
+  },
+  "remote": 6,
+  "families": {
+   "data": 106,
+   "software": 128,
+   "operations": 17,
+   "product": 27,
+   "finance": 4,
+   "legal": 7,
+   "sales": 1,
+   "people": 2,
+   "marketing": 6,
+   "design": 4,
+   "support": 1
+  },
+  "entry": 62
+ },
+ {
+  "slug": "wayve",
+  "name": "Wayve",
+  "ats": "ashby",
+  "country": "United Kingdom",
+  "industry": "Autonomy",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 174,
+  "hires": {
+   "US": 79,
+   "GB": 51,
+   "DE": 20,
+   "JP": 20,
+   "IL": 4
+  },
+  "remote": 93,
+  "families": {
+   "data": 54,
+   "software": 72,
+   "operations": 7,
+   "product": 9,
+   "legal": 2,
+   "marketing": 2,
+   "people": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "wealthfront",
+  "name": "Wealthfront",
+  "ats": "lever",
+  "country": "United States",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 23,
+  "hires": {
+   "US": 22
+  },
+  "remote": 9,
+  "families": {
+   "software": 7,
+   "data": 5,
+   "product": 1,
+   "operations": 3,
+   "design": 2,
+   "sales": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "wealthsimple",
+  "name": "Wealthsimple",
+  "ats": "ashby",
+  "country": "Canada",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 41,
+  "hires": {
+   "CA": 40
+  },
+  "remote": 39,
+  "families": {
+   "design": 2,
+   "software": 7,
+   "finance": 2,
+   "marketing": 5,
+   "data": 4,
+   "sales": 1,
+   "operations": 3
+  },
+  "entry": 0
+ },
+ {
+  "slug": "weaviate",
+  "name": "Weaviate",
+  "ats": "ashby",
+  "country": "Netherlands",
+  "industry": "Databases",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 2,
+  "hires": {
+   "US": 1,
+   "NL": 1
+  },
+  "remote": 2,
+  "families": {
+   "sales": 1,
+   "finance": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "webflow",
+  "name": "Webflow",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 21,
+  "hires": {
+   "US": 14,
+   "GB": 2,
+   "CA": 1
+  },
+  "remote": 21,
+  "families": {
+   "software": 6,
+   "data": 5,
+   "sales": 3,
+   "design": 2,
+   "product": 1,
+   "legal": 2,
+   "support": 1,
+   "operations": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "whoop",
+  "name": "Whoop",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "Consumer Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 126,
+  "hires": {
+   "US": 122,
+   "DE": 1,
+   "AU": 1
+  },
+  "remote": 2,
+  "families": {
+   "design": 9,
+   "software": 46,
+   "legal": 6,
+   "data": 26,
+   "product": 6,
+   "operations": 2,
+   "marketing": 5,
+   "finance": 2,
+   "sales": 2,
+   "support": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "wildlifestudios",
+  "name": "Wildlifestudios",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 15,
+  "hires": {
+   "BR": 15
+  },
+  "remote": 0,
+  "families": {
+   "finance": 1,
+   "data": 5,
+   "design": 2,
+   "operations": 2,
+   "product": 1,
+   "marketing": 1
+  },
+  "entry": 5
+ },
+ {
+  "slug": "wise",
+  "name": "Wise",
+  "ats": "greenhouse",
+  "country": "United Kingdom",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 18,
+  "hires": {
+   "US": 12
+  },
+  "remote": 0,
+  "families": {
+   "sales": 18
+  },
+  "entry": 0
+ },
+ {
+  "slug": "wolt",
+  "name": "Wolt",
+  "ats": "greenhouse",
+  "country": "Finland",
+  "industry": "Food Delivery",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 193,
+  "hires": {
+   "DE": 21,
+   "PL": 10,
+   "IL": 16,
+   "SE": 6,
+   "GB": 8
+  },
+  "remote": 2,
+  "families": {
+   "sales": 32,
+   "finance": 5,
+   "operations": 13,
+   "software": 17,
+   "marketing": 7,
+   "support": 1,
+   "product": 1,
+   "data": 1,
+   "people": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "workato",
+  "name": "Workato",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 63,
+  "hires": {
+   "JP": 6,
+   "US": 14,
+   "SG": 6,
+   "GB": 3,
+   "IN": 1,
+   "DE": 7,
+   "PT": 3,
+   "ES": 5,
+   "AU": 3,
+   "NL": 1,
+   "IE": 1,
+   "PL": 1
+  },
+  "remote": 0,
+  "families": {
+   "sales": 13,
+   "data": 18,
+   "software": 18,
+   "support": 1,
+   "marketing": 1,
+   "product": 1
+  },
+  "entry": 1
+ },
+ {
+  "slug": "writer",
+  "name": "Writer",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "AI",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 46,
+  "hires": {
+   "US": 34,
+   "GB": 12
+  },
+  "remote": 46,
+  "families": {
+   "sales": 9,
+   "software": 11,
+   "data": 17,
+   "legal": 1,
+   "marketing": 4,
+   "product": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "xendit",
+  "name": "Xendit",
+  "ats": "greenhouse",
+  "country": "Multiple",
+  "industry": "",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 19,
+  "hires": {
+   "IN": 2,
+   "SG": 10,
+   "US": 1
+  },
+  "remote": 0,
+  "families": {
+   "support": 3,
+   "operations": 1,
+   "software": 5,
+   "legal": 2,
+   "product": 1,
+   "sales": 2,
+   "design": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "xero",
+  "name": "Xero",
+  "ats": "ashby",
+  "country": "New Zealand",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 106,
+  "hires": {
+   "AU": 42,
+   "CA": 23,
+   "US": 11,
+   "GB": 8
+  },
+  "remote": 106,
+  "families": {
+   "sales": 11,
+   "data": 24,
+   "software": 36,
+   "marketing": 3,
+   "support": 1,
+   "operations": 4,
+   "legal": 1,
+   "design": 1,
+   "product": 1,
+   "people": 1,
+   "finance": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "yugabyte",
+  "name": "Yugabyte",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Databases",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 13,
+  "hires": {
+   "US": 10,
+   "IN": 3
+  },
+  "remote": 4,
+  "families": {
+   "software": 8,
+   "sales": 2,
+   "finance": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "zapier",
+  "name": "Zapier",
+  "ats": "ashby",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 11,
+  "hires": {},
+  "remote": 11,
+  "families": {
+   "marketing": 2,
+   "sales": 3,
+   "support": 1,
+   "data": 1,
+   "design": 1,
+   "legal": 1,
+   "software": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "zeta",
+  "name": "Zeta",
+  "ats": "lever",
+  "country": "India",
+  "industry": "Banking Tech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 31,
+  "hires": {
+   "IN": 26,
+   "US": 1
+  },
+  "remote": 3,
+  "families": {
+   "people": 4,
+   "legal": 4,
+   "software": 8,
+   "data": 4,
+   "marketing": 1,
+   "product": 1,
+   "operations": 1,
+   "sales": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "zocdoc",
+  "name": "Zocdoc",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Healthtech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 62,
+  "hires": {
+   "US": 48,
+   "IN": 14
+  },
+  "remote": 16,
+  "families": {
+   "sales": 13,
+   "data": 11,
+   "support": 1,
+   "finance": 2,
+   "marketing": 3,
+   "software": 14,
+   "design": 4,
+   "people": 2,
+   "operations": 2,
+   "product": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "zoominfo",
+  "name": "ZoomInfo",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "SaaS",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 94,
+  "hires": {
+   "US": 61,
+   "CA": 36,
+   "GB": 8,
+   "IN": 12
+  },
+  "remote": 16,
+  "families": {
+   "sales": 23,
+   "data": 22,
+   "finance": 1,
+   "operations": 3,
+   "software": 19,
+   "product": 5,
+   "legal": 1,
+   "support": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "zoox",
+  "name": "Zoox",
+  "ats": "lever",
+  "country": "United States",
+  "industry": "Autonomy",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 225,
+  "hires": {
+   "US": 224,
+   "GB": 1
+  },
+  "remote": 0,
+  "families": {
+   "software": 104,
+   "data": 43,
+   "operations": 10,
+   "product": 27,
+   "people": 5,
+   "sales": 2,
+   "marketing": 1,
+   "design": 2
+  },
+  "entry": 0
+ },
+ {
+  "slug": "zopa",
+  "name": "Zopa",
+  "ats": "lever",
+  "country": "United Kingdom",
+  "industry": "Fintech",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 31,
+  "hires": {
+   "GB": 31
+  },
+  "remote": 2,
+  "families": {
+   "software": 12,
+   "data": 6,
+   "support": 1,
+   "finance": 3,
+   "operations": 2,
+   "marketing": 1,
+   "sales": 2,
+   "design": 1
+  },
+  "entry": 0
+ },
+ {
+  "slug": "zscaler",
+  "name": "Zscaler",
+  "ats": "greenhouse",
+  "country": "United States",
+  "industry": "Security",
+  "unverified": false,
+  "verifiedAt": "2026-11-04T14:02:33.738Z",
+  "jobCount": 375,
+  "hires": {
+   "AU": 8,
+   "IN": 82,
+   "JP": 41,
+   "DE": 7,
+   "US": 155,
+   "CA": 6,
+   "CH": 1,
+   "GB": 20,
+   "ES": 3,
+   "SG": 10,
+   "NL": 5,
+   "IL": 3,
+   "PL": 2,
+   "MX": 2,
+   "FR": 2,
+   "SE": 2,
+   "AE": 1,
+   "IE": 1
+  },
+  "remote": 138,
+  "families": {
+   "sales": 78,
+   "data": 41,
+   "software": 167,
+   "design": 2,
+   "marketing": 7,
+   "product": 7,
+   "finance": 10,
+   "people": 5,
+   "operations": 2
+  },
+  "entry": 0
+ }
 ]

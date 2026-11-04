@@ -17,7 +17,7 @@ export const NO_FILTERS: DiscoverFilters = { experience: "", type: "", remoteOnl
 
 const INTERN = /\b(intern|interns|internship|trainee|apprentice(ship)?|co-?op|working student|werkstudent|stagiaire|praktikum)\b/i;
 const ENTRY = /\b(graduate|new grad|fresher|freshers|entry[- ]level|junior|jr\.?|campus|early career|associate(?! (director|vice|principal|partner)))\b/i;
-const SENIOR = /\b(senior|sr\.?|staff|principal|lead|head|director|manager|vp|vice president|architect|chief)\b/i;
+const SENIOR = /\b(senior|sr\.?|staff|principal|lead|head|director|manager|vp|vice president|architect|chief|tl|stl|team lead|sse|sde[- ]?(?:iii|3|iv|4))\b/i;
 
 /** The level a posting's title names (internship, entry, senior); "mid" when it names none. */
 export function jobLevel(job: Pick<JobPosting, "title">): JobLevel {
@@ -48,9 +48,16 @@ export function jobType(job: Pick<JobPosting, "title" | "employmentType">): JobT
 }
 
 /** The minimum years a posting asks for ("3+ years", "at least 5 years of experience", "2-4 years"), if it says. */
-export function requiredYears(job: Pick<JobPosting, "descriptionSnippet" | "requirements">): number | undefined {
-  const text = [job.descriptionSnippet ?? "", ...(job.requirements ?? [])].join(" ").toLowerCase();
-  const m = /\b(?:minimum (?:of )?|at least |min\.? )?(\d{1,2})(?:\s*(?:-|–|to)\s*\d{1,2})?\s*\+?\s*(?:years?|yrs?)(?:'|’)?\s*(?:of\s+)?(?:\w+\s+){0,3}?(?:experience|exp\b)/.exec(text);
+export function requiredYears(job: Pick<JobPosting, "descriptionSnippet" | "requirements" | "description"> & { title?: string }): number | undefined {
+  const title = (job.title ?? "").toLowerCase();
+  const text = [job.description ?? job.descriptionSnippet ?? "", ...(job.requirements ?? [])].join(" ").toLowerCase();
+  // "3+ years of experience", "at least 5 years' relevant experience"
+  const yearsThenExp = /\b(?:minimum (?:of )?|at least |min\.? )?(\d{1,2})(?:\s*(?:-|–|to)\s*\d{1,2})?\s*\+?\s*(?:years?|yrs?)(?:'|’)?\s*(?:of\s+)?(?:\w+\s+){0,3}?(?:experience|exp\b)/;
+  // "Experience: 5-7 yrs", "Exp - 1 to 3 Yrs" (Indian boards often put this in the title)
+  const expThenYears = /\b(?:experience|exp)\.?\s*[:\-–(]?\s*(?:of\s+)?(\d{1,2})\s*(?:\+|(?:-|–|to)\s*\d{1,2})?\s*\+?\s*(?:years?|yrs?)\b/;
+  // In a title only: "(2-4 yrs)", "| 3+ Years"
+  const bareInTitle = /(?:^|[\s(|,-])(\d{1,2})\s*(?:\+|(?:-|–|to)\s*\d{1,2})?\s*\+?\s*(?:years?|yrs?)\b/;
+  const m = expThenYears.exec(title) ?? yearsThenExp.exec(title) ?? bareInTitle.exec(title) ?? yearsThenExp.exec(text) ?? expThenYears.exec(text);
   if (!m) return undefined;
   const n = Number(m[1]);
   return Number.isFinite(n) && n <= 30 ? n : undefined;

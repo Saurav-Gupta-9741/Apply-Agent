@@ -338,6 +338,7 @@ if (!window.__applyAgentLoaded) {
           ? await runOnce(document, {
             profile: await loadProfile(), answers: await loadAnswers(), applications: await loadApplications(), mode: message.mode, understand,
             pauseBetweenFieldsMs: pacing?.pauseBetweenFieldsMs, stopOnChallenge: pacing?.stopOnChallenge,
+            fillOnly: message.fillOnly === true,
           }, markSubmitting)
           : await submitForm(document, 20000, markSubmitting);
         sendResponse(report);

@@ -472,3 +472,35 @@ kbd { font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; padding: 
 .back-to-jobs { align-self: flex-start; margin-bottom: 6px; gap: 6px; }
 .wizard-hint { font-size: 12px; margin: 0 0 10px 0; }
 .wizard-skip-hint { font-size: 12px; margin: 0 0 8px 0; }
+
+/* round 4: Discover (what it matches on, score breakdown, own companies) */
+.discover-for { border: 1px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 8px 10px; font-size: 12px; display: flex; flex-direction: column; gap: 4px; }
+.discover-for:empty { display: none; }
+.discover-for-title { margin: 0; font-weight: 600; font-size: 12px; }
+.discover-for ul { margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 2px; color: var(--text-2); }
+.discover-for li.missing { color: var(--warn); }
+.discover-for .btn { align-self: flex-start; }
+.discover-checks { display: flex; flex-wrap: wrap; gap: 4px 14px; grid-column: 1 / -1; }
+.job-card-header > div:first-child { min-width: 0; }
+.job-title, .job-company { overflow-wrap: anywhere; }
+.job-score { flex: none; align-self: flex-start; font-weight: 700; font-size: 13px; padding: 3px 8px; border-radius: 8px; border: 1px solid var(--line); }
+.job-score.badge-high { color: var(--ok); background: var(--ok-soft); }
+.job-score.badge-mid { color: var(--warn); background: rgba(245, 184, 75, 0.12); }
+.job-score.badge-low { color: var(--text-2); background: var(--surface-2); }
+.job-tags .tag-remote, .job-tags .tag-new { color: var(--ok); }
+.job-tags .tag-warning { color: var(--warn); }
+.match-breakdown summary { cursor: pointer; font-size: 12px; color: var(--accent); padding: 2px 0; }
+.match-parts { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
+.match-parts li { display: grid; grid-template-columns: 76px 40px 1fr; align-items: center; gap: 2px 8px; }
+.match-parts .match-text { grid-column: 1 / -1; color: var(--text-2); line-height: 1.35; }
+.match-parts .match-points { color: var(--text-2); font-variant-numeric: tabular-nums; }
+.match-bar { height: 5px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+.match-bar > span { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.match-parts li.match-missing { display: block; }
+.discover-companies { margin-top: 6px; border: 1px solid var(--line); border-radius: 10px; }
+.discover-companies > :not(summary) { margin-left: 12px; margin-right: 12px; }
+.discover-companies > :last-child { margin-bottom: 12px; }
+.company-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+.company-list:empty { display: none; }
+.company-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+#discover-show-more { align-self: center; }

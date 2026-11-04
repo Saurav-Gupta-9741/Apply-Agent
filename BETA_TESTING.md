@@ -28,6 +28,37 @@ it to**. Switching to it once looks like a new extension to Chrome, so:
 3. In beta 4's first screen choose **"Used ApplyAgent before? Restore from a backup file"** and pick that file.
 4. Turn on **Keep an automatic backup on this PC** (Backup & move), so a reinstall never loses anything again.
 
+## Updating to beta 5 (1.0.4)
+
+Nothing to do: unzip it over your beta 4 folder (or any folder) and press **Reload** (or **Load unpacked**). Your
+data stays, because beta 4 and later share one identity.
+
+## What's new in beta 5 (1.0.4): Discover, rebuilt around you
+
+- **Jobs are matched to your profile and resume.** The Jobs screen shows exactly what it matches on (roles,
+  experience, where, skills) and where each came from. With no Target roles it uses your current title, your work
+  history, or your field of study, and says so. A student is treated as a fresher.
+- **Every % is explained.** "Why 82%?" on each job shows Role, Skills, Experience and Location points with the reason
+  for each, and the skills the job names that your profile does not list.
+- **Jobs you can't take are left out, and counted:** other fields, two or more years more experience than you have,
+  senior / team-lead roles for freshers, and (with "Only where I can work", on by default) jobs in countries you did
+  not list, including remote jobs open only to other countries.
+- **340 companies** (was 54), each checked against its own job board, with what it hires for and where. Discover
+  checks the companies that hire for your field where you can work first; "Check more companies" goes further.
+- **Add any company** by pasting its careers page or job-board link (Jobs → Add a company you want to work for).
+  ApplyAgent reads that page once (after checking the site's robots.txt), finds its Greenhouse / Lever / Ashby /
+  SmartRecruiters / Workable / Recruitee / Personio board, and checks it first in every search. Job sites (LinkedIn,
+  Naukri…) are refused. Your companies are in your backups.
+- **The last results come back** when you reopen the panel, with when they were checked.
+- **Plan card:** no licence key box while there is nothing to buy or activate.
+- **Fill only fills (from your report).** It no longer closes pop-up application forms, never presses Next or
+  Continue for you (multi-page forms: check the page, press Next yourself, then Fill again), and nothing is ever
+  submitted while a required field is empty: Submit names the empty ones instead. The Queue, which works in its own
+  tabs, still moves through the steps and stops before the final Submit.
+
+Privacy: Discover only reads public job boards and, when you add a company, that company's page. Nothing about you
+is in any request; matching happens in your browser.
+
 ## What's new in beta 4 (1.0.3)
 
 - **Your data survives reinstalls:** fixed extension identity for every beta; optional **automatic backup** to

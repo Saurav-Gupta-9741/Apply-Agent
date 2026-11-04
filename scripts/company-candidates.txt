@@ -1,0 +1,802 @@
+# Candidate employers for static/companies.json: "Name | industry | HQ country".
+# scripts/grow-companies.mjs looks each one up on the public job-board APIs (Greenhouse, Lever, Ashby, SmartRecruiters,
+# Workable) and keeps it ONLY if a board answers with open jobs. Nothing here is shown to users unless verified.
+# --- India ---
+Razorpay | Fintech | India
+PhonePe | Fintech | India
+CRED | Fintech | India
+Groww | Fintech | India
+Zerodha | Fintech | India
+Paytm | Fintech | India
+Pine Labs | Fintech | India
+# (same-name board of another company, not listed) Slice | Fintech | India
+Jupiter | Fintech | India
+Juspay | Fintech | India
+Zeta | Fintech | India
+Cashfree | Fintech | India
+PayU | Fintech | India
+BharatPe | Fintech | India
+Open Financial | Fintech | India
+Jar | Fintech | India
+# (same-name board of another company, not listed) Fi | Fintech | India
+KreditBee | Fintech | India
+# (same-name board of another company, not listed) Navi | Fintech | India
+Acko | Insurance | India
+Digit Insurance | Insurance | India
+PolicyBazaar | Insurance | India
+Postman | Developer Tools | India
+BrowserStack | Developer Tools | India
+Hasura | Developer Tools | India
+Freshworks | SaaS | India
+Zoho | SaaS | India
+Chargebee | SaaS | India
+Druva | Cloud Software | India
+Innovaccer | Healthtech | India
+Sprinklr | SaaS | India
+Darwinbox | HR Tech | India
+LeadSquared | SaaS | India
+Whatfix | SaaS | India
+Mindtickle | SaaS | India
+Yellow.ai | AI | India
+Haptik | AI | India
+Observe.AI | AI | India
+Sarvam AI | AI | India
+Krutrim | AI | India
+Uniphore | AI | India
+Gupshup | SaaS | India
+MoEngage | SaaS | India
+CleverTap | SaaS | India
+WebEngage | SaaS | India
+Exotel | SaaS | India
+Zluri | SaaS | India
+Rocketlane | SaaS | India
+Atlan | Data & AI | India
+Fractal | Data & AI | India
+Tredence | Data & AI | India
+Tiger Analytics | Data & AI | India
+LatentView | Data & AI | India
+MathCo | Data & AI | India
+Meesho | E-commerce | India
+Flipkart | E-commerce | India
+Myntra | E-commerce | India
+Nykaa | E-commerce | India
+Zepto | Quick Commerce | India
+Swiggy | Food Delivery | India
+Zomato | Food Delivery | India
+Blinkit | Quick Commerce | India
+BigBasket | E-commerce | India
+Licious | E-commerce | India
+FirstCry | E-commerce | India
+Lenskart | Retail | India
+Udaan | E-commerce | India
+Urban Company | Consumer Services | India
+Ola | Mobility | India
+Rapido | Mobility | India
+Ather Energy | EV | India
+Ola Electric | EV | India
+Dream11 | Gaming | India
+Dream Sports | Gaming | India
+MPL | Gaming | India
+Games24x7 | Gaming | India
+WinZO | Gaming | India
+ShareChat | Social Media | India
+InMobi | Adtech | India
+Glance | Consumer Tech | India
+Unacademy | Edtech | India
+upGrad | Edtech | India
+PhysicsWallah | Edtech | India
+Scaler | Edtech | India
+Vedantu | Edtech | India
+Eruditus | Edtech | India
+Byju's | Edtech | India
+Khatabook | Fintech | India
+OkCredit | Fintech | India
+Delhivery | Logistics | India
+Shiprocket | Logistics | India
+# (same-name board of another company, not listed) Porter | Logistics | India
+Rivigo | Logistics | India
+BlackBuck | Logistics | India
+Cars24 | Automotive | India
+Spinny | Automotive | India
+CarDekho | Automotive | India
+OYO | Hospitality | India
+MakeMyTrip | Travel | India
+ixigo | Travel | India
+Practo | Healthtech | India
+PharmEasy | Healthtech | India
+Tata 1mg | Healthtech | India
+HealthifyMe | Healthtech | India
+Cult.fit | Healthtech | India
+Pristyn Care | Healthtech | India
+Qure.ai | Healthtech | India
+Niramai | Healthtech | India
+Nobroker | Real Estate | India
+Housing.com | Real Estate | India
+Livspace | Home | India
+Pepperfry | E-commerce | India
+Simplilearn | Edtech | India
+Infra.Market | B2B Commerce | India
+OfBusiness | B2B Commerce | India
+Moglix | B2B Commerce | India
+Zetwerk | Manufacturing | India
+Ninjacart | Agritech | India
+DeHaat | Agritech | India
+Capillary Technologies | SaaS | India
+Icertis | SaaS | India
+Amagi | Media Tech | India
+Hevo Data | Data & AI | India
+Signzy | Fintech | India
+Perfios | Fintech | India
+M2P Fintech | Fintech | India
+Setu | Fintech | India
+Lentra | Fintech | India
+Increff | SaaS | India
+Unbxd | SaaS | India
+Uplers | Staffing | India
+Turing | Staffing | United States
+Toddle | Edtech | India
+Classplus | Edtech | India
+Teachmint | Edtech | India
+Mfine | Healthtech | India
+Groyyo | Manufacturing | India
+Pocket FM | Media | India
+Kuku FM | Media | India
+Dailyhunt | Media | India
+VerSe Innovation | Media | India
+# Apna: a job platform (hands-off), not listed
+Zolve | Fintech | India
+GoKwik | E-commerce | India
+Shadowfax | Logistics | India
+Zypp Electric | EV | India
+Euler Motors | EV | India
+Yulu | Mobility | India
+Cure.fit | Healthtech | India
+Rupeek | Fintech | India
+Smallcase | Fintech | India
+INDmoney | Fintech | India
+Upstox | Fintech | India
+Angel One | Fintech | India
+Dhan | Fintech | India
+CoinDCX | Crypto | India
+CoinSwitch | Crypto | India
+Polygon | Crypto | India
+# --- Global tech ---
+Stripe | Fintech | United States
+Airbnb | Hospitality | United States
+Figma | Design Software | United States
+Discord | Communications | United States
+Databricks | Data & AI | United States
+GitLab | Developer Tools | United States
+Gusto | HR Tech | United States
+Robinhood | Fintech | United States
+Coinbase | Crypto | United States
+Dropbox | Cloud Software | United States
+Pinterest | Social Media | United States
+Lyft | Mobility | United States
+Reddit | Social Media | United States
+Twitch | Media | United States
+Roblox | Gaming | United States
+Instacart | E-commerce | United States
+Asana | SaaS | United States
+Cloudflare | Cloud Infrastructure | United States
+Datadog | Developer Tools | United States
+MongoDB | Databases | United States
+Elastic | Databases | United States
+HashiCorp | Developer Tools | United States
+Twilio | Communications | United States
+Okta | Security | United States
+Zscaler | Security | United States
+Snowflake | Data & AI | United States
+Samsara | IoT | United States
+Brex | Fintech | United States
+Chime | Fintech | United States
+Affirm | Fintech | United States
+SoFi | Fintech | United States
+Plaid | Fintech | United States
+Ramp | Fintech | United States
+Mercury | Fintech | United States
+Notion | SaaS | United States
+Anthropic | AI | United States
+OpenAI | AI | United States
+Scale AI | AI | United States
+Cohere | AI | Canada
+Mistral AI | AI | France
+Hugging Face | AI | United States
+Perplexity | AI | United States
+Runway | AI | United States
+ElevenLabs | AI | United States
+Character.AI | AI | United States
+Glean | AI | United States
+Harvey | AI | United States
+Jasper | AI | United States
+Writer | AI | United States
+Replit | Developer Tools | United States
+Vercel | Developer Tools | United States
+Netlify | Developer Tools | United States
+Supabase | Developer Tools | United States
+PlanetScale | Databases | United States
+# (same-name board of another company, not listed) Neon | Databases | United States
+Cockroach Labs | Databases | United States
+Redis | Databases | United States
+Couchbase | Databases | United States
+Confluent | Data Infrastructure | United States
+Fivetran | Data Infrastructure | United States
+dbt Labs | Data Infrastructure | United States
+Airbyte | Data Infrastructure | United States
+Starburst | Data Infrastructure | United States
+ClickHouse | Databases | United States
+Grafana Labs | Developer Tools | United States
+New Relic | Developer Tools | United States
+Sentry | Developer Tools | United States
+PagerDuty | Developer Tools | United States
+LaunchDarkly | Developer Tools | United States
+CircleCI | Developer Tools | United States
+JFrog | Developer Tools | United States
+Snyk | Security | United Kingdom
+1Password | Security | Canada
+CrowdStrike | Security | United States
+SentinelOne | Security | United States
+Wiz | Security | United States
+Rubrik | Cloud Software | United States
+Cohesity | Cloud Software | United States
+Nutanix | Cloud Software | United States
+Tanium | Security | United States
+Arctic Wolf | Security | United States
+Abnormal Security | Security | United States
+Vanta | Security | United States
+Drata | Security | United States
+Netskope | Security | United States
+Illumio | Security | United States
+Lacework | Security | United States
+Exabeam | Security | United States
+Rippling | HR Tech | United States
+Deel | HR Tech | United States
+# (same-name board of another company, not listed) Remote | HR Tech | Netherlands
+Oyster | HR Tech | United States
+Lattice | HR Tech | United States
+Greenhouse | HR Tech | United States
+Lever | HR Tech | United States
+Ashby | HR Tech | United States
+Workato | SaaS | United States
+Zapier | SaaS | United States
+Airtable | SaaS | United States
+Miro | SaaS | Netherlands
+Canva | Design Software | Australia
+Atlassian | SaaS | Australia
+Linear | SaaS | United States
+ClickUp | SaaS | United States
+Monday.com | SaaS | Israel
+Smartsheet | SaaS | United States
+Calendly | SaaS | United States
+Loom | SaaS | United States
+Grammarly | AI | United States
+Duolingo | Edtech | United States
+Coursera | Edtech | United States
+Udemy | Edtech | United States
+Chegg | Edtech | United States
+Khan Academy | Edtech | United States
+Quizlet | Edtech | United States
+Webflow | SaaS | United States
+Squarespace | SaaS | United States
+Wix | SaaS | Israel
+HubSpot | SaaS | United States
+Intercom | SaaS | Ireland
+Zendesk | SaaS | United States
+Gong | SaaS | United States
+Outreach | SaaS | United States
+Amplitude | SaaS | United States
+Mixpanel | SaaS | United States
+Segment | SaaS | United States
+Braze | SaaS | United States
+Iterable | SaaS | United States
+Klaviyo | SaaS | United States
+Attentive | SaaS | United States
+Toast | Fintech | United States
+Square | Fintech | United States
+Block | Fintech | United States
+Marqeta | Fintech | United States
+Checkout.com | Fintech | United Kingdom
+Wise | Fintech | United Kingdom
+Revolut | Fintech | United Kingdom
+Monzo | Fintech | United Kingdom
+Starling Bank | Fintech | United Kingdom
+GoCardless | Fintech | United Kingdom
+Klarna | Fintech | Sweden
+Adyen | Fintech | Netherlands
+N26 | Fintech | Germany
+Trade Republic | Fintech | Germany
+Scalable Capital | Fintech | Germany
+Qonto | Fintech | France
+Pleo | Fintech | Denmark
+Payhawk | Fintech | Bulgaria
+Airwallex | Fintech | Australia
+Nium | Fintech | Singapore
+Thunes | Fintech | Singapore
+Rapyd | Fintech | United Kingdom
+Paddle | Fintech | United Kingdom
+Truelayer | Fintech | United Kingdom
+Kraken | Crypto | United States
+Gemini | Crypto | United States
+Chainalysis | Crypto | United States
+Consensys | Crypto | United States
+Ripple | Crypto | United States
+Circle | Crypto | United States
+Alchemy | Crypto | United States
+Fireblocks | Crypto | United States
+Anchorage Digital | Crypto | United States
+Uniswap Labs | Crypto | United States
+OpenSea | Crypto | United States
+DoorDash | Food Delivery | United States
+Uber | Mobility | United States
+Grab | Mobility | Singapore
+Gojek | Mobility | Indonesia
+Bolt | Mobility | Estonia
+Deliveroo | Food Delivery | United Kingdom
+Delivery Hero | Food Delivery | Germany
+Glovo | Food Delivery | Spain
+Wolt | Food Delivery | Finland
+HelloFresh | Food Delivery | Germany
+Zalando | E-commerce | Germany
+Etsy | E-commerce | United States
+Wayfair | E-commerce | United States
+Chewy | E-commerce | United States
+Faire | E-commerce | United States
+Shopify | E-commerce | Canada
+Wealthsimple | Fintech | Canada
+Faire Wholesale | E-commerce | United States
+Booking.com | Travel | Netherlands
+Expedia | Travel | United States
+Hopper | Travel | Canada
+GetYourGuide | Travel | Germany
+Skyscanner | Travel | United Kingdom
+Agoda | Travel | Singapore
+Traveloka | Travel | Indonesia
+Spotify | Media | Sweden
+SoundCloud | Media | Germany
+Netflix | Media | United States
+Vimeo | Media | United States
+Patreon | Media | United States
+Substack | Media | United States
+Medium | Media | United States
+Quora | Social Media | United States
+Snap | Social Media | United States
+Nextdoor | Social Media | United States
+Tinder | Consumer Tech | United States
+Bumble | Consumer Tech | United States
+Hinge | Consumer Tech | United States
+Strava | Consumer Tech | United States
+Peloton | Consumer Tech | United States
+Whoop | Consumer Tech | United States
+Oura | Consumer Tech | Finland
+Calm | Healthtech | United States
+Headspace | Healthtech | United States
+Noom | Healthtech | United States
+Hims & Hers | Healthtech | United States
+Ro | Healthtech | United States
+Oscar Health | Healthtech | United States
+Devoted Health | Healthtech | United States
+Komodo Health | Healthtech | United States
+Tempus | Healthtech | United States
+Flatiron Health | Healthtech | United States
+Zocdoc | Healthtech | United States
+Doctolib | Healthtech | France
+Babylon | Healthtech | United Kingdom
+Cera | Healthtech | United Kingdom
+Benchling | Biotech Software | United States
+Recursion | Biotech | United States
+Insitro | Biotech | United States
+Ginkgo Bioworks | Biotech | United States
+23andMe | Biotech | United States
+Color | Healthtech | United States
+SpaceX | Aerospace | United States
+Relativity Space | Aerospace | United States
+Rocket Lab | Aerospace | United States
+Planet | Aerospace | United States
+Anduril | Defense | United States
+Shield AI | Defense | United States
+Palantir | Data & AI | United States
+Applied Intuition | Autonomy | United States
+Aurora | Autonomy | United States
+Nuro | Autonomy | United States
+Zoox | Autonomy | United States
+Waymo | Autonomy | United States
+Cruise | Autonomy | United States
+Wayve | Autonomy | United Kingdom
+Motional | Autonomy | United States
+Rivian | EV | United States
+Lucid Motors | EV | United States
+Tesla | EV | United States
+Northvolt | Energy | Sweden
+Octopus Energy | Energy | United Kingdom
+Sunrun | Energy | United States
+Arcadia | Energy | United States
+Watershed | Climate | United States
+Pachama | Climate | United States
+Boston Dynamics | Robotics | United States
+Figure AI | Robotics | United States
+Skydio | Robotics | United States
+Formlabs | Hardware | United States
+Nothing | Hardware | United Kingdom
+Framework | Hardware | United States
+Arm | Semiconductors | United Kingdom
+Cerebras | Semiconductors | United States
+SambaNova | Semiconductors | United States
+Groq | Semiconductors | United States
+Lightmatter | Semiconductors | United States
+SiFive | Semiconductors | United States
+Tenstorrent | Semiconductors | Canada
+Graphcore | Semiconductors | United Kingdom
+Celonis | SaaS | Germany
+Personio | HR Tech | Germany
+Contentful | SaaS | Germany
+Mambu | Fintech | Germany
+Babbel | Edtech | Germany
+Blinkist | Edtech | Germany
+Raisin | Fintech | Germany
+Solaris | Fintech | Germany
+Taxfix | Fintech | Germany
+FlixBus | Travel | Germany
+Flix | Travel | Germany
+Sennder | Logistics | Germany
+Forto | Logistics | Germany
+Gorillas | Quick Commerce | Germany
+Ecosia | Search | Germany
+DeepL | AI | Germany
+Aleph Alpha | AI | Germany
+Helsing | Defense | Germany
+Isar Aerospace | Aerospace | Germany
+Lilium | Aerospace | Germany
+Volocopter | Aerospace | Germany
+BlaBlaCar | Mobility | France
+Back Market | E-commerce | France
+Alan | Insurance | France
+Spendesk | Fintech | France
+Swile | HR Tech | France
+PayFit | HR Tech | France
+Dataiku | Data & AI | France
+Algolia | Developer Tools | France
+Mirakl | E-commerce | France
+ContentSquare | SaaS | France
+Ledger | Crypto | France
+Sorare | Gaming | France
+Vinted | E-commerce | Lithuania
+Bolt Food | Food Delivery | Estonia
+Pipedrive | SaaS | Estonia
+Wise Payments | Fintech | United Kingdom
+Deliveroo Hop | Food Delivery | United Kingdom
+Ocado Technology | E-commerce | United Kingdom
+Darktrace | Security | United Kingdom
+Synthesia | AI | United Kingdom
+Stability AI | AI | United Kingdom
+PolyAI | AI | United Kingdom
+Tractable | AI | United Kingdom
+Faculty | AI | United Kingdom
+DeepMind | AI | United Kingdom
+Improbable | Gaming | United Kingdom
+# (same-name board of another company, not listed) Cleo | Fintech | United Kingdom
+Zopa | Fintech | United Kingdom
+Thought Machine | Fintech | United Kingdom
+ClearScore | Fintech | United Kingdom
+Moneybox | Fintech | United Kingdom
+Marshmallow | Insurance | United Kingdom
+Bloom & Wild | E-commerce | United Kingdom
+Depop | E-commerce | United Kingdom
+Farfetch | E-commerce | United Kingdom
+Gymshark | E-commerce | United Kingdom
+Babylon Health | Healthtech | United Kingdom
+Huel | Consumer Goods | United Kingdom
+Typeform | SaaS | Spain
+Factorial | HR Tech | Spain
+Travelperk | Travel | Spain
+Cabify | Mobility | Spain
+Wallapop | E-commerce | Spain
+Idealista | Real Estate | Spain
+Satispay | Fintech | Italy
+Bending Spoons | Consumer Tech | Italy
+Picnic | Quick Commerce | Netherlands
+Mollie | Fintech | Netherlands
+Bunq | Fintech | Netherlands
+MessageBird | Communications | Netherlands
+# (same-name board of another company, not listed) Bird | Communications | Netherlands
+Elastic NV | Databases | Netherlands
+Mews | Hospitality | Czech Republic
+Productboard | SaaS | Czech Republic
+Rohlik | Quick Commerce | Czech Republic
+UiPath | Automation | Romania
+Bitdefender | Security | Romania
+Grafana | Developer Tools | Sweden
+Kry | Healthtech | Sweden
+Tink | Fintech | Sweden
+Voi | Mobility | Sweden
+Einride | Logistics | Sweden
+Epidemic Sound | Media | Sweden
+King | Gaming | Sweden
+Mojang | Gaming | Sweden
+Paradox Interactive | Gaming | Sweden
+Supercell | Gaming | Finland
+Rovio | Gaming | Finland
+Unity | Gaming | United States
+Epic Games | Gaming | United States
+Riot Games | Gaming | United States
+Niantic | Gaming | United States
+Scopely | Gaming | United States
+Zynga | Gaming | United States
+Jam City | Gaming | United States
+Discord Inc | Communications | United States
+Zoom | Communications | United States
+RingCentral | Communications | United States
+Vonage | Communications | United States
+Sinch | Communications | Sweden
+Bandwidth | Communications | United States
+Telnyx | Communications | United States
+DigitalOcean | Cloud Infrastructure | United States
+Linode | Cloud Infrastructure | United States
+Fastly | Cloud Infrastructure | United States
+Akamai | Cloud Infrastructure | United States
+Backblaze | Cloud Infrastructure | United States
+Wasabi | Cloud Infrastructure | United States
+Hetzner | Cloud Infrastructure | Germany
+OVHcloud | Cloud Infrastructure | France
+Scaleway | Cloud Infrastructure | France
+CoreWeave | Cloud Infrastructure | United States
+Lambda | Cloud Infrastructure | United States
+Together AI | AI | United States
+Fireworks AI | AI | United States
+Modal | Cloud Infrastructure | United States
+Anyscale | AI | United States
+Weights & Biases | AI | United States
+Pinecone | Databases | United States
+Weaviate | Databases | Netherlands
+Qdrant | Databases | Germany
+Chroma | Databases | United States
+LangChain | AI | United States
+LlamaIndex | AI | United States
+Cursor | AI | United States
+Anysphere | AI | United States
+Cognition | AI | United States
+Sourcegraph | Developer Tools | United States
+GitHub | Developer Tools | United States
+JetBrains | Developer Tools | Czech Republic
+Docker | Developer Tools | United States
+Kong | Developer Tools | United States
+Tailscale | Security | Canada
+Teleport | Security | United States
+Temporal | Developer Tools | United States
+Retool | Developer Tools | United States
+Postgres | Databases | United States
+Prisma | Developer Tools | Germany
+Clerk | Developer Tools | United States
+Auth0 | Security | United States
+Twilio Segment | SaaS | United States
+Algolia Inc | Developer Tools | United States
+Mapbox | Developer Tools | United States
+Carto | Data & AI | Spain
+Esri | Data & AI | United States
+Alteryx | Data & AI | United States
+Domo | Data & AI | United States
+ThoughtSpot | Data & AI | United States
+Sigma Computing | Data & AI | United States
+Hex | Data & AI | United States
+Monte Carlo | Data & AI | United States
+Collibra | Data & AI | Belgium
+DataRobot | Data & AI | United States
+H2O.ai | Data & AI | United States
+C3 AI | Data & AI | United States
+SAS | Data & AI | United States
+Qualtrics | SaaS | United States
+SurveyMonkey | SaaS | United States
+Momentive | SaaS | United States
+DocuSign | SaaS | United States
+Box | Cloud Software | United States
+Egnyte | Cloud Software | United States
+ServiceTitan | SaaS | United States
+Procore | SaaS | United States
+Veeva | SaaS | United States
+Workiva | SaaS | United States
+BILL | Fintech | United States
+Bill.com | Fintech | United States
+Expensify | Fintech | United States
+Navan | Travel | United States
+TripActions | Travel | United States
+Carta | Fintech | United States
+AngelList | Fintech | United States
+Betterment | Fintech | United States
+Wealthfront | Fintech | United States
+Acorns | Fintech | United States
+Stash | Fintech | United States
+# (same-name board of another company, not listed) Current | Fintech | United States
+Dave | Fintech | United States
+MoneyLion | Fintech | United States
+Upstart | Fintech | United States
+LendingClub | Fintech | United States
+Opendoor | Real Estate | United States
+Compass | Real Estate | United States
+Zillow | Real Estate | United States
+Redfin | Real Estate | United States
+Flock Safety | Security | United States
+Verkada | Security | United States
+Ring | Consumer Tech | United States
+Sonos | Hardware | United States
+GoPro | Hardware | United States
+Fitbit | Hardware | United States
+Garmin | Hardware | United States
+Pure Storage | Cloud Software | United States
+NetApp | Cloud Software | United States
+Splunk | Data & AI | United States
+Dynatrace | Developer Tools | United States
+AppDynamics | Developer Tools | United States
+Sumo Logic | Developer Tools | United States
+Honeycomb | Developer Tools | United States
+Chronosphere | Developer Tools | United States
+Cribl | Data Infrastructure | United States
+Imply | Databases | United States
+SingleStore | Databases | United States
+Yugabyte | Databases | United States
+MariaDB | Databases | United States
+Aiven | Data Infrastructure | Finland
+Timescale | Databases | United States
+InfluxData | Databases | United States
+Neo4j | Databases | United States
+Dremio | Data Infrastructure | United States
+Tecton | Data & AI | United States
+Labelbox | AI | United States
+Snorkel AI | AI | United States
+# (same-name board of another company, not listed) Hive | AI | United States
+Clarifai | AI | United States
+Primer | AI | United States
+Moveworks | AI | United States
+Cresta | AI | United States
+Abridge | AI | United States
+Hippocratic AI | AI | United States
+Synthflow | AI | Germany
+Typeface | AI | United States
+Adept | AI | United States
+Inflection AI | AI | United States
+xAI | AI | United States
+Magic | AI | United States
+Poolside | AI | France
+Lovable | AI | Sweden
+Bolt.new | AI | United States
+StackBlitz | Developer Tools | United States
+Warp | Developer Tools | United States
+Raycast | Developer Tools | United Kingdom
+Zed Industries | Developer Tools | United States
+Mintlify | Developer Tools | United States
+Pulumi | Developer Tools | United States
+Render | Cloud Infrastructure | United States
+Railway | Cloud Infrastructure | United States
+Fly.io | Cloud Infrastructure | United States
+Deno | Developer Tools | United States
+Bun | Developer Tools | United States
+Expo | Developer Tools | United States
+Ionic | Developer Tools | United States
+Postmark | Developer Tools | United States
+Resend | Developer Tools | United States
+SendGrid | Communications | United States
+Mailchimp | SaaS | United States
+Hootsuite | SaaS | Canada
+Sprout Social | SaaS | United States
+Buffer | SaaS | United States
+Hotjar | SaaS | Malta
+FullStory | SaaS | United States
+Heap | SaaS | United States
+Pendo | SaaS | United States
+WalkMe | SaaS | Israel
+Gainsight | SaaS | United States
+Totango | SaaS | United States
+Highspot | SaaS | United States
+Seismic | SaaS | United States
+Clari | SaaS | United States
+Apollo.io | SaaS | United States
+ZoomInfo | SaaS | United States
+Clay | SaaS | United States
+Lusha | SaaS | Israel
+Front | SaaS | United States
+Help Scout | SaaS | United States
+Kustomer | SaaS | United States
+Gorgias | SaaS | United States
+Ada | AI | Canada
+Forethought | AI | United States
+Dialpad | Communications | United States
+Aircall | Communications | France
+Talkdesk | Communications | United States
+Five9 | Communications | United States
+Genesys | Communications | United States
+Nice | SaaS | Israel
+Checkr | HR Tech | United States
+HireRight | HR Tech | United States
+Hibob | HR Tech | Israel
+BambooHR | HR Tech | United States
+Namely | HR Tech | United States
+Justworks | HR Tech | United States
+TriNet | HR Tech | United States
+Papaya Global | HR Tech | Israel
+Multiplier | HR Tech | Singapore
+Velocity Global | HR Tech | United States
+Andela | Staffing | United States
+Toptal | Staffing | United States
+Upwork | Marketplace | United States
+Fiverr | Marketplace | Israel
+Thumbtack | Marketplace | United States
+TaskRabbit | Marketplace | United States
+Rover | Marketplace | United States
+Care.com | Marketplace | United States
+Poshmark | E-commerce | United States
+ThredUp | E-commerce | United States
+StockX | E-commerce | United States
+GOAT | E-commerce | United States
+Whatnot | E-commerce | United States
+Vinted Group | E-commerce | Lithuania
+Mercari | E-commerce | Japan
+SmartNews | Media | Japan
+Rakuten | E-commerce | Japan
+PayPay | Fintech | Japan
+LINE | Communications | Japan
+Sea | E-commerce | Singapore
+Shopee | E-commerce | Singapore
+Lazada | E-commerce | Singapore
+Carousell | E-commerce | Singapore
+PropertyGuru | Real Estate | Singapore
+Ninja Van | Logistics | Singapore
+Xendit | Fintech | Indonesia
+Tokopedia | E-commerce | Indonesia
+Kredivo | Fintech | Indonesia
+Canva Pty | Design Software | Australia
+Atlassian Pty | SaaS | Australia
+SafetyCulture | SaaS | Australia
+Culture Amp | HR Tech | Australia
+Employment Hero | HR Tech | Australia
+Afterpay | Fintech | Australia
+Zip Co | Fintech | Australia
+Linktree | SaaS | Australia
+Rokt | Adtech | Australia
+Envato | Marketplace | Australia
+Xero | Fintech | New Zealand
+Rocket Lab USA | Aerospace | United States
+Careem | Mobility | United Arab Emirates
+Talabat | Food Delivery | United Arab Emirates
+Kitopi | Food Delivery | United Arab Emirates
+Tabby | Fintech | United Arab Emirates
+Tamara | Fintech | Saudi Arabia
+Swvl | Mobility | Egypt
+Paymob | Fintech | Egypt
+Flutterwave | Fintech | Nigeria
+Paystack | Fintech | Nigeria
+Moniepoint | Fintech | Nigeria
+Chipper Cash | Fintech | United States
+Andela Africa | Staffing | Nigeria
+Nubank | Fintech | Brazil
+Mercado Libre | E-commerce | Argentina
+Rappi | Food Delivery | Colombia
+iFood | Food Delivery | Brazil
+QuintoAndar | Real Estate | Brazil
+Kavak | Automotive | Mexico
+Clip | Fintech | Mexico
+Konfio | Fintech | Mexico
+Bitso | Crypto | Mexico
+Ualá | Fintech | Argentina
+dLocal | Fintech | Uruguay
+Wildlife Studios | Gaming | Brazil
+VTEX | E-commerce | Brazil
+Loft | Real Estate | Brazil
+Hotmart | Edtech | Brazil
+Lightspeed | E-commerce | Canada
+Clio | SaaS | Canada
+Benevity | SaaS | Canada
+Thinkific | Edtech | Canada
+FreshBooks | Fintech | Canada
+Wave | Fintech | Canada
+Koho | Fintech | Canada
+Faire Canada | E-commerce | Canada
+Coveo | AI | Canada
+Hootsuite Inc | SaaS | Canada
+Shakepay | Crypto | Canada
+Dapper Labs | Crypto | Canada
+# (same-name board of another company, not listed) Ritual | Consumer Tech | Canada
+League | Healthtech | Canada
+Dialogue | Healthtech | Canada
+Cohere Inc | AI | Canada
+Waabi | Autonomy | Canada
+Sanctuary AI | Robotics | Canada
+Clearco | Fintech | Canada
+Snyk Ltd | Security | United Kingdom

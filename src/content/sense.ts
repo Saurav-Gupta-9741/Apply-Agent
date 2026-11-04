@@ -25,7 +25,8 @@ export const FORM_THRESHOLD = 7;
 const JOB_URL = /\/(careers?|jobs?|apply|application|positions?|openings?|vacanc(y|ies)|requisitions?)(\/|$|\?)|[?&](gh_jid|job_?id|jobid|req(uisition)?_?id)=/i;
 const ROLE_WORDS = /\b(engineer|developer|analyst|manager|designer|intern(ship)?|scientist|associate|specialist|consultant|executive|officer|lead|architect|administrator|coordinator|representative|technician|accountant|recruiter)\b/i;
 const JOB_FIELD_LABELS = /cover letter|linked ?in|portfolio|notice period|years of (relevant |professional |total )?experience|authori[sz]ed to work|work authori[sz]ation|sponsor|salary|\bctc\b|relocat|start date|how did you hear|current (company|employer)|github/i;
-const APPLY_TEXT = /^(apply|apply now|apply for (this )?(job|position|role)|apply to (this )?(job|position)|start (your )?application|i'?m interested|submit (your )?application)$/i;
+// Only buttons that OPEN an application. Never "Submit application": pressing that sends one.
+const APPLY_TEXT = /^(apply|apply now|apply for (this )?(job|position|role)|apply to (this )?(job|position)|start (your )?application|i'?m interested)$/i;
 
 function hasJobPostingData(doc: Document): boolean {
   if (doc.querySelector("[itemtype*='schema.org/JobPosting' i]")) return true;
@@ -51,7 +52,7 @@ function visible(el: Element): boolean {
 }
 
 export function findApplyControl(doc: Document): HTMLElement | null {
-  const candidates = Array.from(doc.querySelectorAll<HTMLElement>("a, button, [role='button'], input[type='button'], input[type='submit']"));
+  const candidates = Array.from(doc.querySelectorAll<HTMLElement>("a, button:not([type='submit']), [role='button'], input[type='button']"));
   return candidates.find((el) => {
     const text = (el instanceof HTMLInputElement ? el.value : el.textContent ?? "").replace(/\s+/g, " ").trim();
     return APPLY_TEXT.test(text) && visible(el) && !el.closest("form");

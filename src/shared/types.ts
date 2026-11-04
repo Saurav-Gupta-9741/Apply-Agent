@@ -276,6 +276,9 @@ export interface RunReport {
   errors: string[];
   /** Steps completed on a multi-step application (absent for one-page forms). */
   steps?: number;
+  /** This page of a multi-page form is filled and has a "Next" button: the user checks it and presses Next
+   * themselves (Fill never moves a form on or sends it). */
+  nextStep?: boolean;
   /** The site showed a robot check or a rate-limit page: the run stopped there (ApplyAgent never solves these). */
   challenge?: string;
 }
@@ -410,7 +413,7 @@ export interface Detection {
 /** Messages between the extension's parts. */
 export type Message =
   /** continuing: a later step of a run already under way (a new page of the same application). */
-  | { type: "RUN"; mode: Mode; continuing?: boolean }
+  | { type: "RUN"; mode: Mode; continuing?: boolean; fillOnly?: boolean }
   /** Read-only preview: what the agent would do, without touching the page. */
   | { type: "SCAN" }
   /** Sent by the silent detector after reading a page (nothing typed). */

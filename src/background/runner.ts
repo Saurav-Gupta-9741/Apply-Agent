@@ -66,6 +66,7 @@ export function queueStatusFor(report: RunReport | undefined): { status: QueueSt
     case "submitted_unconfirmed":
       return { status: "needs_check", note: "Submitted, but the site showed no confirmation. Please check the tab." };
     case "ready_to_submit":
+      if (report.nextStep) return { status: "needs_user", note: "This page is filled. Press Next in the tab yourself, then Retry to fill the next page." };
       return {
         status: "ready",
         note: `${report.steps ? `Went through ${report.steps} steps. ` : ""}Filled. Review the tab, then press Submit.`,

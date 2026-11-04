@@ -248,20 +248,16 @@ describe("Arena ATS Dynamic: Multi-step wizards with Virtual DOM replacing DOM n
       }
     });
 
-    // In review mode: agent fills Step 1, presses Next; fills Step 2, presses Next; stops on Step 3 ready to submit!
-    const report = await runOnce(document, { profile: TEST_PROFILE, answers: [], mode: "review", stepTimeoutMs: 3000 });
+    // Review mode fills Step 1 and stops: the user checks it and presses Next themselves (round 4).
+    const report = await runOnce(document, { profile: TEST_PROFILE, answers: [], mode: "review", fillOnly: true, stepTimeoutMs: 3000 });
 
     expect(report.status).toBe("ready_to_submit");
-    expect(report.steps).toBe(3);
+    expect(report.nextStep).toBe(true);
+    expect(report.steps).toBeUndefined();
     expect(finalSubmits).toBe(0); // Never presses final submit in review mode!
-
-    const step1Field = report.fields.find((f) => f.field.label === "First Name");
-    expect(step1Field).toBeDefined();
-    expect(step1Field?.detail).toMatch(/^Step 1/);
-
-    const step2Field = report.fields.find((f) => f.field.label === "Phone Number");
-    expect(step2Field).toBeDefined();
-    expect(step2Field?.detail).toMatch(/^Step 2/);
+    expect(currentStep).toBe(1); // ... and never Next either
+    expect(report.fields.find((f) => f.field.label === "First Name")).toBeDefined();
+    expect(report.fields.find((f) => f.field.label === "Phone Number")).toBeUndefined();
   });
 
   it("submits the multi-step application cleanly in auto mode", async () => {
