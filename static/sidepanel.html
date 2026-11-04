@@ -337,6 +337,8 @@
       <div class="card">
         <div class="card-head"><h2>Backup &amp; move</h2></div>
         <p class="hint">Save your profile, resume, answers and application history to a file, to restore them later or on another computer. The file contains your personal details: keep it private.</p>
+        <label class="check-label"><input type="checkbox" id="auto-backup" /> Keep an automatic backup on this PC</label>
+        <p class="hint" id="auto-backup-status">Off. When on, ApplyAgent saves <strong>Downloads → ApplyAgent → applyagent-backup.json</strong> a couple of minutes after you change something (at most once an hour). Nothing is uploaded anywhere. If you ever reinstall, choose "Restore from file" and pick it.</p>
         <div class="button-row">
           <button id="export-backup" class="btn btn-secondary btn-sm"><span data-icon="download" data-size="16"></span><span>Export backup</span></button>
           <label class="btn btn-ghost btn-sm file-inline"><input type="file" id="import-backup" accept=".json,application/json" /><span data-icon="upload" data-size="16"></span><span>Restore from file</span></label>

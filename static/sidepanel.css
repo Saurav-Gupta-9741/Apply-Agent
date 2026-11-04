@@ -463,6 +463,7 @@ kbd { font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; padding: 
 /* <<< arena-fix */
 
 /* beta 2: inline notes under profile fields, back-to-jobs link */
+.field-help { display: block; font-size: 11px; margin-top: 3px; line-height: 1.35; }
 .field-note { display: block; font-size: 12px; margin-top: 4px; min-height: 0; }
 .field-note:empty { display: none; }
 .field-note.warn { color: var(--warn, #b45309); }

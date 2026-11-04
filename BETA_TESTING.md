@@ -18,6 +18,24 @@ separate copy that starts empty. (Safest: first export a backup from Profile & p
 setup could save its example answers (e.g. "3 years of experience") for questions you skipped. Please clear anything
 that isn't yours.
 
+## Updating to beta 4 (1.0.3): one extra step, once
+
+Beta 4 gives ApplyAgent a fixed identity, so from now on **every update keeps your data, whatever folder you unzip
+it to**. Switching to it once looks like a new extension to Chrome, so:
+
+1. In your current ApplyAgent: **Profile & plan → Backup & move → Export backup** (saves a .json file).
+2. Unzip beta 4 and load it (same folder + **Reload**, or a new folder + **Load unpacked**; remove the old copy).
+3. In beta 4's first screen choose **"Used ApplyAgent before? Restore from a backup file"** and pick that file.
+4. Turn on **Keep an automatic backup on this PC** (Backup & move), so a reinstall never loses anything again.
+
+## What's new in beta 4 (1.0.3)
+
+- **Your data survives reinstalls:** fixed extension identity for every beta; optional **automatic backup** to
+  Downloads → ApplyAgent → applyagent-backup.json (at most once an hour, never uploaded); **Restore from a backup**
+  on the first screen.
+- **Every Profile field shows an example** ("e.g. +91 98765 43210") and which form questions it answers.
+- **The first-run screen asks before reading your resume** (it used to copy your name, email and phone silently).
+
 ## What's new in beta 3 (1.0.2, from your reports)
 
 - **Your resume is read only when you say so.** Uploading saves the file; ApplyAgent then asks whether to read it

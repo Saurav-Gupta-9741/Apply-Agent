@@ -12,6 +12,12 @@ import type { Profile } from "../shared/types";
 export interface OnboardingOptions {
   onDone: () => void | Promise<void>;
   onOpenDemo?: () => void;
+  /** After the resume file is saved: ask whether to read it for profile details (never assumed). */
+  onResumeSaved?: (fileName: string) => void | Promise<void>;
+  /** Pasted resume text: show the import review (nothing ticked). */
+  onPasteResume?: (text: string) => void | Promise<void>;
+  /** "Restore from a backup": a reinstall (or a new computer) gets everything back in one step. */
+  onRestore?: () => void;
 }
 
 export async function isFirstRun(): Promise<boolean> {
@@ -53,8 +59,19 @@ export function createOnboardingElement(options: OnboardingOptions): HTMLElement
       title.textContent = "1. Add your resume";
       const desc = document.createElement("p");
       desc.className = "hint";
-      desc.textContent = "Import your resume to auto-fill your contact info and experience. Everything stays on this device.";
+      desc.textContent = "Add your resume: forms that ask for one get it. You choose whether ApplyAgent reads it to suggest profile details. Everything stays on this device.";
       body.append(desc);
+
+      if (options.onRestore) {
+        const restore = document.createElement("button");
+        restore.type = "button";
+        restore.id = "onboarding-restore";
+        restore.className = "btn btn-secondary btn-sm";
+        restore.style.marginBottom = "10px";
+        restore.textContent = "Used ApplyAgent before? Restore from a backup file";
+        restore.addEventListener("click", () => options.onRestore?.());
+        body.append(restore);
+      }
 
       // File upload dropzone
       const dropzone = document.createElement("label");
@@ -88,22 +105,14 @@ export function createOnboardingElement(options: OnboardingOptions): HTMLElement
           const bytes = new Uint8Array(buffer);
           let binary = "";
           for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+          // Only the file is saved. Reading it for profile details is asked, and every value is the user's pick
+          // (beta 2 copied name, email and phone from it silently).
           const profile = await loadProfile();
           profile.resume = { name: file.name, type: file.type || "application/octet-stream", dataBase64: btoa(binary) };
-          const { parseResumeFromBuffer } = await import("./resume-import");
-          const parsed = await parseResumeFromBuffer(file.name, bytes);
-          if (parsed.fullName) {
-            const parts = parsed.fullName.trim().split(/\s+/);
-            profile.firstName = parts[0] || "";
-            profile.lastName = parts.slice(1).join(" ") || "";
-          }
-          const emailSugg = parsed.suggestions.find((s) => s.field === "email");
-          if (emailSugg) profile.email = emailSugg.value;
-          const phoneSugg = parsed.suggestions.find((s) => s.field === "phone");
-          if (phoneSugg) profile.phone = phoneSugg.value;
           await saveProfile(profile);
           dropText.textContent = `Attached: ${file.name}`;
           nextBtn.textContent = "Continue to Quick Answers →";
+          await options.onResumeSaved?.(file.name);
         } catch {
           dropText.textContent = `Attached: ${file.name}`;
         }
@@ -125,26 +134,13 @@ export function createOnboardingElement(options: OnboardingOptions): HTMLElement
       savePasteBtn.type = "button";
       savePasteBtn.className = "btn btn-secondary btn-sm";
       savePasteBtn.style.marginTop = "6px";
-      savePasteBtn.textContent = "Save text";
+      savePasteBtn.textContent = "Show what it found";
       savePasteBtn.addEventListener("click", async () => {
         const txt = pasteTextarea.value.trim();
         if (!txt) return;
-        const profile = await loadProfile();
-        const encoder = new TextEncoder();
-        const bytes = encoder.encode(txt);
-        const { parseResumeFromBuffer } = await import("./resume-import");
-        const parsed = await parseResumeFromBuffer("resume.txt", bytes);
-        if (parsed.fullName) {
-          const parts = parsed.fullName.trim().split(/\s+/);
-          profile.firstName = parts[0] || "";
-          profile.lastName = parts.slice(1).join(" ") || "";
-        }
-        const emailSugg = parsed.suggestions.find((s) => s.field === "email");
-        if (emailSugg) profile.email = emailSugg.value;
-        const phoneSugg = parsed.suggestions.find((s) => s.field === "phone");
-        if (phoneSugg) profile.phone = phoneSugg.value;
-        await saveProfile(profile);
-        savePasteBtn.textContent = "Saved ✓";
+        // Pasting asks for suggestions: the review shows them, nothing ticked.
+        await options.onPasteResume?.(txt);
+        savePasteBtn.textContent = "Done ✓";
         nextBtn.textContent = "Continue to Quick Answers →";
       });
 

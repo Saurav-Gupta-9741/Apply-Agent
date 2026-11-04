@@ -42,6 +42,16 @@ Status: **Fixed** (in a released build, with a test), **Not a bug** (works as de
 | 2.10 | (found while fixing) Importing replaced Key skills instead of adding | Fixed | Imported skills are added; inventory skills are kept in Key skills |
 | 2.11 | (found while fixing) Skill level defaulted to "Intermediate" | Fixed | Level is "Not set" until chosen |
 
+## Round 3: own testing of beta 3 (2026-11-04) → beta 4 (1.0.3)
+
+| # | Flaw reported | Status | What changed |
+|---|---|---|---|
+| 3.1 | Profile data lost every time the extension was loaded again | Fixed | Cause: Chrome gives an unpacked extension a new identity per folder, and removing it deletes its data. Beta builds now have a fixed identity (same data in any folder); optional automatic backup file on the PC; "Restore from a backup" on the first screen. No data is sent anywhere (no account, no cloud sync, by decision) |
+| 3.2 | No example of what to type in each Profile field | Fixed | Every field has an example placeholder and says which form questions it answers |
+| 3.3 | (found while fixing) First-run screen copied name, email and phone from the resume without asking | Fixed | It saves the file and asks, like the Profile upload; pasted text opens the review |
+| 3.4 | Discover not based on the profile / resume; match % unclear; few companies; can't add a company's careers page | Open | Planned next round: search from profile + resume, explained match %, ~500 companies, add by careers-page URL |
+| 3.5 | "Account setup" so data is always saved | Not done, by decision | An account means storing data on a server; replaced by the fixed identity + backup file (data stays on the PC) |
+
 ## Still open
 
 | Item | Why open |

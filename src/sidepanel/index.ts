@@ -25,6 +25,7 @@ import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shar
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
 import { findSuggestedCorrection } from "../shared/corrections";
 import { KNOWN_CITIES } from "../shared/city-check";
+import { AUTO_BACKUP_FILE, loadAutoBackup, setAutoBackup } from "../shared/auto-backup";
 import { diversityFactFromAnswer, EDUCATION_STATUS_OPTIONS } from "../shared/quick-answers";
 import { allCountryNames, normalizeProfileValue, statesFor, timezoneChoices, validateProfile, type FieldIssue, type ProfileValues } from "../shared/profile-validate";
 import { extractTechTerms } from "../shared/techterms";
@@ -1133,6 +1134,36 @@ const PROFILE_GROUPS: Array<{ title: string; fields: Array<[ProfileKey, string, 
   ] },
 ];
 const PROFILE_KEYS = PROFILE_GROUPS.flatMap((g) => g.fields.map(([key]) => key));
+
+/** What each field looks like (placeholder) and which form questions it answers, so nothing is a guess. */
+const FIELD_HELP: Partial<Record<ProfileKey, [example: string, answers: string]>> = {
+  firstName: ["e.g. Priya", "First name / Given name"],
+  lastName: ["e.g. Sharma", "Last name / Surname / Family name"],
+  email: ["e.g. priya.sharma@gmail.com", "Email; the employer writes to it"],
+  phone: ["e.g. +91 98765 43210", "Phone / Mobile, with your country code"],
+  location: ["e.g. Bengaluru", "City / \"Where are you based?\" / Current location"],
+  country: ["e.g. India", "Country of residence; choose from the list"],
+  addressLine1: ["e.g. 12, 4th Cross, Indiranagar", "Street address (only forms that ask for an address)"],
+  addressLine2: ["e.g. Flat 302, Green Residency", "Apartment / suite (optional)"],
+  state: ["e.g. Karnataka", "State / Province / Region"],
+  postalCode: ["e.g. 560038", "PIN / ZIP / Postal code"],
+  timezone: ["e.g. IST or Asia/Kolkata", "Time zone questions (mostly remote roles)"],
+  linkedin: ["e.g. linkedin.com/in/priya-sharma", "LinkedIn profile URL"],
+  github: ["e.g. github.com/priyasharma", "GitHub URL (your profile, not a repository)"],
+  portfolio: ["e.g. priyasharma.dev", "Website / Portfolio / Personal site"],
+  resumeUrl: ["e.g. https://drive.google.com/file/d/…/view", "\"Link to your resume\" (set sharing to anyone with the link)"],
+  currentTitle: ["e.g. Software Engineer (or leave empty if a student)", "Current job title"],
+  currentCompany: ["e.g. Infosys", "Current employer / company"],
+  experienceYears: ["e.g. 0 (fresher) or 2.5", "Total years of experience, and year brackets like \"0-1\" or \"3-5\""],
+  graduationYear: ["e.g. 2026 (expected year if still studying)", "Graduation year / Year of passing"],
+  school: ["e.g. IIT Jodhpur", "School / College / University"],
+  degree: ["e.g. M.Tech", "Degree"],
+  educationLevel: ["e.g. Bachelor's (highest COMPLETED)", "Highest level of education"],
+  discipline: ["e.g. Computer Science", "Field of study / Major / Branch"],
+  targetRoles: ["e.g. Software Engineer, ML Engineer", "Used by Jobs to find and rank roles (not filled into forms)"],
+  preferredLocations: ["e.g. Bengaluru, Hyderabad, Remote", "Used by Jobs to find roles (not filled into forms)"],
+  skills: ["e.g. Python, SQL, PyTorch", "Skills questions and job matching"],
+};
 let profile: Profile = { ...EMPTY_PROFILE };
 const MAX_RESUME_BYTES = 5 * 1024 * 1024;
 
@@ -1298,7 +1329,10 @@ async function renderProfile(): Promise<void> {
       const list = FIELD_LISTS[key];
       if (list) input.setAttribute("list", list);
       if (key === "graduationYear" || key === "experienceYears") input.inputMode = "decimal";
-      const wrap = h("label", { class: `field-label${full ? " span-2" : ""}` }, label, input);
+      const help = FIELD_HELP[key];
+      if (help) input.placeholder = help[0];
+      const wrap = h("label", { class: `field-label${full ? " span-2" : ""}` }, label, input,
+        ...(help ? [h("span", { class: "field-help muted" }, `Answers: ${help[1]}`)] : []));
       // One note per field: what is wrong (red, blocks saving) or worth a second look (amber).
       wrap.append(h("span", { class: "field-note", "data-note-for": key, role: "status", ...(key === "location" ? { id: "city-note" } : {}) }));
       grid.append(wrap);
@@ -2325,6 +2359,28 @@ async function renderSetup(): Promise<void> {
 }
 
 // --- Backup & move ---------------------------------------------------------------------------------------
+/** The automatic backup switch and when it last ran. */
+async function renderAutoBackup(): Promise<void> {
+  const state = await loadAutoBackup();
+  ($("auto-backup") as HTMLInputElement).checked = state.enabled;
+  const status = $("auto-backup-status");
+  const where = `Downloads → ${AUTO_BACKUP_FILE.replace("/", " → ")}`;
+  if (!state.enabled) status.textContent = `Off. When on, ApplyAgent saves ${where} a couple of minutes after you change something (at most once an hour). Nothing is uploaded anywhere. If you ever reinstall, choose "Restore from file" and pick it.`;
+  else if (state.lastError) status.textContent = `On, but the last backup failed: ${state.lastError}. Use "Export backup" meanwhile.`;
+  else status.textContent = `On. ${state.lastAt ? `Last backup ${new Date(state.lastAt).toLocaleString()}` : "First backup after your next change"}: ${where}. Nothing is uploaded anywhere.`;
+}
+$("auto-backup").addEventListener("change", async () => {
+  const on = ($("auto-backup") as HTMLInputElement).checked;
+  const state = await setAutoBackup(on);
+  await renderAutoBackup();
+  if (on && !state.enabled) toast("Automatic backup is off: Chrome's permission to save files was not given.", "warn");
+  else toast(on ? "Automatic backup is on" : "Automatic backup is off");
+});
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "local" && changes.autoBackup) void renderAutoBackup();
+});
+void renderAutoBackup();
+
 $("export-backup").addEventListener("click", async () => {
   const backup = makeBackup({
     profile: await loadProfile(), answers: await loadAnswers(), applications: await loadApplications(), settings: await loadSettings(),
@@ -2364,6 +2420,9 @@ $("import-backup").addEventListener("change", async (event) => {
   await renderProfile();
   await renderSetup();
   toast(`Restored: profile, ${backup.answers.length} answers, ${backup.applications.length} applications`);
+  // A restore on a fresh install is the setup: no welcome steps after it.
+  await chrome.storage.local.set({ onboarding_done: true });
+  document.getElementById("onboarding-container")?.remove();
 });
 
 // --- Silent detection setting ---------------------------------------------------------------------------
@@ -2529,6 +2588,15 @@ async function checkAndMountOnboarding(): Promise<void> {
     const secApply = document.getElementById("sec-apply");
     if (secApply) {
       const el = createOnboardingElement({
+        onResumeSaved: async () => {
+          showResume((await loadProfile()).resume?.name ?? "", true);
+          await readStoredResume();
+        },
+        onPasteResume: async (text) => {
+          const { parseResume } = await import("../shared/resume-parse");
+          await openResumeReview(parseResume(text));
+        },
+        onRestore: () => ($("import-backup") as HTMLInputElement).click(),
         onDone: async () => {
           await renderProfile();
           await renderSetup();

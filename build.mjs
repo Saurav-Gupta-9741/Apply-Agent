@@ -38,9 +38,19 @@ cpSync(`${MODEL}/tokenizer.json`, `${outdir}/intent/tokenizer.json`);
 mkdirSync(`${outdir}/ort`, { recursive: true });
 for (const f of ["ort-wasm-simd-threaded.wasm", "ort-wasm-simd-threaded.mjs"]) cpSync(`node_modules/onnxruntime-web/dist/${f}`, `${outdir}/ort/${f}`);
 if (existsSync("node_modules/pdfjs-dist/build/pdf.worker.min.mjs")) cpSync("node_modules/pdfjs-dist/build/pdf.worker.min.mjs", `${outdir}/pdf.worker.mjs`);
+// Beta builds carry a fixed public key, so Chrome gives every beta the same extension ID whatever folder it is loaded
+// from: testers keep their data across updates. (Only the public half exists; the Web Store build has no key: the
+// store assigns its own.)
+if (betaBuild) {
+  const manifest = JSON.parse(readFileSync(`${outdir}/manifest.json`, "utf8"));
+  manifest.key = readFileSync("scripts/beta-extension-key.txt", "utf8").trim();
+  writeFileSync(`${outdir}/manifest.json`, JSON.stringify(manifest, null, 2));
+}
 if (testBuild) {
   const manifest = JSON.parse(readFileSync(`${outdir}/manifest.json`, "utf8"));
   manifest.host_permissions = TEST_ORIGINS;
+  // Granted up front in tests (optional in real builds), so the automatic backup can be tested without a prompt.
+  manifest.permissions = [...manifest.permissions, "downloads"];
   writeFileSync(`${outdir}/manifest.json`, JSON.stringify(manifest, null, 2));
 }
 

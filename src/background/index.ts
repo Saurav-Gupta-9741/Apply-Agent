@@ -2,6 +2,7 @@
  * State lives in chrome.storage, never in memory, because the worker is stopped when idle. */
 
 import { runStorageMigration } from "../shared/migration";
+import { initAutoBackup } from "../shared/auto-backup";
 import type { ApplicationRecord, ApplicationStatus, Message, RunReport } from "../shared/types";
 import { loadApplications, loadQueue, loadSettings, setQueueRunning, updateApplications as updateStoredApplications, updateCorrections, updateAnswers, upsertAnswer } from "../shared/storage";
 import { applyCorrection, isLearnableCorrection, type CorrectionMessage } from "../shared/corrections";
@@ -19,6 +20,8 @@ const PUMP_ALARM = "queue-pump";
 const resyncDetector = () => void loadSettings().then((s) => syncDetector(s.detection)).catch(() => undefined);
 
 const FILL_MENU = "applyagent-fill";
+
+initAutoBackup();
 
 chrome.runtime.onInstalled.addListener((details) => {
   // Beta 1's setup could save its example answers for skipped questions: after an update, ask the user to check.

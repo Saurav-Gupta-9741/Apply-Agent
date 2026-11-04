@@ -34,6 +34,8 @@ describe("manifest", () => {
       ["activeTab", "alarms", "contextMenus", "offscreen", "scripting", "sidePanel", "storage", "unlimitedStorage"],
     );
     expect(manifest.host_permissions ?? []).toEqual([]); // sites are allowed one by one, at runtime
+    // Asked for only when the user turns on automatic backup (a file on their own PC; nothing is uploaded).
+    expect(manifest.optional_permissions).toEqual(["downloads"]);
     expect(manifest.content_scripts).toBeUndefined(); // nothing runs on pages the user did not allow
     // The default strict MV3 policy, plus WebAssembly for the local question model (no remote code, no eval).
     expect(manifest.content_security_policy).toEqual({ extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'" });
