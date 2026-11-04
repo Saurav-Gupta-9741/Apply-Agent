@@ -37,7 +37,7 @@ test("a LinkedIn link that isn't one is not saved; a bare one is completed", asy
   const linkedin = ext.locator("#profile-form input[name='linkedin']");
   await linkedin.fill("my linkedin");
   await ext.locator("#save-profile").click();
-  await expect(ext.locator("[data-link-note='linkedin']")).toContainText("linkedin.com/in/");
+  await expect(ext.locator("[data-note-for='linkedin']")).toContainText("linkedin.com/in/");
   expect((await getStorage<Profile>(ext, "profile"))?.linkedin ?? "").not.toBe("my linkedin");
   await linkedin.fill("linkedin.com/in/ravi-k");
   await ext.locator("#save-profile").click();
@@ -47,8 +47,14 @@ test("a LinkedIn link that isn't one is not saved; a bare one is completed", asy
 test("city typo gets a suggestion; Back to jobs; Discover filters are there", async ({ ext }) => {
   await goTo(ext, "profile");
   await ext.locator("#profile-form input[name='location']").fill("Banglore");
+  await ext.locator("#profile-form input[name='location']").press("Tab");
   await expect(ext.locator("#city-note")).toContainText("Did you mean");
-  await goTo(ext, "apply");
+  // Leaving Profile with an unsaved edit asks first (tester report 2).
+  if (await ext.locator("#nav-toggle").isVisible()) await ext.locator("#nav-toggle").click();
+  await ext.locator("#drawer [data-section='apply']").click();
+  await expect(ext.locator("#unsaved-dialog")).toBeVisible();
+  await ext.locator("#unsaved-discard").click();
+  await expect(ext.locator("#sec-apply")).toBeVisible();
   await ext.locator("#back-to-jobs").click();
   await expect(ext.locator("#sec-jobs")).toBeVisible();
   await expect(ext.locator("#discover-experience option")).toHaveCount(5);

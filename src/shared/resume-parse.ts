@@ -9,6 +9,7 @@
 
 import { splitPhone } from "../content/phone";
 import { countriesIn, countriesInLocation } from "./countries";
+import { looksLikeDegree } from "./profile-validate";
 import { extractTechTerms, TECH_ALIASES } from "./techterms";
 import type { LanguageEntry, ProfileKey, WorkEntry } from "./types";
 
@@ -18,7 +19,7 @@ export type ResumeSection = "Contact" | "Links" | "Education" | "Experience" | "
 export interface Suggestion {
   id: string;
   section: ResumeSection;
-  field: ProfileKey | "workHistory" | "languages";
+  field: ProfileKey | "workHistory" | "languages" | "educationStatus";
   label: string;
   value: string;
   confidence: Confidence;
@@ -39,6 +40,8 @@ export interface EducationItem {
   year: string;
   /** CGPA or percentage as written ("8.4/10", "92.4%"). */
   score: string;
+  /** Still studying ("2025 – Present", "Expected 2027"): `year` is then only the expected year, if one is written. */
+  ongoing: boolean;
   level: string;
   source: string;
 }
@@ -384,9 +387,13 @@ function parseEducation(lines: Line[]): EducationItem[] {
     const years = [...all.matchAll(YEAR)].map((m) => Number(m[1]));
     const score = SCORE.exec(all);
     const degree = (e.degree ?? "").trim();
+    // "2025 – Present" is a start year, not a graduation year; "Expected 2027" / "2025 – 2027 (expected)" is the expected year.
+    const expected = /\b(?:expected|exp\.?|anticipated|graduating|due)\b[^0-9]{0,12}(19[6-9]\d|20[0-4]\d)|(19[6-9]\d|20[0-4]\d)\s*\(?\s*(?:expected|exp\.?|anticipated)\b/i.exec(all);
+    const ongoing = !!expected || new RegExp(`(?:-|–|—|to)\\s*(?:${NOW})\\b|\\b(?:pursuing|currently enrolled|in progress)\\b`, "i").test(all);
+    const year = expected ? (expected[1] ?? expected[2]!) : ongoing ? "" : years.length ? String(Math.max(...years)) : "";
     return {
-      degree, institution, discipline,
-      year: years.length ? String(Math.max(...years)) : "",
+      degree, institution, discipline, ongoing,
+      year,
       score: score ? (score[1] ?? score[2] ?? score[3] ?? score[4] ?? "").trim() : "",
       level: degree ? levelOf(degree) : "",
       source: e.lines.join(" / "),
@@ -574,7 +581,10 @@ export function parseResume(text: string, today: Date = new Date()): ParsedResum
   if (github && !/^(orgs|topics|features|about)$/i.test(github[1]!)) add({ section: "Links", field: "github", label: "GitHub", value: withScheme(github[0]), confidence: "high", source: lines.find((l) => l.text.includes(github[0]))!.text });
   const portfolioLines = [...top, ...nonReferenceLines.filter((l) => /^(portfolio|website|web|blog|personal site)\s*[:\-]/i.test(l.text))];
   for (const line of portfolioLines) {
-    const urls = [...line.text.replace(new RegExp(EMAIL.source, "g"), " ").matchAll(URLISH)].map((m) => m[0]).filter((u) => !/linkedin\.com|github\.com\/?$|github\.com\/|mailto:/i.test(u));
+    const urls = [...line.text.replace(new RegExp(EMAIL.source, "g"), " ").matchAll(URLISH)].map((m) => m[0])
+      .filter((u) => !/linkedin\.com|github\.com\/?$|github\.com\/|mailto:/i.test(u))
+      // "M.Tech", "B.Sc": degrees, not websites. A bare address in capitals ("IIT.AC") is not a link either.
+      .filter((u) => !looksLikeDegree(u) && (/^(https?:\/\/|www\.)/i.test(u) || u !== u.toUpperCase()));
     if (urls[0]) {
       add({ section: "Links", field: "portfolio", label: "Portfolio / website", value: withScheme(urls[0]), confidence: "high", source: line.text });
       break;
@@ -588,9 +598,19 @@ export function parseResume(text: string, today: Date = new Date()): ParsedResum
     add({ section: "Education", field: "school", label: "School / university", value: primary.institution, confidence: primary.institution ? "high" : "low", source: primary.source });
     add({ section: "Education", field: "degree", label: "Degree", value: primary.degree, confidence: "high", source: primary.source });
     add({ section: "Education", field: "discipline", label: "Field of study", value: primary.discipline, confidence: "high", source: primary.source });
-    add({ section: "Education", field: "graduationYear", label: "Graduation year", value: primary.year, confidence: "high", source: primary.source });
-    add({ section: "Education", field: "educationLevel", label: "Education level", value: primary.level, confidence: "medium", source: primary.source,
-      computed: true, note: `Worked out from "${primary.degree}"` });
+    if (primary.ongoing) {
+      add({ section: "Education", field: "educationStatus", label: "Are you still studying?", value: "I am currently pursuing a degree", confidence: "high",
+        source: primary.source, computed: true, note: `Your ${primary.degree} has no end date yet` });
+      if (primary.year) add({ section: "Education", field: "graduationYear", label: "Graduation year (expected)", value: primary.year, confidence: "high", source: primary.source });
+      // Education level is the highest level COMPLETED: the degree being studied for is not it.
+      const done = [...education].filter((e) => e.degree && !e.ongoing).sort((a, b) => (LEVEL_RANK[b.level] ?? 0) - (LEVEL_RANK[a.level] ?? 0))[0];
+      if (done?.level) add({ section: "Education", field: "educationLevel", label: "Education level (completed)", value: done.level, confidence: "medium",
+        source: done.source, computed: true, note: `Worked out from "${done.degree}", the highest degree you have finished` });
+    } else {
+      add({ section: "Education", field: "graduationYear", label: "Graduation year", value: primary.year, confidence: "high", source: primary.source });
+      add({ section: "Education", field: "educationLevel", label: "Education level", value: primary.level, confidence: "medium", source: primary.source,
+        computed: true, note: `Worked out from "${primary.degree}"` });
+    }
   }
 
   // Experience

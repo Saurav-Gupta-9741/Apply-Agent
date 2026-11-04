@@ -18,6 +18,19 @@ separate copy that starts empty. (Safest: first export a backup from Profile & p
 setup could save its example answers (e.g. "3 years of experience") for questions you skipped. Please clear anything
 that isn't yours.
 
+## What's new in beta 3 (1.0.2, from your reports)
+
+- **Your resume is read only when you say so.** Uploading saves the file; ApplyAgent then asks whether to read it
+  for profile details. In the review **nothing is ticked**: every value shows the resume line it came from, and only
+  what you tick is imported. Unsaved Profile edits are saved first, so nothing you typed is lost.
+- **The import no longer invents values:** a degree like "M.Tech" is never read as a website, "2025 – Present" is not a
+  graduation year (it sets "currently pursuing"), skills get no made-up years and languages no made-up level.
+- **Every Profile field is checked.** Country and state come from lists (a made-up country or a state of another
+  country can't be saved), postal codes are checked per country (an Indian PIN must fit the state), and names,
+  email ("Did you mean gmail.com?"), phone, links, time zone and years are checked too. Red notes block saving;
+  amber notes are worth a second look.
+- **Leaving Profile with unsaved changes asks you** to save, discard or keep editing.
+
 ## What's new in beta 2 (from your reports)
 
 - **Setup never saves an example answer.** Skip means "ask me on each form". Progress is saved after every question

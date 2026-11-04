@@ -51,7 +51,7 @@ Software Engineer at TechCorp | 2024 – Present
     // Review modal should open
     const reviewDialog = ext.locator("#resume-review-dialog");
     await expect(reviewDialog).toBeVisible();
-    await expect(reviewDialog.getByText("Review suggestions from resume")).toBeVisible();
+    await expect(reviewDialog.getByText("Choose what to import from your resume")).toBeVisible();
 
     // Find the row for First name (which already has existing value "Asha")
     const firstNameRow = reviewDialog.locator(".resume-review-item", { hasText: "First name" });
@@ -61,10 +61,12 @@ Software Engineer at TechCorp | 2024 – Present
     // Find the row for School (which was empty in initial profile)
     const schoolRow = reviewDialog.locator(".resume-review-item", { hasText: "School / university" });
     await expect(schoolRow).toBeVisible();
-    await expect(schoolRow.locator("input[type='checkbox']")).toBeChecked(); // Pre-checked because empty
+    // Nothing is pre-ticked, even for an empty field: the user ticks it (tester report 2)
+    await expect(schoolRow.locator("input[type='checkbox']")).not.toBeChecked();
+    await schoolRow.locator("input[type='checkbox']").check();
 
-    // Save selected without ticking First name replacement
-    await reviewDialog.getByRole("button", { name: "Save selected" }).click();
+    // Import without ticking First name replacement
+    await reviewDialog.getByRole("button", { name: "Import ticked values" }).click();
     await expect(reviewDialog).not.toBeVisible();
 
     // Verify in storage: firstName was NOT overwritten; school WAS updated
@@ -87,8 +89,7 @@ Software Engineer at TechCorp | 2024 – Present
     await firstNameCheckbox.check();
     await expect(firstNameCheckbox).toBeChecked();
 
-    // Save selected
-    await reviewDialog.getByRole("button", { name: "Save selected" }).click();
+    await reviewDialog.getByRole("button", { name: "Import ticked values" }).click();
     await expect(reviewDialog).not.toBeVisible();
 
     // Verify in storage: firstName is now overwritten with "Neha"

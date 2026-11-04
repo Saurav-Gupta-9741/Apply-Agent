@@ -23,7 +23,7 @@ describe("Resume Import Component & Review Flow", () => {
     document.body.innerHTML = "";
   });
 
-  it("pre-ticks ONLY high-confidence items where profile field is currently empty", () => {
+  it("ticks nothing (the user picks every value) and marks values the profile already has", () => {
     const rawResume = `
 Jane Doe
 jane.doe@example.com
@@ -42,13 +42,13 @@ Python, TypeScript, Docker
     const parsed = parseResume(rawResume);
     const items = buildReviewItems(parsed, sampleProfile);
 
-    // email: profile has empty email, confidence is high -> preChecked: true
+    // email: profile has empty email, confidence is high -> still not ticked (tester report 2: import needs consent)
     const emailItem = items.find((i) => i.suggestion.field === "email");
     expect(emailItem).toBeDefined();
     expect(emailItem!.hasExistingValue).toBe(false);
     expect(emailItem!.suggestion.confidence).toBe("high");
-    expect(emailItem!.preChecked).toBe(true);
-    expect(emailItem!.checked).toBe(true);
+    expect(emailItem!.preChecked).toBe(false);
+    expect(emailItem!.checked).toBe(false);
 
     // phone: profile already has "+1 555-0199" -> must NOT be pre-ticked
     const phoneItem = items.find((i) => i.suggestion.field === "phone");
@@ -162,13 +162,14 @@ Jan 2021 - Present
     const phoneWarn = Array.from(warnings).find((w) => w.textContent?.includes("+1 555-0199"));
     expect(phoneWarn).toBeDefined();
 
-    // Check that pre-ticked checkboxes correspond to empty profile fields
+    // Nothing is ticked until the user asks; "Tick everything for empty fields" ticks only empty ones
     const checkboxes = element.querySelectorAll<HTMLInputElement>('input[type="checkbox"]');
     expect(checkboxes.length).toBeGreaterThan(0);
+    expect(Array.from(checkboxes).some((c) => c.checked)).toBe(false);
+    element.querySelector<HTMLButtonElement>("#resume-tick-empty")!.click();
 
-    // Find and click the 'Save selected' button
     const saveBtn = Array.from(element.querySelectorAll("button")).find(
-      (b) => b.textContent?.trim() === "Save selected"
+      (b) => b.textContent?.trim() === "Import ticked values"
     );
     expect(saveBtn).toBeDefined();
     saveBtn!.click();

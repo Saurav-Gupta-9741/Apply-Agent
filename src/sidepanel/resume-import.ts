@@ -1,4 +1,6 @@
 import type { LanguageEntry, Profile, ProfileKey, WorkEntry } from "../shared/types";
+import { validateProfile } from "../shared/profile-validate";
+import { EDUCATION_STATUS_OPTIONS } from "../shared/quick-answers";
 import {
   docxToText,
   extractPdfText,
@@ -35,8 +37,18 @@ export async function parseResumeFromBuffer(
   return parseResume(text || "");
 }
 
+/** A suggestion that fails the same checks as typed input ("https://M.TECH", a state not in the country): never offered. */
+export function suggestionProblem(suggestion: Suggestion, parsed: ParsedResume, profile: Profile): string | undefined {
+  if (suggestion.field === "workHistory" || suggestion.field === "languages" || suggestion.field === "educationStatus") return undefined;
+  const country = parsed.suggestions.find((s) => s.field === "country")?.value ?? profile.country ?? "";
+  const issues = validateProfile({ country, [suggestion.field]: suggestion.value });
+  return issues.find((i) => i.key === suggestion.field && i.level === "error")?.text;
+}
+
+/** What the resume suggests, minus values that fail the Profile checks and values the profile already has. Nothing
+ * is ticked: the user picks every value that goes into the profile. */
 export function buildReviewItems(parsed: ParsedResume, profile: Profile): ReviewItem[] {
-  return parsed.suggestions.map((suggestion) => {
+  return parsed.suggestions.filter((suggestion) => !suggestionProblem(suggestion, parsed, profile)).map((suggestion) => {
     let currentValue = "";
     let hasExistingValue = false;
 
@@ -56,6 +68,12 @@ export function buildReviewItems(parsed: ParsedResume, profile: Profile): Review
         hasExistingValue = true;
         currentValue = match.language + (match.proficiency ? ` (${match.proficiency})` : "");
       }
+    } else if (suggestion.field === "educationStatus") {
+      const status = profile.educationStatus;
+      if (status) {
+        hasExistingValue = true;
+        currentValue = EDUCATION_STATUS_OPTIONS[status];
+      }
     } else {
       const val = profile[suggestion.field as ProfileKey];
       if (val !== undefined && String(val).trim().length > 0) {
@@ -64,9 +82,8 @@ export function buildReviewItems(parsed: ParsedResume, profile: Profile): Review
       }
     }
 
-    // Pre-ticked: confidence === "high" AND current profile field is empty.
-    // Unticked: confidence === "medium" / "low" OR current profile field already has a value.
-    const preChecked = suggestion.confidence === "high" && !hasExistingValue;
+    // Nothing is pre-ticked (beta 1 ticked confident values for empty fields, which imported them on one click).
+    const preChecked = false;
 
     return {
       suggestion,
@@ -75,7 +92,7 @@ export function buildReviewItems(parsed: ParsedResume, profile: Profile): Review
       preChecked,
       checked: preChecked,
     };
-  });
+  }).filter((item) => !(item.hasExistingValue && item.currentValue.trim().toLowerCase() === item.suggestion.value.trim().toLowerCase()));
 }
 
 export function applyReviewItemsToProfile(
@@ -104,9 +121,11 @@ export function applyReviewItemsToProfile(
       const idx = updated.languages.findIndex(
         (l) => l.language.toLowerCase() === suggestion.language!.language.toLowerCase()
       );
+      // A language is imported only with a level the resume states or the user chose in the review (never a guess).
+      if (!suggestion.language.proficiency) continue;
       const entry: LanguageEntry = {
         language: suggestion.language.language,
-        proficiency: suggestion.language.proficiency || "Conversational",
+        proficiency: suggestion.language.proficiency,
       };
       if (idx >= 0) {
         updated.languages[idx] = entry;
@@ -114,14 +133,14 @@ export function applyReviewItemsToProfile(
         updated.languages.push(entry);
       }
     } else if (suggestion.field === "skills") {
-      updated.skills = suggestion.value;
-      const skillsArray = suggestion.value.split(",").map((s) => s.trim()).filter(Boolean);
-      if (!updated.skillsInventory) updated.skillsInventory = [];
-      for (const sk of skillsArray) {
-        if (!updated.skillsInventory.some((inv) => inv.name.toLowerCase() === sk.toLowerCase())) {
-          updated.skillsInventory.push({ name: sk, years: 1, level: "proficient" });
-        }
+      // Added to Key skills (names only). Years are never guessed: the Skills inventory is the user's to fill.
+      const have = (updated.skills ?? "").split(",").map((x) => x.trim()).filter(Boolean);
+      for (const sk of suggestion.value.split(",").map((x) => x.trim()).filter(Boolean)) {
+        if (!have.some((h) => h.toLowerCase() === sk.toLowerCase())) have.push(sk);
       }
+      updated.skills = have.join(", ");
+    } else if (suggestion.field === "educationStatus") {
+      updated.educationStatus = /pursuing/i.test(suggestion.value) ? "pursuing" : /completed/i.test(suggestion.value) ? "completed" : updated.educationStatus;
     } else {
       (updated as any)[suggestion.field] = suggestion.value;
     }
@@ -148,7 +167,7 @@ export function createResumeReviewElement(
   const head = document.createElement("div");
   head.className = "dialog-head";
   const title = document.createElement("h3");
-  title.textContent = "Review suggestions from resume";
+  title.textContent = "Choose what to import from your resume";
   head.append(title);
   const closeBtn = document.createElement("button");
   closeBtn.type = "button";
@@ -164,6 +183,23 @@ export function createResumeReviewElement(
   body.style.padding = "16px";
   body.style.maxHeight = "70vh";
   body.style.overflowY = "auto";
+
+  const intro = document.createElement("p");
+  intro.className = "hint";
+  intro.textContent = reviewItems.length
+    ? "Nothing is imported until you tick it. Each value shows the resume line it came from. Values that failed ApplyAgent's checks (for example a degree read as a website) are left out."
+    : "Your resume has nothing new for your profile: every value it has is already there, or did not pass ApplyAgent's checks.";
+  body.append(intro);
+  const tickAll = document.createElement("button");
+  tickAll.type = "button";
+  tickAll.className = "btn btn-ghost btn-sm";
+  tickAll.id = "resume-tick-empty";
+  tickAll.textContent = "Tick everything for empty fields";
+  const boxes: Array<{ item: ReviewItem; cb: HTMLInputElement }> = [];
+  tickAll.onclick = () => {
+    for (const { item, cb } of boxes) if (!item.hasExistingValue && !cb.disabled) { cb.checked = true; item.checked = true; }
+  };
+  if (reviewItems.some((i) => !i.hasExistingValue)) body.append(tickAll);
 
   let expYearsInput: HTMLInputElement | null = null;
   if (parsed.questions.length > 0) {
@@ -220,9 +256,11 @@ export function createResumeReviewElement(
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.checked = item.checked;
+      cb.setAttribute("aria-label", `Import ${item.suggestion.label}`);
       cb.onchange = () => {
         item.checked = cb.checked;
       };
+      boxes.push({ item, cb });
 
       const info = document.createElement("div");
       info.style.flex = "1";
@@ -259,13 +297,44 @@ export function createResumeReviewElement(
       val.textContent = item.suggestion.value;
       info.append(val);
 
+      if (item.suggestion.source) {
+        const from = document.createElement("div");
+        from.className = "hint resume-source";
+        from.style.fontSize = "11px";
+        from.style.marginTop = "2px";
+        from.textContent = `From your resume: "${item.suggestion.source.slice(0, 160)}${item.suggestion.source.length > 160 ? "…" : ""}"`;
+        info.append(from);
+      }
+
+      // A language without a level in the resume: the user picks one, or it is not imported.
+      const lang = item.suggestion.field === "languages" ? item.suggestion.language : undefined;
+      if (lang && !lang.proficiency) {
+        const pick = document.createElement("select");
+        pick.className = "input resume-lang-level";
+        pick.setAttribute("aria-label", `How well you speak ${lang.language}`);
+        for (const [value, text] of [["", "Choose level to import…"], ["Native", "Native"], ["Fluent", "Fluent"], ["Professional", "Advanced (professional)"],
+          ["Conversational", "Intermediate (conversational)"], ["Basic", "Beginner (basic)"]] as const) {
+          const o = document.createElement("option");
+          o.value = value;
+          o.textContent = text;
+          pick.append(o);
+        }
+        cb.disabled = true;
+        pick.onchange = () => {
+          lang.proficiency = (pick.value || undefined) as LanguageEntry["proficiency"] | undefined;
+          cb.disabled = !pick.value;
+          if (!pick.value) { cb.checked = false; item.checked = false; }
+        };
+        info.append(pick);
+      }
+
       if (item.hasExistingValue) {
         const warn = document.createElement("div");
         warn.className = "hint warn";
         warn.style.fontSize = "11px";
         warn.style.marginTop = "4px";
         warn.style.color = "var(--warn, #f5b84b)";
-        warn.textContent = `⚠️ Overwrites existing value: Current: "${item.currentValue}" → New: "${item.suggestion.value}"`;
+        warn.textContent = `Replaces what you have now: "${item.currentValue}"`;
         info.append(warn);
       } else if (item.suggestion.note) {
         const note = document.createElement("div");
@@ -303,7 +372,7 @@ export function createResumeReviewElement(
   const saveBtn = document.createElement("button");
   saveBtn.type = "button";
   saveBtn.className = "btn btn-primary btn-sm";
-  saveBtn.textContent = "Save selected";
+  saveBtn.textContent = "Import ticked values";
   saveBtn.onclick = async () => {
     saveBtn.disabled = true;
     const customAns = expYearsInput?.value?.trim()

@@ -5,6 +5,7 @@
  */
 
 import quickAnswerStats from "./quick-answer-stats.json";
+import { linkIssue } from "./profile-validate";
 import type { LanguageEntry, Profile, QuickFacts, SkillEntry } from "./types";
 
 export interface QuickQuestion {
@@ -361,27 +362,12 @@ export function parseLanguagesInput(input: string): { entries: LanguageEntry[]; 
   return { entries, missingLevel };
 }
 
-const LINK_RULES: Record<string, { re: RegExp; problem: string }> = {
-  linkedin: {
-    re: /^(https?:\/\/)?([a-z]{2,3}\.)?linkedin\.com\/(in|pub)\/[^\s/?#]+\/?([?#]\S*)?$/i,
-    problem: "That isn't a LinkedIn profile link. It looks like linkedin.com/in/your-name.",
-  },
-  github: {
-    re: /^(https?:\/\/)?(www\.)?github\.com\/[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})\/?$/i,
-    problem: "That isn't a GitHub profile link. It looks like github.com/your-username.",
-  },
-  portfolio: {
-    re: /^(https?:\/\/)?[^\s/.]+(\.[^\s/.]+)+(\/\S*)?$/i,
-    problem: "That isn't a web address. It looks like yourname.dev or https://yourname.com.",
-  },
-};
-
 /** What is wrong with a profile link, or undefined when it is fine (an empty link is fine: it is just left out). */
 export function linkProblem(kind: "linkedin" | "github" | "portfolio" | "resumeUrl", value: string): string | undefined {
   const v = value.trim();
   if (!v) return undefined;
-  const rule = LINK_RULES[kind === "resumeUrl" ? "portfolio" : kind]!;
-  return rule.re.test(v) ? undefined : rule.problem;
+  // One set of link checks for the wizard, the Profile form and the resume import.
+  return linkIssue(kind, v);
 }
 
 /** A link as forms accept it: "linkedin.com/in/x" becomes "https://linkedin.com/in/x". */

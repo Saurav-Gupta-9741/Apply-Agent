@@ -24,8 +24,9 @@ import { HANDS_OFF_MESSAGE, isHandsOff, platformFor } from "../shared/platforms"
 import { makeBackup, mergeAnswers, mergeApplications, readBackup } from "../shared/backup";
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
 import { findSuggestedCorrection } from "../shared/corrections";
-import { citySuggestion, KNOWN_CITIES } from "../shared/city-check";
-import { diversityFactFromAnswer, EDUCATION_STATUS_OPTIONS, linkProblem, normalizeLink } from "../shared/quick-answers";
+import { KNOWN_CITIES } from "../shared/city-check";
+import { diversityFactFromAnswer, EDUCATION_STATUS_OPTIONS } from "../shared/quick-answers";
+import { allCountryNames, normalizeProfileValue, statesFor, timezoneChoices, validateProfile, type FieldIssue, type ProfileValues } from "../shared/profile-validate";
 import { extractTechTerms } from "../shared/techterms";
 import { buildDiagnostic, saveDiagnosticFile } from "../shared/diagnostic";
 import { clockTime, loadPacing, loadPacingState, PACING_BOUNDS, savePacing, statusLine, type PacingSettings } from "../shared/pacing";
@@ -142,6 +143,12 @@ function setDrawer(open: boolean): void {
 }
 
 function showSection(name: Section): void {
+  const current = document.querySelector<HTMLElement>(".nav-item[aria-current='page']")?.dataset.section;
+  if (current === "profile" && name !== "profile" && profileDirty) {
+    setDrawer(false);
+    confirmLeaveProfile(name);
+    return;
+  }
   document.querySelectorAll<HTMLElement>(".section").forEach((s) => (s.hidden = s.id !== `sec-${name}`));
   document.querySelectorAll<HTMLButtonElement>(".nav-item").forEach((b) => {
     if (b.dataset.section === name) b.setAttribute("aria-current", "page");
@@ -1132,12 +1139,129 @@ const MAX_RESUME_BYTES = 5 * 1024 * 1024;
 function showResume(text: string, hasFile: boolean): void {
   $("resume-name").textContent = text;
   $("resume").closest(".dropzone")?.classList.toggle("has-file", hasFile);
+  $("read-resume-btn").hidden = !hasFile;
 }
+
+/** Asks before the resume is read for profile details. Unsaved Profile edits are saved first (an import redraws the
+ * form). Resolves true when the user said yes and nothing is left unsaved. */
+function askToReadResume(fileName: string): Promise<boolean> {
+  const dialog = $("resume-review-dialog") as HTMLDialogElement;
+  return new Promise((resolve) => {
+    const yes = button("Yes, show me what it found", { variant: "primary", size: "sm" });
+    const no = button("No thanks", { variant: "ghost", size: "sm" });
+    yes.id = "resume-read-yes";
+    no.id = "resume-read-no";
+    dialog.replaceChildren(h("div", { class: "dialog-body stack", style: "padding: 16px;" },
+      h("h3", {}, "Fill your profile from your resume?"),
+      h("p", { class: "hint" }, `Resume saved: ${fileName}. ApplyAgent can read it on this device and suggest details for your profile. Nothing is imported until you tick it.`),
+      ...(profileDirty ? [h("p", { class: "hint warn" }, "Your unsaved Profile changes will be saved first, so nothing you typed is lost.")] : []),
+      h("div", { class: "button-row" }, yes, no)));
+    let answered = false;
+    const done = (v: boolean) => {
+      answered = true;
+      dialog.close();
+      resolve(v);
+    };
+    yes.addEventListener("click", async () => {
+      if (profileDirty && !(await saveProfileForm())) {
+        done(false);
+        toast("Fix the marked Profile fields and save, then press \"Suggest details from my resume\".", "bad");
+        return;
+      }
+      done(true);
+    });
+    no.addEventListener("click", () => done(false));
+    dialog.addEventListener("close", () => { if (!answered) resolve(false); }, { once: true });
+    dialog.showModal();
+  });
+}
+
+/** The import review: nothing ticked, every value with its resume line; saves only what the user ticks. */
+async function openResumeReview(parsed: import("../shared/resume-parse").ParsedResume): Promise<void> {
+  const { createResumeReviewElement } = await import("./resume-import");
+  const dialog = $("resume-review-dialog") as HTMLDialogElement;
+  const before = await loadProfile();
+  dialog.replaceChildren(createResumeReviewElement(parsed, before, async (updated) => {
+    const changed = JSON.stringify(updated) !== JSON.stringify(before);
+    if (changed) {
+      // Merged onto the stored profile: anything saved while the review was open is kept.
+      const latest = await loadProfile();
+      const merged = { ...latest } as Record<string, unknown>;
+      for (const [k, v] of Object.entries(updated)) if (JSON.stringify(v) !== JSON.stringify((before as unknown as Record<string, unknown>)[k])) merged[k] = v;
+      profile = merged as unknown as Profile;
+      await saveProfile(profile);
+    }
+    dialog.close();
+    await renderProfile();
+    toast(changed ? "Imported the values you ticked. Check them in Profile." : "Nothing was imported", changed ? "ok" : "warn");
+  }, () => dialog.close()));
+  dialog.showModal();
+}
+
+async function readStoredResume(): Promise<void> {
+  const stored = (await loadProfile()).resume;
+  if (!stored) return;
+  if (!(await askToReadResume(stored.name))) return;
+  try {
+    const { parseResumeFromBuffer } = await import("./resume-import");
+    const bytes = Uint8Array.from(atob(stored.dataBase64), (c) => c.charCodeAt(0));
+    const parsed = await parseResumeFromBuffer(stored.name, bytes);
+    await openResumeReview(parsed);
+  } catch (err) {
+    console.error("Resume parse error:", err);
+    toast("Could not read details from this resume", "warn");
+  }
+}
+$("read-resume-btn").addEventListener("click", () => void readStoredResume());
 
 /** True while the user has typed in the Profile form and not saved: a change saved elsewhere (Quick Answers, the
  * resume) then does not redraw the form under them. */
 let profileDirty = false;
-const LINK_KEYS = new Set<ProfileKey>(["linkedin", "github", "portfolio", "resumeUrl"]);
+const FIELD_LISTS: Partial<Record<ProfileKey, string>> = { location: "city-suggestions", country: "country-list", state: "state-list", timezone: "timezone-list" };
+/** Fields whose note is shown: ones with a value when the form was drawn, ones the user has left, and all of them
+ * after a Save. A half-typed email is not flagged while the user is still typing it. */
+const touchedKeys = new Set<string>();
+
+function ensureDatalist(id: string, values: readonly string[]): HTMLElement {
+  let list = document.getElementById(id);
+  if (!list) {
+    list = h("datalist", { id });
+    document.body.append(list);
+  }
+  if (list.childElementCount !== values.length) list.replaceChildren(...values.map((v) => h("option", { value: v })));
+  return list;
+}
+
+/** The State list follows the chosen country (India, US, Canada, Australia, UK; free text elsewhere). */
+function refreshStateList(): void {
+  const country = document.querySelector<HTMLInputElement>("#profile-form input[name='country']")?.value ?? "";
+  ensureDatalist("state-list", []).replaceChildren(...statesFor(country).map((v) => h("option", { value: v })));
+}
+
+/** The Profile form's values, as the checks read them. */
+function profileFormValues(): ProfileValues {
+  const values: ProfileValues = {};
+  for (const key of PROFILE_KEYS) values[key] = document.querySelector<HTMLInputElement>(`#profile-form input[name='${key}']`)?.value ?? "";
+  values.educationStatus = document.querySelector<HTMLSelectElement>("#education-status")?.value ?? "";
+  return values;
+}
+
+/** Shows each field's problem under it; returns every problem (shown or not). */
+function refreshFieldNotes(showAll = false): FieldIssue[] {
+  const issues = validateProfile(profileFormValues());
+  document.querySelectorAll<HTMLElement>("#profile-form [data-note-for]").forEach((note) => {
+    const key = note.dataset.noteFor!;
+    const input = document.querySelector<HTMLInputElement>(`#profile-form input[name='${key}']`);
+    const issue = issues.find((i) => i.key === key && i.level === "error") ?? issues.find((i) => i.key === key);
+    const show = !!issue && (showAll || touchedKeys.has(key));
+    note.textContent = show ? issue!.text : "";
+    note.classList.toggle("bad", show && issue!.level === "error");
+    note.classList.toggle("warn", show && issue!.level === "warn");
+    if (show && issue!.level === "error") input?.setAttribute("aria-invalid", "true");
+    else input?.removeAttribute("aria-invalid");
+  });
+  return issues;
+}
 
 async function renderProfile(): Promise<void> {
   profile = await loadProfile();
@@ -1168,28 +1292,15 @@ async function renderProfile(): Promise<void> {
     const grid = h("div", { class: "form-grid" });
     for (const [key, label, type, full] of group.fields) {
       // Links are typed as text: the browser's own URL check would reject "linkedin.com/in/x"; ApplyAgent checks them.
-      const input = h("input", { class: "input", type: LINK_KEYS.has(key) ? "text" : type, name: key, autocomplete: "off" }) as HTMLInputElement;
+      // Typed as text: the browser's own checks (email, url) are replaced by ApplyAgent's, which explain the problem.
+      const input = h("input", { class: "input", type: type === "tel" ? "tel" : "text", name: key, autocomplete: "off" }) as HTMLInputElement;
       input.value = profile[key] ?? "";
+      const list = FIELD_LISTS[key];
+      if (list) input.setAttribute("list", list);
+      if (key === "graduationYear" || key === "experienceYears") input.inputMode = "decimal";
       const wrap = h("label", { class: `field-label${full ? " span-2" : ""}` }, label, input);
-      if (key === "location") {
-        input.setAttribute("list", "city-suggestions");
-        const note = h("span", { class: "field-note warn", id: "city-note", role: "status" });
-        const check = () => {
-          const better = citySuggestion(input.value);
-          note.textContent = better ? `Did you mean ${better}? Forms get the city exactly as you type it.` : "";
-        };
-        input.addEventListener("input", check);
-        check();
-        wrap.append(note);
-      }
-      if (LINK_KEYS.has(key)) {
-        const note = h("span", { class: "field-note bad", "data-link-note": key, role: "status" });
-        input.addEventListener("input", () => {
-          note.textContent = "";
-          input.removeAttribute("aria-invalid");
-        });
-        wrap.append(note);
-      }
+      // One note per field: what is wrong (red, blocks saving) or worth a second look (amber).
+      wrap.append(h("span", { class: "field-note", "data-note-for": key, role: "status", ...(key === "location" ? { id: "city-note" } : {}) }));
       grid.append(wrap);
     }
     if (group.title === "Experience & education") {
@@ -1203,11 +1314,14 @@ async function renderProfile(): Promise<void> {
     }
     form.append(h("div", { class: "card" }, h("div", { class: "card-head" }, h("h2", {}, group.title)), grid));
   }
-  if (!document.getElementById("city-suggestions")) {
-    const list = h("datalist", { id: "city-suggestions" });
-    for (const city of KNOWN_CITIES) list.append(h("option", { value: city }));
-    document.body.append(list);
-  }
+  ensureDatalist("city-suggestions", KNOWN_CITIES);
+  ensureDatalist("country-list", allCountryNames());
+  ensureDatalist("timezone-list", timezoneChoices());
+  refreshStateList();
+  // Saved values are checked straight away, so a bad value saved before (or imported) shows its note.
+  touchedKeys.clear();
+  for (const key of PROFILE_KEYS) if ((profile[key] ?? "").trim()) touchedKeys.add(key);
+  refreshFieldNotes();
   form.append(skillsCard(profile.skillsInventory ?? [], profile.skillsComplete ?? false));
   form.append(languagesCard(profile.languages ?? [], profile.languagesComplete ?? false));
   form.append(workCard(profile.workHistory ?? []));
@@ -1279,12 +1393,13 @@ function workCard(entries: WorkEntry[]): HTMLElement {
 
 function skillsCard(entries: SkillEntry[] = [], isComplete = false): HTMLElement {
   const list = h("div", { class: "stack", id: "skills-list" });
-  const row = (name = "", years: number | "" = "", level = "Intermediate") => {
+  const row = (name = "", years: number | "" = "", level = "") => {
     const nameInput = h("input", { class: "input", type: "text", "data-skill": "name", placeholder: "Skill name (e.g. Python)", autocomplete: "off" }) as HTMLInputElement;
     nameInput.value = name;
     const yearsInput = h("input", { class: "input", type: "number", min: "0", max: "50", step: "0.5", "data-skill": "years", placeholder: "Years" }) as HTMLInputElement;
     yearsInput.value = String(years);
     const levelSelect = h("select", { class: "input", "data-skill": "level" },
+      h("option", { value: "" }, "Not set"),
       h("option", { value: "Beginner" }, "Beginner"),
       h("option", { value: "Intermediate" }, "Intermediate"),
       h("option", { value: "Advanced" }, "Advanced"),
@@ -1301,7 +1416,7 @@ function skillsCard(entries: SkillEntry[] = [], isComplete = false): HTMLElement
     remove.addEventListener("click", () => wrap.remove());
     return wrap;
   };
-  entries.forEach((s) => list.append(row(s.name, s.years, s.level || "Intermediate")));
+  entries.forEach((s) => list.append(row(s.name, s.years, ["Beginner", "Intermediate", "Advanced", "Expert"].includes(s.level ?? "") ? s.level : "")));
 
   const add = button("Add skill", { variant: "ghost", icon: "plus", size: "sm" });
   add.id = "add-skill";
@@ -1373,8 +1488,8 @@ function readSkillsInventoryFromUI(): SkillEntry[] {
   return Array.from(document.querySelectorAll<HTMLElement>("#skills-list .skill-row")).map((row) => {
     const name = row.querySelector<HTMLInputElement>("[data-skill='name']")?.value.trim() ?? "";
     const years = parseFloat(row.querySelector<HTMLInputElement>("[data-skill='years']")?.value ?? "") || 0;
-    const level = row.querySelector<HTMLSelectElement>("[data-skill='level']")?.value ?? "Intermediate";
-    return { name, years, level };
+    const level = row.querySelector<HTMLSelectElement>("[data-skill='level']")?.value ?? "";
+    return level ? { name, years, level } : { name, years };
   }).filter((s) => s.name);
 }
 
@@ -1412,36 +1527,8 @@ $("resume").addEventListener("change", async (event) => {
   profile.resume = resume;
   showResume(file.name, true);
   toast("Resume saved");
-
-  try {
-    toast("Parsing resume...", "ok");
-    const { parseResumeFromBuffer, createResumeReviewElement } = await import("./resume-import");
-    const parsed = await parseResumeFromBuffer(file.name, bytes);
-    if (parsed.suggestions.length > 0 || parsed.questions.length > 0) {
-      const reviewDialog = $("resume-review-dialog") as HTMLDialogElement | null;
-      if (reviewDialog) {
-        reviewDialog.replaceChildren();
-        reviewDialog.append(
-          createResumeReviewElement(
-            parsed,
-            await loadProfile(),
-            async (updated) => {
-              profile = updated;
-              await saveProfile(profile);
-              await renderProfile();
-              reviewDialog.close();
-              toast("Profile updated from resume", "ok");
-            },
-            () => reviewDialog.close()
-          )
-        );
-        reviewDialog.showModal();
-      }
-    }
-  } catch (err) {
-    console.error("Resume parse error:", err);
-    toast("Could not extract details from resume", "warn");
-  }
+  // Reading it for profile details is a separate choice (asked, never assumed).
+  await readStoredResume();
 });
 
 const pasteDialog = $("paste-resume-dialog") as HTMLDialogElement | null;
@@ -1462,28 +1549,10 @@ if (pasteBtn && pasteDialog) {
     }
     pasteDialog.close();
     try {
+      // Pasting is the request to read it; unsaved Profile edits are saved first, as for an upload.
+      if (profileDirty && !(await saveProfileForm())) return;
       const { parseResume } = await import("../shared/resume-parse");
-      const { createResumeReviewElement } = await import("./resume-import");
-      const parsed = parseResume(raw);
-      const reviewDialog = $("resume-review-dialog") as HTMLDialogElement | null;
-      if (reviewDialog) {
-        reviewDialog.replaceChildren();
-        reviewDialog.append(
-          createResumeReviewElement(
-            parsed,
-            await loadProfile(),
-            async (updated) => {
-              profile = updated;
-              await saveProfile(profile);
-              await renderProfile();
-              reviewDialog.close();
-              toast("Profile updated from resume", "ok");
-            },
-            () => reviewDialog.close()
-          )
-        );
-        reviewDialog.showModal();
-      }
+      await openResumeReview(parseResume(raw));
     } catch (err) {
       console.error("Resume parse error:", err);
       toast("Could not parse resume text", "warn");
@@ -1495,16 +1564,10 @@ if (pasteBtn && pasteDialog) {
  * a level (ApplyAgent never fills a guessed value). Marks each problem on the form. */
 function profileProblems(): Array<{ text: string; el: HTMLElement }> {
   const problems: Array<{ text: string; el: HTMLElement }> = [];
-  for (const key of LINK_KEYS) {
-    const input = document.querySelector<HTMLInputElement>(`#profile-form input[name='${key}']`);
-    if (!input) continue;
-    const problem = linkProblem(key as "linkedin" | "github" | "portfolio" | "resumeUrl", input.value);
-    const note = document.querySelector<HTMLElement>(`[data-link-note='${key}']`);
-    if (note) note.textContent = problem ?? "";
-    if (problem) {
-      input.setAttribute("aria-invalid", "true");
-      problems.push({ text: problem, el: input });
-    } else input.removeAttribute("aria-invalid");
+  for (const issue of refreshFieldNotes(true)) {
+    if (issue.level !== "error") continue;
+    const input = document.querySelector<HTMLInputElement>(`#profile-form input[name='${issue.key}']`);
+    if (input) problems.push({ text: issue.text, el: input });
   }
   document.querySelectorAll<HTMLElement>("#skills-list .skill-row").forEach((row) => {
     const name = row.querySelector<HTMLInputElement>("[data-skill='name']")?.value.trim() ?? "";
@@ -1519,24 +1582,37 @@ function profileProblems(): Array<{ text: string; el: HTMLElement }> {
   return problems;
 }
 
-$("profile-form").addEventListener("input", () => (profileDirty = true));
-$("profile-form").addEventListener("change", () => (profileDirty = true));
+$("profile-form").addEventListener("input", (e) => {
+  profileDirty = true;
+  const name = (e.target as HTMLInputElement).name;
+  if (name === "country") refreshStateList();
+  // While typing, a shown note updates or goes away; a new problem waits until the field is left.
+  if (name) refreshFieldNotes();
+});
+$("profile-form").addEventListener("change", (e) => {
+  profileDirty = true;
+  const name = (e.target as HTMLInputElement).name;
+  if (name) touchedKeys.add(name);
+  if (name === "country" || name === "educationStatus") {
+    const values = profileFormValues();
+    for (const k of ["state", "postalCode", "phone", "location", "graduationYear"]) if (values[k]) touchedKeys.add(k);
+  }
+  refreshFieldNotes();
+});
 
-$("save-profile").addEventListener("click", async () => {
+/** Saves the Profile form. False when a problem stops it (the first one is shown and focused). */
+async function saveProfileForm(): Promise<boolean> {
   const problems = profileProblems();
   if (problems.length) {
-    toast(problems[0]!.text, "bad");
+    toast(problems.length > 1 ? `${problems[0]!.text} (and ${problems.length - 1} more to fix)` : problems[0]!.text, "bad");
     problems[0]!.el.focus();
-    return;
+    return false;
   }
   // The stored profile, not the copy loaded when the panel opened: answers saved since (Quick Answers setup, the
   // resume, diversity answers) are kept, and only what this form shows is replaced.
   profile = await loadProfile();
-  for (const key of PROFILE_KEYS) {
-    const input = document.querySelector<HTMLInputElement>(`#profile-form input[name='${key}']`);
-    const value = input?.value.trim() ?? "";
-    profile[key] = LINK_KEYS.has(key) ? normalizeLink(value) : value;
-  }
+  const values = profileFormValues();
+  for (const key of PROFILE_KEYS) profile[key] = normalizeProfileValue(key, values[key] ?? "", values);
   const status = document.querySelector<HTMLSelectElement>("#education-status")?.value ?? "";
   profile.educationStatus = status === "completed" || status === "pursuing" ? status : "";
   const work = readWorkHistory();
@@ -1545,6 +1621,9 @@ $("save-profile").addEventListener("click", async () => {
   profile.workHistoryComplete = (document.querySelector<HTMLInputElement>("#work-history-complete"))?.checked ?? false;
 
   const skills = readSkillsInventoryFromUI();
+  const keySkills = (profile.skills ?? "").split(",").map((x) => x.trim()).filter(Boolean);
+  for (const sk of skills) if (!keySkills.some((k) => k.toLowerCase() === sk.name.toLowerCase())) keySkills.push(sk.name);
+  profile.skills = keySkills.join(", ");
   if (skills.length) profile.skillsInventory = skills;
   else delete profile.skillsInventory;
   profile.skillsComplete = (document.querySelector<HTMLInputElement>("#skills-complete"))?.checked ?? false;
@@ -1557,9 +1636,44 @@ $("save-profile").addEventListener("click", async () => {
   await saveProfile(profile);
   profileDirty = false;
   showResume(profile.resume ? profile.resume.name : "Upload your resume (PDF or DOCX, max 5 MB)", !!profile.resume);
-  toast("Profile saved");
+  const warnings = validateProfile(profileFormValues()).filter((i) => i.level === "warn").length;
+  toast(warnings ? `Profile saved. ${warnings} thing${warnings === 1 ? "" : "s"} worth checking (amber notes).` : "Profile saved", warnings ? "warn" : "ok");
   if (feedJobs.length) await renderFeed(); // preferences changed: re-rank the jobs
-});
+  return true;
+}
+$("save-profile").addEventListener("click", () => void saveProfileForm());
+
+/** Leaving Profile with unsaved edits: save them, throw them away, or stay. */
+function confirmLeaveProfile(next: Section): void {
+  let dialog = document.getElementById("unsaved-dialog") as HTMLDialogElement | null;
+  if (!dialog) {
+    dialog = h("dialog", { id: "unsaved-dialog", class: "dialog", "aria-labelledby": "unsaved-title" }) as HTMLDialogElement;
+    document.body.append(dialog);
+  }
+  const save = button("Save changes", { variant: "primary", size: "sm" });
+  const discard = button("Discard changes", { variant: "ghost", size: "sm" });
+  const stay = button("Keep editing", { variant: "ghost", size: "sm" });
+  save.id = "unsaved-save";
+  discard.id = "unsaved-discard";
+  stay.id = "unsaved-stay";
+  dialog.replaceChildren(h("div", { class: "dialog-body stack", style: "padding: 16px;" },
+    h("h3", { id: "unsaved-title" }, "You have unsaved changes"),
+    h("p", { class: "hint" }, "Your Profile edits are not saved yet. Forms only get what is saved."),
+    h("div", { class: "button-row" }, save, discard, stay)));
+  const d = dialog;
+  save.addEventListener("click", async () => {
+    d.close();
+    if (await saveProfileForm()) showSection(next);
+  });
+  discard.addEventListener("click", async () => {
+    d.close();
+    profileDirty = false;
+    await renderProfile();
+    showSection(next);
+  });
+  stay.addEventListener("click", () => d.close());
+  dialog.showModal();
+}
 
 // --- Quick answers -------------------------------------------------------------------------------------
 const EMPTY_FACTS: QuickFacts = {
