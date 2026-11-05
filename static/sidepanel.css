@@ -530,3 +530,9 @@ kbd { font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; padding: 
 .field-group .field-toggle { margin-left: auto; text-transform: none; letter-spacing: 0; padding: 2px 8px; }
 .field-group { gap: 8px; }
 .field-row .tag.ai { display: inline-flex; align-items: center; gap: 2px; margin-left: 6px; padding: 0 5px; border-radius: 6px; font-size: 10px; font-weight: 600; color: #c9caff; background: var(--accent-soft); vertical-align: 1px; }
+/* Apply: the resume a Fill attaches in this tab (Profile's, or one for this application only). */
+.apply-resume { gap: 6px; padding: 10px 14px; }
+.apply-resume-title { font-size: 11.5px; }
+.apply-resume-file { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 13px; min-width: 0; }
+.apply-resume-file strong { font-weight: 600; overflow-wrap: anywhere; min-width: 0; }
+.apply-resume-actions { display: flex; flex-wrap: wrap; gap: 6px; }

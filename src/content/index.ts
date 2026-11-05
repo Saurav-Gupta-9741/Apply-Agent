@@ -12,6 +12,7 @@ import { HANDS_OFF_MESSAGE, platformFor, shouldDetect } from "../shared/platform
 import { loadPacing } from "../shared/pacing";
 import { consentElement, listConsentBoxes, tickConsentBox } from "../shared/consent-review";
 import { extractJobDescriptionText } from "./fit";
+import { withResumeOverride } from "../shared/resume-override";
 
 declare global {
   interface Window {
@@ -358,7 +359,8 @@ if (!window.__applyAgentLoaded) {
         const pacing = await loadPacing().catch(() => undefined);
         const report = message.type === "RUN"
           ? await runOnce(document, {
-            profile: await loadProfile(), answers: await loadAnswers(), applications: await loadApplications(), mode: message.mode, understand,
+            // A resume chosen for this application only replaces the Profile's one in this run (a copy: nothing is saved).
+            profile: withResumeOverride(await loadProfile(), message.resume), answers: await loadAnswers(), applications: await loadApplications(), mode: message.mode, understand,
             pauseBetweenFieldsMs: pacing?.pauseBetweenFieldsMs, stopOnChallenge: pacing?.stopOnChallenge,
             fillOnly: message.fillOnly === true,
           }, markSubmitting)
