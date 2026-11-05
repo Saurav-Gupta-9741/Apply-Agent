@@ -231,8 +231,9 @@ export interface FieldDescriptor {
 export const NEVER_REMEMBER: ReadonlySet<SensitiveTopic> = new Set<SensitiveTopic>(["identity", "signature"]);
 
 export type Decision =
-  | { kind: "profile"; key: ProfileKey | "fullName"; value: string }
-  | { kind: "answer"; value: string; question: string; reused?: boolean }
+  /** `source`: where a value found by the fact sheet came from ("from your work history: Acme"), shown in the panel. */
+  | { kind: "profile"; key: ProfileKey | "fullName"; value: string; source?: string }
+  | { kind: "answer"; value: string; question: string; reused?: boolean; source?: string }
   /** A value from the user's work history, for a field in the n-th job block. */
   | { kind: "work"; index: number; part: keyof WorkEntry; value: string }
   | { kind: "resume" }

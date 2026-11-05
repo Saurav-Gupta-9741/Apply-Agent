@@ -43,6 +43,7 @@ import { mountFormStructureButton } from "./form-structure";
 import { headline, rowState, summarize, type LiveField } from "./checklist";
 // >>> L4 ai drafts
 import { createDraftWidget, isDraftableField } from "./drafts";
+import { factHints, focusQuickAnswer } from "./fact-hints";
 // <<< L4
 
 let cachedCorrections: UserCorrection[] = [];
@@ -618,7 +619,9 @@ function fieldNote(r: FieldResult): string {
     : r.decision.kind === "resume" ? "your resume file" : "";
   const short = (text: string) => (text.length > 80 ? `${text.slice(0, 79)}…` : text);
   if (r.review) return r.detail ?? "";
-  if (r.status === "filled" && value) return `→ ${short(value)}`;
+  // A value the fact sheet found says where it came from ("from your work history: Acme").
+  const source = (r.decision.kind === "profile" || r.decision.kind === "answer") && r.decision.source ? ` (${r.decision.source})` : "";
+  if (r.status === "filled" && value) return `→ ${short(value)}${source}`;
   if (r.status === "already_filled") return r.detail ? `Kept what was there: ${short(r.detail)}` : "";
   return r.detail && r.detail !== "would fill" ? r.detail : "";
 }
@@ -780,6 +783,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   const input = answerInput(r);
   if (r.field.maxLength && !(input instanceof HTMLSelectElement)) input.maxLength = r.field.maxLength;
   card.append(input);
+  card.append(...factHints(r, profile, input, (key) => void openQuickAnswer(key)));
   const suggested = findSuggestedCorrection(ctx.corrections ?? [], r.field.label);
   if (suggested && suggested.count === 1 && !onPageOnly) {
     const chipBtn = button(`Use previous correction: "${suggested.answer}"`, {
@@ -872,6 +876,15 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   foot.append(left, save);
   card.append(foot);
   return card;
+}
+
+/** "Open Quick answers" on a question card: the Answers section, scrolled to that Quick answer. */
+async function openQuickAnswer(key: string): Promise<void> {
+  showSection("answers");
+  if (!focusQuickAnswer(key)) {
+    await renderQuick();
+    focusQuickAnswer(key);
+  }
 }
 
 function renderQuestions(report: RunReport): void {
