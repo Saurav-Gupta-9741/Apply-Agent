@@ -93,6 +93,12 @@
       <button id="preview" class="btn btn-ghost btn-block" title="Reads the form only: types nothing, uploads nothing"><span data-icon="info" data-size="16"></span><span>Preview only (nothing is typed or uploaded)</span></button>
       <p class="hint center shortcut-hint">Tip: press <kbd id="fill-shortcut">Alt+Shift+F</kbd> on any application, or right-click → <em>Fill this application with ApplyAgent</em>.</p>
       <div id="status" class="banner" role="status" hidden></div>
+      <details id="fields-box" class="card details" hidden>
+        <summary><span>Fields on this page</span><span id="fields-summary" class="muted"></span></summary>
+        <div id="fields-progress" class="fill-progress" hidden><i></i></div>
+        <p class="hint fields-hint">Click a field to go to it on the page.</p>
+        <ul id="fields" class="field-list"></ul>
+      </details>
       <div id="questions" class="stack"></div>
       <div id="consent-box" class="card consent-card" hidden>
         <div class="card-head"><h2>Consent boxes on this page</h2><span id="consent-summary" class="muted"></span></div>
@@ -100,10 +106,6 @@
         <ul id="consent-list" class="cards"></ul>
       </div>
       <button id="submit" class="btn btn-primary btn-lg btn-block" hidden><span data-icon="send"></span><span>Submit application</span></button>
-      <details id="fields-box" class="card details" hidden>
-        <summary><span>Field details</span><span id="fields-summary" class="muted"></span></summary>
-        <ul id="fields" class="field-list"></ul>
-      </details>
       <button id="report-problem" class="btn btn-ghost btn-sm report-btn" hidden
         title="Copies what ApplyAgent saw on this page (questions and its decisions, never your answers) to send to the ApplyAgent team">
         <span data-icon="alert" data-size="14"></span><span>Something wrong? Report a problem</span></button>

@@ -76,6 +76,8 @@ Status: **Fixed** (in a released build, with a test), **Not a bug** (works as de
 | # | Flaw reported | Status | What changed |
 |---|---|---|---|
 | 5.1 | With several application tabs open, the panel must show the current tab's form and never the previous tab's fields | Fixed (4 flaws found) | (1) A fill still running when you switched tabs showed its result, and its status lines, on the new tab: now each result is kept for its own tab and shown only there. (2) Saving an answer while another tab was filling started a second fill at the same time, which could send a step to the wrong tab: one fill at a time, with a clear message. (3) Coming back to a tab lost its result: each tab's result is kept until that tab loads another page or closes. (4) Switching quickly could let a slow page check paint the previous tab's page info: only the latest check paints. Tabs in another Chrome window no longer change the panel |
+| 5.2 | Show a Simplify-style list: what is filled, what is left, and go to an unfilled field by clicking it | Fixed in 1.0.7 | "Fields on this page" comes first after a fill: required count, progress bar, every required field with its state (optional folded). Clicking a field scrolls the page to it, outlines it and puts the cursor in it. Fields the user fills on the page afterwards are ticked off live ("Filled by you"), their question cards go away, and the status says when nothing required is left. A wrong dropdown option still showing is not counted as fixed |
+| 5.3 | Does the on-device AI answer new questions using the resume? | Fixed in 1.0.7 (it used the Profile only) | Drafts for open questions now also read the saved resume file (PDF, Word or text) as a source of facts, on the device. Numbers and degrees from the resume are not flagged as invented; anything else still is. Unchanged: a draft is never typed until you press Use, and "not enough facts" gives no draft. Short-answer questions are recognised by the local question model (55 kinds), which fills only from your saved data |
 
 ## Still open
 
@@ -83,4 +85,5 @@ Status: **Fixed** (in a released build, with a test), **Not a bug** (works as de
 |---|---|
 | Cover letter generator (on-device AI) | Planned feature, not started |
 | AI matching for reworded questions | Planned feature, not started |
+| Quick answers wizard can redraw just after a step is saved, so a very fast click may be lost | Found by the tests on 1.0.6 and 1.0.7 alike (3 of 4 repeated runs); to fix next |
 | Address existence check | Needs an online lookup; conflicts with "data never leaves the browser" |

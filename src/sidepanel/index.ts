@@ -40,6 +40,7 @@ import { renderFitCard } from "./fit-card";
 // >>> L3 form structure
 import { mountFormStructureButton } from "./form-structure";
 // <<< L3
+import { headline, rowState, summarize, type LiveField } from "./checklist";
 // >>> L4 ai drafts
 import { createDraftWidget, isDraftableField } from "./drafts";
 // <<< L4
@@ -420,7 +421,7 @@ let agentRunning = false;
 
 /** Each tab's last result (round 5: several applications open at once). Switching tabs shows that tab's own
  * fields and questions, never another application's; a tab that loads a new page loses its result. */
-type TabResult = { report: RunReport | undefined; url: string; preview?: boolean };
+type TabResult = { report: RunReport | undefined; url: string; preview?: boolean; live?: LiveField[] };
 const tabResults = new Map<number, TabResult>();
 /** The tab whose page and results the panel shows now. */
 let shownTabId: number | undefined = pinnedTabId;
@@ -444,6 +445,7 @@ function showTab(tabId: number, url: string): void {
   else if (saved) {
     showReport(saved.report, tabId, saved.preview);
     if (!saved.preview && wantsConsent(saved.report)) void loadConsent(tabId);
+    void refreshLive(tabId); // the user may have answered fields on the page while another tab was shown
   }
   if (agentRunning && runTabId !== undefined && runTabId !== tabId && !tabResults.has(tabId)) {
     setStatus("ApplyAgent is filling an application in another tab. Press Fill here when it has finished (a few seconds).", "info");
@@ -503,10 +505,42 @@ chrome.tabs.onUpdated.addListener((id, info) => {
   }
   if ((info.url || info.status === "complete") && (id === shownTabId || shownTabId === undefined)) void refreshPage();
 });
-chrome.runtime.onMessage.addListener((message: Message) => {
+chrome.runtime.onMessage.addListener((message: Message, sender) => {
   if (message.type === "PANEL_REFRESH") void refreshPage();
+  // The user filled something on the application shown: tick it off in the checklist.
+  if (message.type === "PAGE_FIELDS_CHANGED" && sender.tab?.id !== undefined && sender.tab.id === shownTabId) void refreshLive(sender.tab.id);
   return false;
 });
+
+/** Read the fields of this tab's application again and update its checklist (never while a fill runs). */
+async function refreshLive(tabId: number): Promise<void> {
+  const saved = tabResults.get(tabId);
+  if (agentRunning || !saved?.report?.fields.length || saved.preview) return;
+  const result = (await sendToApplication(tabId, { type: "FIELD_STATE" })) as unknown as { fields?: LiveField[] } | undefined;
+  if (!Array.isArray(result?.fields) || agentRunning || tabResults.get(tabId) !== saved || tabId !== shownTabId) return;
+  saved.live = result.fields;
+  renderFields(saved.report, saved.live);
+  pruneAnswered(saved.report, saved.live);
+}
+
+/** Questions the user has since answered on the page leave "Needs your answer"; when no required field is left,
+ * the status says so. */
+function pruneAnswered(report: RunReport, live: LiveField[]): void {
+  const box = $("questions");
+  for (const card of Array.from(box.querySelectorAll<HTMLElement>(".question[data-key]"))) {
+    const r = report.fields.find((f) => f.field.key === card.dataset.key && f.field.label === card.dataset.label);
+    if (r && rowState(r, live).byYou) card.remove();
+  }
+  const left = box.querySelectorAll(".question").length;
+  const title = box.querySelector(".section-label");
+  if (title) {
+    if (left) title.textContent = `Needs your answer · ${left}`;
+    else title.remove();
+  }
+  if (report.status === "needs_user" && !report.challenge && !report.captcha && summarize(report.fields, live).left === 0) {
+    setStatus("Every required field is filled now. Check the page, then press Next or Submit on it yourself.", "ok");
+  }
+}
 // The profile saved from anywhere (Quick Answers setup, onboarding, a resume) redraws the forms showing it, unless
 // the user is typing there: then their Save merges into the stored profile instead (beta 1 wrote an old copy back,
 // so gender and the resume "reverted").
@@ -577,15 +611,7 @@ function setStatus(text: string, tone: Tone = "info"): void {
   box.hidden = !text;
 }
 
-const FIELD_CHIP: Record<FieldResult["status"], [string, string]> = {
-  filled: ["Filled", "ok"],
-  already_filled: ["Kept yours", "info"],
-  failed: ["Failed", "bad"],
-  needs_user: ["Needs you", "warn"],
-  skipped: ["Left blank", ""],
-};
-
-/** The line under a field in "Field details": the value it gets (so the user can check it), what the site already
+/** The line under a field in the field list: the value it gets (so the user can check it), what the site already
  * put there, or why it was not filled. */
 function fieldNote(r: FieldResult): string {
   const value = r.decision.kind === "profile" || r.decision.kind === "answer" || r.decision.kind === "work" || r.decision.kind === "draft" ? r.decision.value
@@ -597,26 +623,87 @@ function fieldNote(r: FieldResult): string {
   return r.detail && r.detail !== "would fill" ? r.detail : "";
 }
 
-function renderFields(report: RunReport): void {
+/** Every field of the page, required first, each with its state: click one to go to it on the page (round 5). */
+function renderFields(report: RunReport, live?: LiveField[]): void {
   const list = $("fields");
   list.replaceChildren();
-  const counts = { filled: 0, needs: 0, blank: 0 };
-  for (const r of report.fields) {
-    const [text, tone] = r.review ? ["Check this", "warn"] : FIELD_CHIP[r.status];
-    if (r.status === "filled" || r.status === "already_filled") counts.filled++;
-    else if (r.status === "needs_user" || r.status === "failed") counts.needs++;
-    else counts.blank++;
-    const displayLabel = r.field.originalLabel ? `${r.field.originalLabel} (${r.field.label})` : (r.field.label || "(unlabelled field)");
-    const label = h("span", { class: "label" }, displayLabel);
-    if (r.tag === "reused" || (r.decision.kind === "answer" && r.decision.reused)) {
-      label.append(h("span", { class: "tag reused", style: "margin-left: 6px; font-size: 10px; color: var(--info); background: var(--info-soft);" }, "reused"));
-    }
-    const note = fieldNote(r);
-    if (note) label.append(h("span", { class: "detail" }, note));
-    list.append(h("li", { class: "field-row" }, label, chip(text, tone)));
-  }
-  $("fields-summary").textContent = `${counts.filled} filled · ${counts.needs} need you · ${counts.blank} blank`;
+  const s = summarize(report.fields, live);
+  const group = (title: string, rows: FieldResult[], done: number, folded = false) => {
+    if (!rows.length) return;
+    const head = h("li", { class: "field-group" }, h("span", {}, title), h("span", { class: "muted" }, `${done} of ${rows.length} filled`));
+    list.append(head);
+    const items = rows.map((r) => fieldRow(r, live));
+    list.append(...items);
+    if (!folded) return;
+    // Optional fields fold away under the required ones (the list stays short); one click shows them.
+    const toggle = h("button", { class: "btn btn-ghost btn-sm field-toggle", type: "button", "aria-expanded": "false" }, `Show ${rows.length} optional`);
+    const set = (open: boolean) => {
+      for (const item of items) item.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.textContent = open ? "Hide optional" : `Show ${rows.length} optional`;
+      optionalOpen = open;
+    };
+    toggle.addEventListener("click", () => set(!optionalOpen));
+    head.append(toggle);
+    set(optionalOpen);
+  };
+  group("Required", report.fields.filter((r) => r.field.required), s.requiredDone);
+  group(s.required ? "Optional" : "Fields", report.fields.filter((r) => !r.field.required), s.optionalDone, s.required > 0);
+  $("fields-summary").textContent = headline(s);
+  const bar = $("fields-progress");
+  const total = s.required || s.optional;
+  const done = s.required ? s.requiredDone : s.optionalDone;
+  bar.hidden = !total;
+  (bar.firstElementChild as HTMLElement).style.width = `${total ? Math.round((done / total) * 100) : 0}%`;
+  bar.classList.toggle("complete", !!total && done === total);
   $("fields-box").hidden = report.fields.length === 0;
+}
+
+/** Whether the optional fields are shown (remembered while the panel is open). */
+let optionalOpen = false;
+
+const ROW_ICON: Record<string, string> = { ok: "check", info: "check", warn: "alert", bad: "alert", "": "circle" };
+
+function fieldRow(r: FieldResult, live?: LiveField[]): HTMLLIElement {
+  const state = rowState(r, live);
+  const displayLabel = r.field.originalLabel ? `${r.field.originalLabel} (${r.field.label})` : (r.field.label || "(unlabelled field)");
+  const label = h("span", { class: "label" }, displayLabel);
+  if (r.field.required) label.append(h("span", { class: "req", "aria-label": "required" }, " *"));
+  if (r.tag === "reused" || (r.decision.kind === "answer" && r.decision.reused)) {
+    label.append(h("span", { class: "tag reused", style: "margin-left: 6px; font-size: 10px; color: var(--info); background: var(--info-soft);" }, "reused"));
+  }
+  const note = state.byYou ? "You filled this on the page." : state.chip === "Empty now" ? "It was filled, but it is empty on the page now." : fieldNote(r);
+  if (note) label.append(h("span", { class: "detail" }, note));
+  const mark = h("span", { class: `row-mark ${state.tone || "plain"}` });
+  mark.append(icon(ROW_ICON[state.tone] ?? "circle", 14));
+  // The list item stays a list item (screen readers keep the list); the row inside it is the button.
+  const row = h("div", {
+    class: `field-row clickable${state.done ? "" : " open"}`, role: "button", tabindex: "0",
+    title: "Show this field on the page", "data-key": r.field.key,
+  }, mark, label, chip(state.chip, state.tone));
+  const go = () => void showField(r);
+  row.addEventListener("click", go);
+  row.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      go();
+    }
+  });
+  return h("li", { class: "field-item" }, row);
+}
+
+/** Go to a field: scroll the page to it, outline it and put the cursor in it; its question card (if any) is shown too. */
+async function showField(r: FieldResult): Promise<void> {
+  const card = Array.from($("questions").querySelectorAll<HTMLElement>(".question[data-key]"))
+    .find((c) => c.dataset.key === r.field.key && c.dataset.label === r.field.label);
+  if (card) {
+    card.scrollIntoView({ behavior: "smooth", block: "center" });
+    card.classList.remove("flash");
+    void card.offsetWidth; // restart the animation
+    card.classList.add("flash");
+  }
+  const found = await send({ type: "HIGHLIGHT", label: r.field.label, key: r.field.key }) as unknown as boolean | undefined;
+  if (found === false || found === undefined) toast("This field is not on the page any more (the form may have changed).", "warn");
 }
 
 function answerInput(r: FieldResult): HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement {
@@ -664,7 +751,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
               : "New question: saved for future forms.";
   const whyRow = h("span", { class: "question-why" });
   whyRow.append(icon(youOnly ? "lock" : appliedBefore ? "lock" : sensitive ? "shield" : upload ? "upload" : "info", 14), h("span", {}, why));
-  const card = h("div", { class: `question${sensitive || youOnly || appliedBefore ? " sensitive" : ""}` },
+  const card = h("div", { class: `question${sensitive || youOnly || appliedBefore ? " sensitive" : ""}`, "data-key": r.field.key, "data-label": r.field.label },
     h("div", { class: "question-title" }, (r.field.label && questionKey(r.field)) || "(unlabelled field)"), whyRow);
   const foot = h("div", { class: "question-foot" });
   const left = h("div", { class: "button-row" });
@@ -805,7 +892,9 @@ function renderQuestions(report: RunReport): void {
 let lastReport: { report: RunReport | undefined; url: string; tabId?: number } | undefined;
 
 function showReport(report: RunReport | undefined, tabId: number | undefined, preview = false): void {
-  if (tabId !== undefined) tabResults.set(tabId, { report, url: report?.url ?? tabResults.get(tabId)?.url ?? "", preview });
+  const before = tabId !== undefined ? tabResults.get(tabId) : undefined;
+  const live = before && before.report === report ? before.live : undefined; // the same result shown again keeps its live state
+  if (tabId !== undefined) tabResults.set(tabId, { report, url: report?.url ?? before?.url ?? "", preview, live });
   if (tabId !== undefined && shownTabId !== undefined && tabId !== shownTabId) return; // another tab: kept for when it is shown
   lastReport = { report, url: report?.url ?? "", tabId };
   $("report-problem").hidden = false;
@@ -819,8 +908,11 @@ function showReport(report: RunReport | undefined, tabId: number | undefined, pr
     setStatus("No application form found on this page. Open the job's application form and try again.", "warn");
     return;
   }
-  renderFields(report);
+  renderFields(report, live);
   renderQuestions(report);
+  if (live) pruneAnswered(report, live);
+  // The checklist is the main result: open after a fill, so every field and its state is in view.
+  ($("fields-box") as HTMLDetailsElement).open = true;
   switch (report.status) {
     case "submitted_confirmed":
       markState("celebrate");
@@ -843,7 +935,7 @@ function showReport(report: RunReport | undefined, tabId: number | undefined, pr
         parts.push(`ApplyAgent stopped: the site is showing ${report.challenge}. It never solves or gets past these checks. If you want to go on, solve it on the page yourself, then press Fill again.`);
       } else if (report.captcha) parts.push("Solve the CAPTCHA on the page, then press Fill again.");
       if (report.errors.length) parts.push(`The site reported: ${report.errors.join("; ")}`);
-      if (report.fields.some((f) => f.status === "needs_user")) parts.push("Answer the questions below.");
+      if (report.fields.some((f) => f.status === "needs_user")) parts.push("Answer the questions below, or click a field marked \"Needs you\" to go to it on the page.");
       setStatus(parts.join(" ") || "Some required fields could not be filled.", "warn");
       break;
     }
@@ -855,13 +947,13 @@ function showReport(report: RunReport | undefined, tabId: number | undefined, pr
     $("questions").replaceChildren();
     const fill = report.fields.filter((f) => f.status === "filled").length;
     const ask = report.fields.filter((f) => f.status === "needs_user").length;
-    setStatus(`Preview: would fill ${fill} field${fill === 1 ? "" : "s"} and ask you ${ask} question${ask === 1 ? "" : "s"}. Nothing was typed or uploaded. Open "Field details" to see each one.`, "info");
+    setStatus(`Preview: would fill ${fill} field${fill === 1 ? "" : "s"} and ask you ${ask} question${ask === 1 ? "" : "s"}. Nothing was typed or uploaded. Each field is listed below.`, "info");
     ($("fields-box") as HTMLDetailsElement).open = true;
     return;
   }
   const reviews = report.fields.filter((f) => f.review).length;
   if (reviews && report.status !== "submitted_confirmed") {
-    setStatus(`${$("status").textContent ?? ""} ${reviews} value${reviews === 1 ? "" : "s"} pre-filled by the site differ${reviews === 1 ? "s" : ""} from your profile: check ${reviews === 1 ? "it" : "them"} in Field details before submitting.`, "warn");
+    setStatus(`${$("status").textContent ?? ""} ${reviews} value${reviews === 1 ? "" : "s"} pre-filled by the site differ${reviews === 1 ? "s" : ""} from your profile: check ${reviews === 1 ? "it" : "them"} in the list below before submitting.`, "warn");
     ($("fields-box") as HTMLDetailsElement).open = true;
   }
 }

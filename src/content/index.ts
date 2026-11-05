@@ -4,7 +4,7 @@ import type { Detection, Message, RunReport } from "../shared/types";
 import { loadAnswers, loadApplications, loadProfile, loadSettings } from "../shared/storage";
 import { generic, pickAdapter } from "./adapters";
 import { extractFields, type ExtractedField } from "./extract";
-import { highlightField, runOnce, scanForm, submitForm } from "./agent";
+import { fieldStates, highlightField, runOnce, scanForm, submitForm } from "./agent";
 import { detectChallenge, detectConfirmation } from "./detect";
 import { findApplyControl, sensePage } from "./sense";
 import { isApplicationPage } from "./target";
@@ -143,6 +143,23 @@ function showOnPage(el: HTMLElement): void {
  * same fields twice, or press Submit twice. */
 let busy = false;
 
+/** After a fill, the user answers the rest on the page: tell the panel (it reads the fields again and ticks them off).
+ * Only the user's own typing and clicks count (ApplyAgent's events are not trusted ones); nothing is sent anywhere. */
+let watchingChanges = false;
+function watchUserChanges(): void {
+  if (watchingChanges) return;
+  watchingChanges = true;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const changed = (event: Event) => {
+    if (busy || !event.isTrusted) return;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      chrome.runtime.sendMessage({ type: "PAGE_FIELDS_CHANGED" } satisfies Message).catch(() => undefined);
+    }, 500);
+  };
+  for (const type of ["input", "change", "click"]) document.addEventListener(type, changed, true);
+}
+
 function plainReport(status: RunReport["status"], error: string): RunReport {
   const sense = sensePage(document, pageUrl());
   return { status, platform: sense.platform, url: location.href, jobTitle: sense.jobTitle, fields: [], captcha: false, errors: error ? [error] : [] };
@@ -164,7 +181,7 @@ if (!window.__applyAgentLoaded) {
 
   if (typeof chrome !== "undefined" && chrome.runtime?.onMessage?.addListener) {
     chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse: (r: unknown) => void) => {
-    const acting = ["RUN", "SUBMIT", "SCAN", "HIGHLIGHT", "OPEN_APPLICATION", "CONSENT_LIST", "CONSENT_SHOW", "CONSENT_TICK"].includes(message.type);
+    const acting = ["RUN", "SUBMIT", "SCAN", "HIGHLIGHT", "FIELD_STATE", "OPEN_APPLICATION", "CONSENT_LIST", "CONSENT_SHOW", "CONSENT_TICK"].includes(message.type);
     if (acting && platform.policy === "hands_off") {
       // Answer once: from the top frame, or from the frame that holds the form when the page around it is not ours.
       if (window !== window.top && !formRoot()) return false;
@@ -239,6 +256,11 @@ if (!window.__applyAgentLoaded) {
     if (message.type === "HIGHLIGHT") {
       if (!formRoot()) return false;
       sendResponse(highlightField(document, message.label, message.key));
+      return false;
+    }
+    if (message.type === "FIELD_STATE") {
+      if (!formRoot()) return false;
+      sendResponse({ fields: fieldStates(document) });
       return false;
     }
     // Consent review: the boxes are listed for the user, and one box is ticked per click, only on the application.
@@ -343,6 +365,7 @@ if (!window.__applyAgentLoaded) {
           : await submitForm(document, 20000, markSubmitting);
         sendResponse(report);
         chrome.runtime.sendMessage({ type: "RUN_RESULT", report } satisfies Message).catch(() => undefined);
+        watchUserChanges();
       } catch (error) {
         // Never leave the panel or the queue waiting forever: say what went wrong.
         sendResponse(plainReport("needs_user", `Something on this page stopped ApplyAgent (${String(error)}). Check the form, then press Fill again.`));

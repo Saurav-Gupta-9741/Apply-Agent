@@ -28,6 +28,17 @@ it to**. Switching to it once looks like a new extension to Chrome, so:
 3. In beta 4's first screen choose **"Used ApplyAgent before? Restore from a backup file"** and pick that file.
 4. Turn on **Keep an automatic backup on this PC** (Backup & move), so a reinstall never loses anything again.
 
+## What's new in 1.0.7: a checklist of every field
+
+- After Fill, **Fields on this page** comes first: "9 of 10 required filled · 1 left", a progress bar, then every
+  required field with its state (Filled, Needs you, Fix on page, Left blank). Optional fields fold away under them.
+- **Click any field** and the page scrolls to it, outlines it and puts the cursor in it. If it has a question card,
+  the card is shown too.
+- **Fill the rest on the page yourself** and the list keeps up: the field turns "Filled by you", its question goes away,
+  and when nothing required is left the panel says so. A field that is emptied again shows "Empty now".
+- **On-device AI drafts now read your resume too** (open questions such as "Describe a project"), not only your
+  Profile. It still runs only on your computer, never invents facts, and nothing is typed until you press Use.
+
 ## What's new in 1.0.6: several applications in several tabs
 
 - The panel always shows the tab in front of you. Switch tabs and you see that page's form, never the fields or

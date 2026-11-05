@@ -30,7 +30,7 @@ test("each tab shows its own application; switching never shows another tab's fi
   await activate(ext, tabA.id);
   await expect(ext.locator("#page-url")).toHaveText(a.url());
   await ext.locator("#run").click();
-  await expect(ext.locator("#fields-box")).toBeVisible();
+  await expect(ext.locator("#fields-box")).toBeVisible({ timeout: 20_000 });
   await expect(fields).toContainText("Python");
 
   // Switch to B: nothing from A is shown.
@@ -42,7 +42,7 @@ test("each tab shows its own application; switching never shows another tab's fi
 
   // Fill B: B's own fields.
   await ext.locator("#run").click();
-  await expect(ext.locator("#fields-box")).toBeVisible();
+  await expect(ext.locator("#fields-box")).toBeVisible({ timeout: 20_000 });
   await expect(fields).not.toContainText("Python");
 
   // Back to A: A's own result is shown again, without filling again.

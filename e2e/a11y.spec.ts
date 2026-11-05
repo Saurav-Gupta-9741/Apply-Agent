@@ -29,7 +29,9 @@ test("no WCAG A/AA violations in any section, with real content on screen", asyn
   await pinToForm(ext, await context.newPage());
   await ext.locator("#run").click(); // questions, chips and field details on screen
   await expect(ext.locator("#status")).toBeVisible();
-  await ext.locator("#fields-box summary").click();
+  await expect(ext.locator("#fields-box")).toHaveAttribute("open", "", { timeout: 30_000 }); // the field checklist opens by itself after a fill
+  const showOptional = ext.locator("#fields .field-toggle");
+  if (await showOptional.count()) await showOptional.click(); // every row on screen, optional ones too
   const problems: string[] = [];
   for (const section of SECTIONS) {
     await goTo(ext, section);

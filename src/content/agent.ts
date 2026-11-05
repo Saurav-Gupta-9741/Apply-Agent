@@ -303,6 +303,18 @@ function guardSubmits(doc: Document): () => void {
   };
 }
 
+/** What each field of the application holds now, for the panel's live checklist. File inputs often sit behind a
+ * styled button that shows the chosen file elsewhere: their state is not guessed (null). */
+export function fieldStates(doc: Document): Array<{ key: string; label: string; filled: boolean | null; value: string }> {
+  const { root } = locate(doc);
+  if (!root) return [];
+  return extractFields(root).map((f) => {
+    if (f.descriptor.control === "file") return { key: f.descriptor.key, label: f.descriptor.label, filled: null, value: "" };
+    const value = currentValue(f).trim();
+    return { key: f.descriptor.key, label: f.descriptor.label, filled: !!value, value: value.slice(0, 120) };
+  });
+}
+
 /** Required fields that are still empty on the page right now (whatever the fill thought). */
 export function emptyRequired(root: HTMLElement): string[] {
   return extractFields(root)

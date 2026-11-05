@@ -432,6 +432,10 @@ export type Message =
   | { type: "PANEL_REFRESH" }
   /** Scroll to a field and outline it, so the user can answer it on the page. */
   | { type: "HIGHLIGHT"; label: string; key?: string }
+  /** The panel's live checklist: which fields of the application hold a value now (read-only). */
+  | { type: "FIELD_STATE" }
+  /** The user typed or chose something on the application after a fill (page → panel: read the fields again). */
+  | { type: "PAGE_FIELDS_CHANGED" }
   /** Consent review: list the consent and agreement boxes on the application (read-only). */
   | { type: "CONSENT_LIST" }
   /** Scroll to one consent box and outline it. */

@@ -10,6 +10,7 @@
  */
 
 import { aiStatus, buildDraftPrompt, checkDraft, draftAnswer, INSUFFICIENT, type DraftOptions } from "../shared/ai";
+import { docxToText, extractPdfText } from "../shared/resume-parse";
 import { isNeverRemembered, isSecretField } from "../content/classify";
 import type { FieldDescriptor, Profile } from "../shared/types";
 
@@ -75,6 +76,27 @@ export function getAiStatusInfo(status: "available" | "downloadable" | "unavaila
   };
 }
 
+/** The text of the saved resume file (PDF, Word or plain text), read once per file: the drafts' second source of
+ * facts. Read on this device only; an unreadable file gives "" (the profile alone is used). */
+let resumeCache: { id: string; text: Promise<string> } | undefined;
+export function resumeTextOf(profile: Profile): Promise<string> {
+  const file = profile.resume;
+  if (!file?.dataBase64) return Promise.resolve("");
+  const id = `${file.name}:${file.dataBase64.length}`;
+  if (resumeCache?.id !== id) {
+    const text = (async () => {
+      const bytes = Uint8Array.from(atob(file.dataBase64), (c) => c.charCodeAt(0));
+      const name = file.name.toLowerCase();
+      if (name.endsWith(".pdf") || file.type === "application/pdf") return extractPdfText(bytes);
+      if (name.endsWith(".docx")) return (await docxToText(bytes)) ?? "";
+      if (name.endsWith(".txt") || file.type.startsWith("text/")) return new TextDecoder("utf-8").decode(bytes);
+      return "";
+    })().catch(() => "");
+    resumeCache = { id, text };
+  }
+  return resumeCache.text;
+}
+
 /** Creates the 1-click draft container UI. */
 export function createDraftWidget(ctx: DraftContext): HTMLElement {
   const container = document.createElement("div");
@@ -126,12 +148,13 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
     draftBtn.textContent = "Drafting answer (on-device)...";
 
     try {
-      const text = await draftAnswer(ctx.question, ctx.profile, ctx.job);
+      const resumeText = await resumeTextOf(ctx.profile);
+      const text = await draftAnswer(ctx.question, ctx.profile, ctx.job, { resumeText });
       if (!text || text.includes(INSUFFICIENT)) {
         previewBox.replaceChildren();
         const insufficientCard = document.createElement("div");
         insufficientCard.className = "draft-insufficient";
-        insufficientCard.textContent = "INSUFFICIENT facts in your profile to draft an accurate answer. ApplyAgent never invents experience or facts.";
+        insufficientCard.textContent = "Not enough facts in your profile or resume to draft an accurate answer. ApplyAgent never invents experience or facts.";
         const dismissBtn = document.createElement("button");
         dismissBtn.type = "button";
         dismissBtn.className = "btn btn-ghost btn-sm";
@@ -148,7 +171,7 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
       }
 
       // Check draft for numbers, fluff, word counts
-      const warnings = checkDraft(text, ctx.profile, ctx.job, ctx.question);
+      const warnings = checkDraft(text, ctx.profile, ctx.job, { question: ctx.question, reference: resumeText });
 
       previewBox.replaceChildren();
       const textarea = document.createElement("textarea");
