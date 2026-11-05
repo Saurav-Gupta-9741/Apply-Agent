@@ -14,6 +14,7 @@ import {
   skillsExperienceAnswer, languageAnswer, workModeAnswer, travelAnswer, previousEmployerAnswer,
 } from "./facts";
 import { normalize } from "../shared/text";
+import { factSheetAnswer } from "./factsheet";
 
 /** What the model read in a question. */
 export interface Meaning {
@@ -229,6 +230,19 @@ function decideWithMeaningInner(field: FieldDescriptor, profile: Profile, answer
   }
   if (owner === "legal" && (rule.kind === "profile" || (rule.kind === "answer" && (rule.reused || rule.question.startsWith("Quick answers › "))))) {
     return field.required ? { kind: "ask", reason: "sensitive" } : { kind: "skip", reason: "legal: entered by you only" };
+  }
+
+  // The fact sheet: wordings the rules do not name ("Who is your current or previous employer?", "Branch", "Have you
+  // worked with Kafka?"), answered only from the user's own saved data and marked for a quick check. Never for a
+  // question the model is very sure is someone else's, a consent or an open question.
+  const rulesGaveUp = rule.kind === "ask" && rule.reason !== "sensitive" || rule.kind === "skip" && /in profile|optional choice/.test(rule.reason);
+  const modelObjects = !!meaning && meaning.confidence >= DOUBT_CONFIDENCE && NEVER_FROM_PROFILE.has(meaning.intent);
+  if (rulesGaveUp && owner === "self" && !modelObjects) {
+    const fact = factSheetAnswer(field.translatedLabel ? { ...field, label: field.translatedLabel } : field, profile);
+    if (fact) {
+      MODEL_DECISIONS.add(fact);
+      return fact;
+    }
   }
 
   if (!meaning) return rule;
