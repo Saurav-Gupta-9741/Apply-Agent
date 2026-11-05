@@ -203,6 +203,10 @@ export function contextInput(field: FieldDescriptor, nearestLabel?: string, help
 /** Contact fields a machine translation cannot turn into a different question. */
 const MACHINE_TRANSLATION_SAFE_KEYS = new Set<string>(["firstName", "lastName", "fullName", "email", "phone", "linkedin", "github", "website", "portfolio"]);
 
+/** Decisions the rules did not know and the local question model answered (from the user's saved data): the panel
+ * marks those fields so the user can give them a quick check. */
+export const MODEL_DECISIONS = new WeakSet<object>();
+
 export function decideWithMeaning(field: FieldDescriptor, profile: Profile, answers: Parameters<typeof decide>[2], page?: PageFacts,
   meaning?: Meaning): Decision {
   const d = decideWithMeaningInner(field, profile, answers, page, meaning);
@@ -246,7 +250,10 @@ function decideWithMeaningInner(field: FieldDescriptor, profile: Profile, answer
   const sensitiveGap = rule.kind === "ask" && rule.reason === "sensitive" && rule.topic && TOPIC_OF[meaning.intent] === rule.topic;
   if ((ruleGaveUp || sensitiveGap) && meaning.confidence >= actThreshold(meaning.intent) && !NEVER_FROM_PROFILE.has(meaning.intent)) {
     const decision = fromMeaning(field, profile, meaning, page);
-    if (decision) return decision;
+    if (decision) {
+      MODEL_DECISIONS.add(decision);
+      return decision;
+    }
   }
   return rule;
 }

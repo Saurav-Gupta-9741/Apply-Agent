@@ -28,6 +28,15 @@ it to**. Switching to it once looks like a new extension to Chrome, so:
 3. In beta 4's first screen choose **"Used ApplyAgent before? Restore from a backup file"** and pick that file.
 4. Turn on **Keep an automatic backup on this PC** (Backup & move), so a reinstall never loses anything again.
 
+## What's new in 1.0.8
+
+- **Fields answered with the on-device AI are marked ✨ AI** in the field list: a question in unfamiliar words that
+  the on-device model understood and answered from your saved data, or an answer the AI drafted and you approved.
+  Give those a quick check.
+- **Fixed: the Quick answers setup wizard could close by itself after Next**, and show the plain Quick answers form
+  instead. Each step saves your answer, and the card redrew itself over the wizard. It now stays open until you
+  finish or press Save & Exit.
+
 ## What's new in 1.0.7: a checklist of every field
 
 - After Fill, **Fields on this page** comes first: "9 of 10 required filled · 1 left", a progress bar, then every

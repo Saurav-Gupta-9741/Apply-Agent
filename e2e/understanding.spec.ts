@@ -33,6 +33,9 @@ test("questions the rules don't know are filled through the model, safely", asyn
   console.log("FIELDS", JSON.stringify(report?.fields.map((f) => [f.field.label, f.status, f.decision.kind])));
   await expect(page.locator("#heard")).toHaveValue("LinkedIn"); // "Where did you FIRST hear…": no rule matches the wording
   await expect(page.locator("#sex")).toHaveValue("Female");
+  // Round 5: the panel marks these "AI" (the model read the wording); a field the rules knew is not marked.
+  expect(by("Where did you first hear about this role?")?.understood).toBe(true);
+  expect(by("First name")?.understood).toBeUndefined();
   // Someone else's details and a yes/no question stay with the user, whatever the model reads.
   await expect(page.locator("#mentor")).toHaveValue("");
   expect(by("Do you have a mentor at our company? Their full name")?.status).not.toBe("filled");

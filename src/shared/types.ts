@@ -254,6 +254,8 @@ export interface FieldResult {
   /** The site pre-filled a value that differs from the user's profile: the user should check it. */
   review?: boolean;
   tag?: FillTag;
+  /** Filled from the user's saved data because the local question model understood a wording the rules did not. */
+  understood?: boolean;
 }
 
 export type RunStatus =

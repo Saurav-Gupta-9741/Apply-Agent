@@ -526,3 +526,4 @@ kbd { font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; padding: 
 @media (prefers-reduced-motion: reduce) { .question.flash { animation: none; } .fill-progress i { transition: none; } }
 .field-group .field-toggle { margin-left: auto; text-transform: none; letter-spacing: 0; padding: 2px 8px; }
 .field-group { gap: 8px; }
+.field-row .tag.ai { display: inline-flex; align-items: center; gap: 2px; margin-left: 6px; padding: 0 5px; border-radius: 6px; font-size: 10px; font-weight: 600; color: #c9caff; background: var(--accent-soft); vertical-align: 1px; }

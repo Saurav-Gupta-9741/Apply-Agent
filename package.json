@@ -1,6 +1,6 @@
 {
   "name": "applyagent",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "private": true,
   "description": "Chrome extension that fills job applications on company career sites, with proof of every submission",
   "type": "module",

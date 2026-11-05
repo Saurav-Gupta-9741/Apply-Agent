@@ -650,6 +650,10 @@ function renderFields(report: RunReport, live?: LiveField[]): void {
   group("Required", report.fields.filter((r) => r.field.required), s.requiredDone);
   group(s.required ? "Optional" : "Fields", report.fields.filter((r) => !r.field.required), s.optionalDone, s.required > 0);
   $("fields-summary").textContent = headline(s);
+  const aiCount = report.fields.filter((r) => (r.understood || r.tag === "drafted") && r.status === "filled").length;
+  $("fields-hint").textContent = aiCount
+    ? `Click a field to go to it on the page. ${aiCount} marked AI ${aiCount === 1 ? "was" : "were"} answered with the on-device AI: give ${aiCount === 1 ? "it" : "them"} a quick check.`
+    : "Click a field to go to it on the page.";
   const bar = $("fields-progress");
   const total = s.required || s.optional;
   const done = s.required ? s.requiredDone : s.optionalDone;
@@ -669,6 +673,12 @@ function fieldRow(r: FieldResult, live?: LiveField[]): HTMLLIElement {
   const displayLabel = r.field.originalLabel ? `${r.field.originalLabel} (${r.field.label})` : (r.field.label || "(unlabelled field)");
   const label = h("span", { class: "label" }, displayLabel);
   if (r.field.required) label.append(h("span", { class: "req", "aria-label": "required" }, " *"));
+  // ✨ the on-device AI was involved: the question model read an unfamiliar wording, or the answer is an AI draft.
+  if ((r.understood || r.tag === "drafted") && !state.byYou) {
+    const ai = h("span", { class: "tag ai", title: r.tag === "drafted" ? "Drafted by the on-device AI and approved by you" : "An unfamiliar wording, understood by the on-device AI and answered from your saved data: worth a quick check" });
+    ai.append(icon("sparkle", 12), h("span", {}, "AI"));
+    label.append(ai);
+  }
   if (r.tag === "reused" || (r.decision.kind === "answer" && r.decision.reused)) {
     label.append(h("span", { class: "tag reused", style: "margin-left: 6px; font-size: 10px; color: var(--info); background: var(--info-soft);" }, "reused"));
   }
@@ -1955,8 +1965,16 @@ function quickInput(field: QuickField, facts: QuickFacts): HTMLElement {
 /** Like profileDirty, for the Quick answers card. */
 let quickDirty = false;
 
-async function renderQuick(): Promise<void> {
+/** The Quick answers setup wizard is on screen (it lives in the Quick answers card). */
+function quickWizardOpen(): boolean {
+  return !!document.querySelector("#quick-card .quick-wizard-card");
+}
+
+/** Draw the Quick answers card. Never over the setup wizard: each wizard step saves the profile, and a redraw then
+ * replaced the wizard with this form mid-setup (round 5). The wizard redraws it itself when it is done (`force`). */
+async function renderQuick(force = false): Promise<void> {
   const facts = { ...EMPTY_FACTS, ...((await loadProfile()).facts ?? {}) };
+  if (!force && quickWizardOpen()) return;
   quickDirty = false;
   const save = button("Save quick answers", { variant: "primary", size: "sm" });
   save.id = "save-quick";
@@ -2761,7 +2779,7 @@ export async function launchQuickAnswersWizard(container?: HTMLElement): Promise
   const target = container ?? document.getElementById("quick-card") ?? document.body;
   await mountQuickAnswers(target, async () => {
     profile = await loadProfile();
-    await renderQuick();
+    await renderQuick(true);
     await renderSetup();
     toast("Quick answers saved");
   });

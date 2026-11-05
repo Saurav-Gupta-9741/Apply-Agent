@@ -6,7 +6,7 @@ import type { AnswerEntry, ApplicationRecord, Decision, FieldResult, FillTag, Mo
 import { detectSignInWall, generic, isGoogleForms, pickAdapter } from "./adapters";
 import { workEntries } from "./classify";
 import { codeOptionFor, dialCodePickerFor, isDialCodePicker, JUST_A_DIAL_CODE, phoneBoxFor, selectedCode, splitPhone } from "./phone";
-import { decideWithMeaning, type Meaning } from "./meaning";
+import { decideWithMeaning, MODEL_DECISIONS, type Meaning } from "./meaning";
 import { detectChallenge, detectConfirmation, hasCaptcha, visibleErrors } from "./detect";
 import { DROPDOWN, extractFields, inWorkSection, sectionHeadings, type ExtractedField } from "./extract";
 import { currentValue, fillCombobox, fillDropdown, fillField, type FillOutcome } from "./fill";
@@ -138,7 +138,8 @@ export async function scanForm(doc: Document, ctx: Omit<AgentContext, "mode">): 
       : guarded && !field.descriptor.required ? "skipped"
       : decision.kind === "ask" ? "needs_user" : decision.kind === "draft" ? "needs_user" : decision.kind === "skip" ? "skipped" : "filled";
     if (guarded && !existing) return { field: field.descriptor, decision, status, detail: CONSENT_DETAIL };
-    return { field: field.descriptor, decision, status, review: decision.kind === "draft" || undefined, detail: decision.kind === "draft" ? "draft ready for review" : status === "filled" ? "would fill" : undefined };
+    return { field: field.descriptor, decision, status, review: decision.kind === "draft" || undefined, detail: decision.kind === "draft" ? "draft ready for review" : status === "filled" ? "would fill" : undefined,
+      understood: (status === "filled" && MODEL_DECISIONS.has(decision)) || undefined };
   });
   report.captcha = hasCaptcha(doc);
   report.status = report.fields.some((r) => r.field.required && r.status === "needs_user") || report.captcha
@@ -273,7 +274,7 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
     : fillField(field, value, ctx.profile.resume);
   return {
     field: field.descriptor, decision, status: outcome.ok ? "filled" : "failed", detail: outcome.detail,
-    tag: fillTagFor(decision),
+    tag: fillTagFor(decision), understood: MODEL_DECISIONS.has(decision) || undefined,
   };
 }
 
