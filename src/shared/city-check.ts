@@ -2,6 +2,7 @@
  * ("Banglore") is filled on every application. Suggests the known spelling; never changes the value itself. */
 
 import { levenshteinDistance } from "./option-matcher";
+import { isListedCity } from "./places";
 
 /** Cities job forms commonly list, as they are usually spelled. Several spellings of one city are all fine. */
 export const KNOWN_CITIES: string[] = [
@@ -33,6 +34,8 @@ export function citySuggestion(value: string): string | undefined {
   // "Pune, Maharashtra" or "Bengaluru (Hybrid)": the city part decides.
   const head = v.split(/[,(/-]/)[0]!.trim();
   if (KNOWN.has(head)) return undefined;
+  // A city in the offline place lists (e.g. Rampur, not a typo of Raipur) is spelled as listed.
+  if (isListedCity(value)) return undefined;
   if (head.length < 4) return undefined;
   let best: { city: string; d: number } | undefined;
   for (const [lower, city] of KNOWN) {

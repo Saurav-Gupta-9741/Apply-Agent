@@ -244,6 +244,9 @@ select.input[multiple] option { padding: 6px 8px; border-radius: 6px; }
 .dropzone .icon { color: var(--accent); }
 .dropzone.has-file { border-style: solid; border-color: rgba(62, 207, 142, 0.4); }
 .dropzone.has-file .icon { color: var(--ok); }
+/* Profile: the resume card leads the screen (the quickest way to fill the profile) */
+.resume-card { border-color: rgba(139, 140, 255, 0.45); background: linear-gradient(rgba(139, 140, 255, 0.07), rgba(139, 140, 255, 0.07)), var(--surface); }
+.resume-card .card-head h2 { font-size: 14.5px; }
 
 /* segmented control */
 .segmented { display: grid; grid-template-columns: 1fr 1fr; padding: 3px; gap: 3px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }

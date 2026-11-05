@@ -26,10 +26,10 @@ import { loadMyCompanies } from "./discover";
 import { MY_COMPANIES_KEY } from "../shared/jobs/companies";
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
 import { findSuggestedCorrection } from "../shared/corrections";
-import { KNOWN_CITIES } from "../shared/city-check";
+import { linkPlaces, mountPlaces, refreshPlaceLists } from "./profile-places";
 import { AUTO_BACKUP_FILE, loadAutoBackup, setAutoBackup } from "../shared/auto-backup";
 import { diversityFactFromAnswer, EDUCATION_STATUS_OPTIONS } from "../shared/quick-answers";
-import { allCountryNames, normalizeProfileValue, statesFor, timezoneChoices, validateProfile, type FieldIssue, type ProfileValues } from "../shared/profile-validate";
+import { allCountryNames, normalizeProfileValue, timezoneChoices, validateProfile, type FieldIssue, type ProfileValues } from "../shared/profile-validate";
 import { extractTechTerms } from "../shared/techterms";
 import { buildDiagnostic, saveDiagnosticFile } from "../shared/diagnostic";
 import { clockTime, loadPacing, loadPacingState, PACING_BOUNDS, savePacing, statusLine, type PacingSettings } from "../shared/pacing";
@@ -1311,12 +1311,11 @@ if (formStructBtn) {
 const PROFILE_GROUPS: Array<{ title: string; fields: Array<[ProfileKey, string, string, boolean?]> }> = [
   { title: "Personal", fields: [
     ["firstName", "First name", "text"], ["lastName", "Last name", "text"], ["email", "Email", "email"],
-    ["phone", "Phone", "tel"], ["location", "City", "text"], ["country", "Country", "text"],
+    ["phone", "Phone", "tel"], ["country", "Country", "text"], ["state", "State / Province", "text"], ["location", "City", "text"],
   ] },
   { title: "Address & Location", fields: [
     ["addressLine1", "Address line 1", "text", true],
     ["addressLine2", "Address line 2 (apt, suite)", "text", true],
-    ["state", "State / Province", "text"],
     ["postalCode", "Postal / ZIP code", "text"],
     ["timezone", "Timezone (e.g. IST, UTC)", "text"],
   ] },
@@ -1467,12 +1466,6 @@ function ensureDatalist(id: string, values: readonly string[]): HTMLElement {
   return list;
 }
 
-/** The State list follows the chosen country (India, US, Canada, Australia, UK; free text elsewhere). */
-function refreshStateList(): void {
-  const country = document.querySelector<HTMLInputElement>("#profile-form input[name='country']")?.value ?? "";
-  ensureDatalist("state-list", []).replaceChildren(...statesFor(country).map((v) => h("option", { value: v })));
-}
-
 /** The Profile form's values, as the checks read them. */
 function profileFormValues(): ProfileValues {
   const values: ProfileValues = {};
@@ -1552,10 +1545,9 @@ async function renderProfile(): Promise<void> {
     }
     form.append(h("div", { class: "card" }, h("div", { class: "card-head" }, h("h2", {}, group.title)), grid));
   }
-  ensureDatalist("city-suggestions", KNOWN_CITIES);
   ensureDatalist("country-list", allCountryNames());
   ensureDatalist("timezone-list", timezoneChoices());
-  refreshStateList();
+  mountPlaces(); // Country → State → City suggestion lists (src/sidepanel/profile-places.ts)
   // Saved values are checked straight away, so a bad value saved before (or imported) shows its note.
   touchedKeys.clear();
   for (const key of PROFILE_KEYS) if ((profile[key] ?? "").trim()) touchedKeys.add(key);
@@ -1823,7 +1815,7 @@ function profileProblems(): Array<{ text: string; el: HTMLElement }> {
 $("profile-form").addEventListener("input", (e) => {
   profileDirty = true;
   const name = (e.target as HTMLInputElement).name;
-  if (name === "country") refreshStateList();
+  if (name === "country" || name === "state") refreshPlaceLists();
   // While typing, a shown note updates or goes away; a new problem waits until the field is left.
   if (name) refreshFieldNotes();
 });
@@ -1831,6 +1823,8 @@ $("profile-form").addEventListener("change", (e) => {
   profileDirty = true;
   const name = (e.target as HTMLInputElement).name;
   if (name) touchedKeys.add(name);
+  // A new country or state clears a state / city that belongs elsewhere (with a note under City).
+  if (name === "country" || name === "state") linkPlaces(name);
   if (name === "country" || name === "educationStatus") {
     const values = profileFormValues();
     for (const k of ["state", "postalCode", "phone", "location", "graduationYear"]) if (values[k]) touchedKeys.add(k);

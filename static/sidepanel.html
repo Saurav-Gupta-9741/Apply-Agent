@@ -301,6 +301,20 @@
 
     <!-- Profile & plan ---------------------------------------------------------------------------------->
     <section id="sec-profile" class="section" data-title="Profile & plan" hidden>
+      <!-- Resume first: the quickest way to fill the profile. -->
+      <div class="card resume-card" id="resume-card">
+        <div class="card-head"><h2>Fill your profile from your resume</h2></div>
+        <p class="hint">ApplyAgent reads your resume on this device and asks before using anything from it.</p>
+        <label class="dropzone"><input type="file" id="resume" accept=".pdf,.doc,.docx,.txt" />
+          <span data-icon="file" data-size="22"></span>
+          <span id="resume-name">Upload your resume (PDF or DOCX, max 5 MB)</span></label>
+        <div class="button-row" style="margin-top: 8px;">
+          <button type="button" id="read-resume-btn" class="btn btn-secondary btn-sm" hidden><span data-icon="file" data-size="16"></span><span>Suggest details from my resume</span></button>
+          <button type="button" id="paste-resume-btn" class="btn btn-secondary btn-sm"><span data-icon="edit" data-size="16"></span><span>Paste resume text</span></button>
+        </div>
+        <p class="hint">The saved file is also attached to forms that ask for a resume. Only the values you tick go into your profile.</p>
+      </div>
+
       <div class="card plan-card">
         <div class="card-head"><h2>Plan</h2><span id="plan-badge" class="chip"></span></div>
         <p id="plan-status" class="plan-status"></p>
@@ -336,17 +350,6 @@
 
       <form id="profile-form" class="stack" novalidate></form>
 
-      <div class="card">
-        <div class="card-head"><h2>Resume</h2></div>
-        <label class="dropzone"><input type="file" id="resume" accept=".pdf,.doc,.docx,.txt" />
-          <span data-icon="file" data-size="22"></span>
-          <span id="resume-name">Upload your resume (PDF or DOCX, max 5 MB)</span></label>
-        <div class="button-row" style="margin-top: 8px;">
-          <button type="button" id="read-resume-btn" class="btn btn-secondary btn-sm" hidden><span data-icon="file" data-size="16"></span><span>Suggest details from my resume</span></button>
-          <button type="button" id="paste-resume-btn" class="btn btn-secondary btn-sm"><span data-icon="edit" data-size="16"></span><span>Paste resume text</span></button>
-        </div>
-        <p class="hint">Uploading only saves the file that forms get. ApplyAgent reads it to fill your profile only when you say so, and only the values you tick.</p>
-      </div>
       <div class="card trust-card">
         <div class="card-head"><h2>Why trust us</h2></div>
         <ul class="bullet-list" style="font-size: 13px; color: var(--text-subtle); line-height: 1.5; padding-left: 18px; margin: 4px 0 10px;">
