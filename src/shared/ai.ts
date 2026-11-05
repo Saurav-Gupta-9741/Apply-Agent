@@ -3,6 +3,7 @@
  * The model may only rephrase facts from the profile; anything it cannot ground becomes "INSUFFICIENT". */
 
 import type { Profile } from "./types";
+import { limitInstruction, type LengthLimit } from "./length-limit";
 
 interface LanguageModelSession {
   prompt(input: string): Promise<string>;
@@ -56,6 +57,8 @@ export interface DraftOptions {
   maxWords?: number;
   /** The text of the user's own resume: a second source of facts (projects, achievements) besides the profile. */
   resumeText?: string;
+  /** The question's length limit (stated words or characters, the box's maxlength): told to the model exactly. */
+  limit?: LengthLimit;
 }
 
 /** The longest resume excerpt sent to the on-device model (its context window is small). */
@@ -216,7 +219,9 @@ export function buildDraftPrompt(
     "- Tone: Avoid generic corporate fluff (e.g. 'I am excited to synergize...', 'dynamic self-starter'); provide concrete, high-signal answers.",
   ];
 
-  if (lengthInfo) {
+  const exact = limitInstruction(options?.limit);
+  if (exact) lines.push(`- ${exact}`);
+  else if (lengthInfo) {
     lines.push(`- Length: ${formatLengthInstruction(lengthInfo.target, lengthInfo.min, lengthInfo.max)}`);
   }
 

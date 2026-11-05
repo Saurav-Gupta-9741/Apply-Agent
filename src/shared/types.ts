@@ -221,6 +221,8 @@ export interface FieldDescriptor {
   placeholder: string;
   /** Character limit set by the site (maxlength), if any. */
   maxLength?: number;
+  /** Help text shown with a text box ("Max. 200 words", "0 / 500 characters"), read for length limits. */
+  hint?: string;
   /** Which job block of a repeating work-experience section this field belongs to (0 = first). */
   workBlock?: number;
   /** The heading of the form section the field sits in ("References", "Emergency contact"…), if any. */

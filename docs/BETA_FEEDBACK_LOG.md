@@ -104,10 +104,18 @@ Status: **Fixed** (in a released build, with a test), **Not a bug** (works as de
 | 7.3 | (found by the tests) "American Samoa+1" chosen for a list labelled "How many years of experience" | Fixed | The 1.0.9 experience rule answered any list; only lists of year counts are answered now |
 | 7.4 | Links typed on one form not used on the next ("LinkedIn URL" vs "LinkedIn Profile URL") | Fixed | Reused for the same kind of link while the Profile has none, only when the value has the right shape |
 
+## Round 7b: "Train on every application, worldwide, with limits" (2026-11-06) → 1.0.11
+
+| # | Flaw reported | Status | What changed |
+|---|---|---|---|
+| 7.5 | Handle every kind of question worldwide, with full validation | Done for what is allowed | 2,881 real questions from 222 Greenhouse boards in 10 languages, hand-labelled; checked as applicants in 4 countries; 25 wrong fills found and fixed (0 now); question model retrained (3,465 questions), 74 boards held out for an honest check. Lever/Workable/SmartRecruiters not collected: their robots.txt forbids AI training. Report: reports/round7/ROUND7_REPORT.md |
+| 7.6 | Respect word / character limits on answers | Fixed | Limits read from the question, help text and box (words, characters, sentences, paragraphs; 10+ languages). AI drafts told the limit and cut at a whole sentence; over-limit answers never typed; live counter in the panel |
+| 7.7 | (found by the tests) Help-text reading made 500-field forms slow (7.5 s) | Fixed | Only the box's nearest neighbours are read |
+
 ## Still open
 
 | Item | Why open |
 |---|---|
 | Cover letter generator (on-device AI) | Planned feature, not started |
-| AI matching for reworded questions | The local question model (MiniLM) already reads reworded questions; a writing model failed the laptop test (7.1) |
+| AI matching for reworded questions | Question model retrained on 3,465 real questions (7.5); a writing model failed the laptop test (7.1) |
 | Address existence check | Needs an online lookup; conflicts with "data never leaves the browser" |

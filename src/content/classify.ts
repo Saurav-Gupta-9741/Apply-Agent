@@ -83,7 +83,7 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["postalCode", /^(?!.*\b(street address|full.*address|adresse)\b).*\b(zip( code)?|postal code|pin ?code|postleitzahl|\bplz\b|code postal|codigo postal|\bcep\b|\bcap\b|codice postale|postcode)\b/],
   // Where both city and state are requested, it is a location question:
   ["location", /\b(?:city\s*(?:and|,|\/|or)?\s*state|state\s*(?:and|,|\/|or)?\s*city)\b/],
-  ["state", /^(?!.*\bcity\b).*\b(state\s*\/\s*province|state or province|u\.s\.\s*state|canadian province|^state$|^province$|canton|departement|bundesland|provincia|regione|provincie)\b/],
+  ["state", /^(?!.*\bcity\b).*\b(state\s*\/\s*province|province\s*\/\s*state|^province state$|^state province$|^state region$|state or province|province or state|state\s*\/\s*region|u\.s\.\s*state|canadian province|^state$|^province$|canton|departement|bundesland|provincia|regione|provincie)\b|^(what|which) (state|province) (are|do) you (currently )?(live|reside|located|based)\b|^(what|which) (state|province) are you (currently )?(located|based|living) in\b/],
   // Where both city and country are requested in one field ("City, Country" or "country and city"), it is a location question:
   ["location", /\b(?:city\s*country|country\s*city|city\s*(?:and|,|\/)\s*country|country\s*(?:and|,|\/)\s*city)\b/],
   ["country", /country|^land$|\bpays\b|\bpais\b|\bpaese\b/],

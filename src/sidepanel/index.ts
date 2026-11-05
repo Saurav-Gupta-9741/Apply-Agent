@@ -43,7 +43,8 @@ import { mountFormStructureButton } from "./form-structure";
 // <<< L3
 import { headline, rowState, summarize, type LiveField } from "./checklist";
 // >>> L4 ai drafts
-import { createDraftWidget, isDraftableField } from "./drafts";
+import { createDraftWidget, isDraftableField, limitCounter, limitOfField } from "./drafts";
+import { checkLength } from "../shared/length-limit";
 import { factHints, focusQuickAnswer } from "./fact-hints";
 // <<< L4
 
@@ -790,6 +791,9 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   const input = answerInput(r);
   if (r.field.maxLength && !(input instanceof HTMLSelectElement)) input.maxLength = r.field.maxLength;
   card.append(input);
+  const limit = input instanceof HTMLSelectElement ? undefined : limitOfField(r.field);
+  const counter = input instanceof HTMLSelectElement ? undefined : limitCounter(input, limit);
+  if (counter) card.append(counter);
   card.append(...factHints(r, profile, input, (key) => void openQuickAnswer(key)));
   const suggested = findSuggestedCorrection(ctx.corrections ?? [], r.field.label);
   if (suggested && suggested.count === 1 && !onPageOnly) {
@@ -837,6 +841,12 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     }
     if (r.field.maxLength && value.length > r.field.maxLength) {
       toast(`Too long: this field allows ${r.field.maxLength} characters`, "warn");
+      input.focus();
+      return;
+    }
+    const fit = checkLength(value, limit);
+    if (!fit.ok) {
+      toast(`Too long: ${fit.problem}`, "warn");
       input.focus();
       return;
     }
