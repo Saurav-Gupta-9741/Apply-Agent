@@ -1008,8 +1008,13 @@ export function travelAnswer(field: FieldDescriptor, facts?: QuickFacts): Decisi
 export function isLanguageQuestion(field: FieldDescriptor): string[] {
   if (!answerableLength(field.label)) return [];
   const q = normalize(field.label);
-  if (!/\b(language|proficiency|proficient|fluency|fluent|speak|idioma|lingua|langue|sprache|bilingual)\b/i.test(q)) return [];
-  const langs = ["english", "french", "german", "spanish", "portuguese", "italian", "mandarin", "japanese", "hindi", "kannada", "marathi"];
+  if (!/\b(language|proficiency|proficient|fluency|fluent|speak|idioma|lingua|langue|sprache|bilingual|level|levels|skills?|knowledge|nivel|niveau|nivel|livello)\b/i.test(q)) return [];
+  // "A degree in English literature", "English teacher": a subject, not the user's command of a language.
+  if (/\b(degree|literature|major|minor|teacher|teaching|tutor|course|class|studies|translation|translator|grade)\b/.test(q)) return [];
+  const langs = ["english", "french", "german", "spanish", "portuguese", "italian", "mandarin", "japanese", "hindi", "kannada", "marathi",
+    "tamil", "telugu", "bengali", "gujarati", "punjabi", "malayalam", "urdu", "arabic", "dutch", "polish", "korean", "chinese", "cantonese",
+    "russian", "turkish", "swedish", "norwegian", "danish", "finnish", "greek", "hebrew", "indonesian", "malay", "thai", "vietnamese",
+    "czech", "romanian", "hungarian", "ukrainian"];
   return langs.filter((lang) => mentions(q, lang));
 }
 
@@ -1020,6 +1025,26 @@ const LEVEL_RANK: Record<string, number> = {
   conversational: 2,
   basic: 1,
 };
+
+/** The level an option of a proficiency list stands for, on the profile's scale (5 native … 1 basic), from many
+ * scales: Beginner/Intermediate/Advanced, CEFR (A1…C2), LinkedIn's (Elementary … Native or bilingual), Spanish and
+ * Portuguese wordings. Undefined when the option is no level. */
+function optionLevel(option: string): number | undefined {
+  const o = normalize(option);
+  if (/\b(native|mother tongue|bilingual|c2|nativo|nativa|muttersprache|langue maternelle)\b/.test(o)) return 5;
+  if (/\b(upper intermediate|intermedio alto|b2|professional working|business)\b/.test(o)) return 3;
+  if (/\b(fluent|advanced?|proficient|full professional|c1|expert|avanzado|avancado|fluente|fluido|courant)\b/.test(o)) return 4;
+  if (/\b(intermediate|intermedio|intermediario|conversational|limited working|b1)\b/.test(o)) return 2;
+  if (/\b(beginner|basic|elementary|a1|a2|principiante|basico|iniciante|no proficiency)\b/.test(o)) return 1;
+  return undefined;
+}
+
+/** The one option at the user's level, or nothing (none, or two at that level: asked). Never a higher level. */
+function levelOption(options: string[], level: number | undefined): string | undefined {
+  if (!level) return undefined;
+  const at = options.filter((o) => optionLevel(o) === level);
+  return at.length === 1 ? at[0] : undefined;
+}
 
 function askedLanguageLevel(q: string): number {
   if (/\b(?:native|mother\s+tongue|first\s+language|bilingual)\b/i.test(q)) return 5;
@@ -1065,8 +1090,9 @@ export function languageAnswer(field: FieldDescriptor, profile: Profile): Decisi
 
   if (field.options.length) {
     // No fallback to a "fluent" option: a Basic or Conversational speaker must never be filled as Fluent (round 4).
-    const match = bestOption(field.options, entry.proficiency, 0.6);
+    const match = bestOption(field.options, entry.proficiency, 0.6) ?? levelOption(field.options, LEVEL_RANK[entry.proficiency.toLowerCase()]);
     if (match) return answer(match, "language");
+    return undefined; // a list without the user's level: asked
   }
   return answer(entry.proficiency, "language");
 }

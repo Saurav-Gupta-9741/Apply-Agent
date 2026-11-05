@@ -959,19 +959,19 @@
   "ashby-fireworks-ai::66765636": {
    "A": {
     "decide": "ASK (skip:optional, not in profile)",
-    "decideWithMeaning": "Asha"
+    "decideWithMeaning": "ASK (skip:optional, not in profile)"
    },
    "B": {
     "decide": "ASK (skip:optional, not in profile)",
-    "decideWithMeaning": "Rohan"
+    "decideWithMeaning": "ASK (skip:optional, not in profile)"
    },
    "C": {
     "decide": "ASK (skip:optional, not in profile)",
-    "decideWithMeaning": "Priya"
+    "decideWithMeaning": "ASK (skip:optional, not in profile)"
    },
    "D": {
     "decide": "ASK (skip:optional, not in profile)",
-    "decideWithMeaning": "Jordan"
+    "decideWithMeaning": "ASK (skip:optional, not in profile)"
    }
   },
   "ashby-fireworks-ai::9d7cc181": {
@@ -1535,7 +1535,7 @@
   "ashby-headway::b23122b8": {
    "A": {
     "decide": "ASK (ask:unknown)",
-    "decideWithMeaning": "ASK (ask:unknown)"
+    "decideWithMeaning": "ASK (ask:missing_profile_value)"
    },
    "B": {
     "decide": "ASK (ask:unknown)",
@@ -5679,15 +5679,15 @@
    },
    "B": {
     "decide": "ASK (no option matched: work:title=Senior Software Engineer)",
-    "decideWithMeaning": "ASK (no option matched: work:title=Senior Software Engineer)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: work:title=Marketing Manager)",
-    "decideWithMeaning": "ASK (no option matched: work:title=Marketing Manager)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: work:title=Senior Product Designer)",
-    "decideWithMeaning": "ASK (no option matched: work:title=Senior Product Designer)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "breezy-in-all-media::b19a3336": {
@@ -5863,7 +5863,7 @@
    },
    "C": {
     "decide": "ASK (no option matched: answer=Company website)",
-    "decideWithMeaning": "ASK (no option matched: answer=Company website)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "LinkedIn",
@@ -6133,7 +6133,7 @@
    },
    "C": {
     "decide": "ASK (no option matched: answer=Company website)",
-    "decideWithMeaning": "ASK (no option matched: answer=Company website)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "LinkedIn",
@@ -7061,37 +7061,37 @@
   "greenhouse-ag1::7380d31f": {
    "A": {
     "decide": "ASK (no option matched: profile:school=Pune University)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=Pune University)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:school=IISc Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=IISc Bangalore)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:school=Mumbai University)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=Mumbai University)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:school=University of Texas at Austin)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=University of Texas at Austin)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    }
   },
   "greenhouse-ag1::017338c2": {
    "A": {
     "decide": "ASK (no option matched: profile:degree=Bachelor of Technology)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Bachelor of Technology)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:degree=Master of Technology)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Master of Technology)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:degree=Bachelor of Arts)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Bachelor of Arts)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:degree=Bachelor of Fine Arts)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Bachelor of Fine Arts)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    }
   },
   "greenhouse-ag1::4b6c2588": {
@@ -7457,37 +7457,37 @@
   "greenhouse-berlin-packaging::7380d31f": {
    "A": {
     "decide": "ASK (no option matched: profile:school=Pune University)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=Pune University)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:school=IISc Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=IISc Bangalore)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:school=Mumbai University)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=Mumbai University)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:school=University of Texas at Austin)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=University of Texas at Austin)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    }
   },
   "greenhouse-berlin-packaging::017338c2": {
    "A": {
     "decide": "ASK (no option matched: profile:degree=Bachelor of Technology)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Bachelor of Technology)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:degree=Master of Technology)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Master of Technology)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:degree=Bachelor of Arts)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Bachelor of Arts)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:degree=Bachelor of Fine Arts)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Bachelor of Fine Arts)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    }
   },
   "greenhouse-berlin-packaging::b32f6c0c": {
@@ -7817,19 +7817,19 @@
   "greenhouse-drw::2bce3634": {
    "A": {
     "decide": "ASK (no option matched: profile:location=Pune)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Pune)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:location=Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Bangalore)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:location=Mumbai)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Mumbai)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:location=Austin, TX)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Austin, TX)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-drw::5784bc44": {
@@ -7901,7 +7901,7 @@
    },
    "D": {
     "decide": "ASK (skip:optional, not in profile)",
-    "decideWithMeaning": "https://jordanmiller.design"
+    "decideWithMeaning": "ASK (skip:optional, not in profile)"
    }
   },
   "greenhouse-drw::47cebacd": {
@@ -7961,19 +7961,19 @@
   "greenhouse-drw::4e777bf2": {
    "A": {
     "decide": "ASK (no option matched: answer=LinkedIn)",
-    "decideWithMeaning": "ASK (no option matched: answer=LinkedIn)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: answer=LinkedIn)",
-    "decideWithMeaning": "ASK (no option matched: answer=LinkedIn)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: answer=Company website)",
-    "decideWithMeaning": "ASK (no option matched: answer=Company website)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: answer=LinkedIn)",
-    "decideWithMeaning": "ASK (no option matched: answer=LinkedIn)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-drw::ffe34615": {
@@ -8447,19 +8447,19 @@
   "greenhouse-figma::2bce3634": {
    "A": {
     "decide": "ASK (no option matched: profile:location=Pune)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Pune)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:location=Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Bangalore)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:location=Mumbai)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Mumbai)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:location=Austin, TX)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Austin, TX)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-figma::5784bc44": {
@@ -8789,19 +8789,19 @@
   "greenhouse-gomotive::2bce3634": {
    "A": {
     "decide": "ASK (no option matched: profile:location=Pune)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Pune)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:location=Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Bangalore)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:location=Mumbai)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Mumbai)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:location=Austin, TX)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Austin, TX)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-gomotive::5784bc44": {
@@ -8969,73 +8969,73 @@
   "greenhouse-gomotive::7380d31f": {
    "A": {
     "decide": "ASK (no option matched: profile:school=Pune University)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=Pune University)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:school=IISc Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=IISc Bangalore)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:school=Mumbai University)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=Mumbai University)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:school=University of Texas at Austin)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=University of Texas at Austin)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-gomotive::017338c2": {
    "A": {
     "decide": "ASK (no option matched: profile:degree=Bachelor of Technology)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Bachelor of Technology)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:degree=Master of Technology)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Master of Technology)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:degree=Bachelor of Arts)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Bachelor of Arts)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:degree=Bachelor of Fine Arts)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Bachelor of Fine Arts)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-gomotive::bd12c11d": {
    "A": {
     "decide": "ASK (no option matched: profile:discipline=Computer Science)",
-    "decideWithMeaning": "ASK (no option matched: profile:discipline=Computer Science)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:discipline=Computer Science)",
-    "decideWithMeaning": "ASK (no option matched: profile:discipline=Computer Science)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:discipline=Mass Communication)",
-    "decideWithMeaning": "ASK (no option matched: profile:discipline=Mass Communication)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:discipline=Design)",
-    "decideWithMeaning": "ASK (no option matched: profile:discipline=Design)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-gomotive::62211fc9": {
    "A": {
     "decide": "ASK (no option matched: answer=LinkedIn)",
-    "decideWithMeaning": "ASK (no option matched: answer=LinkedIn)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: answer=LinkedIn)",
-    "decideWithMeaning": "ASK (no option matched: answer=LinkedIn)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: answer=Company website)",
-    "decideWithMeaning": "ASK (no option matched: answer=Company website)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: answer=LinkedIn)",
-    "decideWithMeaning": "ASK (no option matched: answer=LinkedIn)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-gomotive::6009b8d7": {
@@ -9089,7 +9089,7 @@
    },
    "D": {
     "decide": "ASK (skip:optional, not in profile)",
-    "decideWithMeaning": "https://jordanmiller.design"
+    "decideWithMeaning": "ASK (skip:optional, not in profile)"
    }
   },
   "greenhouse-gomotive::842aca99": {
@@ -9293,19 +9293,19 @@
   "greenhouse-gusto::2bce3634": {
    "A": {
     "decide": "ASK (no option matched: profile:location=Pune)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Pune)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:location=Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Bangalore)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:location=Mumbai)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Mumbai)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:location=Austin, TX)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Austin, TX)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-gusto::5784bc44": {
@@ -9761,19 +9761,19 @@
   "greenhouse-kinder-s::2bce3634": {
    "A": {
     "decide": "ASK (no option matched: profile:location=Pune)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Pune)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:location=Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Bangalore)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:location=Mumbai)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Mumbai)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:location=Austin, TX)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Austin, TX)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-kinder-s::5784bc44": {
@@ -10061,7 +10061,7 @@
    },
    "D": {
     "decide": "ASK (skip:optional, not in profile)",
-    "decideWithMeaning": "https://jordanmiller.design"
+    "decideWithMeaning": "ASK (skip:optional, not in profile)"
    }
   },
   "greenhouse-lg-energy-solution-arizona::0789ac22": {
@@ -10553,19 +10553,19 @@
   "greenhouse-samsara::2bce3634": {
    "A": {
     "decide": "ASK (no option matched: profile:location=Pune)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Pune)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:location=Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Bangalore)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:location=Mumbai)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Mumbai)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:location=Austin, TX)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Austin, TX)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-samsara::5784bc44": {
@@ -10787,19 +10787,19 @@
   "greenhouse-samsara::debbea90": {
    "A": {
     "decide": "ASK (no option matched: answer=LinkedIn)",
-    "decideWithMeaning": "ASK (no option matched: answer=LinkedIn)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: answer=LinkedIn)",
-    "decideWithMeaning": "ASK (no option matched: answer=LinkedIn)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: answer=Company website)",
-    "decideWithMeaning": "ASK (no option matched: answer=Company website)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: answer=LinkedIn)",
-    "decideWithMeaning": "ASK (no option matched: answer=LinkedIn)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-samsara::fbff87ed": {
@@ -10859,19 +10859,19 @@
   "greenhouse-samsara::41173c49": {
    "A": {
     "decide": "ASK (no option matched: answer=LinkedIn)",
-    "decideWithMeaning": "ASK (no option matched: answer=LinkedIn)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: answer=LinkedIn)",
-    "decideWithMeaning": "ASK (no option matched: answer=LinkedIn)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: answer=Company website)",
-    "decideWithMeaning": "ASK (no option matched: answer=Company website)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: answer=LinkedIn)",
-    "decideWithMeaning": "ASK (no option matched: answer=LinkedIn)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-samsara::090a6071": {
@@ -11111,19 +11111,19 @@
   "greenhouse-scaleops::2bce3634": {
    "A": {
     "decide": "ASK (no option matched: profile:location=Pune)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Pune)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:location=Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Bangalore)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:location=Mumbai)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Mumbai)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:location=Austin, TX)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Austin, TX)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-scaleops::5784bc44": {
@@ -11195,7 +11195,7 @@
    },
    "D": {
     "decide": "ASK (skip:optional, not in profile)",
-    "decideWithMeaning": "https://jordanmiller.design"
+    "decideWithMeaning": "ASK (skip:optional, not in profile)"
    }
   },
   "greenhouse-scaleops::a9a0d95e": {
@@ -11327,19 +11327,19 @@
   "greenhouse-twitch::2bce3634": {
    "A": {
     "decide": "ASK (no option matched: profile:location=Pune)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Pune)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:location=Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Bangalore)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:location=Mumbai)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Mumbai)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:location=Austin, TX)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Austin, TX)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "greenhouse-twitch::5784bc44": {
@@ -11381,55 +11381,55 @@
   "greenhouse-twitch::7380d31f": {
    "A": {
     "decide": "ASK (no option matched: profile:school=Pune University)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=Pune University)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:school=IISc Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=IISc Bangalore)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:school=Mumbai University)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=Mumbai University)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:school=University of Texas at Austin)",
-    "decideWithMeaning": "ASK (no option matched: profile:school=University of Texas at Austin)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    }
   },
   "greenhouse-twitch::017338c2": {
    "A": {
     "decide": "ASK (no option matched: profile:degree=Bachelor of Technology)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Bachelor of Technology)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:degree=Master of Technology)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Master of Technology)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:degree=Bachelor of Arts)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Bachelor of Arts)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:degree=Bachelor of Fine Arts)",
-    "decideWithMeaning": "ASK (no option matched: profile:degree=Bachelor of Fine Arts)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    }
   },
   "greenhouse-twitch::bd12c11d": {
    "A": {
     "decide": "ASK (no option matched: profile:discipline=Computer Science)",
-    "decideWithMeaning": "ASK (no option matched: profile:discipline=Computer Science)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:discipline=Computer Science)",
-    "decideWithMeaning": "ASK (no option matched: profile:discipline=Computer Science)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:discipline=Mass Communication)",
-    "decideWithMeaning": "ASK (no option matched: profile:discipline=Mass Communication)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:discipline=Design)",
-    "decideWithMeaning": "ASK (no option matched: profile:discipline=Design)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    }
   },
   "greenhouse-twitch::9594dc9c": {
@@ -11537,7 +11537,7 @@
    },
    "D": {
     "decide": "ASK (skip:optional, not in profile)",
-    "decideWithMeaning": "https://jordanmiller.design"
+    "decideWithMeaning": "ASK (skip:optional, not in profile)"
    }
   },
   "greenhouse-twitch::b8c1fed8": {
@@ -13639,7 +13639,7 @@
    },
    "C": {
     "decide": "ASK (no option matched: answer=Company website)",
-    "decideWithMeaning": "ASK (no option matched: answer=Company website)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "LinkedIn",
@@ -13973,19 +13973,19 @@
   "lever-paytm::0129d95d": {
    "A": {
     "decide": "ASK (no option matched: profile:location=Pune)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Pune)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:location=Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Bangalore)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:location=Mumbai)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Mumbai)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:location=Austin, TX)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Austin, TX)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    }
   },
   "lever-paytm::989f51fa": {
@@ -14495,19 +14495,19 @@
   "lever-spotify::0129d95d": {
    "A": {
     "decide": "ASK (no option matched: profile:location=Pune)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Pune)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:location=Bangalore)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Bangalore)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:location=Mumbai)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Mumbai)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:location=Austin, TX)",
-    "decideWithMeaning": "ASK (no option matched: profile:location=Austin, TX)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    }
   },
   "lever-spotify::42210459": {
@@ -14971,7 +14971,7 @@
    },
    "C": {
     "decide": "ASK (no option matched: answer=Yes)",
-    "decideWithMeaning": "ASK (no option matched: answer=Yes)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (ask:unknown)",
@@ -14985,15 +14985,15 @@
    },
    "B": {
     "decide": "ASK (no option matched: answer=25 LPA)",
-    "decideWithMeaning": "ASK (no option matched: answer=25 LPA)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: answer=18 LPA)",
-    "decideWithMeaning": "ASK (no option matched: answer=18 LPA)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: answer=USD 135,000)",
-    "decideWithMeaning": "ASK (no option matched: answer=USD 135,000)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "lever-zeta::3e44bad3": {
@@ -15003,15 +15003,15 @@
    },
    "B": {
     "decide": "ASK (no option matched: answer=35 LPA)",
-    "decideWithMeaning": "ASK (no option matched: answer=35 LPA)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "C": {
     "decide": "ASK (no option matched: answer=24 LPA)",
-    "decideWithMeaning": "ASK (no option matched: answer=24 LPA)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    },
    "D": {
     "decide": "ASK (no option matched: answer=USD 150,000)",
-    "decideWithMeaning": "ASK (no option matched: answer=USD 150,000)"
+    "decideWithMeaning": "ASK (ask:unknown)"
    }
   },
   "lever-zeta::cb63b6f5": {
@@ -15665,19 +15665,19 @@
   "recruitee-hostpoint::68829953": {
    "A": {
     "decide": "ASK (no option matched: profile:phone=+91 90000 00000)",
-    "decideWithMeaning": "ASK (no option matched: profile:phone=+91 90000 00000)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "B": {
     "decide": "ASK (no option matched: profile:phone=+91 98888 88888)",
-    "decideWithMeaning": "ASK (no option matched: profile:phone=+91 98888 88888)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "C": {
     "decide": "ASK (no option matched: profile:phone=+91 97777 77777)",
-    "decideWithMeaning": "ASK (no option matched: profile:phone=+91 97777 77777)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    },
    "D": {
     "decide": "ASK (no option matched: profile:phone=+1 512 555 0142)",
-    "decideWithMeaning": "ASK (no option matched: profile:phone=+1 512 555 0142)"
+    "decideWithMeaning": "ASK (skip:not sure this saved answer fits: left for you)"
    }
   },
   "recruitee-hostpoint::92fe2019": {

@@ -28,6 +28,21 @@ it to**. Switching to it once looks like a new extension to Chrome, so:
 3. In beta 4's first screen choose **"Used ApplyAgent before? Restore from a backup file"** and pick that file.
 4. Turn on **Keep an automatic backup on this PC** (Backup & move), so a reinstall never loses anything again.
 
+## What's new in 1.0.11: tested on 222 companies worldwide
+
+- **Checked against 2,881 real questions** from 222 companies' public job boards in 10 languages (US, India, UK,
+  Europe, Brazil, Japan, Korea, Taiwan and more). 25 wrong fills were found and fixed; the check now finds 0 for
+  applicants in the US, India, the UK and Germany. Details: reports/round7/ROUND7_REPORT.md.
+- **Safer by design:** a saved fact the list does not offer is asked, not forced in; questions for only some people
+  ("For pre-college applicants…", "If you're less than 3 years out of school…") are asked; "Alternative email",
+  "Can you accommodate this schedule?", "Cost to Company", "PyVISA" and other traps are no longer misread.
+- **Word and character limits** are read from the question and its help text in many languages ("max 200 words",
+  "500 caractères", "400字以内", "in 2-3 sentences"). AI drafts keep to them (cut at a whole sentence), an answer over a
+  limit is never typed, and the answer box shows "143 / 200 words".
+- **More filled from your Profile:** "Province/State", "Not in the US / Not in Canada" on residence lists, language
+  levels on the form's own scale ("Advanced", "C1").
+- **Better question model:** retrained on 3,465 real questions (was 1,539).
+
 ## What's new in 1.0.10
 
 - **"Where do you live?" questions answered from your Profile**: "Are you based in India?", "Do you currently reside in

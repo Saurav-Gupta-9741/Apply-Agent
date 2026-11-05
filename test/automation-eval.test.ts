@@ -7,121 +7,8 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { decideWithMeaning } from "../src/content/meaning";
-import type { Decision, FieldDescriptor, Profile } from "../src/shared/types";
-import { PROFILE } from "./fixtures";
-
-const FULL: Profile = {
-  ...PROFILE,
-  location: "Pune",
-  country: "India",
-  address: "123 Main St, Apt 4B",
-  postalCode: "411001",
-  state: "Maharashtra",
-  educationLevel: "Master's Degree",
-  timezone: "IST",
-  github: "https://github.com/asha",
-  portfolio: "https://asha.dev",
-  currentCompany: "Initech",
-  currentTitle: "Data Analyst",
-  school: "IIT Jodhpur",
-  degree: "Master's Degree",
-  discipline: "Computer Science",
-  graduationYear: "2026",
-  experienceYears: "2",
-  workHistoryComplete: true,
-  preferredLocations: "Bangalore, Remote, Pune",
-  skills: "Python, SQL, Machine Learning, Power BI, Excel, Product Design, CRM, B2B SaaS",
-  skillsInventory: [
-    { name: "Python", years: 2, level: "Advanced" },
-    { name: "SQL", years: 2, level: "Advanced" },
-    { name: "Excel", years: 2, level: "Advanced" },
-    { name: "Power BI", years: 2, level: "Intermediate" },
-    { name: "CRM", years: 2, level: "Intermediate" },
-    { name: "Product Design", years: 2, level: "Intermediate" },
-    { name: "B2B SaaS", years: 2, level: "Intermediate" },
-    { name: "Salesforce", years: 2, level: "Intermediate" },
-    { name: "Jira", years: 2, level: "Intermediate" },
-    { name: "AI", years: 2, level: "Advanced" },
-    { name: "Customer Success", years: 2, level: "Intermediate" },
-    { name: "Open Source", years: 2, level: "Intermediate" },
-  ],
-  languages: [
-    { language: "English", proficiency: "Fluent" },
-    { language: "Hindi", proficiency: "Native" },
-  ],
-  facts: {
-    workCountries: "India",
-    unauthorizedCountries: "United States, United Kingdom, Germany, Canada",
-    noticePeriod: "30 days",
-    currentCtc: "6 LPA",
-    expectedCtc: "20 LPA",
-    relocate: "Yes",
-    heardFrom: "LinkedIn",
-    gender: "Female",
-    hispanic: "No",
-    race: "Asian",
-    veteran: "No",
-    disability: "No",
-    workMode: "any",
-    travel: "Yes",
-    needsAccommodation: "No",
-    pronouns: "she/her",
-    sexualOrientation: "Decline",
-    transgender: "No",
-    over18: "Yes",
-    age: "24",
-  },
-};
-
-const QUICK: Record<string, string> = {
-  "work authorization": "work_authorization",
-  sponsorship: "sponsorship",
-  "notice period": "notice_period",
-  "current CTC": "salary_current",
-  "expected CTC": "salary_expected",
-  relocation: "relocation",
-  "how you heard": "heard_about",
-  gender: "gender",
-  "Hispanic/Latino": "hispanic",
-  "race/ethnicity": "race",
-  "veteran status": "veteran",
-  disability: "disability",
-  "previous employer": "previous_employee",
-  onsite: "onsite",
-  pronouns: "pronouns",
-  "sexual orientation": "sexual_orientation",
-  transgender: "transgender",
-  age: "age",
-  "over 18": "age",
-  accommodation: "accommodation",
-  travel: "travel",
-  language: "language_proficiency",
-  skills: "skills_experience",
-  "where you live": "residence",
-};
-const WORK: Record<string, string> = {
-  title: "currentTitle",
-  company: "currentCompany",
-  location: "location",
-  start: "work_dates",
-  end: "work_dates",
-};
-
-function filledAs(d: Decision): string | undefined {
-  if (d.kind === "profile") {
-    if (d.key === "preferredLocations") return "location";
-    if (d.key === "postalCode") return "postal_code";
-    if (d.key === "educationLevel") return "education_level";
-    if (d.key === "addressLine1" || d.key === "addressLine2") return "address";
-    return d.key;
-  }
-  if (d.kind === "resume") return "resume";
-  if (d.kind === "work") return WORK[d.part] ?? d.part;
-  if (d.kind === "answer") return d.question.startsWith("Quick answers › ") ? QUICK[d.question.slice(16)] ?? "?" : "saved answer";
-  return undefined;
-}
-
-const HUMAN_ONLY_INTENTS = new Set(["consent", "legal_declaration", "signature", "identity"]);
+import type { FieldDescriptor } from "../src/shared/types";
+import { FULL, HUMAN_ONLY_INTENTS, filledAs, rightFill } from "./eval-common";
 
 describe("automation evaluation across all 1,539 real questions", () => {
   it("evaluates automation share and enforces zero wrong fills", () => {
@@ -175,11 +62,7 @@ describe("automation evaluation across all 1,539 real questions", () => {
     };
 
     let totalQuestionCount = 0;
-    // The meaning labels have no "where do you live?" class: those questions carry "other" or "location". The values
-    // themselves are checked one by one in test/factsheet.test.ts.
-    const ok = (as: string, intent: string, label: string) =>
-      as === intent || (as === "fullName" && intent === "firstName" && /preferred/i.test(label))
-      || (as === "residence" && (intent === "other" || intent === "location"));
+    const ok = rightFill;
 
     for (const r of rounds) {
       const labels = JSON.parse(readFileSync(`reports/${r}`, "utf8")) as Array<{
@@ -288,7 +171,7 @@ describe("automation evaluation across all 1,539 real questions", () => {
       expect(perCountry[code].wrong).toBe(0);
     }
     expect(perCountry.US.auto).toBeGreaterThanOrEqual(floor.autoFilled);
-    expect(scorecard.modelOof.accuracy).toBe("77.6%");
-    expect(scorecard.modelOof.precisionAtActThreshold).toBe("95.7%");
+    expect(scorecard.modelOof.accuracy).toBe("79.2%");
+    expect(scorecard.modelOof.precisionAtActThreshold).toBe("97.4%");
   });
 });

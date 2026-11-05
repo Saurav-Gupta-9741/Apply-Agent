@@ -1,6 +1,6 @@
 {
   "source": "reports/oof.json",
-  "questions": 1539,
+  "questions": 3465,
   "rule": {
     "precision": 0.98,
     "minActs": 15,
@@ -13,31 +13,40 @@
       "github": 0.85,
       "portfolio": 0.85,
       "resumeUrl": 0.85,
-      "other_links": 0.95
+      "other_links": 0.95,
+      "work_authorization": 0.95,
+      "sponsorship": 0.95
     }
   },
   "thresholds": {
-    "consent": 0.88,
-    "gender": 0.71,
+    "currentCompany": 0.7,
+    "disability": 0.92,
+    "gender": 0.7,
     "heard_about": 0.7,
-    "notice_period": 0.91,
+    "language_proficiency": 0.7,
+    "legal_declaration": 0.79,
+    "location": 0.89,
+    "notice_period": 0.88,
+    "onsite": 0.73,
     "open_question": 0.95,
     "other": 0.95,
     "other_links": 0.95,
-    "previous_employee": 0.78,
+    "other_person": 0.7,
+    "pronouns": 0.7,
     "race": 0.7,
-    "salary_expected": 0.71,
-    "skills_experience": 0.94,
+    "salary_expected": 0.7,
+    "sexual_orientation": 0.7,
+    "skills_experience": 0.92,
     "sponsorship": 0.95,
-    "work_authorization": 0.97
+    "work_authorization": 0.95
   },
   "detail": {
     "accommodation": {
       "threshold": 0.85,
       "calibrated": false,
-      "acts": 1,
-      "right": 1,
-      "precision": 1
+      "acts": 0,
+      "right": 0,
+      "precision": null
     },
     "address": {
       "threshold": 0.85,
@@ -49,16 +58,16 @@
     "age": {
       "threshold": 0.85,
       "calibrated": false,
-      "acts": 7,
-      "right": 7,
+      "acts": 3,
+      "right": 3,
       "precision": 1
     },
     "consent": {
-      "threshold": 0.88,
+      "threshold": 0.85,
       "calibrated": true,
-      "acts": 53,
-      "right": 52,
-      "precision": 0.9811
+      "acts": 134,
+      "right": 132,
+      "precision": 0.9851
     },
     "country": {
       "threshold": 0.85,
@@ -75,10 +84,10 @@
       "precision": 1
     },
     "currentCompany": {
-      "threshold": 0.85,
-      "calibrated": false,
-      "acts": 8,
-      "right": 8,
+      "threshold": 0.7,
+      "calibrated": true,
+      "acts": 19,
+      "right": 19,
       "precision": 1
     },
     "currentTitle": {
@@ -91,16 +100,16 @@
     "degree": {
       "threshold": 0.85,
       "calibrated": false,
-      "acts": 1,
-      "right": 1,
-      "precision": 1
+      "acts": 0,
+      "right": 0,
+      "precision": null
     },
     "disability": {
-      "threshold": 0.85,
-      "calibrated": false,
-      "acts": 8,
-      "right": 7,
-      "precision": 0.875
+      "threshold": 0.92,
+      "calibrated": true,
+      "acts": 24,
+      "right": 24,
+      "precision": 1
     },
     "discipline": {
       "threshold": 0.85,
@@ -112,64 +121,64 @@
     "education_level": {
       "threshold": 0.85,
       "calibrated": false,
+      "acts": 7,
+      "right": 7,
+      "precision": 1
+    },
+    "email": {
+      "threshold": 0.85,
+      "calibrated": false,
       "acts": 2,
       "right": 2,
       "precision": 1
     },
-    "email": {
+    "experienceYears": {
       "threshold": 0.85,
       "calibrated": false,
       "acts": 3,
       "right": 3,
       "precision": 1
     },
-    "experienceYears": {
+    "firstName": {
       "threshold": 0.85,
       "calibrated": false,
-      "acts": 2,
-      "right": 2,
+      "acts": 3,
+      "right": 3,
       "precision": 1
     },
-    "firstName": {
+    "fullName": {
+      "threshold": 0.85,
+      "calibrated": false,
+      "acts": 3,
+      "right": 3,
+      "precision": 1
+    },
+    "gender": {
+      "threshold": 0.7,
+      "calibrated": true,
+      "acts": 37,
+      "right": 37,
+      "precision": 1
+    },
+    "github": {
       "threshold": 0.85,
       "calibrated": false,
       "acts": 6,
       "right": 6,
       "precision": 1
     },
-    "fullName": {
-      "threshold": 0.85,
-      "calibrated": false,
-      "acts": 4,
-      "right": 4,
-      "precision": 1
-    },
-    "gender": {
-      "threshold": 0.71,
-      "calibrated": true,
-      "acts": 18,
-      "right": 18,
-      "precision": 1
-    },
-    "github": {
-      "threshold": 0.85,
-      "calibrated": false,
-      "acts": 7,
-      "right": 7,
-      "precision": 1
-    },
     "graduationYear": {
       "threshold": 0.85,
       "calibrated": false,
-      "acts": 2,
-      "right": 2,
+      "acts": 1,
+      "right": 1,
       "precision": 1
     },
     "heard_about": {
       "threshold": 0.7,
       "calibrated": true,
-      "acts": 25,
-      "right": 25,
+      "acts": 41,
+      "right": 41,
       "precision": 1
     },
     "hispanic": {
@@ -179,75 +188,82 @@
       "right": 0,
       "precision": null
     },
-    "language_proficiency": {
+    "identity": {
       "threshold": 0.85,
       "calibrated": false,
-      "acts": 7,
-      "right": 7,
-      "precision": 1
+      "acts": 0,
+      "right": 0,
+      "precision": null
+    },
+    "language_proficiency": {
+      "threshold": 0.7,
+      "calibrated": true,
+      "acts": 74,
+      "right": 73,
+      "precision": 0.9865
     },
     "lastName": {
-      "threshold": 0.85,
-      "calibrated": false,
-      "acts": 3,
-      "right": 3,
-      "precision": 1
-    },
-    "legal_declaration": {
-      "threshold": 0.85,
-      "calibrated": false,
-      "acts": 6,
-      "right": 6,
-      "precision": 1
-    },
-    "linkedin": {
-      "threshold": 0.85,
-      "calibrated": false,
-      "acts": 18,
-      "right": 17,
-      "precision": 0.9444
-    },
-    "location": {
-      "threshold": 0.85,
-      "calibrated": false,
-      "acts": 19,
-      "right": 18,
-      "precision": 0.9474
-    },
-    "notice_period": {
-      "threshold": 0.91,
-      "calibrated": true,
-      "acts": 21,
-      "right": 21,
-      "precision": 1
-    },
-    "onsite": {
-      "threshold": 0.85,
-      "calibrated": false,
-      "acts": 20,
-      "right": 19,
-      "precision": 0.95
-    },
-    "open_question": {
-      "threshold": 0.95,
-      "calibrated": true,
-      "acts": 17,
-      "right": 17,
-      "precision": 1
-    },
-    "other": {
-      "threshold": 0.95,
-      "calibrated": false,
-      "acts": 18,
-      "right": 17,
-      "precision": 0.9444
-    },
-    "other_document": {
       "threshold": 0.85,
       "calibrated": false,
       "acts": 1,
       "right": 1,
       "precision": 1
+    },
+    "legal_declaration": {
+      "threshold": 0.79,
+      "calibrated": true,
+      "acts": 24,
+      "right": 24,
+      "precision": 1
+    },
+    "linkedin": {
+      "threshold": 0.85,
+      "calibrated": false,
+      "acts": 29,
+      "right": 27,
+      "precision": 0.931
+    },
+    "location": {
+      "threshold": 0.89,
+      "calibrated": true,
+      "acts": 17,
+      "right": 17,
+      "precision": 1
+    },
+    "notice_period": {
+      "threshold": 0.88,
+      "calibrated": true,
+      "acts": 39,
+      "right": 39,
+      "precision": 1
+    },
+    "onsite": {
+      "threshold": 0.73,
+      "calibrated": true,
+      "acts": 135,
+      "right": 133,
+      "precision": 0.9852
+    },
+    "open_question": {
+      "threshold": 0.95,
+      "calibrated": true,
+      "acts": 29,
+      "right": 29,
+      "precision": 1
+    },
+    "other": {
+      "threshold": 0.95,
+      "calibrated": true,
+      "acts": 15,
+      "right": 15,
+      "precision": 1
+    },
+    "other_document": {
+      "threshold": 0.85,
+      "calibrated": false,
+      "acts": 0,
+      "right": 0,
+      "precision": null
     },
     "other_links": {
       "threshold": 0.95,
@@ -257,60 +273,60 @@
       "precision": null
     },
     "other_person": {
-      "threshold": 0.85,
-      "calibrated": false,
-      "acts": 7,
-      "right": 7,
+      "threshold": 0.7,
+      "calibrated": true,
+      "acts": 15,
+      "right": 15,
       "precision": 1
     },
     "phone": {
-      "threshold": 0.85,
-      "calibrated": false,
-      "acts": 5,
-      "right": 5,
-      "precision": 1
-    },
-    "portfolio": {
-      "threshold": 0.85,
-      "calibrated": false,
-      "acts": 9,
-      "right": 8,
-      "precision": 0.8889
-    },
-    "postal_code": {
       "threshold": 0.85,
       "calibrated": false,
       "acts": 4,
       "right": 4,
       "precision": 1
     },
-    "previous_employee": {
-      "threshold": 0.78,
-      "calibrated": true,
-      "acts": 15,
-      "right": 15,
-      "precision": 1
-    },
-    "pronouns": {
+    "portfolio": {
       "threshold": 0.85,
       "calibrated": false,
-      "acts": 9,
-      "right": 9,
+      "acts": 15,
+      "right": 14,
+      "precision": 0.9333
+    },
+    "postal_code": {
+      "threshold": 0.85,
+      "calibrated": false,
+      "acts": 8,
+      "right": 8,
+      "precision": 1
+    },
+    "previous_employee": {
+      "threshold": 0.85,
+      "calibrated": false,
+      "acts": 30,
+      "right": 28,
+      "precision": 0.9333
+    },
+    "pronouns": {
+      "threshold": 0.7,
+      "calibrated": true,
+      "acts": 16,
+      "right": 16,
       "precision": 1
     },
     "race": {
       "threshold": 0.7,
       "calibrated": true,
-      "acts": 17,
-      "right": 17,
+      "acts": 42,
+      "right": 42,
       "precision": 1
     },
     "relocation": {
       "threshold": 0.85,
       "calibrated": false,
-      "acts": 6,
-      "right": 6,
-      "precision": 1
+      "acts": 23,
+      "right": 21,
+      "precision": 0.913
     },
     "resume": {
       "threshold": 0.85,
@@ -322,50 +338,50 @@
     "salary_current": {
       "threshold": 0.85,
       "calibrated": false,
-      "acts": 4,
-      "right": 4,
+      "acts": 7,
+      "right": 7,
       "precision": 1
     },
     "salary_expected": {
-      "threshold": 0.71,
+      "threshold": 0.7,
       "calibrated": true,
-      "acts": 69,
-      "right": 68,
-      "precision": 0.9855
+      "acts": 125,
+      "right": 123,
+      "precision": 0.984
     },
     "school": {
       "threshold": 0.85,
       "calibrated": false,
-      "acts": 2,
-      "right": 2,
+      "acts": 1,
+      "right": 1,
       "precision": 1
     },
     "sexual_orientation": {
-      "threshold": 0.85,
-      "calibrated": false,
-      "acts": 2,
-      "right": 2,
+      "threshold": 0.7,
+      "calibrated": true,
+      "acts": 16,
+      "right": 16,
       "precision": 1
     },
     "skills_experience": {
-      "threshold": 0.94,
+      "threshold": 0.92,
       "calibrated": true,
-      "acts": 18,
-      "right": 18,
-      "precision": 1
+      "acts": 104,
+      "right": 103,
+      "precision": 0.9904
     },
     "sponsorship": {
       "threshold": 0.95,
       "calibrated": true,
-      "acts": 53,
-      "right": 52,
-      "precision": 0.9811
+      "acts": 127,
+      "right": 127,
+      "precision": 1
     },
     "state": {
       "threshold": 0.85,
       "calibrated": false,
-      "acts": 2,
-      "right": 2,
+      "acts": 3,
+      "right": 3,
       "precision": 1
     },
     "timezone": {
@@ -378,9 +394,9 @@
     "transgender": {
       "threshold": 0.85,
       "calibrated": false,
-      "acts": 1,
-      "right": 1,
-      "precision": 1
+      "acts": 0,
+      "right": 0,
+      "precision": null
     },
     "travel": {
       "threshold": 0.85,
@@ -392,16 +408,16 @@
     "veteran": {
       "threshold": 0.85,
       "calibrated": false,
-      "acts": 12,
-      "right": 11,
-      "precision": 0.9167
+      "acts": 23,
+      "right": 22,
+      "precision": 0.9565
     },
     "work_authorization": {
-      "threshold": 0.97,
+      "threshold": 0.95,
       "calibrated": true,
-      "acts": 25,
-      "right": 25,
-      "precision": 1
+      "acts": 96,
+      "right": 94,
+      "precision": 0.9792
     },
     "work_dates": {
       "threshold": 0.85,

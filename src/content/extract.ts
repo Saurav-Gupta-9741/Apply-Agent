@@ -504,6 +504,33 @@ function labelAfter(el: Element): string {
   return text.length <= 80 ? text : "";
 }
 
+const CONTROL = "input, textarea, select";
+
+/** The help text of a text box, read for length limits ("Max. 200 words", "0 / 500 characters"): what
+ * aria-describedby points to, and short texts with a number beside the box or beside its wrapper (never an element
+ * holding another field). Siblings only, no style lookups: it runs for every text box of a form. */
+function hintOf(el: HTMLInputElement | HTMLTextAreaElement, label: string): { hint?: string } {
+  const parts: string[] = [];
+  for (const id of (el.getAttribute("aria-describedby") ?? "").split(/\s+/).filter(Boolean)) {
+    const d = el.ownerDocument.getElementById(id);
+    if (d) parts.push(d.textContent ?? "");
+  }
+  // The nearest neighbours only (help text sits next to its box), up to the next field or label in either direction.
+  for (const node of [el, el.parentElement]) {
+    if (!node) continue;
+    for (const step of ["nextElementSibling", "previousElementSibling"] as const) {
+      let sib = node[step];
+      for (let i = 0; sib && i < 3; i++, sib = sib[step]) {
+        if (sib.tagName === "LABEL" || sib.matches(CONTROL) || sib.querySelector(CONTROL)) break;
+        const t = (sib.textContent ?? "").replace(/\s+/g, " ").trim();
+        if (t && t.length <= 300 && /\d/.test(t)) parts.push(t);
+      }
+    }
+  }
+  const hint = [...new Set(parts.map((p) => p.replace(/\s+/g, " ").trim()).filter((p) => p && p !== label))].join(" ").slice(0, 500);
+  return hint ? { hint } : {};
+}
+
 export function extractFields(root: ParentNode): ExtractedField[] {
   clearExtractCaches();
   let all = deepQueryAll<FieldElement>(root, CONTROLS);
@@ -563,6 +590,7 @@ export function extractFields(root: ParentNode): ExtractedField[] {
         autocomplete: el.getAttribute("autocomplete") ?? "",
         placeholder: el.getAttribute("placeholder") ?? "",
         maxLength: (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && el.maxLength > 0 ? el.maxLength : undefined,
+        ...(el instanceof HTMLTextAreaElement || (el instanceof HTMLInputElement && el.type === "text") ? hintOf(el, label) : {}),
       },
     });
   }

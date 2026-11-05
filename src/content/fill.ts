@@ -6,6 +6,7 @@ import { deepQueryAll, scopeOf } from "./dom";
 import { isDropzone, visibleText, type ExtractedField, type FieldElement } from "./extract";
 import type { ResumeFile } from "../shared/types";
 import { bestOption, cleanLabel, cssAttr, normalize } from "../shared/text";
+import { checkLength, lengthLimit } from "../shared/length-limit";
 
 export interface FillOutcome {
   ok: boolean;
@@ -341,8 +342,14 @@ export function fillField(field: ExtractedField, value: string, resume?: ResumeF
     case "dropdown":
       // Type-and-pick and open-and-pick interactions are asynchronous: the agent uses fillCombobox / fillDropdown.
       return { ok: false, detail: field.descriptor.control };
-    default:
-      return fillText(el as HTMLInputElement | HTMLTextAreaElement, value, `${field.descriptor.label} ${field.descriptor.placeholder}`);
+    default: {
+      // A limit the question states ("max 200 words", "500 Zeichen"): an answer over it is given to the user to
+      // shorten, never typed (the box's own maxlength is checked in fillText).
+      const d = field.descriptor;
+      const fit = checkLength(value, lengthLimit(`${d.label} ${d.hint ?? ""} ${d.placeholder}`));
+      if (!fit.ok) return { ok: false, detail: `answer is ${fit.problem}` };
+      return fillText(el as HTMLInputElement | HTMLTextAreaElement, value, `${d.label} ${d.placeholder}`);
+    }
   }
 }
 

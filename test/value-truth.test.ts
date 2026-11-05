@@ -240,7 +240,8 @@ describe("10. fragments and notice periods are not answers", () => {
 describe("11. the model acts on links only at the full threshold, and on resume words only", () => {
   it("thresholds", () => {
     for (const intent of ["firstName", "lastName", "fullName", "email", "phone"]) expect(actThreshold(intent)).toBeLessThan(ACT_CONFIDENCE);
-    for (const intent of ["resumeUrl", "linkedin", "github", "portfolio", "location", "country"]) expect(actThreshold(intent)).toBe(ACT_CONFIDENCE);
+    // Never below the full threshold; calibration may make one stricter (location: 0.89 in round 7, 17/17 right).
+    for (const intent of ["resumeUrl", "linkedin", "github", "portfolio", "location", "country"]) expect(actThreshold(intent)).toBeGreaterThanOrEqual(ACT_CONFIDENCE);
   });
   it("a link box that does not say resume is not filled with the resume link", () => {
     const p = { ...FULL, resumeUrl: "https://example.com/cv.pdf" };

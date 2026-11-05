@@ -1,40 +1,40 @@
 {
   "totalQuestions": 1539,
   "modelOof": {
-    "total": 1539,
-    "accuracy": "77.6%",
-    "precisionAtActThreshold": "95.7%",
+    "total": 3465,
+    "accuracy": "79.2%",
+    "precisionAtActThreshold": "97.4%",
     "actThreshold": 0.85
   },
   "automation": {
-    "autoFilled": 583,
-    "autoShare": "37.9%",
+    "autoFilled": 586,
+    "autoShare": "38.1%",
     "draft": 0,
-    "askOnce": 804,
+    "askOnce": 801,
     "humanOnly": 152,
     "wrong": 0,
     "wrongList": []
   },
   "perCountry": {
     "US": {
-      "auto": 583,
+      "auto": 586,
       "wrong": 0
     },
     "IN": {
-      "auto": 583,
+      "auto": 586,
       "wrong": 0
     },
     "GB": {
-      "auto": 583,
+      "auto": 586,
       "wrong": 0
     },
     "DE": {
-      "auto": 565,
+      "auto": 568,
       "wrong": 0
     }
   },
   "latency": {
-    "p50Ms": 0.123,
-    "p99Ms": 2.472
+    "p50Ms": 0.166,
+    "p99Ms": 5.02
   }
 }

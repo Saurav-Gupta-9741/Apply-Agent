@@ -16,7 +16,10 @@ const MIN_ACTS = 15;
 /** Below this, 15 right answers are too few to trust a reading (the 0.70-0.85 band is 82% right overall). */
 const FLOOR = 0.7;
 /** Never lowered below this. */
-const NEVER_LOWER = { other: 0.95, open_question: 0.95, linkedin: DEFAULT, github: DEFAULT, portfolio: DEFAULT, resumeUrl: DEFAULT, other_links: 0.95 };
+// Work authorization and sponsorship answers decide whether an application is screened out: a reading must be very
+// sure (round 7 lowered them to 0.92 / 0.83 on 98% precision; policy keeps them at 0.95).
+const NEVER_LOWER = { other: 0.95, open_question: 0.95, linkedin: DEFAULT, github: DEFAULT, portfolio: DEFAULT, resumeUrl: DEFAULT, other_links: 0.95,
+  work_authorization: 0.95, sponsorship: 0.95 };
 
 const oof = JSON.parse(readFileSync("reports/oof.json", "utf8"));
 const intents = [...new Set(oof.map((o) => o.guess))].sort();

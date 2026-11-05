@@ -13,6 +13,29 @@ import { aiStatus, buildDraftPrompt, checkDraft, draftAnswer, INSUFFICIENT, type
 import { docxToText, extractPdfText } from "../shared/resume-parse";
 import { isNeverRemembered, isSecretField } from "../content/classify";
 import type { FieldDescriptor, Profile } from "../shared/types";
+import { checkLength, fitToLimit, lengthCounter, lengthLimit, type LengthLimit } from "../shared/length-limit";
+
+/** The length limit of a question: its words, help text and placeholder, and the box's maxlength. */
+export function limitOfField(field: FieldDescriptor): LengthLimit | undefined {
+  return lengthLimit(`${field.label} ${field.hint ?? ""} ${field.placeholder ?? ""}`, field.maxLength);
+}
+
+/** A live "143 / 200 words" line under a text box; red when over a hard limit. Nothing when there is no limit. */
+export function limitCounter(input: HTMLInputElement | HTMLTextAreaElement, limit: LengthLimit | undefined): HTMLElement | undefined {
+  if (!limit) return undefined;
+  const line = document.createElement("p");
+  line.className = "length-counter";
+  line.setAttribute("aria-live", "polite");
+  const update = () => {
+    line.textContent = lengthCounter(input.value, limit) ?? "";
+    const fit = checkLength(input.value, limit);
+    line.classList.toggle("over", !fit.ok);
+    line.title = fit.problem ?? "";
+  };
+  input.addEventListener("input", update);
+  update();
+  return line;
+}
 
 export interface DraftContext {
   question: string;
@@ -149,7 +172,22 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
 
     try {
       const resumeText = await resumeTextOf(ctx.profile);
-      const text = await draftAnswer(ctx.question, ctx.profile, ctx.job, { resumeText });
+      const limit = limitOfField(ctx.field);
+      const raw = await draftAnswer(ctx.question, ctx.profile, ctx.job, { resumeText, limit });
+      // Cut to the question's limit at a whole sentence; a draft whose first sentence is already too long is not offered.
+      const text = raw && !raw.includes(INSUFFICIENT) ? fitToLimit(raw, limit) : raw;
+      const shortened = !!raw && !!text && text !== raw.trim();
+      if (raw && !raw.includes(INSUFFICIENT) && !text) {
+        previewBox.replaceChildren();
+        const tooLong = document.createElement("div");
+        tooLong.className = "draft-insufficient";
+        tooLong.textContent = `The draft did not fit this question's limit (${lengthCounter("", limit)?.replace(/^0 \/ /, "") ?? "length"}). Please write a short answer yourself.`;
+        previewBox.append(tooLong);
+        previewBox.style.display = "block";
+        draftBtn.disabled = false;
+        draftBtn.textContent = "Draft answer with Chrome AI";
+        return;
+      }
       if (!text || text.includes(INSUFFICIENT)) {
         previewBox.replaceChildren();
         const insufficientCard = document.createElement("div");
@@ -179,6 +217,14 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
       textarea.rows = 4;
       textarea.value = text;
       previewBox.append(textarea);
+      const counter = limitCounter(textarea, limit);
+      if (counter) previewBox.append(counter);
+      if (shortened) {
+        const note = document.createElement("p");
+        note.className = "draft-note";
+        note.textContent = "Shortened at a whole sentence to fit this question's limit.";
+        previewBox.append(note);
+      }
 
       if (warnings.length) {
         const warnList = document.createElement("ul");
@@ -214,8 +260,14 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
       skipBtn.title = "Discard this draft";
 
       useBtn.addEventListener("click", async () => {
-        useBtn.disabled = true;
         const finalDraft = textarea.value.trim();
+        const fit = checkLength(finalDraft, limit);
+        if (!fit.ok) {
+          ctx.toast?.(`Too long: ${fit.problem}`, "warn");
+          textarea.focus();
+          return;
+        }
+        useBtn.disabled = true;
         await ctx.onUse(finalDraft);
         previewBox.style.display = "none";
         draftBtn.textContent = "Draft accepted (assisted)";
