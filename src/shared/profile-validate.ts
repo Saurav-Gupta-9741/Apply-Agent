@@ -6,6 +6,7 @@
 
 import { citySuggestion } from "./city-check";
 import { countriesInLocation } from "./countries";
+import { countriesOfCity, statesOfCity } from "./places";
 
 export type IssueLevel = "error" | "warn";
 export interface FieldIssue {
@@ -386,9 +387,16 @@ export function validateProfile(values: ProfileValues, today = new Date()): Fiel
       const better = citySuggestion(city);
       if (better) add("location", "warn", `Did you mean ${better}? Forms get the city exactly as you type it.`);
       else if (iso) {
-        const places = countriesInLocation(city);
         const name = canonicalCountry(countryRaw);
+        // The offline city lists first (India, US, Canada, Australia, UK), then the big job-market cities.
+        const listed = countriesOfCity(city);
+        const places = listed.length ? listed.map((c) => canonicalCountry(c)) : countriesInLocation(city);
         if (places.length && !places.includes(name)) add("location", "warn", `${city} is in ${places[0]}, but your country is ${name}. Check both.`);
+        else {
+          const stateName = canonicalState(countryRaw, val("state"));
+          const where = stateName ? statesOfCity(iso, city) : [];
+          if (stateName && where.length && !where.includes(stateName)) add("location", "warn", `${city} is in ${where[0]}, but your state is ${stateName}. Check both.`);
+        }
       }
     }
   }

@@ -26,10 +26,10 @@ import { loadMyCompanies } from "./discover";
 import { MY_COMPANIES_KEY } from "../shared/jobs/companies";
 import { COMMON_SCREENING_QUESTIONS } from "../shared/screening";
 import { findSuggestedCorrection } from "../shared/corrections";
-import { KNOWN_CITIES } from "../shared/city-check";
+import { linkPlaces, mountPlaces, refreshPlaceLists } from "./profile-places";
 import { AUTO_BACKUP_FILE, loadAutoBackup, setAutoBackup } from "../shared/auto-backup";
 import { diversityFactFromAnswer, EDUCATION_STATUS_OPTIONS } from "../shared/quick-answers";
-import { allCountryNames, normalizeProfileValue, statesFor, timezoneChoices, validateProfile, type FieldIssue, type ProfileValues } from "../shared/profile-validate";
+import { allCountryNames, normalizeProfileValue, timezoneChoices, validateProfile, type FieldIssue, type ProfileValues } from "../shared/profile-validate";
 import { extractTechTerms } from "../shared/techterms";
 import { buildDiagnostic, saveDiagnosticFile } from "../shared/diagnostic";
 import { clockTime, loadPacing, loadPacingState, PACING_BOUNDS, savePacing, statusLine, type PacingSettings } from "../shared/pacing";
@@ -37,12 +37,14 @@ import type { ConsentBox, ConsentList, TickResult } from "../shared/consent-revi
 import { initTracker, renderTrackerCrm, type TrackerUi } from "./tracker";
 import { initUsageMeter, renderUsageMeter } from "./usage-meter";
 import { renderFitCard } from "./fit-card";
+import { applyResumeTabClosed, applyResumeTabMoved, initApplyResume, renderApplyResume, sendWithResume } from "./apply-resume";
 // >>> L3 form structure
 import { mountFormStructureButton } from "./form-structure";
 // <<< L3
 import { headline, rowState, summarize, type LiveField } from "./checklist";
 // >>> L4 ai drafts
 import { createDraftWidget, isDraftableField } from "./drafts";
+import { factHints, focusQuickAnswer } from "./fact-hints";
 // <<< L4
 
 let cachedCorrections: UserCorrection[] = [];
@@ -306,6 +308,7 @@ async function refreshPage(): Promise<void> {
   ($("preview") as HTMLButtonElement).disabled = !canFill || agentRunning;
   void renderUsageMeter({ toast: (m, t) => toast(m, t ?? ""), showPlan: () => showSection("profile") });
   void renderFitCard(tab?.id, canFill, () => showSection("profile"));
+  void renderApplyResume(tab?.id, url, canFill);
   await renderDetection(tab, handsOff, embedded, () => mine === pageCheck);
 }
 
@@ -490,7 +493,10 @@ chrome.tabs.onActivated.addListener((info) => {
   if (pinnedTabId === undefined) showTab(info.tabId, "");
   void refreshPage();
 });
-chrome.tabs.onRemoved.addListener((id) => tabResults.delete(id));
+chrome.tabs.onRemoved.addListener((id) => {
+  tabResults.delete(id);
+  applyResumeTabClosed(id); // a resume chosen for this tab's application only
+});
 /** Page loads per tab ("loading" is reported even where the address is not), to notice a step that loaded a new page. */
 const navigations = new Map<number, number>();
 chrome.tabs.onUpdated.addListener((id, info) => {
@@ -503,6 +509,7 @@ chrome.tabs.onUpdated.addListener((id, info) => {
     const saved = tabResults.get(id);
     if (saved && !samePage(saved.url, info.url)) forgetTab(id);
   }
+  if (info.url && !(agentRunning && id === runTabId)) applyResumeTabMoved(id, info.url); // another job: Profile resume again
   if ((info.url || info.status === "complete") && (id === shownTabId || shownTabId === undefined)) void refreshPage();
 });
 chrome.runtime.onMessage.addListener((message: Message, sender) => {
@@ -598,7 +605,8 @@ async function send(message: Message): Promise<RunReport | undefined> {
     return (await chrome.tabs.sendMessage(tabId, message).catch(() => undefined)) as RunReport | undefined;
   }
   // Only the frame holding the application acts (never a search box on the page around an embedded form).
-  return sendToApplication(tabId, message);
+  // A Fill carries the resume chosen for this tab's application, if any.
+  return sendWithResume(tabId, message, (m) => sendToApplication(tabId, m));
 }
 
 type Tone = "ok" | "warn" | "bad" | "info";
@@ -615,10 +623,12 @@ function setStatus(text: string, tone: Tone = "info"): void {
  * put there, or why it was not filled. */
 function fieldNote(r: FieldResult): string {
   const value = r.decision.kind === "profile" || r.decision.kind === "answer" || r.decision.kind === "work" || r.decision.kind === "draft" ? r.decision.value
-    : r.decision.kind === "resume" ? "your resume file" : "";
+    : r.decision.kind === "resume" ? (r.detail && r.detail !== "would fill" ? r.detail : "your resume file") : "";
   const short = (text: string) => (text.length > 80 ? `${text.slice(0, 79)}…` : text);
   if (r.review) return r.detail ?? "";
-  if (r.status === "filled" && value) return `→ ${short(value)}`;
+  // A value the fact sheet found says where it came from ("from your work history: Acme").
+  const source = (r.decision.kind === "profile" || r.decision.kind === "answer") && r.decision.source ? ` (${r.decision.source})` : "";
+  if (r.status === "filled" && value) return `→ ${short(value)}${source}`;
   if (r.status === "already_filled") return r.detail ? `Kept what was there: ${short(r.detail)}` : "";
   return r.detail && r.detail !== "would fill" ? r.detail : "";
 }
@@ -780,6 +790,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   const input = answerInput(r);
   if (r.field.maxLength && !(input instanceof HTMLSelectElement)) input.maxLength = r.field.maxLength;
   card.append(input);
+  card.append(...factHints(r, profile, input, (key) => void openQuickAnswer(key)));
   const suggested = findSuggestedCorrection(ctx.corrections ?? [], r.field.label);
   if (suggested && suggested.count === 1 && !onPageOnly) {
     const chipBtn = button(`Use previous correction: "${suggested.answer}"`, {
@@ -872,6 +883,15 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   foot.append(left, save);
   card.append(foot);
   return card;
+}
+
+/** "Open Quick answers" on a question card: the Answers section, scrolled to that Quick answer. */
+async function openQuickAnswer(key: string): Promise<void> {
+  showSection("answers");
+  if (!focusQuickAnswer(key)) {
+    await renderQuick();
+    focusQuickAnswer(key);
+  }
 }
 
 function renderQuestions(report: RunReport): void {
@@ -1311,12 +1331,11 @@ if (formStructBtn) {
 const PROFILE_GROUPS: Array<{ title: string; fields: Array<[ProfileKey, string, string, boolean?]> }> = [
   { title: "Personal", fields: [
     ["firstName", "First name", "text"], ["lastName", "Last name", "text"], ["email", "Email", "email"],
-    ["phone", "Phone", "tel"], ["location", "City", "text"], ["country", "Country", "text"],
+    ["phone", "Phone", "tel"], ["country", "Country", "text"], ["state", "State / Province", "text"], ["location", "City", "text"],
   ] },
   { title: "Address & Location", fields: [
     ["addressLine1", "Address line 1", "text", true],
     ["addressLine2", "Address line 2 (apt, suite)", "text", true],
-    ["state", "State / Province", "text"],
     ["postalCode", "Postal / ZIP code", "text"],
     ["timezone", "Timezone (e.g. IST, UTC)", "text"],
   ] },
@@ -1467,12 +1486,6 @@ function ensureDatalist(id: string, values: readonly string[]): HTMLElement {
   return list;
 }
 
-/** The State list follows the chosen country (India, US, Canada, Australia, UK; free text elsewhere). */
-function refreshStateList(): void {
-  const country = document.querySelector<HTMLInputElement>("#profile-form input[name='country']")?.value ?? "";
-  ensureDatalist("state-list", []).replaceChildren(...statesFor(country).map((v) => h("option", { value: v })));
-}
-
 /** The Profile form's values, as the checks read them. */
 function profileFormValues(): ProfileValues {
   const values: ProfileValues = {};
@@ -1552,10 +1565,9 @@ async function renderProfile(): Promise<void> {
     }
     form.append(h("div", { class: "card" }, h("div", { class: "card-head" }, h("h2", {}, group.title)), grid));
   }
-  ensureDatalist("city-suggestions", KNOWN_CITIES);
   ensureDatalist("country-list", allCountryNames());
   ensureDatalist("timezone-list", timezoneChoices());
-  refreshStateList();
+  mountPlaces(); // Country → State → City suggestion lists (src/sidepanel/profile-places.ts)
   // Saved values are checked straight away, so a bad value saved before (or imported) shows its note.
   touchedKeys.clear();
   for (const key of PROFILE_KEYS) if ((profile[key] ?? "").trim()) touchedKeys.add(key);
@@ -1823,7 +1835,7 @@ function profileProblems(): Array<{ text: string; el: HTMLElement }> {
 $("profile-form").addEventListener("input", (e) => {
   profileDirty = true;
   const name = (e.target as HTMLInputElement).name;
-  if (name === "country") refreshStateList();
+  if (name === "country" || name === "state") refreshPlaceLists();
   // While typing, a shown note updates or goes away; a new problem waits until the field is left.
   if (name) refreshFieldNotes();
 });
@@ -1831,6 +1843,8 @@ $("profile-form").addEventListener("change", (e) => {
   profileDirty = true;
   const name = (e.target as HTMLInputElement).name;
   if (name) touchedKeys.add(name);
+  // A new country or state clears a state / city that belongs elsewhere (with a note under City).
+  if (name === "country" || name === "state") linkPlaces(name);
   if (name === "country" || name === "educationStatus") {
     const values = profileFormValues();
     for (const k of ["state", "postalCode", "phone", "location", "graduationYear"]) if (values[k]) touchedKeys.add(k);
@@ -2762,6 +2776,7 @@ initTracker(trackerUi, () => void renderTrackerCrm(trackerUi));
 initDiscover({ ...trackerUi, openProfile: () => showSection("profile") });
 // <<< arena-fix
 initUsageMeter({ toast: (m, t) => toast(m, t ?? ""), showPlan: () => showSection("profile") });
+initApplyResume({ toast: (m, t) => toast(m, t ?? "ok"), showProfile: () => showSection("profile") });
 void (async () => {
   const cached = await chrome.storage.local.get(["feedCache", "feedSource"]);
   if (cached.feedCache) {

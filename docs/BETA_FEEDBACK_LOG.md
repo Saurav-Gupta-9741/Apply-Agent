@@ -81,6 +81,20 @@ Status: **Fixed** (in a released build, with a test), **Not a bug** (works as de
 | 5.4 | (found by the tests) The Quick answers setup wizard could close by itself after Next | Fixed in 1.0.8 | Each step saves the profile, and the Quick answers card redrew itself ~150 ms later, replacing the wizard with the plain form (timing-dependent: 3 of 4 runs). The card no longer redraws while the wizard is open; the wizard redraws it once when it is done |
 | 5.5 | Show which fields the AI filled (like Simplify's sparkle) | Fixed in 1.0.8 | Fields answered because the on-device question model understood an unfamiliar wording, and AI drafts you approved, are marked "AI" in the field list, with a line asking for a quick check. Fields the rules knew are not marked |
 
+## Round 6: Stripe form vs Simplify, Profile and resume (2026-11-05) → 1.0.9
+
+| # | Flaw reported | Status | What changed |
+|---|---|---|---|
+| 6.1 | Phone "did not stick" on a new Greenhouse form | Fixed | The box formats the number as typed or keeps only the national part beside its country picker: the number is checked by its digits, typed key by key when needed |
+| 6.2 | School "options did not appear" | Fixed | The list searches a server after a pause: ApplyAgent waits for the results, searches the full name of short forms (IIT, NIT, BITS…) and the distinctive word; only the same institution is picked, never another campus or "Other" |
+| 6.3 | Degree left for the user (Simplify filled it) | Fixed | M.Tech/MCA/M.E. → Master's, B.Tech/BCA/B.E./B.Com → Bachelor's, Ph.D → Doctorate, on Greenhouse's level lists |
+| 6.4 | Simplify answered more questions | Fixed (and beyond) | Work eligibility / sponsorship: Simplify asks them at sign-up; ApplyAgent now offers to answer them once in Quick answers right on the question. Employer and job title (Simplify left them too) are filled from work history. Education in other words, total experience, "experience with X" answered from the user's own data, marked AI with the source |
+| 6.5 | Country → State → City as lists | Fixed | Linked suggestion lists (offline data, all Indian states and UTs, US/CA/AU/UK), any city can still be typed |
+| 6.6 | Resume upload first in Profile, clearly worded | Fixed | "Fill your profile from your resume" card at the top |
+| 6.7 | Resume reading not accurate; GitHub/LinkedIn behind words not read | Fixed | Links read from PDF annotations and Word hyperlinks with their words; a repository link is never the profile; parser fixes; labelled set: 99%/96% → 100%/100% precision/recall |
+| 6.8 | Use the Profile resume in Apply, with a different one for one application | Fixed | Resume row in Apply; "Use a different resume" for this tab's application only (Fill and Preview); Profile unchanged |
+| 6.9 | On-device AI for every question, based on the resume | Partly, by design | The user's laptop cannot run Chrome's built-in AI (needs 16 GB RAM or a 4 GB GPU). Short factual questions are answered from the resume/profile without any model (works everywhere, never invents); open questions use Chrome AI drafts (now with the resume) where available, else asked |
+
 ## Still open
 
 | Item | Why open |

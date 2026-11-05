@@ -231,8 +231,9 @@ export interface FieldDescriptor {
 export const NEVER_REMEMBER: ReadonlySet<SensitiveTopic> = new Set<SensitiveTopic>(["identity", "signature"]);
 
 export type Decision =
-  | { kind: "profile"; key: ProfileKey | "fullName"; value: string }
-  | { kind: "answer"; value: string; question: string; reused?: boolean }
+  /** `source`: where a value found by the fact sheet came from ("from your work history: Acme"), shown in the panel. */
+  | { kind: "profile"; key: ProfileKey | "fullName"; value: string; source?: string }
+  | { kind: "answer"; value: string; question: string; reused?: boolean; source?: string }
   /** A value from the user's work history, for a field in the n-th job block. */
   | { kind: "work"; index: number; part: keyof WorkEntry; value: string }
   | { kind: "resume" }
@@ -414,10 +415,12 @@ export interface Detection {
 
 /** Messages between the extension's parts. */
 export type Message =
-  /** continuing: a later step of a run already under way (a new page of the same application). */
-  | { type: "RUN"; mode: Mode; continuing?: boolean; fillOnly?: boolean }
+  /** continuing: a later step of a run already under way (a new page of the same application).
+   * resume: a resume for this application only (Apply panel); attached instead of the Profile's resume, which is
+   * never changed. Absent: the Profile's resume (the queue never sends one). */
+  | { type: "RUN"; mode: Mode; continuing?: boolean; fillOnly?: boolean; resume?: ResumeFile }
   /** Read-only preview: what the agent would do, without touching the page. */
-  | { type: "SCAN" }
+  | { type: "SCAN"; /** A resume chosen for this application only (Preview reads it like Fill). */ resume?: ResumeFile }
   /** Sent by the silent detector after reading a page (nothing typed). */
   | { type: "DETECTED"; detection: Detection }
   /** Click the page's own "Apply" button (only when the user asks, from the panel). */

@@ -119,12 +119,16 @@ const DEGREE_PATTERNS: Record<DegreeBucket, RegExp[]> = {
     /\b(bachelor|bachelors|baccalaureat|licenciatura|bacc|undergraduate)\b/i,
     // Two-letter codes (BS, BA, BE, …) are matched separately, as whole tokens only (see SHORT_DEGREE_CODES).
     /\b(bsc|bba|btech|beng|bca|bfa|b tech|b sc)\b/i,
+    // Indian bachelor's degrees: B.Com, B.Arch, B.Pharm, B.Ed, LLB, MBBS, BDS.
+    /\b(bcom|b com|barch|b arch|bpharm|b pharm|b ed|llb|mbbs|bds)\b/i,
     /\b4 year (college )?degree\b/i,
     /\bfour year (college )?degree\b/i,
   ],
   [DegreeBucket.MASTER]: [
     /\b(master|masters|magister|postgraduate|graduate degree)\b/i,
     /\b(msc|mtech|mba|meng|mca|mfa|m tech|m sc)\b/i,
+    // M.Com, M.Arch, M.Pharm, M.Phil, LLM. ("march" alone is a month, never a degree.)
+    /\b(mcom|m com|m arch|mpharm|m pharm|mphil|m phil|llm)\b/i,
   ],
   [DegreeBucket.DOCTORATE]: [
     /\b(doctorate|doctoral|doctor of philosophy|terminal degree|postdoc)\b/i,
@@ -384,6 +388,16 @@ const COUNTRIES: CountryInfo[] = [
   { alpha2: "NZ", alpha3: "NZL", name: "new zealand", dialCode: "64", aliases: ["nz", "nzl"] },
 ];
 
+/** Countries (title case) whose dialling code is `code`: "91" → ["India"], "1" → ["United States", "Canada"]. */
+export function countriesForDialCode(code: string): string[] {
+  return COUNTRIES.filter((c) => c.dialCode === code).map((c) => c.name.replace(/\b\w/g, (ch) => ch.toUpperCase()));
+}
+
+/** The dialling code of the country a text names ("India" → "91"), when it names one. */
+export function dialCodeOfCountry(text: string): string | undefined {
+  return classifyText(text).country?.dialCode;
+}
+
 const COUNTRY_BY_CODE = new Map<string, CountryInfo>();
 const COUNTRY_BY_ALIAS = new Map<string, CountryInfo>();
 
@@ -489,7 +503,7 @@ export interface ClassifiedDomain {
  * "Bachelor of Science (B.S.)"). "Same as above" is not an Associate degree. */
 const SHORT_DEGREE_CODES: [string, DegreeBucket][] = [
   ["bs", DegreeBucket.BACHELOR], ["ba", DegreeBucket.BACHELOR], ["be", DegreeBucket.BACHELOR],
-  ["ms", DegreeBucket.MASTER], ["ma", DegreeBucket.MASTER],
+  ["ms", DegreeBucket.MASTER], ["ma", DegreeBucket.MASTER], ["me", DegreeBucket.MASTER],
   ["md", DegreeBucket.DOCTORATE], ["jd", DegreeBucket.DOCTORATE],
   ["aa", DegreeBucket.ASSOCIATE], ["as", DegreeBucket.ASSOCIATE],
 ];
@@ -513,6 +527,11 @@ function degreeSpec(raw: string): string | undefined {
   if (/\b(btech|mtech|b tech|m tech|technology)\b/.test(n)) return "tech";
   if (/\b(bba|mba|dba|business)\b/.test(n)) return "business";
   if (/\b(bca|mca|computer applications?)\b/.test(n)) return "computer_applications";
+  if (/\b(bcom|mcom|b com|m com|commerce)\b/.test(n)) return "commerce";
+  if (/\b(barch|b arch|m arch|architecture)\b/.test(n)) return "architecture";
+  if (/\b(bpharm|mpharm|b pharm|m pharm|pharmacy)\b/.test(n)) return "pharmacy";
+  if (/\b(bds|dental|dentistry)\b/.test(n)) return "dental";
+  if (/\b(mphil|m phil)\b/.test(n)) return "mphil";
   if (/\b(bfa|mfa|fine arts?)\b/.test(n)) return "fine_arts";
   if (/\b(bsc|msc|b sc|m sc|science|sciences)\b/.test(n) || code("bs", "ms")) return "science";
   if (/\b(beng|meng|b eng|m eng|engineering)\b/.test(n) || code("be", "me")) return "engineering";
@@ -520,7 +539,7 @@ function degreeSpec(raw: string): string | undefined {
   if (/\b(phd|ph d|dphil|philosophy)\b/.test(n)) return "philosophy";
   if (/\b(medicine|mbbs)\b/.test(n) || code("md")) return "medicine";
   if (/\b(juris|law|llb|llm)\b/.test(n) || code("jd")) return "law";
-  if (/\b(ed d|edd|education)\b/.test(n)) return "education";
+  if (/\b(ed d|edd|b ed|education)\b/.test(n)) return "education";
   return undefined;
 }
 
@@ -1440,6 +1459,9 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
     let tie = false;
     for (const c of validCandidates) {
       if (distinguishingDiff(wantedNorm, c.normalized)) continue;
+      // One word swapped for another is another thing with the same pattern: "Indian Institute of Technology
+      // Jodhpur" is not "… Delhi", "University of Pune" is not "University of Mumbai".
+      if ([...wantedStems].some((s) => !c.stems.has(s)) && [...c.stems].some((s) => !wantedStems.has(s))) continue;
       let shared = 0;
       for (const s of wantedStems) if (c.stems.has(s)) shared++;
       const denom = wantedStems.size + c.stems.size - shared;

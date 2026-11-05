@@ -28,6 +28,23 @@ it to**. Switching to it once looks like a new extension to Chrome, so:
 3. In beta 4's first screen choose **"Used ApplyAgent before? Restore from a backup file"** and pick that file.
 4. Turn on **Keep an automatic backup on this PC** (Backup & move), so a reinstall never loses anything again.
 
+## What's new in 1.0.9
+
+- **New Greenhouse forms fill properly** (Stripe and others): the phone number next to a country picker, the School
+  list that searches as you type ("IIT Jodhpur" finds "Indian Institute of Technology Jodhpur", never another campus,
+  never "Other"), and Indian degrees (M.Tech, MCA, B.E., B.Com…) on lists of "Master's / Bachelor's Degree".
+- **New questions answered from your own data**, marked AI with where it came from: current or previous employer and
+  job title (from your work history), Branch, Stream, College name, Year of passing, total experience as you saved it,
+  "Do you have experience with X?" (Yes only when X is in your skills, jobs or projects). Anything unclear is asked.
+- **Help on questions that stay asked**: "When can you start?" suggests "After graduating in May 2027" for you to check;
+  work-permit and visa questions offer a button to answer them once in Quick answers.
+- **Resume reading**: links hidden behind words ("LinkedIn", "GitHub", your name, "Portfolio") are read from PDF and
+  Word files; a project's GitHub link is never taken as your profile; better degrees, education tables and job lines.
+- **Profile**: the resume card is first ("Fill your profile from your resume"); Country → State → City lists follow each
+  other (you can still type any city).
+- **Apply panel**: shows the resume that will be attached, and "Use a different resume" for one application only;
+  your Profile's resume is never changed.
+
 ## What's new in 1.0.8
 
 - **Fields answered with the on-device AI are marked ✨ AI** in the field list: a question in unfamiliar words that

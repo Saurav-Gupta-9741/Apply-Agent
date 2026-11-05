@@ -84,6 +84,52 @@ export function fillText(el: HTMLInputElement | HTMLTextAreaElement, rawValue: s
   return el.value === value ? { ok: true } : { ok: false, detail: "value did not stick" };
 }
 
+const digitsOf = (s: string) => s.replace(/\D/g, "");
+
+/** Type text key by key, the way a person does: phone boxes that format as you type, or that keep their own state and
+ * ignore a whole value put in at once, take it this way. */
+function typeKeys(el: HTMLInputElement | HTMLTextAreaElement, text: string): void {
+  const key = (type: string, k: string) => el.dispatchEvent(new KeyboardEvent(type, { key: k, bubbles: true, composed: true, cancelable: true }));
+  el.focus();
+  if (el.value) {
+    setNativeValue(el, "");
+    el.dispatchEvent(new InputEvent("input", { bubbles: true, composed: true, inputType: "deleteContentBackward" }));
+  }
+  for (const ch of text) {
+    key("keydown", ch);
+    key("keypress", ch);
+    const before = new InputEvent("beforeinput", { bubbles: true, composed: true, cancelable: true, data: ch, inputType: "insertText" });
+    if (el.dispatchEvent(before)) {
+      setNativeValue(el, el.value + ch);
+      el.dispatchEvent(new InputEvent("input", { bubbles: true, composed: true, data: ch, inputType: "insertText" }));
+    }
+    key("keyup", ch);
+  }
+  fire(el, "change");
+  el.blur();
+}
+
+/** A phone number box. Many format the number as it is typed ("9000000000" shows as "90000 00000") or keep it in
+ * their own state: the number counts as filled when the box holds its digits. A box that shows the country code
+ * itself before the number (`code`, from the picker beside it) is fine; the same code twice ("+91 +91 …") is not. */
+export function fillPhone(el: HTMLInputElement | HTMLTextAreaElement, value: string, code?: string): FillOutcome {
+  const want = digitsOf(value);
+  // The national number in a box that adds the code itself is fine; a full "+91…" number in such a box is not (it
+  // would read "+91 +91 …"), so that only counts when the digits are exactly the number's.
+  const holds = () => {
+    const got = digitsOf(el.value);
+    return !!want && (got === want || (!!code && !value.trim().startsWith("+") && got === code + want)
+      // A box beside a country picker keeps only the national number of a full "+91 …" number.
+      || (!!code && value.trim().startsWith("+") && want === code + got && got.length >= 6));
+  };
+  const first = fillText(el, value);
+  if (first.ok || holds()) return { ok: true };
+  if (/characters; this field allows/.test(first.detail ?? "")) return first;
+  typeKeys(el, value);
+  if (holds()) return { ok: true };
+  return { ok: false, detail: el.value.trim() ? `the box shows "${el.value.trim()}", not ${value}` : "value did not stick" };
+}
+
 function fillSelect(el: HTMLSelectElement, value: string): FillOutcome {
   const allOptions = Array.from(el.options);
   // Exclude placeholder and disabled options from match candidates
@@ -267,6 +313,8 @@ export function currentValue(field: ExtractedField): string {
     if (nameEl && cleanLabel(nameEl.textContent ?? "")) return cleanLabel(nameEl.textContent ?? "");
   }
   if (field.descriptor.control === "dropdown") return dropdownValue(el);
+  // react-select empties its text box once a choice is made and shows the choice beside it.
+  if (el instanceof HTMLInputElement && el.getAttribute("role") === "combobox") return el.value.trim() || comboboxShown(el);
   if (el instanceof HTMLSelectElement) {
     const selected = el.selectedOptions[0];
     return selected && selected.value ? optionLabel(selected) : "";
@@ -307,6 +355,8 @@ const OPTION_SELECTOR = [
   "[data-automation-id='select-option']",
   "[data-automation-id='menuItem']",
   "[data-reach-combobox-option]",
+  // react-select (new Greenhouse job boards, many React forms); versions before 5.8 give options no role.
+  ".select__option",
   "li.select2-results__option",
   "li.active-result",
   "[role='listbox'] > li",
@@ -346,7 +396,7 @@ function visibleOptions(scope: ParentNode): HTMLElement[] {
   });
 }
 
-const LIST_CONTAINERS = "[role='listbox'], .exportSelectPopup, .select2-dropdown, .chosen-drop, [data-automation-id*='promptPopup'], [data-automation-id*='menu'], .dropdown-menu.show, .fabric-select-menu, .sapMPopover, .sapMSelectItems, .sapMComboBoxList, .oj-listbox-results, .oj-select-results, .mat-select-panel, .mat-mdc-select-panel, .cdk-overlay-pane, .zp_dropdown_menu, .zp_select_options";
+const LIST_CONTAINERS = "[role='listbox'], .select__menu, .exportSelectPopup, .select2-dropdown, .chosen-drop, [data-automation-id*='promptPopup'], [data-automation-id*='menu'], .dropdown-menu.show, .fabric-select-menu, .sapMPopover, .sapMSelectItems, .sapMComboBoxList, .oj-listbox-results, .oj-select-results, .mat-select-panel, .mat-mdc-select-panel, .cdk-overlay-pane, .zp_dropdown_menu, .zp_select_options";
 
 /** The list a dropdown opened, when it does not name it: the one inside the field's own group, else the only open list
  * on the page. Never every option on the page: another open list, or a menu built of options, is not this field's. */
@@ -355,7 +405,9 @@ function listNear(owner: HTMLElement): ParentNode | undefined {
   for (let depth = 0; node && depth < 5; depth++, node = node.parentElement) {
     if (visibleOptions(node).length) return node;
   }
-  const lists = deepQueryAll<HTMLElement>(owner.ownerDocument, LIST_CONTAINERS).filter((l) => visibleOptions(l).length);
+  const open = deepQueryAll<HTMLElement>(owner.ownerDocument, LIST_CONTAINERS).filter((l) => visibleOptions(l).length);
+  // A menu and the list inside it are one list.
+  const lists = open.filter((l) => !open.some((inner) => inner !== l && l.contains(inner)));
   if (lists.length === 1) return lists[0];
   if (lists.length) return undefined;
   // Options with no list around them (a portal at the end of the page): only when they all sit together.
@@ -374,46 +426,171 @@ function choose(option: HTMLElement): void {
   option.click();
 }
 
-/** Wait for the list's real results (results arrive late, and stale or "Loading…" rows come first), then pick the
- * best match. Gives up only when the time is out, closing the list again. */
-async function pickFromList(owner: HTMLElement, value: string, timeoutMs: number): Promise<FillOutcome> {
+/** Catch-all choices ("Other", "My school is not listed", "None of the above") need the user's own words in another
+ * box: never picked unless the answer itself is that choice. */
+const CATCH_ALL = /^(other|others|none of the above|not listed|(my )?(school|university|college|institution|degree|option) (is )?not listed|not (in|on) (the |this )?list)( please specify)?$/;
+
+function withoutCatchAll(value: string, pick: (labels: string[]) => string | undefined): (labels: string[]) => string | undefined {
+  if (CATCH_ALL.test(normalize(value))) return pick;
+  return (labels) => pick(labels.filter((l) => !CATCH_ALL.test(normalize(l))));
+}
+
+/** Rows a list shows while it searches or when it found nothing (react-select's menu notices, select2's message…). */
+const LIST_NOTICE = "[class*='menu-notice' i], [class*='no-options' i], [class*='nooptions' i], [class*='no-results' i], [class*='noresults' i], [class*='loading' i], [aria-busy='true'], .select2-results__message";
+
+/** Whether the field's list is still loading, or says it found nothing. Looks in the list and in the field's own widget. */
+function listStatus(owner: HTMLElement, scope: ParentNode | undefined): "loading" | "empty" | undefined {
+  const roots: ParentNode[] = scope ? [scope] : [];
+  let node: Element | null = owner.parentElement;
+  for (let depth = 0; node && depth < 5; depth++, node = node.parentElement) {
+    if (node.querySelectorAll("[role='combobox']").length > 1) break; // another field's widget
+    roots.push(node);
+  }
+  for (const root of roots) {
+    for (const notice of Array.from(root.querySelectorAll<HTMLElement>(LIST_NOTICE))) {
+      if (notice.closest("[hidden], [aria-hidden='true']")) continue;
+      const text = cleanLabel(notice.textContent ?? "");
+      if (/^(loading|searching|please wait)/i.test(text) || notice.getAttribute("aria-busy") === "true" || (!text && /loading/i.test(String(notice.className)))) return "loading";
+      if (text && NOT_AN_OPTION.test(text)) return "empty";
+    }
+  }
+  return undefined;
+}
+
+function optionText(option: HTMLElement): string {
+  const primary = option.querySelector("[data-automation-id='promptOptionTitle'], .primary-text, .title");
+  return cleanLabel((primary ?? option).textContent ?? "");
+}
+
+interface ListPick {
+  chosen?: string;
+  /** The real options the list showed last. */
+  seen: string[];
+}
+
+/** Wait for the list's real results (they arrive late, and stale or "Loading…" rows come first) and click the one
+ * `pick` names. Returns without a choice when the time is out, or when the list has shown the same finished results
+ * (or "No options") for `settleMs`: nothing better is coming for this search. The list is not closed here. */
+async function waitAndPick(owner: HTMLElement, pick: (labels: string[]) => string | undefined, timeoutMs: number, settleMs: number): Promise<ListPick> {
   const doc = owner.ownerDocument;
-  const listId = owner.getAttribute("aria-controls") ?? owner.getAttribute("aria-owns");
   const deadline = Date.now() + timeoutMs;
   let seen: string[] = [];
+  let signature = "\u0000";
+  let stableSince = Date.now();
   while (Date.now() < deadline) {
+    // Read every time: react-select names its list (aria-controls) only once the list is open.
+    const listId = owner.getAttribute("aria-controls") || owner.getAttribute("aria-owns");
     const scope: ParentNode | undefined = (listId && (scopeOf(owner).getElementById(listId) ?? doc.getElementById(listId))) || listNear(owner);
-    if (!scope) {
-      await sleep(150); // the list has not opened yet, or there are several and none is clearly this one
-      continue;
+    const options = scope ? visibleOptions(scope).filter((o) => !NOT_AN_OPTION.test(cleanLabel(o.textContent ?? ""))) : [];
+    const labels = options.map(optionText);
+    if (labels.length) {
+      const match = pick(labels);
+      if (match) {
+        choose(options[labels.indexOf(match)]!);
+        return { chosen: match, seen: labels };
+      }
+      seen = labels;
     }
-    const options = visibleOptions(scope).filter((o) => !NOT_AN_OPTION.test(cleanLabel(o.textContent ?? "")));
-    const labels = options.map((o) => {
-      const primary = o.querySelector("[data-automation-id='promptOptionTitle'], .primary-text, .title");
-      return cleanLabel((primary ?? o).textContent ?? "");
-    });
-    const match = bestOption(labels, value);
-    if (match) {
-      choose(options[labels.indexOf(match)]!);
-      return { ok: true, detail: match === value ? undefined : `chose "${match}"`, chosen: match };
+    const status = listStatus(owner, scope);
+    const now = `${status ?? ""}|${labels.join("\n")}`;
+    if (now !== signature) {
+      signature = now;
+      stableSince = Date.now();
+    } else if (status !== "loading" && (labels.length || status === "empty") && Date.now() - stableSince >= settleMs) {
+      return { seen };
     }
-    seen = labels.length ? labels : seen;
-    await sleep(120);
+    await sleep(scope ? 120 : 150); // the list has not opened yet, or there are several and none is clearly this one
   }
-  // Close the list on the field itself only. A bubbling Escape reaches the page, and pop-up application forms
-  // close on Escape: the user's form would vanish (round 4 report). Leaving the field closes most lists too.
+  return { seen };
+}
+
+/** Close the list on the field itself only. A bubbling Escape reaches the page, and pop-up application forms close on
+ * Escape: the user's form would vanish (round 4 report). Leaving the field closes most lists too. */
+function closeList(owner: HTMLElement): void {
   owner.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: false, composed: false }));
   owner.blur();
+}
+
+/** Open a list and pick the best match for `value`; gives up only when the time is out, closing the list again. */
+async function pickFromList(owner: HTMLElement, value: string, timeoutMs: number): Promise<FillOutcome> {
+  const { chosen, seen } = await waitAndPick(owner, withoutCatchAll(value, (labels) => bestOption(labels, value)), timeoutMs, Infinity);
+  if (chosen) return { ok: true, detail: chosen === value ? undefined : `chose "${chosen}"`, chosen };
+  closeList(owner);
   return { ok: false, detail: seen.length ? `no option matches "${value}"` : "options did not appear" };
 }
 
-/** Type into a searchable dropdown (e.g. a location typeahead backed by a server) and pick the best match. */
-export async function fillCombobox(input: HTMLInputElement, value: string, timeoutMs = 6000): Promise<FillOutcome> {
+/** What a searchable dropdown shows as chosen. react-select keeps its text box empty and shows the choice beside it
+ * (".select__single-value"); other widgets show it in the box. Only inside the field's own widget. */
+export function comboboxShown(el: Element): string {
+  let node: Element | null = el.parentElement;
+  for (let depth = 0; node && depth < 5; depth++, node = node.parentElement) {
+    if (node.querySelectorAll("[role='combobox']").length > 1) return "";
+    const multi = Array.from(node.querySelectorAll("[class*='multi-value__label' i], [class*='multiValue'] [class*='Label']"));
+    if (multi.length) return multi.map((m) => cleanLabel(m.textContent ?? "")).filter(Boolean).join(", ");
+    const single = node.querySelector("[class*='single-value' i], [class*='singleValue']");
+    if (single) return cleanLabel(single.textContent ?? "");
+  }
+  return "";
+}
+
+/** Put a search into a type-ahead box the way typing does (native setter, input event, a key). An empty search opens
+ * the whole list (react-select lists everything when nothing is typed). */
+function typeQuery(input: HTMLInputElement, query: string, first: boolean): void {
+  if (first || input.value !== query) {
+    setNativeValue(input, query);
+    fire(input, "input");
+    input.dispatchEvent(new KeyboardEvent("keyup", { key: query.slice(-1) || "Backspace", bubbles: true, composed: true }));
+  }
+  // ArrowDown opens a closed list (it never submits or closes anything on the page).
+  if (!query) input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", code: "ArrowDown", bubbles: true, composed: true, cancelable: true }));
+}
+
+export interface ComboboxOptions {
+  /** Other things to type when the value itself finds nothing ("Indian Institute of Technology Jodhpur" for
+   * "IIT Jodhpur", a distinctive word). The whole list (an empty search) is always tried last. */
+  queries?: string[];
+  /** Which listed option is the answer (default: the best match for the value). Never a catch-all "Other". */
+  pick?: (labels: string[]) => string | undefined;
+}
+
+const sameChoice = (a: string, b: string) => {
+  const n = (s: string) => normalize(s).replace(/\s+/g, "");
+  return n(a) === n(b) || n(a).includes(n(b)) || n(b).includes(n(a));
+};
+
+/** Type into a searchable dropdown (a location typeahead backed by a server, a react-select list) and pick the option
+ * that clearly is the value. Searches that find nothing ("M.Tech" in a list of "Master's Degree"…, a school list that
+ * knows "IIT Jodhpur" by its full name) are followed by the other queries and then by the whole list. Gives up, leaving
+ * the field for the user, when no option clearly matches. */
+export async function fillCombobox(input: HTMLInputElement, value: string, timeoutMs = 6000, options: ComboboxOptions = {}): Promise<FillOutcome> {
+  const pick = withoutCatchAll(value, options.pick ?? ((labels) => bestOption(labels, value)));
+  const queries = [...new Set([value, ...(options.queries ?? []).filter(Boolean), ""])];
+  // Every search together stays within a little more than one wait: a long form with several lists must not crawl.
+  const deadline = Date.now() + timeoutMs + 3000;
+  let seen: string[] = [];
   input.focus();
-  setNativeValue(input, value);
-  fire(input, "input");
-  input.dispatchEvent(new KeyboardEvent("keyup", { key: value.slice(-1), bubbles: true, composed: true }));
-  return pickFromList(input, value, timeoutMs);
+  for (const [index, query] of queries.entries()) {
+    const left = deadline - Date.now();
+    if (left <= 0) break;
+    typeQuery(input, query, index === 0);
+    // A search answers within ~1.2 s of showing its results; nothing better comes after that. The whole list (an
+    // empty search) is there at once or not at all.
+    const result = await waitAndPick(input, pick, Math.min(left, query ? timeoutMs : 3000), 1200);
+    if (result.seen.length) seen = result.seen;
+    if (result.chosen) {
+      await sleep(120);
+      const shown = comboboxShown(input);
+      if (shown && !sameChoice(shown, result.chosen)) return { ok: false, detail: `the list shows "${shown}", not "${result.chosen}"` };
+      return { ok: true, detail: result.chosen === value ? undefined : `chose "${result.chosen}"`, chosen: result.chosen };
+    }
+  }
+  // Nothing typed for a search stays behind (a half name is a wrong answer); the field is left for the user.
+  if (input.value && input.value !== value) {
+    setNativeValue(input, "");
+    fire(input, "input");
+  }
+  closeList(input);
+  return { ok: false, detail: seen.length ? `no option matches "${value}"` : "options did not appear" };
 }
 
 const DROPDOWN_PLACEHOLDER = /^(select|choose|please select)\b|^(select( one| an option)?|choose( one)?|please select|--+|—|bitte w[äa]hlen|s[ée]lectionner|seleccion(e|a|ar)|selecione)\W*$/i;

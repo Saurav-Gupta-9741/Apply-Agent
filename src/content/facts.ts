@@ -37,7 +37,7 @@ export function answerableLength(label: string): boolean {
   return normalize(label).split(" ").length <= MAX_ANSWERABLE_WORDS;
 }
 
-function yesNoField(field: FieldDescriptor): boolean {
+export function yesNoField(field: FieldDescriptor): boolean {
   if (field.control === "textarea" || field.control === "checkbox_group" || field.control === "file") return false;
   const q = normalize(field.label);
   if (WANTS_DETAILS.test(q) || WH_QUESTION.test(q) || !answerableLength(field.label)) return false;
