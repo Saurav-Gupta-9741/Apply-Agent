@@ -37,6 +37,7 @@ import type { ConsentBox, ConsentList, TickResult } from "../shared/consent-revi
 import { initTracker, renderTrackerCrm, type TrackerUi } from "./tracker";
 import { initUsageMeter, renderUsageMeter } from "./usage-meter";
 import { renderFitCard } from "./fit-card";
+import { applyResumeTabClosed, applyResumeTabMoved, initApplyResume, renderApplyResume, sendWithResume } from "./apply-resume";
 // >>> L3 form structure
 import { mountFormStructureButton } from "./form-structure";
 // <<< L3
@@ -306,6 +307,7 @@ async function refreshPage(): Promise<void> {
   ($("preview") as HTMLButtonElement).disabled = !canFill || agentRunning;
   void renderUsageMeter({ toast: (m, t) => toast(m, t ?? ""), showPlan: () => showSection("profile") });
   void renderFitCard(tab?.id, canFill, () => showSection("profile"));
+  void renderApplyResume(tab?.id, url, canFill);
   await renderDetection(tab, handsOff, embedded, () => mine === pageCheck);
 }
 
@@ -490,7 +492,10 @@ chrome.tabs.onActivated.addListener((info) => {
   if (pinnedTabId === undefined) showTab(info.tabId, "");
   void refreshPage();
 });
-chrome.tabs.onRemoved.addListener((id) => tabResults.delete(id));
+chrome.tabs.onRemoved.addListener((id) => {
+  tabResults.delete(id);
+  applyResumeTabClosed(id); // a resume chosen for this tab's application only
+});
 /** Page loads per tab ("loading" is reported even where the address is not), to notice a step that loaded a new page. */
 const navigations = new Map<number, number>();
 chrome.tabs.onUpdated.addListener((id, info) => {
@@ -503,6 +508,7 @@ chrome.tabs.onUpdated.addListener((id, info) => {
     const saved = tabResults.get(id);
     if (saved && !samePage(saved.url, info.url)) forgetTab(id);
   }
+  if (info.url && !(agentRunning && id === runTabId)) applyResumeTabMoved(id, info.url); // another job: Profile resume again
   if ((info.url || info.status === "complete") && (id === shownTabId || shownTabId === undefined)) void refreshPage();
 });
 chrome.runtime.onMessage.addListener((message: Message, sender) => {
@@ -598,7 +604,8 @@ async function send(message: Message): Promise<RunReport | undefined> {
     return (await chrome.tabs.sendMessage(tabId, message).catch(() => undefined)) as RunReport | undefined;
   }
   // Only the frame holding the application acts (never a search box on the page around an embedded form).
-  return sendToApplication(tabId, message);
+  // A Fill carries the resume chosen for this tab's application, if any.
+  return sendWithResume(tabId, message, (m) => sendToApplication(tabId, m));
 }
 
 type Tone = "ok" | "warn" | "bad" | "info";
@@ -615,7 +622,7 @@ function setStatus(text: string, tone: Tone = "info"): void {
  * put there, or why it was not filled. */
 function fieldNote(r: FieldResult): string {
   const value = r.decision.kind === "profile" || r.decision.kind === "answer" || r.decision.kind === "work" || r.decision.kind === "draft" ? r.decision.value
-    : r.decision.kind === "resume" ? "your resume file" : "";
+    : r.decision.kind === "resume" ? (r.detail && r.detail !== "would fill" ? r.detail : "your resume file") : "";
   const short = (text: string) => (text.length > 80 ? `${text.slice(0, 79)}…` : text);
   if (r.review) return r.detail ?? "";
   if (r.status === "filled" && value) return `→ ${short(value)}`;
@@ -2762,6 +2769,7 @@ initTracker(trackerUi, () => void renderTrackerCrm(trackerUi));
 initDiscover({ ...trackerUi, openProfile: () => showSection("profile") });
 // <<< arena-fix
 initUsageMeter({ toast: (m, t) => toast(m, t ?? ""), showPlan: () => showSection("profile") });
+initApplyResume({ toast: (m, t) => toast(m, t ?? "ok"), showProfile: () => showSection("profile") });
 void (async () => {
   const cached = await chrome.storage.local.get(["feedCache", "feedSource"]);
   if (cached.feedCache) {

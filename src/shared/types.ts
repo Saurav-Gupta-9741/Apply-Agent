@@ -414,8 +414,10 @@ export interface Detection {
 
 /** Messages between the extension's parts. */
 export type Message =
-  /** continuing: a later step of a run already under way (a new page of the same application). */
-  | { type: "RUN"; mode: Mode; continuing?: boolean; fillOnly?: boolean }
+  /** continuing: a later step of a run already under way (a new page of the same application).
+   * resume: a resume for this application only (Apply panel); attached instead of the Profile's resume, which is
+   * never changed. Absent: the Profile's resume (the queue never sends one). */
+  | { type: "RUN"; mode: Mode; continuing?: boolean; fillOnly?: boolean; resume?: ResumeFile }
   /** Read-only preview: what the agent would do, without touching the page. */
   | { type: "SCAN" }
   /** Sent by the silent detector after reading a page (nothing typed). */
