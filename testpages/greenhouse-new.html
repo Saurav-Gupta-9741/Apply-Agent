@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Job Application for Software Engineer, New Grad at Samplepay · ApplyAgent Test</title>
+<style>
+  body { font: 15px system-ui, sans-serif; max-width: 720px; margin: 32px auto; padding: 0 16px; color: #222; }
+  .field-wrapper, .select, .phone-input { margin: 14px 0; }
+  .phone-input { display: flex; gap: 8px; border: 0; padding: 0; }
+  .label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .input { font: inherit; padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; box-sizing: border-box; }
+  .select-shell { position: relative; }
+  .select__control { display: flex; align-items: center; min-height: 38px; border: 1px solid #ccc; border-radius: 4px; padding: 2px 8px; background: #fff; }
+  .select__value-container { display: grid; flex: 1; }
+  .select__placeholder, .select__single-value, .select__input-container { grid-area: 1 / 1 / 2 / 3; }
+  .select__placeholder { color: #888; }
+  .select__input { border: 0; outline: 0; font: inherit; background: transparent; width: 100%; }
+  .select__menu { position: absolute; z-index: 10; left: 0; right: 0; background: #fff; border: 1px solid #ccc; border-radius: 4px; margin-top: 4px; }
+  .select__option { padding: 8px 12px; cursor: pointer; }
+  .select__option:hover { background: #eef2ff; }
+  .select__menu-notice { padding: 8px 12px; color: #888; }
+  .requiredInput { opacity: 0; width: 100%; height: 0; position: absolute; bottom: 0; left: 0; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); }
+</style>
+</head>
+<body>
+<!-- Reproduction of the new Greenhouse job board application form (job-boards.greenhouse.io, Remix + react-select):
+     the phone row is a "Country" react-select plus a tel box inside fieldset.phone-input; School is an async
+     typeahead (debounced server search, "Loading..." first, "Other" at the end); Degree is a react-select whose
+     options load when it opens and are filtered by what is typed; Location (City) is an async geocoder typeahead.
+     Markup shapes follow the public page; data is invented. The script below imitates react-select's behaviour
+     (controlled input, menu opening on mousedown / ArrowDown / typing, value cleared on blur). -->
+<h1 class="section-header">Software Engineer, New Grad</h1>
+<form method="get" action="/thanks.html" id="application-form" class="application--form">
+  <div class="application--questions">
+    <div class="field-wrapper"><div class="text-input-wrapper"><div class="input-wrapper input-wrapper--outside-label">
+      <label id="first_name-label" for="first_name" class="label">First Name<span aria-hidden="true">*</span></label>
+      <input id="first_name" class="input input__single-line" aria-label="First Name" aria-required="true" type="text" maxlength="255" autocomplete="given-name" value="">
+    </div></div></div>
+    <div class="field-wrapper"><div class="text-input-wrapper"><div class="input-wrapper input-wrapper--outside-label">
+      <label id="last_name-label" for="last_name" class="label">Last Name<span aria-hidden="true">*</span></label>
+      <input id="last_name" class="input input__single-line" aria-label="Last Name" aria-required="true" type="text" maxlength="255" autocomplete="family-name" value="">
+    </div></div></div>
+    <div class="field-wrapper"><div class="text-input-wrapper"><div class="input-wrapper input-wrapper--outside-label">
+      <label id="email-label" for="email" class="label">Email<span aria-hidden="true">*</span></label>
+      <input id="email" class="input input__single-line" aria-label="Email" aria-required="true" type="text" maxlength="255" autocomplete="email" value="">
+    </div></div></div>
+    <div><fieldset class="phone-input"><legend class="visually-hidden">Phone</legend>
+      <div class="phone-input__country"><div class="select"><div class="select__container select__container--outside-label">
+        <label id="country-label" for="country" class="label select__label">Country<span aria-hidden="true">*</span></label>
+        <div class="select-shell" data-rs="country"></div>
+      </div></div></div>
+      <div class="phone-input__phone"><div class="text-input-wrapper"><div class="input-wrapper input-wrapper--outside-label">
+        <label id="phone-label" for="phone" class="label">Phone<span aria-hidden="true">*</span></label>
+        <input id="phone" class="input input__single-line" aria-label="Phone" aria-required="true" type="tel" maxlength="255">
+      </div></div></div>
+    </fieldset></div>
+    <div class="field-wrapper"><div class="select"><div class="select__container select__container--outside-label">
+      <label id="candidate-location-label" for="candidate-location" class="label select__label">Location (City)<span aria-hidden="true">*</span></label>
+      <div class="select-shell" data-rs="candidate-location"></div>
+    </div></div><button type="button" class="btn--tertiary" id="locate-me">Locate me</button></div>
+    <div class="education--container"><div class="education--form"><hr>
+      <div class="education--header"><p class="body body--medium">Education</p></div>
+      <div class="select"><div class="select__container select__container--outside-label">
+        <label id="school--0-label" for="school--0" class="label select__label">School<span aria-hidden="true">*</span></label>
+        <div class="select-shell" data-rs="school--0"></div>
+      </div></div>
+      <div class="select"><div class="select__container select__container--outside-label">
+        <label id="degree--0-label" for="degree--0" class="label select__label">Degree<span aria-hidden="true">*</span></label>
+        <div class="select-shell" data-rs="degree--0"></div>
+      </div></div>
+      <div class="select"><div class="select__container select__container--outside-label">
+        <label id="discipline--0-label" for="discipline--0" class="label select__label">Discipline</label>
+        <div class="select-shell" data-rs="discipline--0"></div>
+      </div></div>
+    </div><button class="add-another-button" type="button">Add another</button></div>
+    <div class="field-wrapper"><div class="select"><div class="select__container select__container--outside-label">
+      <label id="question_1001-label" for="question_1001" class="label select__label">Are you currently eligible to work in India?<span aria-hidden="true">*</span></label>
+      <div class="select-shell" data-rs="question_1001"></div>
+    </div></div></div>
+  </div>
+  <div class="application--submit"><button type="submit" class="btn btn--pill" id="submit-app">Submit application</button></div>
+</form>
+<script>
+(function () {
+  // Invented sample data, shaped like what the real widgets return.
+  var COUNTRIES = [
+    ["Afghanistan", "+93"], ["Australia", "+61"], ["Canada", "+1"], ["Germany", "+49"], ["India", "+91"],
+    ["Indonesia", "+62"], ["Ireland", "+353"], ["Singapore", "+65"], ["United Kingdom", "+44"], ["United States", "+1"]
+  ];
+  var SCHOOLS = [
+    "Indian Institute of Technology Bombay", "Indian Institute of Technology Delhi", "Indian Institute of Technology Jodhpur",
+    "Indian Institute of Technology Madras", "Jodhpur National University", "Jai Narain Vyas University",
+    "National Institute of Technology Karnataka", "Birla Institute of Technology and Science, Pilani", "University of Delhi"
+  ];
+  var DEGREES = [
+    "High School", "Associate's Degree", "Bachelor's Degree", "Master's Degree", "Master of Business Administration (M.B.A.)",
+    "Juris Doctor (J.D.)", "Doctor of Medicine (M.D.)", "Doctor of Philosophy (Ph.D.)", "Engineer's Degree", "Other"
+  ];
+  var DISCIPLINES = ["Biology", "Computer Engineering", "Computer Science", "Economics", "Electrical Engineering", "Mathematics", "Other"];
+  var PLACES = [
+    "Bengaluru, Karnataka, India", "Bengaluru Rural, Karnataka, India", "Pune, Maharashtra, India", "Punjab, India",
+    "Jodhpur, Rajasthan, India", "Mumbai, Maharashtra, India"
+  ];
+
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function matches(label, q) { return label.toLowerCase().indexOf(q.trim().toLowerCase()) >= 0; }
+
+  /** A react-select look-alike. opts: options (array) or search(q) -> array (async, debounced, slow);
+   *  loadOnOpen: the full list arrives only after the menu opens; minChars: search starts at that many characters. */
+  function reactSelect(id, opts) {
+    var shell = document.querySelector("[data-rs='" + id + "']");
+    var state = { value: null, inputValue: "", open: false, loading: false, results: null, loaded: !opts.loadOnOpen, timer: 0, seq: 0 };
+    var wrap = el("div"), control = el("div", "select__control"), values = el("div", "select__value-container");
+    var placeholder = el("div", "select__placeholder", "Select...");
+    placeholder.id = "react-select-" + id + "-placeholder";
+    var inputContainer = el("div", "select__input-container");
+    var input = el("input", "select__input");
+    input.id = id; input.type = "text"; input.setAttribute("role", "combobox"); input.setAttribute("aria-autocomplete", "list");
+    input.setAttribute("aria-expanded", "false"); input.setAttribute("aria-haspopup", "true");
+    input.setAttribute("aria-labelledby", id + "-label"); input.setAttribute("aria-required", "true");
+    input.setAttribute("autocomplete", "off"); input.setAttribute("aria-activedescendant", "");
+    input.setAttribute("aria-describedby", placeholder.id);
+    var indicators = el("div", "select__indicators");
+    var toggle = el("button", "icon-button"); toggle.type = "button"; toggle.setAttribute("aria-label", "Toggle flyout"); toggle.tabIndex = -1;
+    indicators.appendChild(toggle);
+    inputContainer.appendChild(input); values.appendChild(placeholder); values.appendChild(inputContainer);
+    control.appendChild(values); control.appendChild(indicators); wrap.appendChild(control); shell.appendChild(wrap);
+    var required = el("input", "requiredInput"); required.required = true; required.tabIndex = -1; required.setAttribute("aria-hidden", "true");
+    shell.appendChild(required);
+    var menu = null;
+
+    // React owns the input's value: every render writes the state back, whatever was put there behind its back.
+    function render() {
+      input.value = state.inputValue;
+      placeholder.style.display = state.value || state.inputValue ? "none" : "";
+      var single = values.querySelector(".select__single-value");
+      if (state.value) {
+        if (!single) { single = el("div", "select__single-value"); values.insertBefore(single, inputContainer); }
+        single.textContent = state.value;
+        single.style.display = state.inputValue ? "none" : "";
+      } else if (single) single.remove();
+      required.value = state.value || "";
+      input.setAttribute("aria-expanded", state.open ? "true" : "false");
+      if (state.open) input.setAttribute("aria-controls", "react-select-" + id + "-listbox"); else input.removeAttribute("aria-controls");
+      if (menu) { menu.remove(); menu = null; }
+      if (!state.open) return;
+      menu = el("div", "select__menu");
+      var list = el("div", "select__menu-list"); list.setAttribute("role", "listbox"); list.id = "react-select-" + id + "-listbox";
+      menu.appendChild(list);
+      var shown = currentOptions();
+      if (state.loading || shown === null) list.appendChild(el("div", "select__menu-notice select__menu-notice--loading", "Loading..."));
+      else if (!shown.length) list.appendChild(el("div", "select__menu-notice select__menu-notice--no-options", "No options"));
+      else shown.forEach(function (label, i) {
+        var o = el("div", "select__option", label); o.setAttribute("role", "option"); o.id = "react-select-" + id + "-option-" + i;
+        o.tabIndex = -1; o.setAttribute("aria-selected", label === state.value ? "true" : "false");
+        o.addEventListener("click", function () { pick(label); });
+        list.appendChild(o);
+      });
+      // react-select keeps focus in the input: mousedown on the menu is prevented.
+      menu.addEventListener("mousedown", function (e) { e.preventDefault(); });
+      shell.insertBefore(menu, required);
+    }
+    function currentOptions() {
+      if (opts.search) return state.results;
+      if (!state.loaded) return null;
+      return opts.options.filter(function (o) { return matches(o, state.inputValue); });
+    }
+    function pick(label) { state.value = label; state.inputValue = ""; state.open = false; render(); }
+    function open() {
+      if (state.open) return;
+      state.open = true;
+      if (opts.loadOnOpen && !state.loaded) setTimeout(function () { state.loaded = true; render(); }, 250);
+      render();
+    }
+    function search() {
+      clearTimeout(state.timer);
+      var q = state.inputValue, seq = ++state.seq;
+      if (q.trim().length < (opts.minChars || 1)) { state.loading = false; state.results = []; render(); return; }
+      state.loading = true; state.results = null; render();
+      state.timer = setTimeout(function () {
+        setTimeout(function () {
+          if (seq !== state.seq) return; // a newer search replaced this one
+          state.loading = false; state.results = opts.search(q); render();
+        }, opts.latency || 300);
+      }, opts.debounce || 250);
+    }
+    input.addEventListener("input", function () {
+      state.inputValue = input.value;
+      if (!state.open) open();
+      if (opts.search) search();
+      render();
+    });
+    control.addEventListener("mousedown", function (e) {
+      if (e.target !== input) e.preventDefault();
+      input.focus();
+      if (state.open && e.target !== input) { state.open = false; render(); } else open();
+    });
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); open(); }
+      else if (e.key === "Escape") { state.open = false; state.inputValue = ""; render(); }
+      else if (e.key === "Enter" && state.open) {
+        e.preventDefault(); var shown = currentOptions(); if (shown && shown.length) pick(shown[0]);
+      }
+    });
+    input.addEventListener("blur", function () { state.open = false; state.inputValue = ""; render(); });
+    if (opts.defaultValue) state.value = opts.defaultValue;
+    render();
+  }
+
+  reactSelect("country", { options: COUNTRIES.map(function (c) { return c[0] + " " + c[1]; }) });
+  reactSelect("candidate-location", { search: function (q) { return PLACES.filter(function (p) { return matches(p, q); }); }, minChars: 2, debounce: 300, latency: 400 });
+  reactSelect("school--0", {
+    search: function (q) { return SCHOOLS.filter(function (s) { return matches(s, q); }).concat(["Other"]); },
+    minChars: 2, debounce: 300, latency: 500
+  });
+  reactSelect("degree--0", { options: DEGREES, loadOnOpen: true });
+  reactSelect("discipline--0", { options: DISCIPLINES, loadOnOpen: true });
+  reactSelect("question_1001", { options: ["Yes", "No"] });
+
+  // The phone box is a controlled React input that formats as you type: digits grouped, "+" kept; a value put
+  // there without an input event is put back to React's state on the next render (here: blur).
+  var phone = document.getElementById("phone"), phoneState = "";
+  function formatPhone(v) {
+    var plus = /^\s*\+/.test(v), digits = v.replace(/\D/g, "");
+    if (!digits) return plus ? "+" : "";
+    if (plus) return "+" + digits.replace(/^(\d{2})(\d{0,5})(\d{0,5})(\d*)$/, function (_, a, b, c, d) { return [a, b, c, d].filter(Boolean).join(" "); });
+    return digits.replace(/^(\d{0,5})(\d{0,5})(\d*)$/, function (_, a, b, c) { return [a, b, c].filter(Boolean).join(" "); });
+  }
+  phone.addEventListener("input", function () { phoneState = formatPhone(phone.value); phone.value = phoneState; });
+  phone.addEventListener("blur", function () { phone.value = phoneState; });
+
+  document.getElementById("application-form").addEventListener("submit", function (e) {
+    e.preventDefault(); window.__submitted = (window.__submitted || 0) + 1;
+  });
+})();
+</script>
+</body>
+</html>

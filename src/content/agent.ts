@@ -9,7 +9,8 @@ import { codeOptionFor, dialCodePickerFor, isDialCodePicker, JUST_A_DIAL_CODE, p
 import { decideWithMeaning, MODEL_DECISIONS, type Meaning } from "./meaning";
 import { detectChallenge, detectConfirmation, hasCaptcha, visibleErrors } from "./detect";
 import { DROPDOWN, extractFields, inWorkSection, sectionHeadings, type ExtractedField } from "./extract";
-import { currentValue, fillCombobox, fillDropdown, fillField, type FillOutcome } from "./fill";
+import { currentValue, fillCombobox, fillDropdown, fillField, fillPhone, type FillOutcome } from "./fill";
+import { pickSchool, schoolQueries } from "./schools";
 import { deepQueryAll } from "./dom";
 import type { PageFacts } from "./facts";
 import { jobCountries } from "./joblocation";
@@ -269,8 +270,13 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
     if ("problem" in number) return { field: field.descriptor, decision, status: "needs_user", detail: number.problem };
     value = number.value;
   }
-  const outcome = field.descriptor.control === "combobox" ? await fillCombobox(el as HTMLInputElement, value)
+  // A school is one exact institution: its own matching and searches ("IIT Jodhpur" is listed by its full name).
+  const school = decision.kind === "profile" && decision.key === "school";
+  const outcome = field.descriptor.control === "combobox" ? await fillCombobox(el as HTMLInputElement, value, 6000,
+      school ? { queries: schoolQueries(value), pick: (labels) => pickSchool(labels, value) } : {})
     : field.descriptor.control === "dropdown" || el.matches(DROPDOWN) ? await fillDropdown(el, value)
+    // Phone boxes often format the number as it is typed, or beside a country picker keep only the national part.
+    : phone && (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) ? fillPhone(el, value, splitPhone(ctx.profile.phone).code)
     : fillField(field, value, ctx.profile.resume);
   return {
     field: field.descriptor, decision, status: outcome.ok ? "filled" : "failed", detail: outcome.detail,
