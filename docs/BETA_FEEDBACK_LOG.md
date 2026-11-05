@@ -95,10 +95,19 @@ Status: **Fixed** (in a released build, with a test), **Not a bug** (works as de
 | 6.8 | Use the Profile resume in Apply, with a different one for one application | Fixed | Resume row in Apply; "Use a different resume" for this tab's application only (Fill and Preview); Profile unchanged |
 | 6.9 | On-device AI for every question, based on the resume | Partly, by design | The user's laptop cannot run Chrome's built-in AI (needs 16 GB RAM or a 4 GB GPU). Short factual questions are answered from the resume/profile without any model (works everywhere, never invents); open questions use Chrome AI drafts (now with the resume) where available, else asked |
 
+## Round 7: a small on-device model for the questions still asked (2026-11-06) → 1.0.10
+
+| # | Flaw reported | Status | What changed |
+|---|---|---|---|
+| 7.1 | Use a small on-device language model (Qwen) so every laptop can answer diverse questions from the resume | Measured, not shipped | Qwen2.5-0.5B in the extension on the user's laptop (i3, 8 GB): 11-50 s per answer, invented facts, gibberish on the Intel GPU. Fails the 0-wrong rule. Report: reports/ON_DEVICE_LM_PHASE0.md |
+| 7.2 | Which still-asked questions can be answered without a model? | Fixed (part) | "Where do you live?" questions from the Profile country/city and the job's country; "Highest level of education" (never a degree in progress for "completed"). Automation eval 575 → 583, 0 wrong |
+| 7.3 | (found by the tests) "American Samoa+1" chosen for a list labelled "How many years of experience" | Fixed | The 1.0.9 experience rule answered any list; only lists of year counts are answered now |
+| 7.4 | Links typed on one form not used on the next ("LinkedIn URL" vs "LinkedIn Profile URL") | Fixed | Reused for the same kind of link while the Profile has none, only when the value has the right shape |
+
 ## Still open
 
 | Item | Why open |
 |---|---|
 | Cover letter generator (on-device AI) | Planned feature, not started |
-| AI matching for reworded questions | Planned feature, not started |
+| AI matching for reworded questions | The local question model (MiniLM) already reads reworded questions; a writing model failed the laptop test (7.1) |
 | Address existence check | Needs an online lookup; conflicts with "data never leaves the browser" |

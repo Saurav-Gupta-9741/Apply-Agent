@@ -88,6 +88,13 @@ describe("experience", () => {
   });
   it("a range list takes the range that holds it", () => {
     expect(value("Total experience", PRO, { control: "select", options: ["0-1 years", "2-4 years", "5+ years"] })).toBe("2-4 years");
+    expect(value("Total experience", PRO, { control: "select", options: ["Select...", "Fresher", "1-2", "3-5", "6 or more years"] })).toBe("3-5");
+    expect(value("Total experience", PRO, { control: "select", options: ["Less than 1 year", "1 to 3 years", "More than 3 years"] })).toBe("1 to 3 years");
+  });
+  it("a list that is not years is never answered (a real Greenhouse phone list carried this label)", () => {
+    const codes = ["Afghanistan+93", "Åland Islands+358", "Albania+355", "American Samoa+1", "India+91"];
+    expect(value("How many years of experience do you have?", PRO, { control: "select", options: codes })).toBeUndefined();
+    expect(value("Total experience", PRO, { control: "select", options: ["Junior", "Mid-level", "Senior"] })).toBeUndefined();
   });
   it("Yes only for a skill in the user's own data; never No for them", () => {
     expect(value("Do you have experience with Kafka?", STUDENT, { control: "select", options: ["Yes", "No"] })).toBe("Yes"); // internship summary
@@ -95,6 +102,68 @@ describe("experience", () => {
     expect(value("Do you have experience with Kubernetes?", STUDENT, { control: "select", options: ["Yes", "No"] })).toBeUndefined();
     expect(value("Do you have 3+ years of experience with Python?", STUDENT, { control: "select", options: ["Yes", "No"] })).toBeUndefined();
     expect(value("Do you have experience leading teams using Python?", STUDENT, { control: "select", options: ["Yes", "No"] })).toBeUndefined();
+  });
+});
+
+describe("where the user lives (real wordings from the 1,539 questions)", () => {
+  const PUNE: Profile = { ...STUDENT, country: "India", location: "Pune" };
+  const yn = { control: "select" as const, options: ["Yes", "No"] };
+  it.each([
+    ["Are you based in India?", "Yes"],
+    ["Do you currently reside in Cyprus?", "No"],
+    ["Do you currently live in the United States?", "No"],
+    ["Do you currently reside in the United States?", "No"],
+    ["Are you currently located in the US?", "No"],
+    ["Do you currently reside in the Denver Metro area?", "No"], // Denver is only in the US lists
+    ["Are you currently living in the Denver area", "No"],
+    ["Are you based out of Pune ?", "Yes"],
+    ["Are you based out of Poona?", "Yes"], // the listed old name of Pune
+    ["Are you based out of Hinjewadi?", undefined], // not a listed place: asked
+  ])("%s → %s", (label, want) => {
+    expect(value(label, PUNE, yn)).toBe(want);
+  });
+  it.each([
+    "Are you based out of Bangalore ?", // another city in the user's own country: asked (metro areas, suburbs)
+    "Are you currently based in EST / MST?",
+    "Are you based in the United Kingdom and able to work a Sunday-to-Thursday schedule?",
+    "Are you currently based in Ireland, or willing to relocate there at your own expense?",
+    "Are you currently located within commuting distance to the assigned office location for this role?",
+    "Do you live/go to school near our Culloden, WV facility? (30-40 miles)",
+    "Are you located in one of the following countries or regions: Belarus, Cuba, Iran, North Korea (DPRK), Syria, or Russia?",
+    "Are you currently based in any of these countries? Please note these are the only countries where we are accepting applications",
+    "Do you currently reside in the geographic location specified in the posting?",
+    "Are you currently based in or willing to relocate to the Bay Area for this position?",
+  ])("asked: %s", (label) => {
+    expect(value(label, PUNE, yn)).toBeUndefined();
+  });
+  it("the job's own country, only when the page names exactly one", () => {
+    const f = field("Do you currently reside in the country where this position is located?", yn);
+    const at = (jobCountries: string[]) => {
+      const d = factSheetAnswer(f, PUNE, undefined, { jobCountries });
+      return d && "value" in d ? d.value : undefined;
+    };
+    expect(at(["India"])).toBe("Yes");
+    expect(at(["Germany"])).toBe("No");
+    expect(at([])).toBeUndefined();
+    expect(at(["India", "Germany"])).toBeUndefined();
+  });
+  it("no Profile country: asked", () => {
+    expect(value("Are you based in India?", { ...PUNE, country: "" }, yn)).toBeUndefined();
+  });
+  it("takes the form's own wording of yes and no, and says where it came from", () => {
+    const d = factSheetAnswer(field("Are you based in India?", { control: "radio", options: ["Yes, I am", "No, I am not"] }), PUNE);
+    expect(d).toMatchObject({ kind: "answer", value: "Yes, I am" });
+    expect(d && "source" in d ? d.source : "").toMatch(/Profile country \(India\)/);
+  });
+});
+
+describe("highest education", () => {
+  it("a finished degree is filled; a student's degree in progress is not 'completed'", () => {
+    expect(value("Highest level of education", PRO)).toBe("M.Tech");
+    expect(value("What is your highest level of education completed?", PRO)).toBe("M.Tech");
+    expect(value("Highest level of education completed", STUDENT)).toBeUndefined();
+    expect(value("Degree obtained", STUDENT)).toBeUndefined();
+    expect(value("Highest level of education", STUDENT)).toBe("M.Tech");
   });
 });
 

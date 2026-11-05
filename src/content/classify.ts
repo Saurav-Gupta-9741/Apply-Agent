@@ -473,6 +473,30 @@ export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" |
   return undefined;
 }
 
+/** The shape a link of each kind must have. A GitHub profile is github.com/<user>, never a repository. */
+const LINK_SHAPE: Partial<Record<string, RegExp>> = {
+  linkedin: /^(https?:\/\/)?([a-z]{2,3}\.)?linkedin\.com\/in\/[A-Za-z0-9_%-]+\/?$/i,
+  github: /^(https?:\/\/)?(www\.)?github\.com\/[A-Za-z0-9-]+\/?$/i,
+  portfolio: /^https?:\/\/(?!([a-z]{2,3}\.)?linkedin\.com|(www\.)?github\.com)[^\s]+$/i,
+};
+
+/** A link the user typed on an earlier form ("LinkedIn URL") for the same kind of link asked in other words
+ * ("LinkedIn Profile URL"), while the Profile has none. Only an answer to a question of the same kind, and only a
+ * value of the right shape: a LinkedIn answer is a linkedin.com/in/ address, or it is not reused. */
+function savedLink(field: FieldDescriptor, key: string, answers: AnswerEntry[]): Decision | undefined {
+  const shape = LINK_SHAPE[key];
+  if (!shape || field.options.length) return undefined;
+  for (let i = answers.length - 1; i >= 0; i--) {
+    const entry = answers[i]!;
+    const value = entry.answer.trim();
+    if (!shape.test(value)) continue;
+    const asked: FieldDescriptor = { ...field, label: entry.question, name: "", placeholder: "", autocomplete: "", control: "text", options: [] };
+    if (profileKeyFor(asked) !== key) continue;
+    return { kind: "answer", value, question: entry.question, reused: normalize(entry.question) !== normalize(field.label) };
+  }
+  return undefined;
+}
+
 export function decide(field: FieldDescriptor, profile: Profile, answers: AnswerEntry[], page?: PageFacts): Decision {
   if (field.translatedLabel) {
     field = { ...field, label: field.translatedLabel, originalLabel: field.label };
@@ -603,6 +627,8 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   if (key) {
     const value = profileValue(profile, key);
     if (value) return { kind: "profile", key, value };
+    const link = savedLink(field, key, answers);
+    if (link) return link;
     if (key === "addressLine2" && !field.required) {
       return { kind: "skip", reason: "optional address line 2 empty" };
     }

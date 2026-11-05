@@ -97,6 +97,7 @@ const QUICK: Record<string, string> = {
   travel: "travel",
   language: "language_proficiency",
   skills: "skills_experience",
+  "where you live": "residence",
 };
 const WORK: Record<string, string> = {
   title: "currentTitle",
@@ -174,8 +175,11 @@ describe("automation evaluation across all 1,539 real questions", () => {
     };
 
     let totalQuestionCount = 0;
+    // The meaning labels have no "where do you live?" class: those questions carry "other" or "location". The values
+    // themselves are checked one by one in test/factsheet.test.ts.
     const ok = (as: string, intent: string, label: string) =>
-      as === intent || (as === "fullName" && intent === "firstName" && /preferred/i.test(label));
+      as === intent || (as === "fullName" && intent === "firstName" && /preferred/i.test(label))
+      || (as === "residence" && (intent === "other" || intent === "location"));
 
     for (const r of rounds) {
       const labels = JSON.parse(readFileSync(`reports/${r}`, "utf8")) as Array<{

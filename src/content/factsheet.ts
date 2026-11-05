@@ -19,6 +19,9 @@ import { parseRequirement } from "../shared/requirements";
 import { extractTechTerms } from "../shared/techterms";
 import { notAProfileFact } from "./classify";
 import { answerableLength, narrowerSkill, yesNoField } from "./facts";
+import { countriesIn } from "../shared/countries";
+import { countriesOfCity, sameCity } from "../shared/places";
+import { countryCode } from "../shared/profile-validate";
 
 export interface SheetJob {
   company: string;
@@ -306,7 +309,9 @@ function historyAnswer(field: FieldDescriptor, profile: Profile, sheet: FactShee
 const DISCIPLINE_Q = /^(your |which |what )?(branch|stream|area of study|course of study|field of specialisation|field of specialization|main subject|subject|concentration|program of study|programme of study|major subject)( of (study|engineering|graduation))?( did you (study|pursue|major in))?$|^(which|what) (branch|stream|major|discipline|field of study|subject) (did|do|are) you\b/;
 const SCHOOL_Q = /^(name of (your |the )?(institute|institution|college|university|school)|(your )?(institute|college|university) name|alma mater|(your )?institute|(which|what) (college|university|school|institute|institution) (did|do|are) you\b.*)$/;
 const GRAD_Q = /^(your )?(year of passing|passing year|pass ?out year|passed out year|passing out year|year of completion|completion year|batch|batch year|graduating year|graduating class|expected (year of )?graduation( year)?)$|^(when|which year|what year) (did|do|will) you (graduate|pass out|complete your (degree|graduation))$/;
-const DEGREE_Q = /^(your )?(highest )?(degree|degree obtained|degree earned|qualification|highest qualification|education qualification|educational qualification|highest education)$|^(what|which) (is your highest )?(degree|qualification)( do you (hold|have))?$/;
+const DEGREE_Q = /^(your )?(highest )?(degree|degree obtained|degree earned|qualification|highest qualification|education qualification|educational qualification|highest education)$|^(what|which) (is your highest )?(degree|qualification)( do you (hold|have))?$|^(what is |what s )?(your )?highest (level of )?(education|educational attainment|education level|degree)( level)?( (you have )?(completed|attained|obtained|earned|achieved|received))?$/;
+/** A degree already finished: a student's degree in progress is not one. */
+const FINISHED = /\b(completed|complete|attained|obtained|earned|achieved|received|awarded|finished|held|hold)\b/;
 /** A question about one level of study ("Year of passing (12th)", "PG branch"): asked, the profile holds one degree. */
 const NAMED_LEVEL = /\b(ug|pg|undergrad\w*|postgrad\w*|post graduation|bachelor\w*|master\w*|phd|doctor\w*|diploma|10th|12th|ssc|hsc|high school|secondary|intermediate|mba)\b/;
 
@@ -327,6 +332,8 @@ function educationAnswer(field: FieldDescriptor, profile: Profile, sheet: FactSh
     return fromProfile("graduationYear", sheet.graduationYear && profile.graduationYear?.trim() ? sheet.graduationYear : undefined, "your profile (graduation year)");
   }
   if (DEGREE_Q.test(q)) {
+    // "Highest level of education completed" for a student: the degree they study for is not finished, so asked.
+    if (profile.educationStatus === "pursuing" && FINISHED.test(normalize(`${field.label} ${field.placeholder}`))) return undefined;
     if (profile.degree?.trim()) return fromProfile("degree", profile.degree.trim(), "your profile (degree)");
     // No degree saved: the highest level finished stands for it on a list of levels ("Master's Degree"), never typed,
     // and never for a student (the degree they study for is not their highest finished one).
@@ -340,6 +347,11 @@ function educationAnswer(field: FieldDescriptor, profile: Profile, sheet: FactSh
 /** "How many years of experience do you have?": the user's own total, never one worked out from dates. */
 const TOTAL_EXPERIENCE_Q = /^(how many )?(total |overall )?(years of )?(total |overall )?(work |working |professional |industry )?experience( do you have)?( in years| years| yrs)?$|^(how many|number of) years of (total |overall )?(work |working |professional )?experience( do you have)?( in total| overall)?$|^(total|overall) (work |professional )?experience( in years| years)?$|^experience in years$/;
 
+/** "2-4 years", "5+", "Less than 1 year", "10 or more years", "0": a count of years and nothing else. */
+const YEARS_OPTION = /^(less than|under|below|over|more than|above|at least|up to|upto|<|>|<=|>=)?\s*\d+(\.\d+)?\s*\+?\s*((-|–|—|to|and)\s*\d+(\.\d+)?\s*\+?)?\s*(years?|yrs?)?\s*(\+|plus|or more|or above|and above|and more|or less|and below)?\s*(years?|yrs?)?$/i;
+/** "Select…", "Please select", "None", "Fresher", "No experience": a list may hold these beside the counts. */
+const PLACEHOLDER_OPTION = /^(|-+|select\b.*|please select\b.*|choose\b.*|--.*--|none|n\/a|na|fresher|no experience|not applicable|prefer not to say)$/i;
+
 function experienceAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
   if (!["text", "number", "select", "combobox", "dropdown"].includes(field.control) || !answerableLength(field.label)) return undefined;
   // The whole question must be one of the shapes below, so the general guards (which read "experience in years" as
@@ -351,6 +363,9 @@ function experienceAnswer(field: FieldDescriptor, profile: Profile): Decision | 
   const stated = profile.experienceYears?.trim();
   if (!stated || !/^\d+(\.\d+)?\+?$/.test(stated)) return undefined;
   if (!field.options.length) return { kind: "profile", key: "experienceYears", value: stated, source: "from your profile (total experience)" };
+  // Only a list of year counts: a list labelled with this question that holds anything else (a phone box's country
+  // codes, "Afghanistan+93", seen on a real Greenhouse form) is not about years at all.
+  if (!field.options.every((o) => YEARS_OPTION.test(o.trim()) || PLACEHOLDER_OPTION.test(o.trim()))) return undefined;
   const years = parseFloat(stated);
   const option = bestOption(field.options, stated, 0.9) ?? field.options.find((o) => {
     const r = parseRequirement(/year|yr/i.test(o) ? o : `${o} years`);
@@ -399,14 +414,70 @@ export function factSheetOf(profile: Profile): FactSheet {
   return sheet;
 }
 
+// --- where the user lives ----------------------------------------------------------------------------------------
+
+/** "Are you based in India?", "Do you currently reside in the Denver Metro area?": one place, asked about now. */
+const RESIDES_Q = /^(?:are|do) you (?:currently |presently |now |still )?(?:live|living|reside|residing|based|located|a resident)(?: out of| in| within| at| of)? (.+)$/i;
+/** Anything beyond one place is asked: "…or willing to relocate", "…and able to work Sunday to Thursday", "near our
+ * facility", "commuting distance", time zones, and lists ("one of the following countries: Belarus, Cuba…" is an
+ * export-control declaration). */
+const NOT_ONE_PLACE = /\b(or|and|near|nearby|around|close|commut\w*|willing|relocat\w*|distance|miles?|kms?|kilomet\w*|any|one of|following|these|those|our|time ?zones?|est|pst|mst|cst|cet|gmt|utc|ist|facility|office|hub|campus|listed|specified|posting|outside|abroad|overseas|anywhere)\b|[,;/&:]/i;
+const JOB_COUNTRY = /^the country (?:where|in which) (?:this|the) (?:job|role|position|opening|vacancy) (?:is|will be) (?:located|based)$/i;
+
+/** Yes or No to "Do you live in X?" from the Profile's country and city. Yes for the user's own country or city; No
+ * for another country, or a city that is only in another country. A different city in the user's own country is
+ * asked (suburbs and metro areas: someone in Noida may well say they are in Delhi). */
+function residenceAnswer(field: FieldDescriptor, profile: Profile, page?: { jobCountries: string[] }): Decision | undefined {
+  if (!yesNoField(field) || field.control === "checkbox") return undefined;
+  const label = field.label.trim().replace(/\s+/g, " ").replace(/\s*[?.!]+\s*$/, "");
+  const m = RESIDES_Q.exec(label);
+  if (!m) return undefined;
+  const home = profile.country?.trim() ? countryCode(profile.country) : undefined;
+  if (!home) return undefined;
+  const homeName = profile.country!.trim();
+  const city = profile.location?.trim() ?? "";
+  const asked = m[1]!.trim();
+  let yes: boolean | undefined;
+  let from = "";
+  if (JOB_COUNTRY.test(asked)) {
+    const job = page?.jobCountries ?? [];
+    const iso = job.length === 1 ? countryCode(job[0]!) : undefined;
+    if (!iso) return undefined;
+    yes = iso === home;
+    from = `your Profile country (${homeName}) and the job's country (${job[0]})`;
+  } else {
+    if (NOT_ONE_PLACE.test(asked)) return undefined;
+    const place = asked.replace(/^the /i, "").replace(/\s+(?:metro(?:politan)?\s+)?(?:area|region)$/i, "").trim();
+    const countries = countriesIn(place);
+    // The place is a country: its whole name ("Cyprus", "the US"), or one country in a few words ("mainland India").
+    const iso = countryCode(place) ?? (countries.length === 1 && normalize(place).split(" ").length <= 4 ? countryCode(countries[0]!) : undefined);
+    if (iso) {
+      yes = iso === home;
+      from = `your Profile country (${homeName})`;
+    } else if (!countries.length) {
+      const cityCountries = countriesOfCity(place);
+      if (!cityCountries.length) return undefined;
+      if (city && sameCity(city, place)) yes = true;
+      else if (!cityCountries.includes(home)) yes = false;
+      else return undefined;
+      from = `your Profile (${[city, homeName].filter(Boolean).join(", ")})`;
+    } else return undefined;
+  }
+  const value = field.options.length ? yesNoOption(field.options, yes ? "Yes" : "No") : yes ? "Yes" : "No";
+  if (!value) return undefined;
+  return { kind: "answer", value, question: "Quick answers › where you live", source: `from ${from}` };
+}
+
 /** The answer the fact sheet gives to a question the rules could not answer, or nothing (the question is asked). */
-export function factSheetAnswer(field: FieldDescriptor, profile: Profile, sheet: FactSheet = factSheetOf(profile)): Decision | undefined {
+export function factSheetAnswer(field: FieldDescriptor, profile: Profile, sheet: FactSheet = factSheetOf(profile),
+  page?: { jobCountries: string[] }): Decision | undefined {
   if (field.control === "file" || field.control === "checkbox_group" || field.control === "textarea") return undefined;
   if (field.section && NOT_THE_USERS.test(normalize(field.section))) return undefined;
   return historyAnswer(field, profile, sheet)
     ?? educationAnswer(field, profile, sheet)
     ?? experienceAnswer(field, profile)
-    ?? skillAnswer(field, sheet);
+    ?? skillAnswer(field, sheet)
+    ?? residenceAnswer(field, profile, page);
 }
 
 // --- panel help for questions that stay asked -----------------------------------------------------------------

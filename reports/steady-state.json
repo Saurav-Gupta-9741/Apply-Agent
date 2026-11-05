@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-02T23:16:06.046Z",
+  "generatedAt": "2026-11-05T20:34:53.635Z",
   "draws": 20,
   "formsPoolSize": 256,
   "checkpoints": [
@@ -12,13 +12,13 @@
     "A": {
       "name": "Persona A (Fresher DA, Pune)",
       "application1": {
-        "meanAutoFilled": 9.1,
-        "meanAutoShare": "51.6%",
+        "meanAutoFilled": 9.2,
+        "meanAutoShare": "52.1%",
         "minAutoShare": "22.7%",
         "maxAutoShare": "75.0%",
         "meanReused": 0.4,
         "meanAssisted": 0.7,
-        "meanAsk": 8.6,
+        "meanAsk": 8.4,
         "meanHumanOnly": 0.8,
         "wrong": {
           "kind1HumanOnly": 0,
@@ -47,12 +47,12 @@
       },
       "application10": {
         "meanAutoFilled": 11.4,
-        "meanAutoShare": "63.2%",
+        "meanAutoShare": "63.5%",
         "minAutoShare": "0.0%",
         "maxAutoShare": "88.0%",
         "meanReused": 2.8,
         "meanAssisted": 0.7,
-        "meanAsk": 6.1,
+        "meanAsk": 6,
         "meanHumanOnly": 0.7,
         "wrong": {
           "kind1HumanOnly": 0,
@@ -83,13 +83,13 @@
     "B": {
       "name": "Persona B (Senior SWE, Bangalore)",
       "application1": {
-        "meanAutoFilled": 9.3,
-        "meanAutoShare": "53.1%",
+        "meanAutoFilled": 9.4,
+        "meanAutoShare": "53.6%",
         "minAutoShare": "22.7%",
         "maxAutoShare": "75.0%",
         "meanReused": 0.3,
         "meanAssisted": 0.7,
-        "meanAsk": 8.3,
+        "meanAsk": 8.2,
         "meanHumanOnly": 0.8,
         "wrong": {
           "kind1HumanOnly": 0,
@@ -117,13 +117,13 @@
         }
       },
       "application10": {
-        "meanAutoFilled": 11.6,
-        "meanAutoShare": "64.1%",
+        "meanAutoFilled": 11.7,
+        "meanAutoShare": "64.3%",
         "minAutoShare": "0.0%",
         "maxAutoShare": "88.0%",
         "meanReused": 2.6,
         "meanAssisted": 0.7,
-        "meanAsk": 5.9,
+        "meanAsk": 5.8,
         "meanHumanOnly": 0.7,
         "wrong": {
           "kind1HumanOnly": 0,
@@ -154,13 +154,13 @@
     "C": {
       "name": "Persona C (Marketing Mgr, Mumbai)",
       "application1": {
-        "meanAutoFilled": 9.4,
-        "meanAutoShare": "53.6%",
+        "meanAutoFilled": 9.6,
+        "meanAutoShare": "54.1%",
         "minAutoShare": "25.0%",
         "maxAutoShare": "75.0%",
         "meanReused": 0.3,
         "meanAssisted": 0.7,
-        "meanAsk": 8.2,
+        "meanAsk": 8.1,
         "meanHumanOnly": 0.8,
         "wrong": {
           "kind1HumanOnly": 0,
@@ -188,13 +188,13 @@
         }
       },
       "application10": {
-        "meanAutoFilled": 11.6,
-        "meanAutoShare": "64.1%",
+        "meanAutoFilled": 11.7,
+        "meanAutoShare": "64.3%",
         "minAutoShare": "0.0%",
         "maxAutoShare": "88.0%",
         "meanReused": 2.6,
         "meanAssisted": 0.7,
-        "meanAsk": 5.9,
+        "meanAsk": 5.8,
         "meanHumanOnly": 0.7,
         "wrong": {
           "kind1HumanOnly": 0,
@@ -225,8 +225,8 @@
     "D": {
       "name": "Persona D (Product Designer, Austin)",
       "application1": {
-        "meanAutoFilled": 10.1,
-        "meanAutoShare": "56.4%",
+        "meanAutoFilled": 10.2,
+        "meanAutoShare": "57.0%",
         "minAutoShare": "25.0%",
         "maxAutoShare": "75.0%",
         "meanReused": 0.3,
@@ -260,12 +260,12 @@
       },
       "application10": {
         "meanAutoFilled": 11.8,
-        "meanAutoShare": "65.6%",
+        "meanAutoShare": "65.8%",
         "minAutoShare": "0.0%",
         "maxAutoShare": "88.0%",
         "meanReused": 1.6,
         "meanAssisted": 0.7,
-        "meanAsk": 5.8,
+        "meanAsk": 5.7,
         "meanHumanOnly": 0.7,
         "wrong": {
           "kind1HumanOnly": 0,
@@ -295,9 +295,9 @@
     }
   },
   "summary": {
-    "firstApplicationMeanShare": "53.7%",
+    "firstApplicationMeanShare": "54.2%",
     "application5MeanShare": "60.2%",
-    "application10SteadyStateMeanShare": "64.2%",
+    "application10SteadyStateMeanShare": "64.5%",
     "application20MeanShare": "64.9%",
     "wrong": {
       "kind1HumanOnly": 0,
@@ -314,7 +314,7 @@
     },
     {
       "meaning": "other",
-      "count": 76
+      "count": 72
     },
     {
       "meaning": "consent",
