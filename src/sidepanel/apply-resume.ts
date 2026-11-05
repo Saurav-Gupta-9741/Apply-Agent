@@ -134,7 +134,7 @@ export function applyResumeTabMoved(tabId: number, url: string | undefined): voi
 /** Send a Fill to the tab with its own resume (if one was chosen), and name the attached file in the checklist.
  * Other messages go out unchanged. */
 export async function sendWithResume(tabId: number, message: Message, deliver: (m: Message) => Promise<RunReport | undefined>): Promise<RunReport | undefined> {
-  if (message.type !== "RUN") return deliver(message);
+  if (message.type !== "RUN" && message.type !== "SCAN") return deliver(message);
   const url = await chrome.tabs.get(tabId).then((t) => t.url, () => undefined);
   const { message: out, override } = await withTabResume(message, tabId, url).catch(() => ({ message, override: undefined }));
   const report = await deliver(out);

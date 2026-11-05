@@ -155,7 +155,9 @@ describe("the Fill message", () => {
   it("carries none without a chosen resume, and other messages are unchanged", async () => {
     expect((await withTabResume(run, 5, JOB)).message).toEqual(run);
     await saveResumeOverride(5, OTHER, JOB);
-    expect((await withTabResume({ type: "SCAN" }, 5, JOB)).message).toEqual({ type: "SCAN" });
+    // Preview reads the chosen resume like Fill does; other messages are unchanged.
+    expect((await withTabResume({ type: "SCAN" }, 5, JOB)).message).toMatchObject({ type: "SCAN", resume: { name: "Resume_v2_backend.pdf" } });
+    expect((await withTabResume({ type: "HIGHLIGHT", label: "Resume" }, 5, JOB)).message).toEqual({ type: "HIGHLIGHT", label: "Resume" });
   });
   it("is never sent to another job: a tab on another job uses the Profile resume and forgets the chosen one", async () => {
     await saveResumeOverride(5, OTHER, JOB);

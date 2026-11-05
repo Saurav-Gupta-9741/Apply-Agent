@@ -125,8 +125,8 @@ export async function forgetIfMovedOn(tabId: number, url: string | undefined): P
 /** The RUN message for this tab, with its own resume when it has one. A first step is checked against the page the
  * resume was chosen on (a later step of a run under way may be on a new page of the same application). */
 export async function withTabResume(message: Message, tabId: number, tabUrl: string | undefined): Promise<{ message: Message; override?: ResumeOverride }> {
-  if (message.type !== "RUN") return { message };
-  if (!message.continuing && (await forgetIfMovedOn(tabId, tabUrl))) return { message };
+  if (message.type !== "RUN" && message.type !== "SCAN") return { message };
+  if (!(message.type === "RUN" && message.continuing) && (await forgetIfMovedOn(tabId, tabUrl))) return { message };
   const override = await loadResumeOverride(tabId);
   return override ? { message: { ...message, resume: override.resume }, override } : { message };
 }

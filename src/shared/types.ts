@@ -419,7 +419,7 @@ export type Message =
    * never changed. Absent: the Profile's resume (the queue never sends one). */
   | { type: "RUN"; mode: Mode; continuing?: boolean; fillOnly?: boolean; resume?: ResumeFile }
   /** Read-only preview: what the agent would do, without touching the page. */
-  | { type: "SCAN" }
+  | { type: "SCAN"; /** A resume chosen for this application only (Preview reads it like Fill). */ resume?: ResumeFile }
   /** Sent by the silent detector after reading a page (nothing typed). */
   | { type: "DETECTED"; detection: Detection }
   /** Click the page's own "Apply" button (only when the user asks, from the panel). */

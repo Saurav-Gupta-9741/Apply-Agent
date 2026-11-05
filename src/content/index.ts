@@ -307,7 +307,7 @@ if (!window.__applyAgentLoaded) {
       }
       (async () => {
         try {
-          sendResponse(await scanForm(document, { profile: await loadProfile(), answers: await loadAnswers(), applications: await loadApplications(), understand }));
+          sendResponse(await scanForm(document, { profile: withResumeOverride(await loadProfile(), message.resume), answers: await loadAnswers(), applications: await loadApplications(), understand }));
         } catch (error) {
           sendResponse(plainReport("needs_user", `Could not read this form: ${String(error)}`));
         }
