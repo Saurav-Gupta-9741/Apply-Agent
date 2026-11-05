@@ -1539,15 +1539,15 @@
    },
    "B": {
     "decide": "ASK (ask:unknown)",
-    "decideWithMeaning": "ASK (ask:unknown)"
+    "decideWithMeaning": "Flipkart"
    },
    "C": {
     "decide": "ASK (ask:unknown)",
-    "decideWithMeaning": "ASK (ask:unknown)"
+    "decideWithMeaning": "Acme Media"
    },
    "D": {
     "decide": "ASK (ask:unknown)",
-    "decideWithMeaning": "ASK (ask:unknown)"
+    "decideWithMeaning": "Lone Star Health"
    }
   },
   "ashby-headway::d66ddb12": {

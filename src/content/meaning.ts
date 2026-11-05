@@ -238,7 +238,7 @@ function decideWithMeaningInner(field: FieldDescriptor, profile: Profile, answer
   const rulesGaveUp = rule.kind === "ask" && rule.reason !== "sensitive" || rule.kind === "skip" && /in profile|optional choice/.test(rule.reason);
   const modelObjects = !!meaning && meaning.confidence >= DOUBT_CONFIDENCE && NEVER_FROM_PROFILE.has(meaning.intent);
   if (rulesGaveUp && owner === "self" && !modelObjects) {
-    const fact = factSheetAnswer(field.translatedLabel ? { ...field, label: field.translatedLabel } : field, profile);
+    const fact = factSheetAnswer(field.translatedLabel ? { ...field, label: field.translatedLabel } : field, profile, undefined, page);
     if (fact) {
       MODEL_DECISIONS.add(fact);
       return fact;

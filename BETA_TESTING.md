@@ -28,6 +28,20 @@ it to**. Switching to it once looks like a new extension to Chrome, so:
 3. In beta 4's first screen choose **"Used ApplyAgent before? Restore from a backup file"** and pick that file.
 4. Turn on **Keep an automatic backup on this PC** (Backup & move), so a reinstall never loses anything again.
 
+## What's new in 1.0.10
+
+- **"Where do you live?" questions answered from your Profile**: "Are you based in India?", "Do you currently reside in
+  the United States?", "...in the country where this position is located?" (when the job page names one country), and
+  "...in the Denver area?" (No, when that city is only in another country). A different city in your own country,
+  "or willing to relocate", "near our office", time zones and lists of countries are still asked.
+- **"Highest level of education"** is filled; while you are still studying, "completed" or "obtained" is asked.
+- **Links you typed once are reused**: after you type your LinkedIn, GitHub or website on one form, later forms that
+  ask for it in other words get it too (only a real linkedin.com/in/..., github.com/... or web address).
+- **Fixed**: a phone country-code list that carried the label "How many years of experience" could get
+  "American Samoa+1". Only lists of year counts are answered now.
+- **On-device writing model: tested, not shipped.** A small open model (Qwen 0.5B) took 11-50 s per answer on an
+  i3 laptop and made up facts, so it would break "never a wrong answer". Details: reports/ON_DEVICE_LM_PHASE0.md.
+
 ## What's new in 1.0.9
 
 - **New Greenhouse forms fill properly** (Stripe and others): the phone number next to a country picker, the School
