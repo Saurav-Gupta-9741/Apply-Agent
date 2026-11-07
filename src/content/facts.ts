@@ -129,12 +129,21 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   // right to work).
   const needs = NEEDS.test(asked) || /sponsor|parrainage|patrocinio/.test(asked);
   let yes: boolean;
-  if (needs && facts.needsFutureSponsorship) {
-    yes = facts.needsFutureSponsorship === "Yes";
-  } else if (needs) {
-    if (canWorkIn(places[0]!, allowed)) {
+  if (needs) {
+    // "Will you need sponsorship in the future?" in Quick answers is about the countries the user may work in now
+    // (on a temporary permit, or permanently): it never answers for a country the user may not work in at all. Live
+    // run 3 (Affirm, a US job, a user allowed to work in India only): it answered "No" to "Do you require immigration
+    // sponsorship to work … in the United States?". Such a country gets Yes when the user listed it as one they cannot
+    // work in, and is asked otherwise.
+    const inAllowed = canWorkIn(places[0]!, allowed);
+    const inTemp = canWorkIn(places[0]!, tempAllowed);
+    // A user who declined to say is asked: the old code turned a "Decline" into "No".
+    if ((inAllowed || inTemp) && facts.needsFutureSponsorship === "Decline") return undefined;
+    if ((inAllowed || inTemp) && facts.needsFutureSponsorship) {
+      yes = facts.needsFutureSponsorship === "Yes";
+    } else if (inAllowed) {
       yes = false;
-    } else if (canWorkIn(places[0]!, tempAllowed) || isExplicitlyUnauth[0]) {
+    } else if (inTemp || isExplicitlyUnauth[0]) {
       yes = true;
     } else {
       // Unlisted country: the user may hold a visa there that needs no sponsorship. ASK, same as authorization.

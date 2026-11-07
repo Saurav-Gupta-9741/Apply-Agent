@@ -334,3 +334,30 @@ describe("live run 2: Brazilian race question", () => {
     expect(questionTopic("Qual a cor do seu carro?")).toBeUndefined();
   });
 });
+
+// Live run 3 (2026-11-08, Quick answers on): Affirm, a US job; the user may work in India only and said "No" to "Will
+// you need sponsorship in the future?" (meaning in India). The extension answered "No" to US sponsorship questions.
+describe("live run 3: the future-sponsorship Quick answer is only about the user's own work countries", () => {
+  const facts = { workCountries: "India", needsFutureSponsorship: "No" as const, noticePeriod: "", currentCtc: "", expectedCtc: "", relocate: "" as const, heardFrom: "", gender: "" as const, hispanic: "" as const, race: "", veteran: "" as const, disability: "" as const };
+  const me = { ...INDIA_PROFILE, facts };
+  const yn = (label: string) => field(label, "select", ["Yes", "No"]);
+  it("a US sponsorship question is never answered No for a user who may not work in the US", () => {
+    for (const label of ["Do you require immigration sponsorship to work for Affirm in the United States?",
+      "Will you require immigration sponsorship at any point in the future to maintain authorization to work in the United States?"]) {
+      expect(decide(yn(label), me, [], US_JOB as PageFacts)).not.toMatchObject({ kind: "answer", value: "No" });
+    }
+  });
+  it("…and is answered Yes when the user listed the US as a country they cannot work in", () => {
+    const listed = { ...me, facts: { ...facts, unauthorizedCountries: "United States" } };
+    expect(decide(yn("Do you require immigration sponsorship to work in the United States?"), listed, [], US_JOB as PageFacts)).toMatchObject({ kind: "answer", value: "Yes" });
+  });
+  it("in a country the user may work in, their future-sponsorship answer is used", () => {
+    expect(decide(yn("Will you now or in the future require visa sponsorship to work in India?"), me, [])).toMatchObject({ kind: "answer", value: "No" });
+    const later = { ...me, facts: { ...facts, needsFutureSponsorship: "Yes" as const } };
+    expect(decide(yn("Will you now or in the future require visa sponsorship to work in India?"), later, [])).toMatchObject({ kind: "answer", value: "Yes" });
+  });
+  it("a declined future-sponsorship answer is asked, never turned into No", () => {
+    const declined = { ...me, facts: { ...facts, needsFutureSponsorship: "Decline" as const } };
+    expect(decide(yn("Will you now or in the future require visa sponsorship to work in India?"), declined, [])).not.toMatchObject({ kind: "answer" });
+  });
+});

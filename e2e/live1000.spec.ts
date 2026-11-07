@@ -36,6 +36,15 @@ export const CANDIDATE: Profile = {
   school: "State Technical University", degree: "Bachelor's Degree", discipline: "Computer Science", graduationYear: "2021", experienceYears: "5",
   targetRoles: "Data Engineer", preferredLocations: "Pune, Remote", skills: "Python, SQL, BigQuery, Apache Airflow, Docker",
   resume: { name: "Asha_Verma_Resume.txt", type: "text/plain", dataBase64: Buffer.from(RESUME).toString("base64") },
+  // Quick answers, as a user gives them once in onboarding (LIVE1000_NO_FACTS=1 runs without them).
+  ...(process.env.LIVE1000_NO_FACTS ? {} : {
+    facts: {
+      workCountries: "India", needsFutureSponsorship: "No", noticePeriod: "30 days", currentCtc: "12 LPA", expectedCtc: "18 LPA",
+      relocate: "Yes", heardFrom: "LinkedIn", gender: "Decline", hispanic: "Decline", race: "Decline", veteran: "Decline", disability: "Decline",
+      workMode: "any", travel: "Yes", travelPercent: "25", needsAccommodation: "No", pronouns: "she/her", sexualOrientation: "Decline",
+      transgender: "Decline", over18: "Yes",
+    },
+  }),
 };
 const now = "2026-11-07T00:00:00Z";
 export const CANDIDATE_ANSWERS: AnswerEntry[] = [
