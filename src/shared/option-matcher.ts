@@ -207,8 +207,10 @@ const PRONOUN_PATTERNS: Record<PronounBucket, RegExp[]> = {
     /\bthey them( theirs)?( themselves)?\b/i,
     /^they\s*[\/\-,\s]\s*them(\s*[\/\-,\s]\s*theirs)?$/i,
   ],
+  // "Other" and "Not listed" are answers (self-describe), never a decline: as a decline bucket they turned a saved
+  // "Decline to self identify" into "Other" on a gender question (live run, Quora).
   [PronounBucket.DECLINE]: [
-    /\b(decline|prefer not to say|decline to state|prefer not to disclose|other|not listed|opt out)\b/i,
+    /\b(decline|prefer not to say|decline to state|prefer not to disclose|opt out)\b/i,
   ],
 };
 

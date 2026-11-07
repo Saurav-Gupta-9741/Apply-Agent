@@ -113,7 +113,7 @@ describe("fields answered with the on-device AI are marked", () => {
   it("only a decision the question model made (not the rules) is marked", async () => {
     const { decideWithMeaning, MODEL_DECISIONS } = await import("../src/content/meaning");
     const profile = { ...PROFILE, facts: { ...(PROFILE.facts ?? {}), heardFrom: "LinkedIn" } } as typeof PROFILE;
-    const field = { key: "f1", label: "Where did you first hear about this role?", control: "dropdown", required: true,
+    const field = { key: "f1", label: "What brought you to discover this role?", control: "dropdown", required: true,
       options: ["LinkedIn", "Indeed", "Referral"], name: "src", autocomplete: "", placeholder: "" } as unknown as FieldResult["field"];
     const byModel = decideWithMeaning(field, profile, [], undefined, { intent: "heard_about", confidence: 0.99 });
     const rules = decideWithMeaning({ ...field, label: "First name", options: [], control: "text", name: "first_name" } as FieldResult["field"], profile, []);

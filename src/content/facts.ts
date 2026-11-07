@@ -15,7 +15,9 @@ import { parseRequirement } from "../shared/requirements";
 import { extractTechTerms } from "../shared/techterms";
 
 /** "How did you hear about this job?" in its many wordings. */
-export const HEARD_ABOUT = /how did you (hear|learn|find out|come across)|where did you (hear|learn|find)|how did you find (out about )?(us|this)|where have you (learned|heard) about|how you heard about|source of (your )?application|referral source/;
+// Live run: "How did you first hear about Cockroach Labs?", "How did you first learn about Affirm as an employer?",
+// "Where did you see or hear about this job?", "How did your hear about this position?" were left for the user.
+export const HEARD_ABOUT = /how did you(r)? (first |initially |originally )?(hear|learn|find out|come across)|where did you (first |initially |originally )?(see or hear|hear|learn|find)|how did you find (out about )?(us|this)|where have you (learned|heard) about|how you heard about|source of (your )?application|referral source/;
 
 const answer = (value: string, what: string): Decision => ({ kind: "answer", value, question: `Quick answers › ${what}` });
 
@@ -153,6 +155,45 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   return answer(val, needs ? "sponsorship" : "work authorization");
 }
 
+/** A saved answer about ONE country ("Will you … require visa sponsorship to work in the United States?" → Yes, saved
+ * with topic and country) answers the same plain question about that same country in other words: "Will you now or in
+ * the future require sponsorship for employment visa status?" on a job in the US (live run: 71 sponsorship and 56
+ * work-authorization questions were left for a user who had saved exactly these). The question must be one plain
+ * yes/no about working (no "not", no second question, no details wanted), about exactly that one country: named in
+ * it, or (when it names none) the job's only country. Anything else stays for the user. */
+export function countryAnswer(field: FieldDescriptor, profile: Profile, answers: Array<{ question: string; answer: string; topic?: SensitiveTopic; country?: string }>, topic: SensitiveTopic, page?: PageFacts): Decision | undefined {
+  if (topic !== "sponsorship" && topic !== "work_authorization") return undefined;
+  const saved = answers.filter((a) => a.topic === topic && a.country && countriesIn(a.country).length === 1 && /^(yes|no)$/i.test(a.answer.trim()));
+  if (!saved.length || !yesNoField(field)) return undefined;
+  const q = theQuestion(field.label);
+  const asked = q?.replace(/\bwithout\b.*$/, "") ?? "";
+  // A yes/no asked with a verb first ("Will you…", "Do you…"): "Your authorization to work in the country where you
+  // live. Please choose the option that describes it." wants a status, not a Yes.
+  if (!q || !YES_NO_QUESTION.test(q) || !ABOUT_WORKING.test(q) || NOT_A_PLAIN_ASK.test(asked) || /\bif (yes|no|so|not)\b/.test(normalize(field.label))) return undefined;
+  const sponsorWords = /sponsor|visa|visum|immigration|parrainage|patrocinio/.test(asked);
+  const authWords = /authori[sz]|right to work|eligib|entitled|legally|lawfully|permit|permis|arbeitserlaubnis|berechtigt/.test(asked);
+  if (sponsorWords && authWords && /\b(and|&)\b/.test(asked)) return undefined; // two questions in one
+  if (topic === "sponsorship" ? !(sponsorWords && NEEDS.test(asked)) : !(authWords && !sponsorWords)) return undefined;
+  let places = countriesIn(field.label);
+  const whole = normalize(field.label);
+  // "…in your country of residence?", "…a visa to remain in your current location?" (GitLab, a US job): where the user
+  // lives, never the job's country. "…in that country?" points at an earlier answer: the user's to recall.
+  if (!places.length && /country (of (your )?(current )?residence|(where|that|which|in which) you (currently )?(live|reside)|you (currently )?(live|reside) in)|where you (currently )?(live|reside)|your (current |home )?(country|location)|current(ly)? (location|based)/.test(whole)) {
+    places = countriesIn(profile.country);
+  } else if (!places.length && /\b(that|this|same) (country|location|place)\b|you selected|previous (response|question|answer)|above/.test(whole)) {
+    return undefined;
+  }
+  // No country named ("…for employment visa status?", "…in the country where this job is located?"): the job's
+  // country, only when the page names exactly one.
+  if (!places.length && page?.jobCountries.length === 1) places = page.jobCountries;
+  if (places.length !== 1) return undefined;
+  const entry = saved.find((a) => countriesIn(a.country!)[0] === places[0]);
+  if (!entry) return undefined;
+  const raw = /^yes$/i.test(entry.answer.trim()) ? "Yes" : "No";
+  const val = field.options.length ? yesNoOption(field.options, raw) : raw;
+  return val ? { kind: "answer", value: val, question: entry.question, reused: true } : undefined;
+}
+
 const CURRENCY: Array<[string, RegExp]> = [
   ["INR", /₹|\brs\.?\b|\binr\b|rupees?|\blpa\b|lakhs?|lacs?|crores?/i],
   ["EUR", /€|\beur\b|euros?/i],
@@ -243,6 +284,8 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts): Decision | und
 }
 
 const DECLINE = /decline|don ?t (wish|want)|do not (wish|want)|prefer not|choose not|not to (say|answer|disclose|self identify)|rather not/;
+/** An answer (or a listed choice) that declines to say ("Decline to self identify", "I don't wish to answer"). */
+export const isDeclineAnswer = (text: string): boolean => DECLINE.test(normalize(text));
 
 /** The form's choice that clearly means the user's answer, or (for search-as-you-type lists whose choices are not
  * known yet) the words to type that find it. */
