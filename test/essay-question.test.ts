@@ -58,3 +58,22 @@ describe("AI drafts only for essay questions", () => {
     expect(isDraftableField({ control: "textarea", label: "Why us?", name: "email" })).toBe(false);
   });
 });
+
+describe("essay questions in other languages (real wordings)", () => {
+  it.each([
+    "Cuéntanos cuál es la motivación para este puesto",
+    "¿Por qué crees que eres un buen fit? Cuéntanos retos que has afrontado en tu experiencia profesional",
+    "Descreva brevemente uma experiência recente em que você utilizou dados, planilhas ou ferramentas",
+    "請用 250 字告訴我們為什麼想加入 Dcard？",
+    "你有沒有其他想和我們分享或想問我們的事？",
+    "補足事項",
+  ])("essay: %s", (label) => expect(ta(label)).toBe(true));
+  it.each([
+    "請你發揮創意，拍攝 3 分鐘內的自我介紹影片，讓我們能夠更認識你！",
+    "請問你週一～週五能排班的時間是？",
+    "Caso necessite de algum recurso de acessibilidade, por favor especifique no campo abaixo:",
+    "Você possui alguma restrição para a realização das etapas do processo seletivo? Caso, sim, especifique por favor:",
+    "¿Cuál es tu expectativa salarial para esta posición?",
+  ])("not an essay: %s", (label) => expect(ta(label)).toBe(false));
+  it.each(["請分享你目前所任職的公司", "請分享你目前的職稱"])("one-line fact: %s", (label) => expect(tx(label)).toBe(false));
+});

@@ -1,9 +1,9 @@
 {
  "summary": {
   "boards": 222,
-  "boardsWithEssayBoxes": 92,
-  "essayBoxes": 188,
-  "withDraftButton": 182,
+  "boardsWithEssayBoxes": 94,
+  "essayBoxes": 197,
+  "withDraftButton": 191,
   "blockedByEmployerRule": [
    "medium",
    "peloton",
@@ -18,13 +18,15 @@
    "greenhouse"
   ],
   "traps": 3,
-  "lengthStated": 15,
-  "lengthUnderstood": 15,
+  "lengthStated": 17,
+  "lengthUnderstood": 17,
   "missedLimits": [],
   "languages": {
-   "en": 184,
-   "pt": 3,
-   "es": 1
+   "en": 187,
+   "zhHant": 6,
+   "es": 2,
+   "pt": 1,
+   "ja": 1
   }
  },
  "boards": [
@@ -1430,19 +1432,26 @@
   {
    "board": "gympass",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
+   "essays": 3,
+   "draftButtons": 3,
    "items": [
     {
-     "label": "Você possui alguma restrição para a realização das etapas do processo seletivo? Caso, sim, especifique por favor:",
-     "lang": "pt",
+     "label": "Caso tenha assinalado qualquer uma das opções acima, descreva os detalhes abaixo. Por favor, forneça o máximo de informações possível para t",
+     "lang": "en",
      "mentionsLength": false,
      "trap": false,
      "draftButton": true
     },
     {
-     "label": "Você precisa de alguma adaptação no seu ambiente de trabalho? Se sim, qual seria?",
-     "lang": "pt",
+     "label": "Em caso de outro, descreva abaixo à qual grupo sub-representado você se identifica:",
+     "lang": "en",
+     "mentionsLength": false,
+     "trap": false,
+     "draftButton": true
+    },
+    {
+     "label": "Em caso de outro, descreva abaixo a raça a qual você se identifica:",
+     "lang": "en",
      "mentionsLength": false,
      "trap": false,
      "draftButton": true
@@ -1547,11 +1556,18 @@
   {
    "board": "cabify",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
+   "essays": 2,
+   "draftButtons": 2,
    "items": [
     {
      "label": "¿Por qué crees que eres un buen fit? Cuéntanos retos que has afrontado en tu experiencia profesional y consideras relevantes para esta posic",
+     "lang": "es",
+     "mentionsLength": false,
+     "trap": false,
+     "draftButton": true
+    },
+    {
+     "label": "Cuéntanos cuál es la motivación para este puesto",
      "lang": "es",
      "mentionsLength": false,
      "trap": false,
@@ -1754,16 +1770,73 @@
   {
    "board": "paypay",
    "aiRule": null,
-   "essays": 0,
-   "draftButtons": 0,
-   "items": []
+   "essays": 1,
+   "draftButtons": 1,
+   "items": [
+    {
+     "label": "補足事項",
+     "lang": "ja",
+     "mentionsLength": false,
+     "trap": false,
+     "draftButton": true
+    }
+   ]
   },
   {
    "board": "dcard",
    "aiRule": null,
-   "essays": 0,
-   "draftButtons": 0,
-   "items": []
+   "essays": 6,
+   "draftButtons": 6,
+   "items": [
+    {
+     "label": "你有沒有其他想和我們分享、補充資訊或想問我們的事？",
+     "lang": "zhHant",
+     "mentionsLength": false,
+     "trap": false,
+     "draftButton": true
+    },
+    {
+     "label": "你有沒有其他想和我們分享或想問我們的事？",
+     "lang": "zhHant",
+     "mentionsLength": false,
+     "trap": false,
+     "draftButton": true
+    },
+    {
+     "label": "您有沒有其他想和我們分享或想問我們的事？",
+     "lang": "zhHant",
+     "mentionsLength": false,
+     "trap": false,
+     "draftButton": true
+    },
+    {
+     "label": "請分享一個你近期使用 AI 工具的例子，它如何協助你？你如何和它協作？以及過程中有什麼洞察或學習。（如果可以分享和 AI 對話的連結，更能具體讓我們知道實際的情況唷！）",
+     "lang": "zhHant",
+     "mentionsLength": false,
+     "trap": false,
+     "draftButton": true
+    },
+    {
+     "label": "請用 250 字告訴我們為什麼想加入 Dcard？",
+     "lang": "zhHant",
+     "limit": {
+      "maxChars": 250
+     },
+     "mentionsLength": true,
+     "trap": false,
+     "draftButton": true
+    },
+    {
+     "label": "請用 250 字告訴我們為什麼想加入 GNTC？",
+     "lang": "zhHant",
+     "limit": {
+      "maxChars": 250
+     },
+     "mentionsLength": true,
+     "trap": false,
+     "draftButton": true
+    }
+   ]
   },
   {
    "board": "hellofresh",
