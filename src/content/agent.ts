@@ -12,9 +12,9 @@ import { DROPDOWN, extractFields, inWorkSection, sectionHeadings, type Extracted
 import { currentValue, fillCombobox, fillDropdown, fillField, fillPhone, type FillOutcome } from "./fill";
 import { pickSchool, schoolQueries } from "./schools";
 import { deepQueryAll } from "./dom";
-import type { PageFacts } from "./facts";
+import { isDeclineAnswer, type PageFacts } from "./facts";
 import { jobCountries } from "./joblocation";
-import { normalize } from "../shared/text";
+import { bestOption, normalize } from "../shared/text";
 import { pruneDisconnectedCorrections, trackCorrection } from "./corrections";
 import { isConsentLabel } from "../shared/consent-review";
 import { questionKey } from "./classify";
@@ -242,6 +242,9 @@ function fillTagFor(d: Decision): FillTag | undefined {
   return undefined;
 }
 
+/** Boxes the agent types into (their value is the text itself). */
+const TYPED_CONTROLS = new Set(["text", "email", "tel", "url", "number", "textarea"]);
+
 async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meaning): Promise<FieldResult> {
   const first = field.elements[0];
   const box = first && isDialCodePicker(first) ? phoneBoxFor(first) : undefined;
@@ -272,9 +275,14 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
   }
   // A school is one exact institution: its own matching and searches ("IIT Jodhpur" is listed by its full name).
   const school = decision.kind === "profile" && decision.key === "school";
+  // A saved "Decline to self identify" lands only on a choice that declines (lists whose choices show once opened).
+  const declineOnly = decision.kind === "answer" && isDeclineAnswer(value) ? (labels: string[]) => {
+    const declines = labels.filter(isDeclineAnswer);
+    return bestOption(declines, value, 0.3) ?? (declines.length === 1 ? declines[0] : undefined);
+  } : undefined;
   const outcome = field.descriptor.control === "combobox" ? await fillCombobox(el as HTMLInputElement, value, 6000,
-      school ? { queries: schoolQueries(value), pick: (labels) => pickSchool(labels, value) } : {})
-    : field.descriptor.control === "dropdown" || el.matches(DROPDOWN) ? await fillDropdown(el, value)
+      school ? { queries: schoolQueries(value), pick: (labels) => pickSchool(labels, value) } : declineOnly ? { pick: declineOnly, queries: ["decline", "wish"] } : {})
+    : field.descriptor.control === "dropdown" || el.matches(DROPDOWN) ? await fillDropdown(el, value, 4000, declineOnly)
     // Phone boxes often format the number as it is typed, or beside a country picker keep only the national part.
     : phone && (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) ? fillPhone(el, value, splitPhone(ctx.profile.phone).code)
     : fillField(field, value, ctx.profile.resume);
@@ -404,6 +412,19 @@ async function fillFormUnguarded(doc: Document, context: AgentContext): Promise<
     rest.push(res);
     // A fixed pause (the same every time) so the page's own scripts can react to the value: reliability, not disguise.
     if (pause && index < remaining.length - 1 && (res.status === "filled" || res.status === "failed")) await sleep(pause);
+  }
+  // 4. Typed values the page has cleared since (live run: Greenhouse emptied the first name, last name and email typed
+  //    while its resume handling was still busy, and the report said "filled"). Empty again, so typing them once more
+  //    overwrites nothing; a value the page clears twice is reported as not filled.
+  for (const [index, field] of remaining.entries()) {
+    const res = rest[index];
+    const box = field.elements[0];
+    if (!res || res.status !== "filled" || !TYPED_CONTROLS.has(field.descriptor.control) || !(box instanceof HTMLInputElement || box instanceof HTMLTextAreaElement)
+      || !box.isConnected || currentValue(field)) continue;
+    const again = await fillOne(field, ctx, meanings.get(field.descriptor.label));
+    rest[index] = again.status === "filled" && currentValue(field)
+      ? { ...again, detail: again.detail ?? "typed again: the page had cleared it" }
+      : { ...res, status: "failed", detail: "the page cleared this value: type it yourself" };
   }
   const results = [...uploads, ...rest];
 

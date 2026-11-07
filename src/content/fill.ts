@@ -405,22 +405,51 @@ function visibleOptions(scope: ParentNode): HTMLElement[] {
 
 const LIST_CONTAINERS = "[role='listbox'], .select__menu, .exportSelectPopup, .select2-dropdown, .chosen-drop, [data-automation-id*='promptPopup'], [data-automation-id*='menu'], .dropdown-menu.show, .fabric-select-menu, .sapMPopover, .sapMSelectItems, .sapMComboBoxList, .oj-listbox-results, .oj-select-results, .mat-select-panel, .mat-mdc-select-panel, .cdk-overlay-pane, .zp_dropdown_menu, .zp_select_options";
 
+const FIELD_CONTROLS = "[role='combobox']";
+
+/** The node holds another dropdown than `owner` (and other than `owner`'s own parts). */
+function otherFieldsIn(node: Element, owner: HTMLElement): boolean {
+  return Array.from(node.querySelectorAll(FIELD_CONTROLS)).some((c) => c !== owner && !c.contains(owner) && !owner.contains(c));
+}
+
+/** An open list that belongs to another dropdown: another field names it (aria-controls / aria-owns), or the nearest
+ * widget around it holds another field and not this one. A phone's country list left open must never answer a
+ * "Which country are you based in?" question (live run: "India+91" picked for it from the phone's list). */
+function ownedByAnother(list: Element, owner: HTMLElement): boolean {
+  const ids = new Set<string>();
+  for (let n: Element | null = list; n && ids.size < 4; n = n.parentElement) if (n.id) ids.add(n.id);
+  for (const id of ids) {
+    const namers = deepQueryAll<HTMLElement>(owner.ownerDocument, `[aria-controls~="${cssAttr(id)}"], [aria-owns~="${cssAttr(id)}"]`);
+    if (namers.some((n) => n !== owner && !n.contains(owner) && !owner.contains(n))) return true;
+  }
+  let node: Element | null = list.parentElement;
+  for (let depth = 0; node && depth < 6; depth++, node = node.parentElement) {
+    if (node.contains(owner)) return false;
+    if (Array.from(node.querySelectorAll(FIELD_CONTROLS)).some((c) => !list.contains(c))) return true;
+  }
+  return false;
+}
+
 /** The list a dropdown opened, when it does not name it: the one inside the field's own group, else the only open list
  * on the page. Never every option on the page: another open list, or a menu built of options, is not this field's. */
 function listNear(owner: HTMLElement): ParentNode | undefined {
   let node: Element | null = owner.parentElement;
   for (let depth = 0; node && depth < 5; depth++, node = node.parentElement) {
+    if (otherFieldsIn(node, owner)) break; // another field's widget: its options are not this field's
     if (visibleOptions(node).length) return node;
   }
-  const open = deepQueryAll<HTMLElement>(owner.ownerDocument, LIST_CONTAINERS).filter((l) => visibleOptions(l).length);
+  const open = deepQueryAll<HTMLElement>(owner.ownerDocument, LIST_CONTAINERS).filter((l) => visibleOptions(l).length && !ownedByAnother(l, owner));
   // A menu and the list inside it are one list.
   const lists = open.filter((l) => !open.some((inner) => inner !== l && l.contains(inner)));
   if (lists.length === 1) return lists[0];
   if (lists.length) return undefined;
   // Options with no list around them (a portal at the end of the page): only when they all sit together.
-  const options = visibleOptions(owner.ownerDocument);
+  const all = visibleOptions(owner.ownerDocument);
+  const options = all.filter((o) => !ownedByAnother(o, owner));
   const parents = new Set(options.map((o) => o.parentElement));
-  return parents.size === 1 ? owner.ownerDocument : undefined;
+  if (parents.size !== 1) return undefined;
+  // Some options belong to another dropdown: look only where this field's options are.
+  return options.length === all.length ? owner.ownerDocument : ([...parents][0] ?? undefined);
 }
 
 function sleep(ms: number): Promise<void> {
@@ -519,8 +548,8 @@ function closeList(owner: HTMLElement): void {
 }
 
 /** Open a list and pick the best match for `value`; gives up only when the time is out, closing the list again. */
-async function pickFromList(owner: HTMLElement, value: string, timeoutMs: number): Promise<FillOutcome> {
-  const { chosen, seen } = await waitAndPick(owner, withoutCatchAll(value, (labels) => bestOption(labels, value)), timeoutMs, Infinity);
+async function pickFromList(owner: HTMLElement, value: string, timeoutMs: number, pick?: (labels: string[]) => string | undefined): Promise<FillOutcome> {
+  const { chosen, seen } = await waitAndPick(owner, withoutCatchAll(value, pick ?? ((labels) => bestOption(labels, value))), timeoutMs, Infinity);
   if (chosen) return { ok: true, detail: chosen === value ? undefined : `chose "${chosen}"`, chosen };
   closeList(owner);
   return { ok: false, detail: seen.length ? `no option matches "${value}"` : "options did not appear" };
@@ -586,7 +615,13 @@ export async function fillCombobox(input: HTMLInputElement, value: string, timeo
     if (result.seen.length) seen = result.seen;
     if (result.chosen) {
       await sleep(120);
-      const shown = comboboxShown(input);
+      let shown = comboboxShown(input);
+      // react-select always shows its choice beside the box: nothing there means the click landed in another list.
+      if (!shown && input.closest("[class*='value-container' i], [class*='ValueContainer']")) {
+        await sleep(400);
+        shown = comboboxShown(input);
+        if (!shown) return { ok: false, detail: `"${result.chosen}" did not stick` };
+      }
       if (shown && !sameChoice(shown, result.chosen)) return { ok: false, detail: `the list shows "${shown}", not "${result.chosen}"` };
       return { ok: true, detail: result.chosen === value ? undefined : `chose "${result.chosen}"`, chosen: result.chosen };
     }
@@ -614,12 +649,12 @@ export function dropdownValue(el: Element): string {
 }
 
 /** Open a custom dropdown (a button with a list of choices), pick the best match, and check that it shows it. */
-export async function fillDropdown(el: HTMLElement, value: string, timeoutMs = 4000): Promise<FillOutcome> {
+export async function fillDropdown(el: HTMLElement, value: string, timeoutMs = 4000, pick?: (labels: string[]) => string | undefined): Promise<FillOutcome> {
   el.focus();
   el.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, composed: true }));
   el.click();
   if (el.getAttribute("aria-expanded") === "false") el.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true, composed: true }));
-  const picked = await pickFromList(el, value, timeoutMs);
+  const picked = await pickFromList(el, value, timeoutMs, pick);
   if (!picked.ok) return picked;
   await sleep(120);
   const shown = dropdownValue(el);

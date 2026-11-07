@@ -96,7 +96,7 @@ export function lengthLimit(text: string, maxLength?: number): LengthLimit | und
       if (n && unit) { set(limit, unit, "max", n); matched = true; }
     }
     // "about 200 words", "a 300-word essay", "in 100 words", "(150 words)", "in one sentence", "in a few sentences".
-    for (const m of t.matchAll(re(String.raw`${ABOUT}\s*${NUM}[\s-]*${UNIT}(?![a-z])(?!\s*(?:or less|or fewer|max(?:imum)?))`))) {
+    for (const m of t.matchAll(re(String.raw`${ABOUT}\s*${NUM}[\s-]*${UNIT}(?![a-z])(?!\s*(?:or less|or fewer|max(?:imum)?\b))`))) {
       const n = num(m[1]!), unit = unitOf(m[2]!);
       if (n && unit && counts(m[1]!, unit)) { set(limit, unit, "max", Math.round(n * 1.1)); limit.approximate = true; matched = true; }
     }
