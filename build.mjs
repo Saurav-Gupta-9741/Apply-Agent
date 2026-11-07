@@ -53,7 +53,9 @@ if (betaBuild) {
 }
 if (testBuild) {
   const manifest = JSON.parse(readFileSync(`${outdir}/manifest.json`, "utf8"));
-  manifest.host_permissions = TEST_ORIGINS;
+  // LIVE_ALL_SITES=1 (the live real-form runs only): every https site counts as allowed, as if the user had pressed
+  // "Allow this site" in the panel on a company's own careers site.
+  manifest.host_permissions = process.env.LIVE_ALL_SITES ? [...TEST_ORIGINS, "https://*/*"] : TEST_ORIGINS;
   // Granted up front in tests (optional in real builds), so the automatic backup can be tested without a prompt.
   manifest.permissions = [...manifest.permissions, "downloads"];
   // The writer needs these in every build (the lead adds them to static/manifest.json); added here when still missing

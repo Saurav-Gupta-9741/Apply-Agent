@@ -116,9 +116,27 @@ test("real-life: the extension fills live application forms (nothing submitted o
       const applyTab = page.getByRole("tab", { name: /application/i }).or(page.getByRole("button", { name: /^apply( for this job| now)?$/i })).first();
       if (await applyTab.isVisible().catch(() => false)) await applyTab.click({ timeout: 5000 }).catch(() => undefined);
       await page.locator("input:not([type=hidden]), textarea").first().waitFor({ timeout: 15_000 }).catch(() => undefined);
-      if (/captcha|are you a robot|verify you are human/i.test(body.slice(0, 2000)) && !(await page.locator("input[type=email]").count())) { row.outcome = "robot_check"; continue; }
+      if (/captcha|are you a robot|verify you are human|security verification|security check|verifies you are not a bot|just a moment|checking your browser/i.test(body.slice(0, 2000)) && !(await page.locator("input[type=email]").count())) { row.outcome = "robot_check"; continue; }
       const startUrl = page.url();
-      const report = await send(ext, page, { type: "RUN", mode: "review", fillOnly: true });
+      let report = await send(ext, page, { type: "RUN", mode: "review", fillOnly: true });
+      if (!report || (report.status === "not_a_form" && !report.fields.length)) {
+        // The job page lives on the company's own site with the form embedded from Greenhouse/Ashby: like the panel
+        // ("Opening the application form…"), open the form's own page and fill there.
+        let embedded = page.frames().map((f) => f.url()).find((u) => /(greenhouse\.io|ashbyhq\.com)\/.*(embed|job_app|application|jobs\/\d)/i.test(u));
+        if (!embedded) {
+          // Only the job description: the panel's "Open the application" button (the page's own Apply link or button).
+          const opened = (await send(ext, page, { type: "OPEN_APPLICATION" })) as unknown as { href?: string; clicked?: boolean } | undefined;
+          if (opened?.href) embedded = opened.href;
+          else if (opened?.clicked) { await page.waitForTimeout(4000); embedded = page.url(); }
+        }
+        if (embedded) {
+          row.openedEmbeddedForm = embedded.slice(0, 200);
+          await page.goto(embedded, { waitUntil: "domcontentloaded", timeout: 45_000 });
+          await page.waitForTimeout(3000);
+          await page.locator("input:not([type=hidden]), textarea").first().waitFor({ timeout: 15_000 }).catch(() => undefined);
+          report = await send(ext, page, { type: "RUN", mode: "review", fillOnly: true, continuing: true });
+        }
+      }
       if (!report || report.status === "not_a_form" || !report.fields.length) {
         row.outcome = "no_form";
         row.runStatus = report?.status ?? "no answer from the page";
@@ -143,7 +161,7 @@ test("real-life: the extension fills live application forms (nothing submitted o
           onPage: values[f.field.name] ?? undefined,
         };
       });
-      row.urlUnchanged = page.url() === startUrl;
+      row.urlUnchanged = page.url() === startUrl || page.url() === row.openedEmbeddedForm;
     } catch (e) {
       row.error = String((e as Error)?.message ?? e).split("\n")[0]!.slice(0, 200);
     } finally {
