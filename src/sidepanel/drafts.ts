@@ -11,7 +11,8 @@
 
 import { aiStatus, buildDraftPrompt, checkDraft, draftAnswer, INSUFFICIENT, type DraftOptions } from "../shared/ai";
 import { docxToText, extractPdfText } from "../shared/resume-parse";
-import { isNeverRemembered, isSecretField } from "../content/classify";
+import { isNeverRemembered, isSecretField, questionTopic } from "../content/classify";
+import { isEssayQuestion } from "../shared/essay-question";
 import type { FieldDescriptor, Profile } from "../shared/types";
 import { checkLength, fitToLimit, lengthCounter, lengthLimit, type LengthLimit } from "../shared/length-limit";
 
@@ -65,15 +66,12 @@ export function isDraftableField(field: { control: string; label: string; name?:
   if (field.name && NOT_DRAFTABLE_NAMES.test(field.name)) return false;
   if (isNeverRemembered(field.label)) return false;
 
-  // Textarea controls are designed for open-ended essay answers
-  if (field.control === "textarea") return true;
-
-  // Text controls matching descriptive prompts
-  if (field.control === "text") {
-    return DRAFTABLE_QUESTION_PATTERNS.some((pat) => pat.test(field.label));
-  }
-
-  return false;
+  // Salary, visa, consent and the other sensitive topics are the user's own facts, never an AI draft.
+  if (questionTopic(field.label)) return false;
+  if (field.control !== "textarea" && field.control !== "text") return false;
+  // Only real essay questions: not links, start dates, "How did you hear about us?" or yes/no facts in a big box.
+  return isEssayQuestion(field.label, field.control === "textarea")
+    || (field.control === "text" && DRAFTABLE_QUESTION_PATTERNS.some((pat) => pat.test(field.label)) && isEssayQuestion(field.label, true));
 }
 
 /** Status message and guidance when built-in AI is missing or downloadable. */
