@@ -283,7 +283,9 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts): Decision | und
   return answer(value, what);
 }
 
-const DECLINE = /decline|don ?t (wish|want)|do not (wish|want)|prefer not|choose not|not to (say|answer|disclose|self identify)|rather not/;
+// Also the declines of Spanish, Portuguese, French, German, Italian, Dutch, Japanese and Chinese forms (live run 2:
+// "Prefiero no responder" on Cabify and "Prefiro não responder" on C6 Bank were missed). Matched on normalized text.
+const DECLINE = /decline|don ?t (wish|want)|do not (wish|want)|prefer not|choose not|not to (say|answer|disclose|self identify)|rather not|prefier[oe] no (responder|decir|contestar|indicar|especificar)|prefiro nao (responder|informar|dizer|declarar)|prefere ne pas|ne (souhaite|veux) pas (repondre|le dire|le preciser)|keine angabe|mochte (ich )?(das |es )?nicht angeben|nicht angeben|preferisco non (rispondere|dirlo|specificare)|liever niet|wil ik niet zeggen|回答しない|答えたくない|回答を控え|不愿透露|不想回答|不愿回答|不願透露|不想回答/;
 /** An answer (or a listed choice) that declines to say ("Decline to self identify", "I don't wish to answer"). */
 export const isDeclineAnswer = (text: string): boolean => DECLINE.test(normalize(text));
 

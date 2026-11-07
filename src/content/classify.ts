@@ -40,7 +40,7 @@ const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   ["sexual_orientation", /\bsexual orientation\b|\blgbt|\bmember of the (lesbian|lgbt)/],
   ["transgender", /\btransgender\b|sex.*assigned at birth/],
   ["gender", /gender|geschlecht|\bgenre\b|\bsexe\b|genero|\bgenere\b|\bsexo\b|\bsesso\b|geslacht/],
-  ["race", /\brace\b|ethnic|hispanic|latin[oax]|\betnia\b|etnicidad|origine ethnique/],
+  ["race", /\brace\b|ethnic|hispanic|latin[oax]|\betnia\b|etnicidad|origine ethnique|\braca\b|\braza\b/],
   ["veteran", /veteran|military|armed forces/],
   ["accommodation", /\baccommodat|ajustements?|adjustments? (to|during|for)|recursos ou adaptacoes|necessidade de acessibilidade/],
   ["disability", /disabilit|behinderung|schwerbehindert|handicap|discapacidad|deficiencia|disabile/],
@@ -340,7 +340,9 @@ function sameFactAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic: S
   return [...answers]
     .filter((a) => a.topic === topic && !BARE_YES_NO.test(normalize(a.answer)))
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
-    .find((a) => bestOption(field.options, a.answer, 0.75) !== undefined);
+    // The answer is one of the listed choices; a saved decline also matches the list's own decline in any wording or
+    // language ("Prefiro não responder", live run 2).
+    .find((a) => bestOption(field.options, a.answer, 0.75) !== undefined || (isDeclineAnswer(a.answer) && field.options.some(isDeclineAnswer)));
 }
 
 export function profileValue(profile: Profile, key: ProfileKey | "fullName"): string {
@@ -556,8 +558,13 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
     if (entry) {
       let val = entry.answer;
       if (field.options.length) {
-        const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
-        // A saved decline only ever lands on a choice that declines (never "Other").
+        let match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
+        // A saved decline lands on the list's own declining choice, whatever its wording or language ("Decline to
+        // self identify" → "Prefiro não responder", live run 2), and never on "Other".
+        if (isDeclineAnswer(val) && !(match && isDeclineAnswer(match))) {
+          const declines = field.options.filter(isDeclineAnswer);
+          match = declines.length === 1 ? declines[0] : (bestOption(declines, val, 0.3) ?? undefined);
+        }
         if (match && !(isDeclineAnswer(val) && !isDeclineAnswer(match))) val = match;
         else return { kind: "ask", reason: "unknown" };
       }

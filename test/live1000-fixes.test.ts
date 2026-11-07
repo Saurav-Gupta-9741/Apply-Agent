@@ -5,8 +5,8 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
 import { fillForm } from "../src/content/agent";
-import { decide } from "../src/content/classify";
-import type { PageFacts } from "../src/content/facts";
+import { decide, questionTopic } from "../src/content/classify";
+import { isDeclineAnswer, type PageFacts } from "../src/content/facts";
 import { decideWithMeaning } from "../src/content/meaning";
 import { bestOption } from "../src/shared/text";
 import type { AnswerEntry, FieldDescriptor } from "../src/shared/types";
@@ -247,5 +247,90 @@ describe("live run: values the page clears after the fill are typed again or rep
     const last = report.fields.find((r) => r.field.label === "Last Name")!;
     expect(box.value).toBe("");
     expect(last.status).not.toBe("filled");
+  });
+});
+
+// The run on the fixed code (1,180 live forms, 2026-11-08): the two wrong fills left.
+describe("live run 2: marketing signups and 'closest office' questions", () => {
+  it("stripe: the page's newsletter email box ('Get industry insights and updates from Stripe') is never filled", () => {
+    const f = { ...field("Get industry insights and updates from Stripe", "email"), name: "email" };
+    expect(decideWithMeaning(f, INDIA_PROFILE, [])).not.toMatchObject({ kind: "profile" });
+    for (const label of ["Subscribe to our newsletter", "Join our talent community", "Sign up for job alerts", "Keep me posted about future roles"]) {
+      expect(decideWithMeaning(field(label, "email"), INDIA_PROFILE, [])).not.toMatchObject({ kind: "profile" });
+    }
+  });
+  it("the application's own email box is still filled", () => {
+    expect(decideWithMeaning(field("Email", "email"), INDIA_PROFILE, [])).toMatchObject({ kind: "profile", key: "email" });
+  });
+  it("cohere: 'Which location are you the closest to?' (their offices) is left for the user", () => {
+    for (const label of ["Which location are you the closest to?", "Which office are you nearest to?", "Preferred office location", "Which hub would you work from?"]) {
+      expect(decideWithMeaning(field(label, "text"), INDIA_PROFILE, [])).not.toMatchObject({ kind: "profile" });
+    }
+  });
+});
+
+/** Like a real react-select: the list shows only the choices that contain what is typed (all of them for an empty
+ * search), and "No options" when none does. */
+function filters(id: string, options: string[]): void {
+  const box = document.getElementById(id) as HTMLInputElement;
+  const render = () => {
+    const container = box.closest(".select__container")!;
+    container.querySelector(".select__menu")?.remove();
+    const shown = options.filter((o) => o.toLowerCase().includes(box.value.trim().toLowerCase()));
+    box.setAttribute("aria-controls", `react-select-${id}-listbox`);
+    container.insertAdjacentHTML("beforeend", `<div class="select__menu"><div role="listbox" id="react-select-${id}-listbox">${
+      shown.length ? shown.map((o) => `<div class="select__option" role="option">${o}</div>`).join("") : `<div class="select__menu-notice--no-options">No options</div>`}</div></div>`);
+  };
+  box.addEventListener("input", () => setTimeout(render, 40));
+  box.addEventListener("keydown", (e) => { if ((e as KeyboardEvent).key === "ArrowDown") setTimeout(render, 40); });
+}
+
+// Live run 2 (2026-11-08): 71 EEO lists failed with "no option matches 'I do not want to answer'": the saved decline
+// was typed first, the list filtered to nothing, and the time ran out before a search that finds the list's own decline.
+describe("live run 2: a saved decline finds the list's own decline wording", () => {
+  beforeAll(reactSelectClicks);
+  for (const [saved, listed] of [["I do not want to answer", "I don't wish to answer"], ["Decline to self identify", "I prefer not to say"], ["I don't wish to answer", "Decline To Self Identify"]] as Array<[string, string]>) {
+    it(`saved "${saved}" picks "${listed}" in a filtering list`, async () => {
+      mount();
+      document.getElementById("application-form")!.insertAdjacentHTML("beforeend", reactSelect("disability_status", "Please indicate your disability status") + reactSelect("gender_identity", "What is your gender identity?"));
+      filters("disability_status", ["Yes, I have a disability (or previously had a disability)", "No, I do not have a disability and have not had one in the past", listed]);
+      filters("gender_identity", ["Male", "Female", listed]);
+      const answers: AnswerEntry[] = [
+        { question: "Disability status", answer: saved, topic: "disability", updatedAt: "2026-11-08T00:00:00Z" },
+        { question: "Gender", answer: saved, topic: "gender", updatedAt: "2026-11-08T00:00:00Z" },
+      ];
+      const report = await fillForm(document, { profile: PROFILE, answers, mode: "review" });
+      for (const label of ["Please indicate your disability status", "What is your gender identity?"]) {
+        expect(report.fields.find((r) => r.field.label === label)).toMatchObject({ status: "filled", detail: `chose "${listed}"` });
+      }
+    }, 30_000);
+  }
+  it("a list without any declining choice is still left for the user", async () => {
+    mount();
+    document.getElementById("application-form")!.insertAdjacentHTML("beforeend", reactSelect("gender_identity", "What is your gender identity?"));
+    filters("gender_identity", ["Male", "Female", "Non-binary"]);
+    const report = await fillForm(document, { profile: PROFILE, answers: [{ question: "Gender", answer: "I do not want to answer", topic: "gender", updatedAt: "2026-11-08T00:00:00Z" }], mode: "review" });
+    expect(report.fields.find((r) => r.field.label === "What is your gender identity?")!.status).not.toBe("filled");
+  }, 30_000);
+});
+
+describe("live run 2: declines in other languages", () => {
+  it.each(["Prefiero no responder", "Prefiro não responder", "Je préfère ne pas répondre", "Keine Angabe", "Preferisco non rispondere", "Zeg ik liever niet", "回答しない", "不愿透露", "I don't wish to answer"])("%s is a decline", (s) => {
+    expect(isDeclineAnswer(s)).toBe(true);
+  });
+  it.each(["Si", "Não", "Mulher Cis", "Other", "Outra", "Yes", "No, I do not have a disability"])("%s is not a decline", (s) => {
+    expect(isDeclineAnswer(s)).toBe(false);
+  });
+  it("c6bank: a saved decline picks 'Prefiro não responder' from the gender list", () => {
+    const options = ["Mulher Cis", "Mulher Trans", "Homem Cis", "Homem Trans", "Não-Binário", "Outra", "Prefiro não responder"];
+    expect(decide(field("Qual a sua identidade de gênero?", "select", options), PROFILE, DECLINES)).toMatchObject({ kind: "answer", value: "Prefiro não responder" });
+  });
+});
+
+describe("live run 2: Brazilian race question", () => {
+  it("'Raça/Cor' is a race question (asked, or a saved decline reused), never a free guess", () => {
+    expect(questionTopic("Raça/Cor")).toBe("race");
+    expect(questionTopic("¿Cuál es tu raza?")).toBe("race");
+    expect(questionTopic("Qual a cor do seu carro?")).toBeUndefined();
   });
 });

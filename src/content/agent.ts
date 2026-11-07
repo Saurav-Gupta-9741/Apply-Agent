@@ -281,7 +281,7 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
     return bestOption(declines, value, 0.3) ?? (declines.length === 1 ? declines[0] : undefined);
   } : undefined;
   const outcome = field.descriptor.control === "combobox" ? await fillCombobox(el as HTMLInputElement, value, 6000,
-      school ? { queries: schoolQueries(value), pick: (labels) => pickSchool(labels, value) } : declineOnly ? { pick: declineOnly, queries: ["decline", "wish"] } : {})
+      school ? { queries: schoolQueries(value), pick: (labels) => pickSchool(labels, value) } : declineOnly ? { pick: declineOnly, first: ["", "decline", "wish", "prefer not"] } : {})
     : field.descriptor.control === "dropdown" || el.matches(DROPDOWN) ? await fillDropdown(el, value, 4000, declineOnly)
     // Phone boxes often format the number as it is typed, or beside a country picker keep only the national part.
     : phone && (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) ? fillPhone(el, value, splitPhone(ctx.profile.phone).code)

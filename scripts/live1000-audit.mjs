@@ -148,12 +148,17 @@ function judge(f, row) {
     return r("wrong", "eeo_topic", `a "${f.matched}" answer reused for a ${want} question`);
   }
   // Work authorization.
-  if (isWorkAuth(q) && (f.decision === "answer" || YES.test(c) || NO.test(c))) {
+  // "Do you need a visa / work permit…" asks about sponsorship, not current authorization: judged below.
+  const needsAsk = /\b(need|require|requir(es|ing))\b[^?]{0,60}\b(visa|work permit|sponsor\w*|right to work support)\b/.test(label);
+  if (isWorkAuth(q) && !needsAsk && (f.decision === "answer" || YES.test(c) || NO.test(c))) {
     const cs = countriesIn(q);
     const yes = YES.test(c) || /authori[sz]ed|eligible/.test(c) && !/not/.test(c);
     const no = NO.test(c);
     if (cs.length === 1 && cs[0] === "India") return yes ? r("correct", "workauth_india", "authorized in India") : r("wrong", "workauth_india", `answered "${chosen ?? value}" for India`);
     if (cs.length && !cs.includes("India")) return yes ? r("wrong", "workauth_other_country", `answered Yes for ${cs.join(", ")}; authorized in India only`) : no ? r("correct", "workauth_other_country", "No for a country other than India") : r("unclear", "workauth", "");
+    // "…in your country of residence?", "…the country you currently reside in?": the candidate lives in India and is
+    // authorized there, whatever the job's country.
+    if (/resid|where you (currently )?live|you (currently )?live in|your (current |home )?country/.test(label)) return yes ? r("correct", "workauth_residence", "authorized where the candidate lives (India)") : r("wrong", "workauth_residence", `"${chosen ?? value}" though authorized in the country of residence`);
     const jc = jobCountries(META[row?.url]);
     if (jc.length === 1 && jc[0] === "India") return yes ? r("correct", "workauth_job_country", "the job is in India") : r("wrong", "workauth_job_country", `"${chosen ?? value}" for a job in India`);
     if (jc.length && !jc.includes("India")) return yes ? r("wrong", "workauth_job_country", `Yes for a job in ${jc.join(", ")} (${META[row.url].location}); authorized in India only`) : no ? r("correct", "workauth_job_country", `No for a job in ${jc.join(", ")}`) : r("unclear", "workauth", "");
@@ -162,7 +167,8 @@ function judge(f, row) {
   // Sponsorship.
   if (isSponsor(q) && (f.decision === "answer" || YES.test(c) || NO.test(c))) {
     const cs = countriesIn(q);
-    const inverted = INVERTED.test(q);
+    // Judged on the question only: help text often explains both answers ("Mark NO if you will NOT require…").
+    const inverted = INVERTED.test(label);
     const yes = YES.test(c);
     const no = NO.test(c);
     if (cs.length === 1 && cs[0] === "India") return (inverted ? yes : no) ? r("correct", "sponsor_india", "no sponsorship needed in India") : r("wrong", "sponsor_india", `"${chosen ?? value}" for India (needs none there)`);

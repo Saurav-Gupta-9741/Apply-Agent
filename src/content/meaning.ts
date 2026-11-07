@@ -250,6 +250,12 @@ const NOT_THIS_FACT: Array<[(d: Decision) => boolean, RegExp]> = [
   // "Which country do you intend to work from?" (live run, an EU role): where the user means to work for this job, not
   // where they live. Plans and wishes are the user's to state.
   [(d) => d.kind === "profile" && (d.key === "country" || d.key === "location"), /\b(intend\w*|plan(ning)? to|would you (like|prefer)|will you (be )?work\w*|want to work|wish to work|applying (for|to)|hope to|work location)\b/i],
+  // "Which location are you the closest to?" (live run, Cohere: London / SF / NY / Paris / Toronto / Montreal): one of
+  // the employer's offices, which the user picks; "Pune" is not an answer to it.
+  [(d) => d.kind === "profile" && (d.key === "country" || d.key === "location"),/\b(closest|nearest)\b|\b(which|preferred|preference)\b[\s\S]{0,20}\b(office|hub|site|campus|posting)\b|\boffice (location|preference)\b/i],
+  // A newsletter or marketing signup on the page ("Get industry insights and updates from Stripe"): not part of the
+  // application. Typing the user's email there subscribes them without asking (live run, Stripe).
+  [(d) => d.kind === "profile" || d.kind === "answer", /\b(newsletter|subscribe|subscription|insights and updates|updates from|marketing (e-?mails?|communications?)|talent (community|network|pool)|job alerts?|keep me (posted|informed)|stay (in touch|connected)|news and (updates|offers))\b/i],
   // "Passport Country" (live run, Supabase): citizenship is not the country the user lives in.
   [(d) => d.kind === "profile" && d.key === "country", /\b(passport|citizen\w*|nationalit\w*|place of birth|country of birth|born)\b/i],
   // "Located in or willing to relocate to Bangalore…?" with an option "Currently based in Bangalore": that option

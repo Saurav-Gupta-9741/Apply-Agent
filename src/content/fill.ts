@@ -587,6 +587,9 @@ export interface ComboboxOptions {
   queries?: string[];
   /** Which listed option is the answer (default: the best match for the value). Never a catch-all "Other". */
   pick?: (labels: string[]) => string | undefined;
+  /** Searches to try BEFORE the value itself (a saved decline: the whole short list first, then "decline", "wish"…,
+   * since lists word a decline in many ways and a search that finds nothing uses up most of the time). */
+  first?: string[];
 }
 
 const sameChoice = (a: string, b: string) => {
@@ -600,7 +603,7 @@ const sameChoice = (a: string, b: string) => {
  * the field for the user, when no option clearly matches. */
 export async function fillCombobox(input: HTMLInputElement, value: string, timeoutMs = 6000, options: ComboboxOptions = {}): Promise<FillOutcome> {
   const pick = withoutCatchAll(value, options.pick ?? ((labels) => bestOption(labels, value)));
-  const queries = [...new Set([value, ...(options.queries ?? []).filter(Boolean), ""])];
+  const queries = [...new Set([...(options.first ?? []), value, ...(options.queries ?? []).filter(Boolean), ""])];
   // Every search together stays within a little more than one wait: a long form with several lists must not crawl.
   const deadline = Date.now() + timeoutMs + 3000;
   let seen: string[] = [];
