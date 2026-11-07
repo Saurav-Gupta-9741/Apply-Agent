@@ -23,7 +23,7 @@ import { checkLength, lengthCounter, lengthLimit, type LengthLimit } from "../sh
 import { factCheck, removedSummary, type FactSources } from "../shared/writer/factcheck";
 import { loadWriterSettings, saveWriterSettings, testOverride, writer } from "../shared/writer/client";
 import { draftId, type FromWriter, type WriterStatus } from "../shared/writer/protocol";
-import { chooseWriter, pickTier, probeHardware, type WriterChoice } from "../shared/writer/tier";
+import { chooseWriter, pickTier, probeHardware, type NoneReason, type WriterChoice } from "../shared/writer/tier";
 import { gb, modelById, type WriterModel } from "../shared/writer/catalog";
 import { currentJobText } from "./fit-card";
 
@@ -197,6 +197,26 @@ const downloadMinutes = (bytes: number) => {
   const low = Math.max(2, Math.round(bytes / 6e6 / 60));
   return `${low}–${Math.max(low + 2, Math.round(bytes / 2e6 / 60))} minutes`;
 };
+/** Why there is no writer, in plain words, with the one thing the user can do about it. */
+export function noWriterText(reason: NoneReason | undefined): string {
+  if (reason === "browser") return "Your Chrome is too old for the answer writer. Please update Chrome: open the ⋮ menu at the top right, then Help, then About Google Chrome. Then try again. Until then, please write this answer yourself.";
+  if (reason === "disk") return "There is not enough free space on this computer for the answer writer. Delete some files you do not need, then try again. Until then, please write this answer yourself.";
+  return "This computer is not powerful enough to write answers by itself. Please write this answer yourself. The word counter below the box still helps you.";
+}
+
+/** Below this much free memory, a model is not loaded (the user is asked to close tabs). */
+const MIN_FREE_TO_LOAD_GiB = 0.2;
+
+/** Free memory now, GiB (undefined when Chrome does not say). */
+async function freeMemoryGiB(): Promise<number | undefined> {
+  try {
+    const m = await (chrome as unknown as { system?: { memory?: { getInfo(): Promise<{ availableCapacity: number }> } } }).system?.memory?.getInfo();
+    return m ? m.availableCapacity / 2 ** 30 : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 const minutes = (ms: number) => (ms < 60_000 ? `${Math.max(1, Math.round(ms / 1000))} s` : `${Math.floor(ms / 60_000)} min ${Math.round((ms % 60_000) / 1000)} s`);
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -212,6 +232,9 @@ const widgets = new Set<WidgetHandle>();
 /** "Draft all" was pressed before the model was downloaded: when the download finishes, every answer is written, not
  * only the one whose card showed the download. */
 let draftAllAfterDownload = false;
+/** Essays whose user pressed Download: each is drafted when the download finishes, even if the panel redrew its cards
+ * meanwhile (it does whenever the page changes). Without this, the card that asked was gone and nothing started. */
+const draftAfterDownload = new Set<string>();
 const liveWidgets = () => [...widgets].filter((w) => w.container.isConnected);
 
 const DRAFT_LABEL = "Draft answer";
@@ -371,6 +394,19 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
 
   // ---- our own model -----------------------------------------------------------------------------------------------
 
+  function showMemoryFull(free: number): void {
+    mode = "idle";
+    const box = el("div", "draft-error", "This computer's memory is full right now. Please close some other tabs or apps, then press Try again.");
+    box.title = `${free.toFixed(2)} GB free`;
+    const row = el("div", "button-row");
+    row.append(btn("Try again", "secondary", () => { reset(); void start(false); }), btn("Close", "ghost", reset));
+    box.append(row);
+    show(box);
+    draftBtn.hidden = false;
+    draftBtn.disabled = false;
+    draftBtn.textContent = DRAFT_LABEL;
+  }
+
   function showError(err: unknown): void {
     mode = "idle";
     // Plain words for the user; the technical reason only on hover, for a bug report.
@@ -423,23 +459,24 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
         const row = el("div", "button-row");
         row.append(
           btn(file && file.done > 0 ? "Continue the download" : "Download now (one time)", "primary", () => void startDownload(model)),
-          btn("Not now", "ghost", () => { draftAllAfterDownload = false; reset(); }),
+          btn("Not now", "ghost", () => { draftAllAfterDownload = false; draftAfterDownload.delete(id); reset(); }),
         );
         card.append(row);
       }
     }
     if (choice.offerNano) card.append(nanoBlock());
     if (!model && !choice.offerNano) {
-      card.append(el("p", "", "This computer is not powerful enough to write answers by itself. Please write this answer yourself. The word counter below the box still helps you."));
+      card.append(el("p", "", noWriterText(choice.noneReason)));
       card.append(btn("OK", "ghost", reset));
     } else if (!model) {
-      card.append(btn("Not now", "ghost", () => { draftAllAfterDownload = false; reset(); }));
+      card.append(btn("Not now", "ghost", () => { draftAllAfterDownload = false; draftAfterDownload.delete(id); reset(); }));
     }
     show(card);
   }
 
   async function startDownload(model: WriterModel): Promise<void> {
     attach();
+    draftAfterDownload.add(id);
     await saveWriterSettings({ consented: true, modelId: model.id, downloading: true });
     await writer.send({ type: "download", modelId: model.id, baseUrl: (await testOverride()).baseUrl });
   }
@@ -536,6 +573,7 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
         if (mode === "setup" && lastChoice?.local?.id === msg.modelId) {
           await saveWriterSettings({ downloading: false });
           const plain = msg.code === "mismatch" ? "The downloaded file was damaged, so it was deleted. Please try again."
+            : msg.code === "disk" ? "There is not enough free space on this computer. Delete some files you do not need, then press \"Continue the download\"."
             : msg.code === "aborted" ? "Download paused."
               : "The download stopped. Check that your internet is on, then press \"Continue the download\". It goes on from where it stopped.";
           showSetup(lastChoice, await writer.fetchStatus(), plain);
@@ -553,6 +591,14 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
     if (!status?.files[model.id]?.complete) {
       if (queued) return; // "Draft all" without a model: the first card shows the setup instead
       return showSetup(lastChoice ?? { writer: "local", offerNano: false, local: model }, status);
+    }
+    draftAfterDownload.delete(id);
+    // Loading a model into a computer whose memory is used up can close the whole browser: check first, and ask the
+    // user (in plain words) to close other tabs instead. Only when memory is nearly exhausted: Windows, macOS and
+    // Linux move idle memory to disk, and the 1.1 GB model loaded fine with 0.6 GB free on an 8 GB laptop.
+    if (status.loaded !== model.id && !queued) {
+      const free = await freeMemoryGiB();
+      if (free !== undefined && free < MIN_FREE_TO_LOAD_GiB) return showMemoryFull(free);
     }
     const src = await sources();
     showDrafting("", status);
@@ -592,6 +638,12 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
     await resumePendingDownload().catch(() => undefined);
     const s = await writer.fetchStatus().catch(() => undefined);
     if (!s || mode !== "idle") return;
+    if (draftAfterDownload.has(id) && localModel) {
+      // A redrawn card whose essay is waiting for the download: show the progress, then draft when it is done.
+      if (s.files[localModel.id]?.complete && !s.download) return void startLocal(localModel);
+      lastChoice = { writer: "local", offerNano: false, local: localModel };
+      return showSetup(lastChoice, s);
+    }
     const done = s.finished[id];
     if (done) await showResult(done.raw, `Written on this computer in ${minutes(done.ms)}. Nothing was sent anywhere.`);
     else if (s.running === id || s.queue.includes(id)) showDrafting("", s);

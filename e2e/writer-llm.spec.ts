@@ -56,9 +56,11 @@ test.describe("on-device writer with the real model", () => {
 
   async function launch(dir: string): Promise<{ context: BrowserContext; ext: Page; extensionId: string }> {
     const extensionPath = resolve("dist-test");
+    // LLM_CHANNEL=msedge runs the same test in Microsoft Edge (Google Chrome blocks unpacked extensions under automation).
+    const channel = process.env.LLM_CHANNEL ?? "chromium";
     const context = await chromium.launchPersistentContext(dir, {
-      channel: "chromium",
-      headless: true,
+      channel,
+      headless: channel === "chromium",
       args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
     });
     let [worker] = context.serviceWorkers();
@@ -159,14 +161,27 @@ test.describe("on-device writer with the real model", () => {
 
       // ---- 4. The checked draft is only shown; Use types it into the page. ----
       const draft = card2.locator(".draft-textarea");
+      if (await card2.locator(".draft-insufficient").count()) {
+        console.log("WRITER E2E INSUFFICIENT", JSON.stringify(await card2.locator(".draft-insufficient").innerText({ timeout: 2000 }).catch(() => "")));
+        const raw = await ext.evaluate(() => new Promise((res) => {
+          const port = chrome.runtime.connect({ name: "applyagent-writer" });
+          port.onMessage.addListener((m: { type: string; status?: { finished: Record<string, { raw: string }> } }) => { if (m.type === "status") { res(Object.values(m.status!.finished).map((f) => f.raw)); port.disconnect(); } });
+          port.postMessage({ type: "status" });
+          setTimeout(() => res(null), 3000);
+        }));
+        console.log("WRITER E2E RAW MODEL OUTPUT", JSON.stringify(raw));
+      }
       await expect(draft, "the fact checker kept a draft (an INSUFFICIENT card here means everything was removed)").toBeVisible();
       const text = await draft.inputValue();
-      console.log("WRITER E2E DRAFT", JSON.stringify(text), JSON.stringify(await card2.locator(".draft-removed").textContent().catch(() => null)));
+      console.log("WRITER E2E DRAFT", JSON.stringify(text), JSON.stringify(await card2.locator(".draft-removed").textContent({ timeout: 2000 }).catch(() => null)));
       expect(text.length).toBeGreaterThan(20);
       expect(text).not.toMatch(/INSUFFICIENT|<think>/);
       expect(text).not.toMatch(/\b(?:I|we)\b[^.]*\b(?:Kafka|Spark|Kubernetes)\b/); // tools only the job names, never claimed
       await expect(page.locator("#why")).toHaveValue(""); // nothing typed before Use
-      await card2.screenshot({ path: "test-results/writer-llm-draft-card.png" }).catch(() => undefined);
+      // The panel is a tab here; a background tab paints no frames, so clicks and screenshots would wait forever (the
+      // real side panel is always visible). Bring it to the front first.
+      await ext.bringToFront();
+      await card2.screenshot({ path: "test-results/writer-llm-draft-card.png", timeout: 15_000 }).catch(() => undefined);
       await card2.getByRole("button", { name: "Use this answer" }).click({ timeout: 30_000 });
       await expect(page.locator("#why")).toHaveValue(text, { timeout: 30_000 });
       console.log("WRITER E2E USE OK: the draft was typed into the page box only after Use");

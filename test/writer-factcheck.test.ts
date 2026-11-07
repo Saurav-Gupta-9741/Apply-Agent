@@ -121,7 +121,8 @@ describe("factCheck: the real failures of small models", () => {
   });
   it("removes 'managed a team' when the resume only says mentored", () => {
     const r = factCheck("I managed the junior engineers on my team. I mentored 2 junior engineers at Acme Pay and built batch and streaming data pipelines in Python and Apache Airflow.", src("Tell us about your leadership experience."));
-    expect(r.removed[0]).toMatchObject({ reason: "strong-verb", detail: "managed" });
+    expect(r.removed[0]).toMatchObject({ reason: "strong-verb" });
+    expect(r.removed[0]!.detail).toMatch(/^managed/);
   });
   it("keeps 'led' when the resume backs it", () => {
     const r = factCheck("I led the migration of 120 tables from MySQL to BigQuery over 6 weeks with zero data loss, planning each step with the analytics team.", src(PROUD), proudLimit);
@@ -242,5 +243,25 @@ describe("no dangling link word after a removed opening sentence", () => {
   it("leaves a draft alone when nothing was removed", () => {
     const c = factCheck("I also rewrote slow BigQuery reporting queries and cut monthly query cost by 35%. I led the migration of 120 tables from MySQL to BigQuery.", src(q), lengthLimit(q));
     expect(c.text).toMatch(/^I also rewrote/);
+  });
+});
+
+// Seen in the real-model e2e on Microsoft Edge (2026-11-07): "led the migration" in the resume became "lead a team".
+describe("leading people needs its own proof", () => {
+  const q = "Why are you interested in joining Northwind Data? (max 80 words)";
+  const base = "I rewrote slow BigQuery reporting queries and cut monthly query cost by 35%. I built batch and streaming data pipelines in Python and Apache Airflow.";
+  it("removes 'lead a team' when the resume only led a migration", () => {
+    const r = factCheck(`${base} I have proven my ability to lead a team in migrating 120 tables from MySQL to BigQuery with zero data loss.`, src(q), lengthLimit(q));
+    expect(r.text ?? "").not.toMatch(/lead a team/);
+    expect(r.removed.some((x) => /team/.test(x.detail))).toBe(true);
+  });
+  it("keeps 'led the migration' (the resume says so)", () => {
+    const r = factCheck(`${base} I led the migration of 120 tables from MySQL to BigQuery with zero data loss.`, src(q), lengthLimit(q));
+    expect(r.text).toMatch(/I led the migration of 120 tables/);
+  });
+  it("keeps 'led a team' when the resume backs it", () => {
+    const withTeam = { ...src(q), resumeText: `${src(q).resumeText}\nData Engineer, Acme Pay: led a team of 3 engineers that migrated 120 tables to BigQuery.` };
+    const r = factCheck(`${base} I led a team of 3 engineers that migrated 120 tables to BigQuery.`, withTeam, lengthLimit(q));
+    expect(r.text).toMatch(/led a team of 3 engineers/);
   });
 });

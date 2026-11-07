@@ -32,3 +32,10 @@ test("a form without AI rules keeps the draft button", async ({ ext, context }) 
 test("extension pages are cross-origin isolated (multi-threaded on-device models)", async ({ ext }) => {
   expect(await ext.evaluate(() => self.crossOriginIsolated)).toBe(true);
 });
+
+test("this browser passes the writer's engine check (JSPI and 64-bit WebAssembly memory), so no false 'update Chrome'", async ({ ext }) => {
+  const ok = await ext.evaluate(() =>
+    typeof (WebAssembly as unknown as { Suspending?: unknown }).Suspending === "function"
+    && WebAssembly.validate(new Uint8Array([0, 0x61, 0x73, 0x6d, 1, 0, 0, 0, 5, 3, 1, 4, 1])));
+  expect(ok).toBe(true);
+});

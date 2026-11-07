@@ -1,0 +1,73 @@
+name: Cross-OS (Windows, macOS, Linux)
+
+# Every test on the three desktop systems Chrome extensions run on, including the on-device essay writer with the real
+# Qwen3.5-0.8B model (downloaded from its pinned Hugging Face revision and checked by SHA-256 in the test itself).
+on:
+  workflow_dispatch:
+  push:
+    branches: [essay-writer]
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch offline question model
+        run: node scripts/fetch-model.mjs
+
+      - name: Build extension and test bundles
+        run: |
+          node build.mjs
+          node build.mjs --test
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit and regression tests
+        run: npx vitest run
+
+      - name: Speed tests
+        run: npm run test:perf
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: End-to-end tests (all practice forms)
+        run: npx playwright test --grep-invert "live read-only" --workers=1
+
+      - name: Download the 0.8B writing model (pinned revision)
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/models"
+          curl -fsSL -o "$RUNNER_TEMP/models/Qwen3.5-0.8B-Q4_K_M.part001" \
+            "https://huggingface.co/unsloth/Qwen3.5-0.8B-GGUF/resolve/6ab461498e2023f6e3c1baea90a8f0fe38ab64d0/Qwen3.5-0.8B-Q4_K_M.gguf"
+          ls -la "$RUNNER_TEMP/models"
+
+      - name: On-device essay writer with the real model
+        shell: bash
+        env:
+          LLM_E2E: "1"
+          MODEL_DIR: ${{ runner.temp }}/models
+        run: npx playwright test e2e/writer-llm.spec.ts --workers=1 --reporter=line
+
+      - name: Keep test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}
+          path: test-results
+          retention-days: 7

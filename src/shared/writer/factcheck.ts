@@ -240,6 +240,10 @@ export function jobOnlyTerms(sources: FactSources): JobTerm[] {
 
 /** Each strong verb with the resume words that support it. */
 const STRONG_VERBS: Array<{ forms: RegExp; support: RegExp }> = [
+  // Leading or managing PEOPLE is a bigger claim than leading a piece of work: "led the migration" in a resume does
+  // not back "led a team in migrating" (seen in the real-model e2e, 2026-11-07). Checked first, with its own proof.
+  { forms: /\b(?:led|lead(?:ing)?|managed|manag(?:e|ing)|headed|ran|built|grew|hired)\s+(?:a|an|the|my|our)?\s*(?:\w+\s+){0,2}(?:team|squad|group|engineers|people|reports)\b|\bteam (?:lead|leader|manager)\b|\bmanag(?:ed|ing) (?:\d+|several|multiple|a few) (?:people|engineers|developers|reports)\b|\bdirect reports?\b/i,
+    support: /\b(?:led|lead(?:s|ing)?|managed|manag(?:e|ing)|headed|ran|built|grew|hired)\s+(?:a|an|the|my|our)?\s*(?:\w+\s+){0,2}(?:team|squad|group|engineers|people|reports)\b|\bteam (?:lead|leader|manager)\b|\b(?:engineering|team|people) manager\b|\bdirect reports?\b|\bmanag(?:ed|ing) (?:\d+|several|multiple|a few)\b/i },
   { forms: /\b(?:led|lead(?:ing)?|headed|spearhead(?:ed|ing)?|directed|drove|helmed)\b/i, support: /\b(?:led|lead(?:s|ing|er|ers|ership)?|head(?:ed)?|head of|spearhead(?:ed)?|direct(?:ed|or)|drove|ran)\b/i },
   { forms: /\b(?:managed|manag(?:e|ing)|supervised|oversaw|overseen|oversee(?:ing)?)\b/i, support: /\b(?:manag(?:ed|e|er|ers|ing|ement)|supervis(?:ed|or|ing)|oversaw|overs(?:ee|aw|een))\b/i },
   { forms: /\b(?:founded|co-?founded|started (?:a|my own) (?:company|startup|business))\b/i, support: /\b(?:found(?:ed|er|ers|ing)|co-?found(?:ed|er))\b/i },
@@ -251,7 +255,8 @@ const STRONG_VERBS: Array<{ forms: RegExp; support: RegExp }> = [
   { forms: /\b(?:scaled|doubled|tripled|grew (?:the|our|a|revenue|users|traffic|sales))\b/i, support: /\b(?:scal\w*|gr[eo]w\w*|doubl\w*|tripl\w*|increas\w*)\b/i },
 ];
 const VERB_NEGATED = /\b(?:not|never|haven't|hasn't|didn't|don't)\s+(?:\w+\s+)?$|n't\s+(?:\w+\s+)?$/i;
-const VERB_WISHED = /\b(?:to|will|would|could|can|might|should)\s+(?:\w+\s+)?$/i;
+// A wish ("eager to lead", "I would lead"), not "my ability to lead" or "I can lead", which are claims.
+const VERB_WISHED = /\b(?:(?:eager|keen|excited|hope|hoping|want|wanting|wish|love|like|ready|plan|planning|aim|aiming|forward|aspire|happy|thrilled|glad|chance|opportunity|learn|learning|grow|growing)\s+to|will|would|could|might|should)\s+(?:\w+\s+)?$/i;
 
 // ---------------------------------------------------------------------------------------------------------------
 // The check

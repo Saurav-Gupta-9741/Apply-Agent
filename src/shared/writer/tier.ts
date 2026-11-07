@@ -34,16 +34,30 @@ export interface Hardware {
   webgpu: boolean;
   /** Measured writing speed per model id (tokens per second), from the speed test after the first setup. */
   tokensPerSec?: Record<string, number>;
+  /** The browser runs the writing engine (WebAssembly memory64 and JSPI: Chrome 137 and later). false: too old. */
+  wasmOk?: boolean;
+  /** Free space this extension may still use on the disk, GiB (undefined when unknown). */
+  freeDiskGiB?: number;
 }
+
+/** Free disk needed on top of the model file (the browser and the system need room too). */
+const DISK_HEADROOM_GiB = 0.5;
 
 export type Tier =
   | { kind: "model"; model: WriterModel }
-  | { kind: "none"; reason: "memory" | "threads" | "slow" };
+  | { kind: "none"; reason: NoneReason };
+
+/** Why there is no on-device writer: too little memory, too few processor threads, measured too slow, a browser too
+ * old for the engine, or not enough free disk space for the model file. */
+export type NoneReason = "memory" | "threads" | "slow" | "browser" | "disk";
 
 /** The on-device model for this computer, or none. */
 export function pickTier(hw: Hardware): Tier {
   const total = hw.totalGiB;
+  if (hw.wasmOk === false) return { kind: "none", reason: "browser" };
   if (total !== undefined && total < TIER_THRESHOLDS.minTotalGiB) return { kind: "none", reason: "memory" };
+  const fitsDisk = (m: WriterModel) => hw.freeDiskGiB === undefined || hw.freeDiskGiB >= m.bytes / 2 ** 30 + DISK_HEADROOM_GiB;
+  let noDisk = false;
   if (hw.threads < TIER_THRESHOLDS.minThreads) return { kind: "none", reason: "threads" };
   let tooSlow = false;
   for (const t of TIER_THRESHOLDS.models) {
@@ -55,11 +69,18 @@ export function pickTier(hw: Hardware): Tier {
       tooSlow = true;
       continue;
     }
+    if (!fitsDisk(model)) {
+      noDisk = true;
+      continue;
+    }
     const smaller = TIER_THRESHOLDS.models.slice(TIER_THRESHOLDS.models.indexOf(t) + 1);
     if (hw.availableGiB !== undefined && smaller.length && hw.availableGiB < model.bytes / 2 ** 30 + TIER_THRESHOLDS.freeHeadroomGiB) continue;
     return { kind: "model", model };
   }
-  return tooSlow ? { kind: "none", reason: "slow" } : { kind: "model", model: modelById(TIER_THRESHOLDS.models[TIER_THRESHOLDS.models.length - 1]!.id)! };
+  if (tooSlow) return { kind: "none", reason: "slow" };
+  const smallest = modelById(TIER_THRESHOLDS.models[TIER_THRESHOLDS.models.length - 1]!.id)!;
+  if (noDisk || !fitsDisk(smallest)) return { kind: "none", reason: "disk" };
+  return { kind: "model", model: smallest };
 }
 
 export type NanoStatus = "available" | "downloadable" | "downloading" | "unavailable";
@@ -72,7 +93,7 @@ export interface WriterChoice {
   /** Our own model for this computer (also offered next to the Nano download). */
   local?: WriterModel;
   /** Why there is no writer. */
-  noneReason?: "memory" | "threads" | "slow";
+  noneReason?: NoneReason;
 }
 
 /** Gemini Nano first when it is ready; when Chrome can download it, offer that and still offer our model. */
@@ -110,7 +131,26 @@ export async function probeHardware(): Promise<Omit<Hardware, "tokensPerSec">> {
   } catch {
     /* no WebGPU */
   }
-  return { totalGiB, availableGiB, threads: navigator.hardwareConcurrency || 2, webgpu };
+  let freeDiskGiB: number | undefined;
+  try {
+    const est = await navigator.storage?.estimate?.();
+    if (est?.quota !== undefined) freeDiskGiB = (est.quota - (est.usage ?? 0)) / 2 ** 30;
+  } catch {
+    /* unknown */
+  }
+  return { totalGiB, availableGiB, threads: navigator.hardwareConcurrency || 2, webgpu, wasmOk: engineSupported(), freeDiskGiB };
+}
+
+/** Whether this browser can run the writing engine: WebAssembly with 64-bit memory (Chrome 133+) and JSPI promise
+ * integration (Chrome 137+). Checked before anything is downloaded, so an old browser never fetches gigabytes it
+ * cannot use. The 64-bit memory check validates a 13-byte module that declares one i64 memory. */
+export function engineSupported(wasm: typeof WebAssembly | undefined = globalThis.WebAssembly): boolean {
+  try {
+    if (!wasm || typeof (wasm as unknown as { Suspending?: unknown }).Suspending !== "function") return false;
+    return wasm.validate(new Uint8Array([0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00, 0x05, 0x03, 0x01, 0x04, 0x01]));
+  } catch {
+    return false;
+  }
 }
 
 /** The catalog, smallest first (for the "use a smaller model" choice). */

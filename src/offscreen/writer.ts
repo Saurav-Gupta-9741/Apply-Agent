@@ -117,7 +117,14 @@ async function ensureLoaded(modelId: string): Promise<void> {
   void sendStatus();
   try {
     const needsGpu = TIER_THRESHOLDS.models.find((t) => t.id === modelId)?.needsWebGPU ?? false;
-    await (await theEngine()).load(modelId, file, { gpu: needsGpu });
+    try {
+      await (await theEngine()).load(modelId, file, { gpu: needsGpu });
+    } catch (e) {
+      // A graphics chip or driver that fails (old drivers, some laptops' second GPU): load on the processor instead.
+      if (!needsGpu) throw e;
+      await engine?.unload().catch(() => undefined);
+      await (await theEngine()).load(modelId, file, { gpu: false });
+    }
   } finally {
     loading = undefined;
   }

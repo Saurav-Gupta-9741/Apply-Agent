@@ -38,7 +38,7 @@ export interface ProgressStore {
   clear(): Promise<void>;
 }
 
-export type DownloadErrorCode = "aborted" | "network" | "http" | "no-range" | "mismatch";
+export type DownloadErrorCode = "aborted" | "network" | "http" | "no-range" | "mismatch" | "disk";
 
 export class DownloadError extends Error {
   constructor(public code: DownloadErrorCode, message: string) {
@@ -145,6 +145,10 @@ export async function downloadModel(o: DownloadOptions): Promise<void> {
       // Keep whatever arrived (it is hashed and written in order), then retry or give up.
       await checkpoint().catch(() => undefined);
       if (o.signal?.aborted || (e as Error)?.name === "AbortError") throw new DownloadError("aborted", "Download stopped");
+      // A full disk is not a network problem: retrying cannot help, and the user must be told to free space.
+      if ((e as Error)?.name === "QuotaExceededError" || /quota|no space|disk full/i.test(String((e as Error)?.message ?? ""))) {
+        throw new DownloadError("disk", "Not enough free disk space");
+      }
       if (e instanceof DownloadError && (e.code === "http" || e.code === "no-range")) throw e;
       if (done === before) failures++;
       else failures = 0;

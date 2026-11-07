@@ -1,7 +1,7 @@
 /** The draft widget's writer choice (Chrome's built-in model mocked; Playwright's Chromium has none) and the fact
  * check between the model and the preview. */
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import { createDraftWidget } from "../src/sidepanel/drafts";
 import type { FieldDescriptor, Profile } from "../src/shared/types";
 import { mount, PROFILE } from "./fixtures";
@@ -35,8 +35,15 @@ function fakeNano(availability: string, reply = "", progress: number[] = []) {
 }
 const button = (w: HTMLElement, label: string) => [...w.querySelectorAll("button")].find((b) => b.textContent === label);
 
+// These tests play a current Chrome (137+), which has JSPI; Node and jsdom do not.
+const wasm = WebAssembly as unknown as { Suspending?: unknown };
+const hadJspi = "Suspending" in wasm;
+beforeEach(() => {
+  if (!hadJspi) wasm.Suspending = function Suspending() {};
+});
 afterEach(() => {
   delete (globalThis as Record<string, unknown>).LanguageModel;
+  if (!hadJspi) delete wasm.Suspending;
 });
 
 describe("draft widget: which writer", () => {
