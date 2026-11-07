@@ -43,7 +43,7 @@ import { mountFormStructureButton } from "./form-structure";
 // <<< L3
 import { headline, rowState, summarize, type LiveField } from "./checklist";
 // >>> L4 ai drafts
-import { createDraftWidget, isDraftableField, limitCounter, limitOfField } from "./drafts";
+import { createDraftAllBar, createDraftWidget, isDraftableField, limitCounter, limitOfField } from "./drafts";
 import { checkLength } from "../shared/length-limit";
 import { factHints, focusQuickAnswer } from "./fact-hints";
 // <<< L4
@@ -912,6 +912,8 @@ function renderQuestions(report: RunReport): void {
   const pending = report.fields.filter((f) => f.status === "needs_user" || f.status === "failed");
   if (!pending.length) return;
   box.append(h("p", { class: "section-label" }, `Needs your answer · ${pending.length}`));
+  // Two or more essay boxes: one button drafts them all, one at a time, on this computer (shown only, never filled).
+  if (pending.filter((r) => isDraftableField(r.field) && r.decision.kind === "ask").length >= 2) box.append(createDraftAllBar());
   const corrections = cachedCorrections;
 
   const job = { title: report.jobTitle, company: companyFromUrl(report.url) };

@@ -541,3 +541,22 @@ kbd { font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; padding: 
 .length-counter { margin: 4px 0 0; font-size: 12px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
 .length-counter.over { color: var(--bad); font-weight: 600; }
 .draft-note { margin: 4px 0 0; font-size: 12px; color: var(--muted); }
+
+/* On-device writer: setup and download, live drafting, "Draft all" (colors from the theme tokens: light and dark) */
+.draft-widget { margin-top: 6px; }
+.draft-preview-box { margin-top: 6px; }
+.draft-alert, .draft-insufficient, .draft-error { display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-2); font-size: 12.5px; }
+.draft-alert p, .draft-insufficient p { margin: 0; }
+.draft-alert .btn, .draft-insufficient .btn, .draft-error .btn { align-self: flex-start; }
+.draft-error { border-color: var(--bad); }
+.writer-option { display: flex; flex-direction: column; gap: 6px; padding-top: 6px; border-top: 1px dashed var(--line); }
+.writer-problem { color: var(--warn); }
+.writer-progress { height: 6px; border-radius: 999px; background: var(--surface-3); overflow: hidden; }
+.writer-progress i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--accent); transition: width 0.3s ease; }
+.draft-live { min-height: 3em; max-height: 14em; overflow-y: auto; padding: 8px; border: 1px dashed var(--line); border-radius: 8px; font-size: 12.5px; line-height: 1.45; color: var(--text-2); white-space: pre-wrap; overflow-wrap: anywhere; }
+.draft-live:empty::before { content: "…"; }
+.draft-textarea { width: 100%; }
+.draft-warnings { margin: 4px 0 0; padding-left: 18px; font-size: 12px; color: var(--warn); }
+.draft-all { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 2px 0 6px; }
+.draft-all .draft-note { margin: 0; flex: 1 1 180px; }
+@media (prefers-reduced-motion: reduce) { .writer-progress i { transition: none; } }
