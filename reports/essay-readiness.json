@@ -1,9 +1,9 @@
 {
  "summary": {
   "boards": 222,
-  "boardsWithEssayBoxes": 122,
-  "essayBoxes": 305,
-  "withDraftButton": 298,
+  "boardsWithEssayBoxes": 92,
+  "essayBoxes": 188,
+  "withDraftButton": 182,
   "blockedByEmployerRule": [
    "medium",
    "peloton",
@@ -18,15 +18,13 @@
    "greenhouse"
   ],
   "traps": 3,
-  "lengthStated": 17,
-  "lengthUnderstood": 17,
+  "lengthStated": 15,
+  "lengthUnderstood": 15,
   "missedLimits": [],
   "languages": {
-   "en": 289,
-   "zhHant": 8,
-   "pt": 5,
-   "es": 2,
-   "ja": 1
+   "en": 184,
+   "pt": 3,
+   "es": 1
   }
  },
  "boards": [
@@ -47,23 +45,9 @@
   {
    "board": "airtable",
    "aiRule": null,
-   "essays": 4,
-   "draftButtons": 4,
+   "essays": 2,
+   "draftButtons": 2,
    "items": [
-    {
-     "label": "Have you used Airtable before? If so, briefly share how you’ve used it or what you’ve built. (Airtable experience is a plus, but not require",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "If not, please provide information regarding your sponsorship needs.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "In 1–2 sentences, share how you’ve used AI in sales or prospecting. If you’re new to sales, how might you use AI to find and connect with po",
      "lang": "en",
@@ -89,8 +73,8 @@
   {
    "board": "algolia",
    "aiRule": "policy",
-   "essays": 3,
-   "draftButtons": 3,
+   "essays": 2,
+   "draftButtons": 2,
    "items": [
     {
      "label": "Share one example of a first message you sent that got a response from a hard-to-reach prospect. What did you include in it, and why do you ",
@@ -101,13 +85,6 @@
     },
     {
      "label": "Why are you interested in the BDR role at Algolia, and what transferable skills would you bring to it?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Will you now, or in the future, require sponsorship for employment visa status?",
      "lang": "en",
      "mentionsLength": false,
      "trap": false,
@@ -231,16 +208,9 @@
   {
    "board": "cockroachlabs",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
+   "essays": 1,
+   "draftButtons": 1,
    "items": [
-    {
-     "label": "What additional accommodations do you need to feel comfortable during your interview process? All responses will be kept private.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "What do you enjoy most about Deal Desk?",
      "lang": "en",
@@ -304,24 +274,9 @@
   {
    "board": "coursera",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
-   "items": [
-    {
-     "label": "Are you legally authorized to work for any employer in this country?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Will you now or in the future require sponsorship of an employment visa?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "cresta",
@@ -362,16 +317,9 @@
   {
    "board": "databricks",
    "aiRule": null,
-   "essays": 4,
-   "draftButtons": 4,
+   "essays": 3,
+   "draftButtons": 3,
    "items": [
-    {
-     "label": "Do you currently reside near the city of San Francisco, CA, Mountain View, CA or Sunnyvale, CA, and if so, which of these locations are you ",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "Please describe a high-impact automation project you led, including the problem addressed, your leadership approach, and the key metrics use",
      "lang": "en",
@@ -449,24 +397,9 @@
   {
    "board": "dremio",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
-   "items": [
-    {
-     "label": "How did you hear about Dremio?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "How did you hear about this opportunity at Dremio?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "dropbox",
@@ -478,60 +411,16 @@
   {
    "board": "druva",
    "aiRule": null,
-   "essays": 5,
-   "draftButtons": 5,
-   "items": [
-    {
-     "label": "Are you comfortable working cross-functionally with Product, Support, and Sales teams to resolve customer issues?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Current CTC :",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Do you have 5+ years of experience in Customer Success or Account Management?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Do you have experience with cloud platforms or virtualization technologies (VMware, Hypervisors, Xen)?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Have you handled customer lifecycle management including onboarding, adoption, renewal, and expansion?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "elastic",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "At which organization(s) did you market to Public Sector accounts, and in what capacity (e.g., federal, state/local, education)?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "esri",
@@ -543,24 +432,9 @@
   {
    "board": "fastly",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
-   "items": [
-    {
-     "label": "If your Personal Pronoun is not listed above, how would you like to be addressed?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Website/Portfolio/Github etc:",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "figma",
@@ -572,31 +446,9 @@
   {
    "board": "five9",
    "aiRule": null,
-   "essays": 3,
-   "draftButtons": 3,
-   "items": [
-    {
-     "label": "Candidate comments:",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Do you have any previous PF or IT deductions, or have you registered yourself as an apprentice on the NATS portal?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "How did you hear about opportunities at Five9?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "fivetran",
@@ -658,18 +510,11 @@
   {
    "board": "gymshark",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
+   "essays": 1,
+   "draftButtons": 1,
    "items": [
     {
      "label": "Tell us: Why Gymshark? Why this job? And why you?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "What is your weekly availability to work?",
      "lang": "en",
      "mentionsLength": false,
      "trap": false,
@@ -709,37 +554,15 @@
   {
    "board": "jfrog",
    "aiRule": null,
-   "essays": 3,
-   "draftButtons": 3,
-   "items": [
-    {
-     "label": "Do you have any immediate family members that are currently employed at JFrog?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "How did you hear about JFrog?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "How did you hear about the job?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "khanacademy",
    "aiRule": null,
-   "essays": 11,
-   "draftButtons": 11,
+   "essays": 8,
+   "draftButtons": 8,
    "items": [
     {
      "label": "Beyond just producing reports, describe how your research findings have changed product or program decisions. Please provide an example.",
@@ -763,28 +586,7 @@
      "draftButton": true
     },
     {
-     "label": "Do you have experience with Spanish-language assessment or dual language learner measurement? If yes, please elaborate.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
      "label": "How do you approach creating architectural legibility or clarity for product teams? What is one example an approach you took, and why was it",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "If you answered 'Yes' above, please provide additional details.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "If you answered 'Yes' to the above question regarding sponsorship, please provide additional details.",
      "lang": "en",
      "mentionsLength": false,
      "trap": false,
@@ -823,16 +625,9 @@
   {
    "board": "komodohealth",
    "aiRule": null,
-   "essays": 6,
-   "draftButtons": 6,
+   "essays": 4,
+   "draftButtons": 4,
    "items": [
-    {
-     "label": "Are you Salesforce certified? If yes, please provide details",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "Have you owned a data platform that other teams built on? In 2–3 sentences: what it was, who used it, and one way you knew it was reliable.",
      "lang": "en",
@@ -863,51 +658,15 @@
      "mentionsLength": false,
      "trap": false,
      "draftButton": true
-    },
-    {
-     "label": "Which is your current location?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
     }
    ]
   },
   {
    "board": "lattice",
    "aiRule": null,
-   "essays": 4,
-   "draftButtons": 4,
-   "items": [
-    {
-     "label": "Have you led product strategy for a platform, API, or extensibility surface (not just features)? If yes, please share brief context.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "How did you hear about Lattice?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "If you'd like to share, what are your pronouns?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Share a description or a link to something you have built with AI.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "launchdarkly",
@@ -948,16 +707,9 @@
   {
    "board": "medium",
    "aiRule": "banned",
-   "essays": 4,
+   "essays": 3,
    "draftButtons": 0,
    "items": [
-    {
-     "label": "Are you able to attend in-person company offsites twice a year? If not, please elaborate on why.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": false
-    },
     {
      "label": "Tell us about a mobile Android engineering project you were proud of. This can be anything related to app architecture, performance, release",
      "lang": "en",
@@ -1022,17 +774,9 @@
   {
    "board": "motional",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "If yes, please describe.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "netlify",
@@ -1126,17 +870,9 @@
   {
    "board": "nice",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "For research purposes only and unrelated to your application: Were you familiar with NiCE before applying for this role? If so, how did you ",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "nuro",
@@ -1170,8 +906,8 @@
   {
    "board": "oura",
    "aiRule": null,
-   "essays": 3,
-   "draftButtons": 3,
+   "essays": 2,
+   "draftButtons": 2,
    "items": [
     {
      "label": "How did you oversee in-house and third-party testing in your previous roles?",
@@ -1186,51 +922,15 @@
      "mentionsLength": false,
      "trap": false,
      "draftButton": true
-    },
-    {
-     "label": "Please share if you will need any accommodations during the interview process if your application is selected.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
     }
    ]
   },
   {
    "board": "pagerduty",
    "aiRule": null,
-   "essays": 4,
-   "draftButtons": 4,
-   "items": [
-    {
-     "label": "Do you have experience in sales, customer retention, and portfolio management? How many clients have you managed simultaneously, and how did",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Do you have experience with international clients, what is your level of conversational English?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Do you have experience with: Incident management, DevOps or IT operations, how many years?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Have you worked with Salesforce, ticketing system, tableau, excel, other operating systems?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "peloton",
@@ -1242,16 +942,9 @@
   {
    "board": "qualtrics",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
+   "essays": 1,
+   "draftButtons": 1,
    "items": [
-    {
-     "label": "Do you specialize in any verticals? What size of accounts have you been selling to?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "What is the percentage of quota attainment against target for the past 3+ years? Have you achieved any awards for your performance (such as ",
      "lang": "en",
@@ -1292,16 +985,9 @@
   {
    "board": "scaleai",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
+   "essays": 1,
+   "draftButtons": 1,
    "items": [
-    {
-     "label": "Are you a current or former civilian or military employee of the United States Government? (If yes, when/where were you last employed and wh",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "Do you have any restrictions on post-government employment? (If yes, please describe.)",
      "lang": "en",
@@ -1321,32 +1007,16 @@
   {
    "board": "singlestore",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "How did you hear about MemSQL?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "smartsheet",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "Do you know anyone who works at Smartsheet?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "snorkelai",
@@ -1615,17 +1285,9 @@
   {
    "board": "sas",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "What is your target pay range?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "purestorage",
@@ -1644,19 +1306,9 @@
   {
    "board": "warp",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
+   "essays": 1,
+   "draftButtons": 1,
    "items": [
-    {
-     "label": "Share your favorite blog post, article, or paper you've read in the last 6 months that relates to agentic development. In two sentences, exp",
-     "lang": "en",
-     "limit": {
-      "maxSentences": 2
-     },
-     "mentionsLength": true,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "Why do you want to work at Warp?",
      "lang": "en",
@@ -1691,16 +1343,9 @@
   {
    "board": "mentimeter",
    "aiRule": null,
-   "essays": 3,
-   "draftButtons": 3,
+   "essays": 2,
+   "draftButtons": 2,
    "items": [
-    {
-     "label": "Do you have experience selling and closing Software-as-a-Service solutions?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "Have you spent 2–4 years working commercially with international clients in a customer-facing or customer success role? If yes, please brief",
      "lang": "en",
@@ -1778,59 +1423,16 @@
   {
    "board": "c6bank",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "Caso necessite de algum recurso de acessibilidade, por favor especifique no campo abaixo:",
-     "lang": "pt",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "gympass",
    "aiRule": null,
-   "essays": 7,
-   "draftButtons": 7,
+   "essays": 2,
+   "draftButtons": 2,
    "items": [
-    {
-     "label": "Caso não tenha, por favor descreva o tipo de autorização de trabalho que possui e informe se agora ou no futuro vai precisar de patrocínio d",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Caso tenha assinalado qualquer uma das opções acima, descreva os detalhes abaixo. Por favor, forneça o máximo de informações possível para t",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "If you checked any of the options above, please provide the details below. Include as much information as possible for each marked item so w",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Para garantir um processo seletivo online e virtual acessível, com comunicação por e-mail e entrevistas por videochamada (Google Meet), por ",
-     "lang": "pt",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Si marcaste alguna de las opciones anteriores, por favor detallá la información a continuación. Incluí la mayor cantidad de datos posible pa",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "Você possui alguma restrição para a realização das etapas do processo seletivo? Caso, sim, especifique por favor:",
      "lang": "pt",
@@ -1850,31 +1452,9 @@
   {
    "board": "glance",
    "aiRule": null,
-   "essays": 3,
-   "draftButtons": 3,
-   "items": [
-    {
-     "label": "Are you able and willing to travel approximately 70% of the time for this role?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Are you comfortable working onsite in either our New York City office (preferred) or our San Mateo office?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "This role is based in Los Angeles, CA, and we're also open to candidates who can work onsite in our San Mateo, CA office. Are you comfortabl",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "justworks",
@@ -1916,23 +1496,9 @@
   {
    "board": "staffbase",
    "aiRule": null,
-   "essays": 5,
-   "draftButtons": 5,
+   "essays": 3,
+   "draftButtons": 3,
    "items": [
-    {
-     "label": "Do you speak a third language (e.g. French, Spanish, Italian)? If so, which one and at what level?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Do you speak a third language (e.g. French)? If so, which one and at what level?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "Staffbase involves a multi-stakeholder SaaS sales process. How complex were the solutions you previously sold, and what did your typical sal",
      "lang": "en",
@@ -1959,16 +1525,9 @@
   {
    "board": "inmobi",
    "aiRule": null,
-   "essays": 6,
-   "draftButtons": 6,
+   "essays": 2,
+   "draftButtons": 2,
    "items": [
-    {
-     "label": "Briefly describe the type of client portfolio you've managed (e.g., number of accounts, average account size, enterprise/corporate vs. SMB, ",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "Describe a time you identified and pitched a budget upsell or optimization opportunity to a client. What was the outcome?",
      "lang": "en",
@@ -1982,45 +1541,17 @@
      "mentionsLength": false,
      "trap": false,
      "draftButton": true
-    },
-    {
-     "label": "Do you have Digital ad sales or agency partnership background?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "List each language you speak, along with your proficiency level for each (Native/Bilingual, Fluent, Professional Working Proficiency, or Lim",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "What annual base salary and/or range (USD) are you targeting for your next role?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
     }
    ]
   },
   {
    "board": "cabify",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
+   "essays": 1,
+   "draftButtons": 1,
    "items": [
     {
      "label": "¿Por qué crees que eres un buen fit? Cuéntanos retos que has afrontado en tu experiencia profesional y consideras relevantes para esta posic",
-     "lang": "es",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Cuéntanos cuál es la motivación para este puesto",
      "lang": "es",
      "mentionsLength": false,
      "trap": false,
@@ -2042,9 +1573,12 @@
    "draftButtons": 1,
    "items": [
     {
-     "label": "How did you hear about Gemini?",
+     "label": "Please share 3-5 sentences explaining your interest in the Blockchain/Web3 industry.",
      "lang": "en",
-     "mentionsLength": false,
+     "limit": {
+      "maxSentences": 5
+     },
+     "mentionsLength": true,
      "trap": false,
      "draftButton": true
     }
@@ -2053,16 +1587,9 @@
   {
    "board": "riotgames",
    "aiRule": null,
-   "essays": 3,
-   "draftButtons": 3,
+   "essays": 2,
+   "draftButtons": 2,
    "items": [
-    {
-     "label": "Please list the names of any and all friends, family or significant others who currently (or have in the last year) work at Riot Games:",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "Please share your experience with and understanding of esports.",
      "lang": "en",
@@ -2082,17 +1609,9 @@
   {
    "board": "careem",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "Current Job Title",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "epicgames",
@@ -2111,39 +1630,11 @@
   {
    "board": "adyen",
    "aiRule": null,
-   "essays": 9,
-   "draftButtons": 9,
+   "essays": 5,
+   "draftButtons": 5,
    "items": [
     {
-     "label": "At Adyen, we strive to create an accessible and inclusive experience for all candidates. Please let our team know if you need any adjustment",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Do you need visa and/or relocation support for this role? If yes, please, elaborate.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
      "label": "For this position it is essential to be fluent in Spanish and English, are you?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Please, provide a summary of your motivations for Adyen and this role.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "What is your base salary expectation for this role?",
      "lang": "en",
      "mentionsLength": false,
      "trap": false,
@@ -2182,16 +1673,9 @@
   {
    "board": "greenhouse",
    "aiRule": "policy",
-   "essays": 4,
-   "draftButtons": 4,
+   "essays": 3,
+   "draftButtons": 3,
    "items": [
-    {
-     "label": "If yes, please confirm what immigration permission/employment permit you hold and when this is to expire.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "In 2-3 sentences explain what attracts you to Greenhouse Software as well as your motivation for a career in Sales?",
      "lang": "en",
@@ -2227,17 +1711,9 @@
   {
    "board": "tanium",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "How did you hear about Tanium?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "pendo",
@@ -2249,16 +1725,9 @@
   {
    "board": "squarespace",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
+   "essays": 1,
+   "draftButtons": 1,
    "items": [
-    {
-     "label": "If Yes, or if you are not sure, please elaborate below. If you answered no, please input ‘N/A’.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "If you answered ‘Yes - Consultant or Vendor for Squarespace', please elaborate below, provide the name of the employer (including if a sole ",
      "lang": "en",
@@ -2285,87 +1754,16 @@
   {
    "board": "paypay",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "補足事項",
-     "lang": "ja",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "dcard",
    "aiRule": null,
-   "essays": 8,
-   "draftButtons": 8,
-   "items": [
-    {
-     "label": "你有沒有其他想和我們分享、補充資訊或想問我們的事？",
-     "lang": "zhHant",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "你有沒有其他想和我們分享或想問我們的事？",
-     "lang": "zhHant",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "您有沒有其他想和我們分享或想問我們的事？",
-     "lang": "zhHant",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "請你發揮創意，拍攝 3 分鐘內的自我介紹影片，讓我們能夠更認識你！( 內容不拘、橫式影片 )",
-     "lang": "zhHant",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "請分享一個你近期使用 AI 工具的例子，它如何協助你？你如何和它協作？以及過程中有什麼洞察或學習。（如果可以分享和 AI 對話的連結，更能具體讓我們知道實際的情況唷！）",
-     "lang": "zhHant",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "請問你週一～週五能排班的時間是？ ( 此職位每週最少需排班 3 天，且可合作半年以上的時間 )",
-     "lang": "zhHant",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "請用 250 字告訴我們為什麼想加入 Dcard？",
-     "lang": "zhHant",
-     "limit": {
-      "maxChars": 250
-     },
-     "mentionsLength": true,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "請用 250 字告訴我們為什麼想加入 GNTC？",
-     "lang": "zhHant",
-     "limit": {
-      "maxChars": 250
-     },
-     "mentionsLength": true,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "hellofresh",
@@ -2460,7 +1858,7 @@
    "draftButtons": 1,
    "items": [
     {
-     "label": "If yes, please advise what support is needed:",
+     "label": "If you selected Other please tell us how you learned about this job.",
      "lang": "en",
      "mentionsLength": false,
      "trap": false,
@@ -2478,30 +1876,9 @@
   {
    "board": "hootsuite",
    "aiRule": null,
-   "essays": 4,
-   "draftButtons": 4,
+   "essays": 1,
+   "draftButtons": 1,
    "items": [
-    {
-     "label": "Do you have any experience in lead outbound generation?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Do you have any SaaS or software sales experience? If so, how many years and in which company?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "What are your annual salary expectations (total on target earnings)?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "What is your current quota per year?",
      "lang": "en",
@@ -2551,31 +1928,10 @@
   {
    "board": "eucalyptus",
    "aiRule": null,
-   "essays": 7,
-   "draftButtons": 7,
+   "essays": 2,
+   "draftButtons": 2,
    "items": [
     {
-     "label": "What are your minimum salary expectations for this role? (please separate base, bonus etc as applicable)",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "What are your minimum salary expectations for this role? (please separate base, bonus, allowance, and other non-monetary benefits as applica",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "What are your minimum salary expectations for this role? (please separate base, bonus, equity and superannuation as applicable)",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
      "label": "What interests you most about this role/working for Eucalyptus?",
      "lang": "en",
      "mentionsLength": false,
@@ -2584,20 +1940,6 @@
     },
     {
      "label": "What interests you most about this role/working for Eucalyptus?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "What is your earliest possible start date/notice period, and what is the likelihood you would be able to negotiate an earlier start date?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "What is your earliest possible start date/notice period?",
      "lang": "en",
      "mentionsLength": false,
      "trap": false,
@@ -2681,17 +2023,9 @@
   {
    "board": "xendit",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "Are you related to, or do you have a close personal relationship with, anyone currently working at Xendit? If so, please provide their name ",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "typeform",
@@ -2757,8 +2091,8 @@
   {
    "board": "wallapop",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
+   "essays": 3,
+   "draftButtons": 3,
    "items": [
     {
      "label": "Can you briefly share an example of a product or feature initiative you led from discovery to launch that drove a measurable outcome (e.g., ",
@@ -2769,6 +2103,13 @@
     },
     {
      "label": "Please explain an example on how you have worked on user growth by owning the strategy and roadmap for acquisition and activation.",
+     "lang": "en",
+     "mentionsLength": false,
+     "trap": false,
+     "draftButton": true
+    },
+    {
+     "label": "Please explain on what product features or projects haver you worked in the past years.",
      "lang": "en",
      "mentionsLength": false,
      "trap": false,
@@ -2837,17 +2178,9 @@
   {
    "board": "thunes",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "Will you now or in the future require employer sponsorship to work in Saudi Arabia?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "zocdoc",
@@ -2867,16 +2200,9 @@
   {
    "board": "neo4j",
    "aiRule": null,
-   "essays": 11,
-   "draftButtons": 11,
+   "essays": 8,
+   "draftButtons": 8,
    "items": [
-    {
-     "label": "How did you hear about Neo4j?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "How would you rate/describe your approach to TDD/BDD within AI workflows, where outputs are often non-deterministic compared to traditional ",
      "lang": "en",
@@ -2913,13 +2239,6 @@
      "draftButton": true
     },
     {
-     "label": "How would you rate/describe your proficiency in building scalable data processing layers and AI pipelines?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
      "label": "How would you rate/describe your readiness to transition from an individual contributor to hiring and mentoring a dedicated team of AI engin",
      "lang": "en",
      "mentionsLength": false,
@@ -2928,13 +2247,6 @@
     },
     {
      "label": "What are you looking for in your next role?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "What is your current location? What is your experience with remote work?",
      "lang": "en",
      "mentionsLength": false,
      "trap": false,
@@ -2996,23 +2308,9 @@
   {
    "board": "wolt",
    "aiRule": null,
-   "essays": 4,
-   "draftButtons": 4,
+   "essays": 2,
+   "draftButtons": 2,
    "items": [
-    {
-     "label": "Please use this space to note any questions regarding the compensation range for this role.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "What are your monthly compensation expectations? Please share your minimum and preferred maximum in KZT, before tax (gross), and clarify whe",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "What experience do you have managing a profit and loss statement (P&L), growing partner sales or Gross Order Value (GOV), and upselling adve",
      "lang": "en",
@@ -3039,52 +2337,16 @@
   {
    "board": "vtex",
    "aiRule": null,
-   "essays": 4,
-   "draftButtons": 4,
-   "items": [
-    {
-     "label": "Do you have any close friends or relatives who are Public Officers? If so, please list their names and their position in their government ag",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Do you have any close friends or relatives who are Public Officers? If so, please list their names and their position in their government ag",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Do you have any family members currently working at VTEX? If so, please list their names and their positions.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Do you have any special needs that we should be aware of in order to accommodate you during the recruitment process? Feel free to specify wh",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "tamara",
    "aiRule": null,
-   "essays": 3,
-   "draftButtons": 3,
+   "essays": 2,
+   "draftButtons": 2,
    "items": [
-    {
-     "label": "Please provide a link to your portfolio or samples of your previous work.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "Why are you applying to Tamara?",
      "lang": "en",
@@ -3119,24 +2381,9 @@
   {
    "board": "getyourguide",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
-   "items": [
-    {
-     "label": "If no, what type of visa/work permit/passport do you currently hold to allow you to work and live in US ? Please specify type if applicable",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "If yes, what type of visa/work permit/passport do you currently hold to allow you to work and live in Brazil?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "circleci",
@@ -3170,17 +2417,9 @@
   {
    "board": "toast",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "Have you worked with financial or HR systems such as Workday, Adaptive, NetSuite, SAP, Oracle, Greenhouse, or similar platforms?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "turing",
@@ -3236,16 +2475,9 @@
   {
    "board": "n26",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
+   "essays": 1,
+   "draftButtons": 1,
    "items": [
-    {
-     "label": "LinkedIn Profile / Website",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "Where are you currently based?",
      "lang": "en",
@@ -3258,33 +2490,18 @@
   {
    "board": "trustpilot",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "Are you able to work from our office in Copenhagen and be in the office 3 days per week? Do you need to relocate for this?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "attentive",
    "aiRule": null,
-   "essays": 3,
-   "draftButtons": 3,
+   "essays": 2,
+   "draftButtons": 2,
    "items": [
     {
      "label": "How do you identify areas where you need to improve on a skill, competency, etc? Can you give an example of how you’ve worked on one of thes",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "If yes, what is the basis of your current employment authorization? And when does your current employment authorization expire?",
      "lang": "en",
      "mentionsLength": false,
      "trap": false,
@@ -3324,17 +2541,9 @@
   {
    "board": "agoda",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "What is your earliest start date?(mm/dd/yyyy)",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "jetbrains",
@@ -3353,18 +2562,11 @@
   {
    "board": "flatironhealth",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
+   "essays": 1,
+   "draftButtons": 1,
    "items": [
     {
      "label": "For the example(s) you provided above please briefly describe: What training did you design? What was your role? What problem were you solvi",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Please share a portfolio link with a minimum of one example of training or learning experiences you've DESIGNED.",
      "lang": "en",
      "mentionsLength": false,
      "trap": false,
@@ -3527,38 +2729,22 @@
   {
    "board": "calm",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "How did you hear about this job opportunity? If someone referred you, please let us know who.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "pinterest",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "If you do require employee sponsorship or assistance for work authorization, please list the type of support you may require.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "consensys",
    "aiRule": null,
-   "essays": 5,
-   "draftButtons": 5,
+   "essays": 4,
+   "draftButtons": 4,
    "items": [
     {
      "label": "Describe a lifecycle program you built from the ground up on a large user base. What was the channel/messaging strategy across the user jour",
@@ -3576,13 +2762,6 @@
     },
     {
      "label": "If you answered \"Yes\" to the previous question. What did you use it for? What is your favorite crypto wallet and why?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Please share a link to your portfolio (required)",
      "lang": "en",
      "mentionsLength": false,
      "trap": false,
@@ -3649,25 +2828,11 @@
   {
    "board": "veriff",
    "aiRule": null,
-   "essays": 4,
-   "draftButtons": 4,
+   "essays": 2,
+   "draftButtons": 2,
    "items": [
     {
      "label": "Describe a project you’re proud of where you helped build a scalable, complex application in a high-volume or high-traffic environment. What",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Have you got experience applying MEDDICC to complex enterprise expansion and renewal motions?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "If you're applying from outside of Spain or Estonia, are you open to relocating to any of those countries on your own?",
      "lang": "en",
      "mentionsLength": false,
      "trap": false,
@@ -3692,18 +2857,11 @@
   {
    "board": "discord",
    "aiRule": null,
-   "essays": 4,
-   "draftButtons": 4,
+   "essays": 3,
+   "draftButtons": 3,
    "items": [
     {
      "label": "Describe the last piece of code, config, or IaC you personally wrote or debugged in the last 30-60 days. What was it, why did you pick it up",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
-    {
-     "label": "Do you have in-house experience or secondment experience at a tech company?",
      "lang": "en",
      "mentionsLength": false,
      "trap": false,
@@ -3771,16 +2929,9 @@
   {
    "board": "groww",
    "aiRule": null,
-   "essays": 2,
-   "draftButtons": 2,
+   "essays": 1,
+   "draftButtons": 1,
    "items": [
-    {
-     "label": "Please share your portfolio link?",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    },
     {
      "label": "What makes you ideal for this role?",
      "lang": "en",
@@ -3793,17 +2944,9 @@
   {
    "board": "housinganywhere",
    "aiRule": null,
-   "essays": 1,
-   "draftButtons": 1,
-   "items": [
-    {
-     "label": "Please share the direct link to your portfolio.",
-     "lang": "en",
-     "mentionsLength": false,
-     "trap": false,
-     "draftButton": true
-    }
-   ]
+   "essays": 0,
+   "draftButtons": 0,
+   "items": []
   },
   {
    "board": "solarisbank",
