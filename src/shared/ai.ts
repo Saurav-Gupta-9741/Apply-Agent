@@ -9,9 +9,17 @@ interface LanguageModelSession {
   prompt(input: string): Promise<string>;
   destroy(): void;
 }
+interface DownloadMonitor {
+  addEventListener(type: "downloadprogress", listener: (e: { loaded: number; total?: number }) => void): void;
+}
 interface LanguageModelStatic {
   availability(): Promise<"unavailable" | "downloadable" | "downloading" | "available">;
-  create(options?: { initialPrompts?: Array<{ role: "system" | "user" | "assistant"; content: string }>; temperature?: number; topK?: number }): Promise<LanguageModelSession>;
+  create(options?: {
+    initialPrompts?: Array<{ role: "system" | "user" | "assistant"; content: string }>;
+    temperature?: number;
+    topK?: number;
+    monitor?: (m: DownloadMonitor) => void;
+  }): Promise<LanguageModelSession>;
 }
 
 function api(): LanguageModelStatic | undefined {
@@ -28,6 +36,36 @@ export async function aiStatus(): Promise<AiStatus> {
     return status === "available" ? "available" : status === "unavailable" ? "unavailable" : "downloadable";
   } catch {
     return "unavailable";
+  }
+}
+
+/** The full Prompt API status: unlike aiStatus, "downloading" is kept apart from "downloadable". */
+export async function nanoStatus(): Promise<"available" | "downloadable" | "downloading" | "unavailable"> {
+  const lm = api();
+  if (!lm) return "unavailable";
+  try {
+    return await lm.availability();
+  } catch {
+    return "unavailable";
+  }
+}
+
+/** Starts (or joins) Chrome's download of its built-in model, reporting progress from 0 to 1. Chrome only starts it
+ * after a user action, so call this from a click handler. Resolves true when the model is ready. */
+export async function downloadNano(onProgress: (fraction: number) => void): Promise<boolean> {
+  const lm = api();
+  if (!lm) return false;
+  try {
+    const session = await lm.create({
+      monitor(m) {
+        m.addEventListener("downloadprogress", (e) => onProgress(e.total ? e.loaded / e.total : e.loaded));
+      },
+    });
+    session.destroy();
+    onProgress(1);
+    return true;
+  } catch {
+    return false;
   }
 }
 
@@ -298,12 +336,23 @@ export async function draftAnswer(
   job: { title: string; company: string },
   options?: DraftOptions,
 ): Promise<string | null> {
+  const text = await draftAnswerRaw(question, profile, job, options);
+  return !text || text.includes(INSUFFICIENT) ? null : text;
+}
+
+/** The model's raw reply (it may say INSUFFICIENT, alone or mixed with an answer): the fact checker decides what is
+ * kept. Null when the model is unavailable. */
+export async function draftAnswerRaw(
+  question: string,
+  profile: Profile,
+  job: { title: string; company: string },
+  options?: DraftOptions,
+): Promise<string | null> {
   const lm = api();
   if (!lm || (await aiStatus()) === "unavailable") return null;
   const session = await lm.create({ initialPrompts: [{ role: "system", content: SYSTEM_PROMPT }], temperature: 0.3, topK: 3 });
   try {
-    const text = (await session.prompt(buildDraftPrompt(question, profile, job, options))).trim();
-    return !text || text.includes(INSUFFICIENT) ? null : text;
+    return (await session.prompt(buildDraftPrompt(question, profile, job, options))).trim();
   } finally {
     session.destroy();
   }

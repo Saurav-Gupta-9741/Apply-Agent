@@ -5,6 +5,7 @@
 import * as ort from "onnxruntime-web/wasm";
 import { encode, vocabFrom, type Vocab } from "../shared/wordpiece";
 import { meanPool, readIntent, type IntentHead, type Reading } from "../shared/intent-model";
+import "./writer";
 
 const MODEL_DIR = "intent/";
 

@@ -43,7 +43,7 @@ import { mountFormStructureButton } from "./form-structure";
 // <<< L3
 import { headline, rowState, summarize, type LiveField } from "./checklist";
 // >>> L4 ai drafts
-import { createDraftWidget, isDraftableField, limitCounter, limitOfField } from "./drafts";
+import { createDraftAllBar, createDraftWidget, isDraftableField, limitCounter, limitOfField } from "./drafts";
 import { AI_TRAP_MESSAGE, aiPolicyMessage, aiPolicyOfForm, aiTrapOf, draftsForbidden, type AiPolicy } from "../shared/ai-policy";
 import { checkLength } from "../shared/length-limit";
 import { factHints, focusQuickAnswer } from "./fact-hints";
@@ -938,6 +938,10 @@ function renderQuestions(report: RunReport): void {
   const aiRule = aiPolicyOfForm(formTexts(report.fields.map((f) => f.field)));
   const notice = aiRuleNotice(aiRule);
   if (notice) box.append(notice);
+  // Two or more essay boxes: one button drafts them all, one at a time, on this computer (shown only, never filled).
+  // Never on a form whose employer bans AI; questions with a planted AI test do not count (they get no draft).
+  const draftable = pending.filter((r) => isDraftableField(r.field) && r.decision.kind === "ask" && !aiTrapOf(`${r.field.label} ${r.field.hint ?? ""}`));
+  if (!draftsForbidden(aiRule) && draftable.length >= 2) box.append(createDraftAllBar());
   for (const r of pending) {
     box.append(questionCard(r, {
       job,
