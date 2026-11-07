@@ -115,10 +115,11 @@ test.describe("on-device writer with the real model", () => {
       const card = ext.locator(".question", { hasText: "Why are you interested in joining Northwind Data?" });
       await card.getByRole("button", { name: "Draft answer" }).click();
       const setup = card.locator(".writer-setup");
-      await expect(setup).toContainText("Download the writing model once (0.5 GB). After that, essays are written on this computer and nothing is sent anywhere.");
+      await expect(setup).toContainText("First, ApplyAgent needs one download. After that it writes answers on this computer, and your details are never sent anywhere.");
+      await expect(setup).toContainText("Please use Wi-Fi, not mobile data.");
       const t0 = Date.now();
-      await setup.getByRole("button", { name: "Download" }).click();
-      await expect(setup).toContainText(/Downloading the writing model: 0\.[1-9] GB of 0\.5 GB/, { timeout: 60_000 });
+      await setup.getByRole("button", { name: "Download now (one time)" }).click();
+      await expect(setup).toContainText(/Downloading: \d+% \(0\.[1-9] GB of 0\.5 GB\)/, { timeout: 60_000 });
       const firstPart = Date.now() - t0;
       await context.close(); // the browser closes in the middle of the download
       const log1 = (await (await fetch(`${MODEL_BASE}/log`)).json()) as Array<{ range: string }>;
@@ -165,7 +166,8 @@ test.describe("on-device writer with the real model", () => {
       expect(text).not.toMatch(/INSUFFICIENT|<think>/);
       expect(text).not.toMatch(/\b(?:I|we)\b[^.]*\b(?:Kafka|Spark|Kubernetes)\b/); // tools only the job names, never claimed
       await expect(page.locator("#why")).toHaveValue(""); // nothing typed before Use
-      await card2.getByRole("button", { name: "Use" }).click();
+      await card2.screenshot({ path: "test-results/writer-llm-draft-card.png" }).catch(() => undefined);
+      await card2.getByRole("button", { name: "Use this answer" }).click({ timeout: 30_000 });
       await expect(page.locator("#why")).toHaveValue(text, { timeout: 30_000 });
       console.log("WRITER E2E USE OK: the draft was typed into the page box only after Use");
     } finally {

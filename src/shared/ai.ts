@@ -295,19 +295,19 @@ export function checkDraft(
   );
   const invented = [...new Set(draft.match(/\d+(\.\d+)?/g) ?? [])].filter((n) => !allowed.has(n));
   const warnings: string[] = [];
-  if (invented.length) warnings.push(`Contains numbers not in your profile: ${invented.join(", ")}. Check them.`);
+  if (invented.length) warnings.push(`Please check these numbers not in your profile: ${invented.join(", ")}.`);
 
   // Corporate fluff detection
   const fluffFound = CORPORATE_FLUFF.filter((p) => p.test(draft)).map((p) => draft.match(p)?.[0] ?? "");
   if (fluffFound.length) {
-    warnings.push(`Contains generic corporate fluff (${fluffFound.join(", ")}). Use concrete technical accomplishments instead.`);
+    warnings.push(`Some words sound empty (${fluffFound.join(", ")}). A real example from your work is better.`);
   }
 
   // Degree grounding check
   const profileDegree = `${profile.degree ?? ""} ${profile.discipline ?? ""} ${reference}`.toLowerCase();
   for (const [pattern, label] of DEGREE_PATTERNS) {
     if (pattern.test(draft) && !pattern.test(profileDegree)) {
-      warnings.push(`Contains degree (${label}) not listed in your profile degree.`);
+      warnings.push(`It mentions a ${label} degree, but your profile has a different degree. Please check.`);
     }
   }
 
@@ -318,12 +318,12 @@ export function checkDraft(
 
   if (lengthInfo) {
     if (lengthInfo.max && words > lengthInfo.max) {
-      warnings.push(`Exceeds word limit: ${words} words (maximum is ${lengthInfo.max}).`);
+      warnings.push(`Too long: ${words} words. This question allows ${lengthInfo.max}.`);
     } else if (lengthInfo.min && words < lengthInfo.min) {
-      warnings.push(`Below recommended word count: ${words} words (minimum target is ${lengthInfo.min}).`);
+      warnings.push(`Short: ${words} words. This question asks for at least ${lengthInfo.min}.`);
     }
   } else {
-    if (words > 350) warnings.push("Longer than usual; consider shortening.");
+    if (words > 350) warnings.push("This is long. A shorter answer is often better.");
   }
 
   return warnings;

@@ -184,6 +184,27 @@ developer developers manager managers analyst analysts scientist designer intern
 product customer customers business strong excellent great good plus bonus nice must join apply equal opportunity employer
 ability skills skill knowledge degree bachelor bachelors master masters phd years year english responsibility perks salary`.split(/\s+/));
 
+/** The employer's own name, which a draft may always say ("I want to join Northwind Data"): it is not a skill.
+ * The panel knows the company only from the web address ("northwinddata", "riotgames"), so the name is also found
+ * (1) as capitalized words whose letters make up that address name, and (2) after "join", "work at", "interested
+ * in"… in the question itself ("Why are you interested in joining Northwind Data?"). Lower-case words. */
+export function employerNameWords(sources: FactSources): string[] {
+  const out = new Set<string>();
+  const text = `${sources.question}\n${sources.job.description ?? ""}`;
+  const slug = sources.job.company.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
+  if (slug.length >= 3) {
+    for (const tok of text.match(/\b[\p{Lu}][\p{L}\p{N}]*/gu) ?? []) {
+      const lower = tok.toLowerCase();
+      if (lower.length >= 3 && slug.includes(lower)) out.add(lower);
+    }
+  }
+  // Only phrases that name an employer: never "about" or "with" ("Tell us about Kubernetes" names a skill, not the
+  // employer, and must stay checked).
+  const named = /\b(?:[Jj]oin(?:ing)?|[Ww]ork(?:ing)? (?:at|for)|interested in joining|[Aa]pply(?:ing)? (?:to|at)|excites? you about|appeals to you about|drew you to|[Ww]hy)\s+((?:[\p{Lu}][\p{L}\p{N}&.'’-]*\s?){1,4})(?=[?.!,]|\s*$)/gu;
+  for (const m of sources.question.matchAll(named)) for (const w of m[1]!.trim().split(/\s+/)) out.add(w.toLowerCase().replace(/[’'.]+$/, ""));
+  return [...out];
+}
+
 /** Tools, skills and other names in the job description and the question that appear nowhere in the profile or resume. */
 export function jobOnlyTerms(sources: FactSources): JobTerm[] {
   const own = `${sources.profileFacts.join("\n")}\n${sources.resumeText}`;
@@ -196,7 +217,7 @@ export function jobOnlyTerms(sources: FactSources): JobTerm[] {
   }
   // Names the vocabulary does not know: capitalized mid-sentence words (English job texts only, since German
   // capitalizes every noun; Title Case headings skipped), CamelCase, ALL-CAPS and names with digits or + / #.
-  const nameWords = new Set(words(`${sources.job.company} ${sources.job.title}`));
+  const nameWords = new Set([...words(`${sources.job.company} ${sources.job.title}`), ...employerNameWords(sources)]);
   const english = isEnglish(jobText);
   for (const sentence of splitSentences(jobText)) {
     const tokens = sentence.match(/[\p{L}][\p{L}\p{N}+#.]*[\p{L}\p{N}+#]|[\p{Lu}]/gu) ?? [];
@@ -341,7 +362,13 @@ export function factCheck(raw: string, sources: FactSources, limit?: LengthLimit
     }
     if (kept.length) keptParas.push(kept.join("\n"));
   }
-  const checked = keptParas.join("\n\n").trim();
+  // A removed opening sentence can leave "I have also…" or "Additionally, …" at the start: drop that leftover link word.
+  const joined = keptParas.join("\n\n").trim();
+  const checked = removed.length
+    ? joined
+      .replace(/^(?:Also|Additionally|Moreover|Furthermore|In addition|Besides),\s*(\p{L})/u, (_, c: string) => c.toUpperCase())
+      .replace(/^(I|We)( have| had|'ve)? also\b\s*/, (_, who: string, aux = "") => `${who}${aux} `)
+    : joined;
   const left = countWords(checked);
   if (!checked || left < minimumWords(limit) || (removed.length && left < totalWords * 0.4)) {
     return { status: "insufficient", removed, shortened: false };
@@ -361,5 +388,5 @@ export function removedSummary(removed: Removed[]): string | undefined {
           : r.reason === "placeholder" ? "it had a blank to fill in"
             : "it is not backed by your resume";
   const n = removed.length;
-  return `Removed ${n} sentence${n > 1 ? "s" : ""} that could not be checked: ${removed.slice(0, 3).map(why).join("; ")}${n > 3 ? "; …" : ""}.`;
+  return `We took out ${n} sentence${n > 1 ? "s" : ""} because ${n > 1 ? "they" : "it"} said something your profile and resume do not show (${removed.slice(0, 3).map(why).join("; ")}${n > 3 ? "; …" : ""}).`;
 }

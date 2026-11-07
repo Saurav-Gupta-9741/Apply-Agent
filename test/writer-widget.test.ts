@@ -47,7 +47,9 @@ describe("draft widget: which writer", () => {
     expect(trigger.textContent).toBe("Draft answer");
     trigger.click();
     await vi.waitFor(() => expect(w.querySelector(".writer-setup")).not.toBeNull());
-    expect(w.textContent).toContain("Download the writing model once (1.1 GB). After that, essays are written on this computer and nothing is sent anywhere.");
+    expect(w.textContent).toContain("First, ApplyAgent needs one download. After that it writes answers on this computer, and your details are never sent anywhere.");
+    expect(w.textContent).toContain("Size: 1.1 GB");
+    expect(w.textContent).toContain("Please use Wi-Fi, not mobile data.");
     expect(w.textContent).not.toContain("Chrome's built-in AI");
     expect(usedText).toBe("");
   });
@@ -58,7 +60,7 @@ describe("draft widget: which writer", () => {
     const w = widget();
     w.querySelector<HTMLButtonElement>(".draft-trigger")!.click();
     await vi.waitFor(() => expect(button(w, "Download Chrome's built-in AI")).toBeDefined());
-    expect(w.textContent).toContain("Download the writing model once"); // our model is still offered
+    expect(w.textContent).toContain("First, ApplyAgent needs one download"); // our model is still offered
     // After its download Chrome reports the model ready.
     (globalThis as unknown as { LanguageModel: { availability: () => Promise<string> } }).LanguageModel.availability = async () => (seen.push(1), "available");
     button(w, "Download Chrome's built-in AI")!.click();
@@ -77,7 +79,8 @@ describe("draft widget: which writer", () => {
     expect(text).toMatch(/120 tables/);
     expect(w.querySelector(".draft-removed")!.textContent).toContain("the number 4 is not in your profile or resume");
     expect(usedText).toBe("");
-    button(w, "Use")!.click();
+    expect(w.textContent).toContain("Please read this draft.");
+    button(w, "Use this answer")!.click();
     await vi.waitFor(() => expect(usedText).toBe(text));
   });
 
@@ -86,7 +89,7 @@ describe("draft widget: which writer", () => {
     const w = widget();
     w.querySelector<HTMLButtonElement>(".draft-trigger")!.click();
     await vi.waitFor(() => expect(w.querySelector(".draft-insufficient")).not.toBeNull());
-    expect(w.textContent).toContain("Not enough facts in your profile or resume");
+    expect(w.textContent).toContain("does not know enough about you to write this answer without guessing");
     expect(w.querySelector(".draft-textarea")).toBeNull();
   });
 });

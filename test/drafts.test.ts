@@ -83,7 +83,7 @@ describe("Draft Grounding and Accuracy Checks", () => {
   it("flags corporate buzzwords and fluff", () => {
     const fluffyDraft = "I am a dynamic self-starter and rockstar ninja ready to synergize outside the box.";
     const warnings = checkDraft(fluffyDraft, profile, job);
-    expect(warnings.some((w) => w.includes("generic corporate fluff"))).toBe(true);
+    expect(warnings.some((w) => w.includes("sound empty"))).toBe(true);
   });
 });
 

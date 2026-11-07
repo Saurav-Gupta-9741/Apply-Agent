@@ -783,7 +783,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
           : r.decision.kind === "ask" && r.decision.reason === "missing_profile_value" ? "Missing from your saved profile."
             : r.status === "failed"
               ? (/^the list shows/.test(r.detail ?? "") ? `${r.detail!.replace(/^the list/, "The list on the page")}: choose the right one there.` : "Could not fill on page: please choose it there.")
-              : "New question: saved for future forms.";
+              : "New question. ApplyAgent remembers your answer for next time.";
   const whyRow = h("span", { class: "question-why" });
   whyRow.append(icon(youOnly ? "lock" : appliedBefore ? "lock" : sensitive ? "shield" : upload ? "upload" : "info", 14), h("span", {}, why));
   const card = h("div", { class: `question${sensitive || youOnly || appliedBefore ? " sensitive" : ""}`, "data-key": r.field.key, "data-label": r.field.label },

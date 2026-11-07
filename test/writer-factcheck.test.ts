@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { claimsTerm, cleanModelOutput, factCheck, jobOnlyTerms, numbersIn, removedSummary, type FactSources } from "../src/shared/writer/factcheck";
+import { claimsTerm, cleanModelOutput, employerNameWords, factCheck, jobOnlyTerms, numbersIn, removedSummary, type FactSources } from "../src/shared/writer/factcheck";
 import { splitSentences } from "../src/shared/writer/words";
 import { lengthLimit } from "../src/shared/length-limit";
 
@@ -203,7 +203,44 @@ describe("factCheck: other languages", () => {
 describe("removedSummary", () => {
   it("explains removals in plain words", () => {
     const r = factCheck("I led the migration of 120 tables from MySQL to BigQuery with zero data loss over 6 weeks. I led a team of 4 engineers to do it. I mentored 2 junior engineers along the way at Acme Pay.", src(PROUD), proudLimit);
-    expect(removedSummary(r.removed)).toBe("Removed 1 sentence that could not be checked: the number 4 is not in your profile or resume.");
+    expect(removedSummary(r.removed)).toBe("We took out 1 sentence because it said something your profile and resume do not show (the number 4 is not in your profile or resume).");
     expect(removedSummary([])).toBeUndefined();
+  });
+});
+
+// Found in the real-model e2e (2026-11-07): the company's own name was removed as an "unknown skill" because the panel
+// knows the company only from the web address. A draft may always name the employer.
+describe("the employer's name is never a job-only skill", () => {
+  const slugJob = (company: string) => ({ ...JOB, company });
+  const q = "Why are you interested in joining Northwind Data? (max 80 words)";
+  const draft = "I am deeply interested in Northwind Data because of its focus on real-time analytics. I rewrote slow BigQuery reporting queries and cut monthly query cost by 35%. I also led the migration of 120 tables from MySQL to BigQuery with zero data loss.";
+  it.each(["northwinddata", "127", ""])("company known as %j: the opening sentence is kept", (company) => {
+    const r = factCheck(draft, { ...src(q), job: slugJob(company) }, lengthLimit(q));
+    expect(r.removed.map((x) => x.detail)).not.toContain("Northwind");
+    expect(r.text).toMatch(/^I am deeply interested in Northwind Data/);
+  });
+  it("finds the name from the address or the question, not from 'about' or 'with'", () => {
+    expect(employerNameWords({ ...src("Why do you want to work at Riot Games?"), job: slugJob("riotgames") })).toEqual(expect.arrayContaining(["riot", "games"]));
+    expect(employerNameWords({ ...src("Why Anthropic?"), job: slugJob("") })).toContain("anthropic");
+    expect(employerNameWords({ ...src("Tell us about Kubernetes in production."), job: slugJob("acme") })).not.toContain("kubernetes");
+    expect(employerNameWords({ ...src("Describe working with Kafka."), job: slugJob("acme") })).not.toContain("kafka");
+  });
+  it("still removes a claimed skill that only the job names", () => {
+    const r = factCheck("I am excited to join Northwind Data. I have built streaming pipelines with Kafka for 3 years.", { ...src(q), job: slugJob("northwinddata") }, lengthLimit(q));
+    expect(r.removed.some((x) => x.reason === "skill" || x.reason === "number")).toBe(true);
+  });
+});
+
+describe("no dangling link word after a removed opening sentence", () => {
+  const q = "Why are you interested in joining Northwind Data? (max 80 words)";
+  it("drops 'also' and 'Additionally,' left at the start", () => {
+    const a = factCheck("I have used Kafka for 4 years. I have also rewrote slow BigQuery reporting queries and cut monthly query cost by 35%. I led the migration of 120 tables from MySQL to BigQuery.", src(q), lengthLimit(q));
+    expect(a.text).toMatch(/^I have rewrote slow BigQuery/);
+    const b = factCheck("I have used Kafka for 4 years. Additionally, I rewrote slow BigQuery reporting queries and cut monthly query cost by 35%. I led the migration of 120 tables from MySQL to BigQuery.", src(q), lengthLimit(q));
+    expect(b.text).toMatch(/^I rewrote slow BigQuery/);
+  });
+  it("leaves a draft alone when nothing was removed", () => {
+    const c = factCheck("I also rewrote slow BigQuery reporting queries and cut monthly query cost by 35%. I led the migration of 120 tables from MySQL to BigQuery.", src(q), lengthLimit(q));
+    expect(c.text).toMatch(/^I also rewrote/);
   });
 });

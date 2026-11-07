@@ -189,6 +189,14 @@ function bar(fraction: number): HTMLElement {
   outer.append(inner);
   return outer;
 }
+/** "Downloading: 36% (0.4 of 1.1 GB). You can keep filling the form." Percent first: everyone reads a percentage. */
+const downloadingText = (done: number, bytes: number) =>
+  `Downloading: ${Math.floor((done / Math.max(bytes, 1)) * 100)}% (${gb(done)} of ${gb(bytes)}). You can keep filling the form meanwhile.`;
+/** A rough time on an ordinary home connection (about 3 MB/s), never shown as less than 2 minutes. */
+const downloadMinutes = (bytes: number) => {
+  const low = Math.max(2, Math.round(bytes / 6e6 / 60));
+  return `${low}–${Math.max(low + 2, Math.round(bytes / 2e6 / 60))} minutes`;
+};
 const minutes = (ms: number) => (ms < 60_000 ? `${Math.max(1, Math.round(ms / 1000))} s` : `${Math.floor(ms / 60_000)} min ${Math.round((ms % 60_000) / 1000)} s`);
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -201,6 +209,9 @@ interface WidgetHandle {
   start: (queued: boolean) => Promise<void>;
 }
 const widgets = new Set<WidgetHandle>();
+/** "Draft all" was pressed before the model was downloaded: when the download finishes, every answer is written, not
+ * only the one whose card showed the download. */
+let draftAllAfterDownload = false;
 const liveWidgets = () => [...widgets].filter((w) => w.container.isConnected);
 
 const DRAFT_LABEL = "Draft answer";
@@ -228,6 +239,7 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
   const reset = () => {
     mode = "idle";
     show();
+    draftBtn.hidden = false;
     draftBtn.disabled = false;
     draftBtn.textContent = DRAFT_LABEL;
   };
@@ -242,9 +254,10 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
   // ---- results -------------------------------------------------------------------------------------------------
 
   const insufficientCard = (removedNote?: string) => {
-    const card = el("div", "draft-insufficient", "Not enough facts in your profile or resume to draft an accurate answer. ApplyAgent never invents experience or facts.");
+    const card = el("div", "draft-insufficient", "ApplyAgent does not know enough about you to write this answer without guessing, and it never guesses.");
+    card.append(el("p", "draft-note", "To get a draft next time: upload your resume in Profile, or add your work details there. Or write this answer yourself."));
     if (removedNote) card.append(el("p", "draft-note", removedNote));
-    card.append(btn("Write answer manually", "ghost", reset));
+    card.append(btn("I'll write it myself", "ghost", reset));
     return card;
   };
 
@@ -253,12 +266,13 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
     const r = factCheck(raw, src, limit);
     const removedNote = removedSummary(r.removed);
     mode = "done";
+    draftBtn.hidden = false;
     draftBtn.disabled = false;
-    draftBtn.textContent = "Regenerate draft";
+    draftBtn.textContent = "Write a new draft";
     if (r.status === "insufficient") return show(insufficientCard(removedNote));
     if (r.status === "too-long") {
-      const card = el("div", "draft-insufficient", `The draft did not fit this question's limit (${lengthCounter("", limit)?.replace(/^0 \/ /, "") ?? "length"}). Please write a short answer yourself.`);
-      card.append(btn("Write answer manually", "ghost", reset));
+      const card = el("div", "draft-insufficient", `The draft was longer than this question allows (${lengthCounter("", limit)?.replace(/^0 \/ /, "") ?? "its limit"}). Please write a short answer yourself.`);
+      card.append(btn("I'll write it myself", "ghost", reset));
       return show(card);
     }
     const text = r.text!;
@@ -266,7 +280,8 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
     textarea.rows = 5;
     textarea.value = text;
     textarea.setAttribute("aria-label", `Draft answer for: ${ctx.question}`);
-    const nodes: Node[] = [textarea];
+    // The one thing every user must do with an AI draft: read it. Said before the text, in plain words.
+    const nodes: Node[] = [el("p", "draft-check", "Please read this draft. Change anything that is not true about you, then press \"Use this answer\"."), textarea];
     const counter = limitCounter(textarea, limit);
     if (counter) nodes.push(counter);
     if (r.shortened) nodes.push(el("p", "draft-note", "Shortened at a whole sentence to fit this question's limit."));
@@ -277,31 +292,36 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
       for (const w of warnings) list.append(el("li", "", w));
       nodes.push(list);
     }
-    const useBtn = btn("Use", "primary", async () => {
+    const useBtn = btn("Use this answer", "primary", async () => {
       const finalDraft = textarea.value.trim();
       const fit = checkLength(finalDraft, limit);
       if (!fit.ok) {
-        ctx.toast?.(`Too long: ${fit.problem}`, "warn");
+        ctx.toast?.(`Too long: ${fit.problem}. Please make it shorter.`, "warn");
+        textarea.focus();
+        return;
+      }
+      if (!finalDraft) {
         textarea.focus();
         return;
       }
       useBtn.disabled = true;
       await ctx.onUse(finalDraft);
       show();
-      draftBtn.textContent = "Draft accepted (assisted)";
+      draftBtn.textContent = "Answer added ✓";
       draftBtn.disabled = true;
     });
-    useBtn.title = "Accept this draft and fill it on the page";
-    const editBtn = btn("Edit", "secondary", () => {
+    useBtn.title = "Put this answer into the form on the page";
+    // Puts the cursor at the end of the text. Never selects it all: the first key pressed would delete the draft.
+    const editBtn = btn("Change it", "secondary", () => {
       textarea.focus();
-      textarea.select();
+      textarea.setSelectionRange(textarea.value.length, textarea.value.length);
     });
-    editBtn.title = "Focus text area to edit before using";
-    const skipBtn = btn("Skip", "ghost", () => {
+    editBtn.title = "Click in the box above and change any words";
+    const skipBtn = btn("Don't use", "ghost", () => {
       reset();
       ctx.onSkip?.();
     });
-    skipBtn.title = "Discard this draft";
+    skipBtn.title = "Throw this draft away";
     const row = el("div", "button-row draft-actions");
     row.append(useBtn, editBtn, skipBtn);
     nodes.push(row);
@@ -313,14 +333,15 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
 
   async function startNano(): Promise<void> {
     mode = "drafting";
+    draftBtn.hidden = false;
     draftBtn.disabled = true;
-    draftBtn.textContent = "Drafting answer (on-device)...";
+    draftBtn.textContent = "Writing…";
     show(el("p", "draft-note", "Writing with Chrome's built-in AI, on this computer…"));
     try {
       const resumeText = await resumeTextOf(ctx.profile);
       const raw = await draftAnswerRaw(ctx.question, ctx.profile, ctx.job, { resumeText, limit });
       if (raw === null) return void showSetup(await resolveWriter());
-      await showResult(raw, "Written by Chrome's built-in AI on this computer.");
+      await showResult(raw, "Written on this computer. Nothing was sent anywhere.");
     } catch (err) {
       showError(err);
     }
@@ -352,9 +373,14 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
 
   function showError(err: unknown): void {
     mode = "idle";
-    const box = el("div", "draft-error", `Drafting failed: ${String((err as Error)?.message ?? err)}`);
-    box.append(btn("Dismiss", "ghost", reset));
+    // Plain words for the user; the technical reason only on hover, for a bug report.
+    const box = el("div", "draft-error", "Something went wrong while writing this draft. Please try again.");
+    box.title = String((err as Error)?.message ?? err);
+    const row = el("div", "button-row");
+    row.append(btn("Try again", "secondary", () => { reset(); void start(false); }), btn("Close", "ghost", reset));
+    box.append(row);
     show(box);
+    draftBtn.hidden = false;
     draftBtn.disabled = false;
     draftBtn.textContent = DRAFT_LABEL;
   }
@@ -363,23 +389,24 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
   function showSetup(choice: WriterChoice, status?: WriterStatus, problem?: string): void {
     mode = "setup";
     lastChoice = choice;
-    draftBtn.disabled = true;
+    // The card has its own buttons; a greyed "Getting ready…" above it would look stuck.
+    draftBtn.hidden = true;
     const card = el("div", "draft-alert writer-setup");
     const model = choice.local;
     if (model) {
-      card.append(el("strong", "", "Write answers on this computer"));
+      card.append(el("strong", "", "Let ApplyAgent write a first draft for you"));
       const file = status?.files[model.id];
       const active = status?.download?.modelId === model.id ? status.download : undefined;
       const shown = previewBox.querySelector<HTMLElement>(".writer-setup[data-phase='downloading']");
       if (active && shown) {
         // Same card, new numbers: the Cancel button stays put.
-        shown.querySelector(".writer-dl-text")!.textContent = `Downloading the writing model: ${gb(active.done)} of ${gb(active.bytes)}. You can keep using ApplyAgent meanwhile.`;
+        shown.querySelector(".writer-dl-text")!.textContent = downloadingText(active.done, active.bytes);
         shown.querySelector(".writer-progress")?.replaceWith(bar(active.done / active.bytes));
         return;
       }
       card.dataset.phase = active ? "downloading" : "consent";
       if (active) {
-        card.append(el("p", "writer-dl-text", `Downloading the writing model: ${gb(active.done)} of ${gb(active.bytes)}. You can keep using ApplyAgent meanwhile.`), bar(active.done / active.bytes));
+        card.append(el("p", "writer-dl-text", downloadingText(active.done, active.bytes)), bar(active.done / active.bytes));
         const row = el("div", "button-row");
         row.append(btn("Cancel download", "ghost", () => {
           void saveWriterSettings({ downloading: false });
@@ -387,23 +414,26 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
         }));
         card.append(row);
       } else {
-        card.append(el("p", "", `Download the writing model once (${gb(model.bytes)}). After that, essays are written on this computer and nothing is sent anywhere.`));
-        if (file && file.done > 0 && !file.complete) card.append(el("p", "draft-note", `${gb(file.done)} of ${gb(file.bytes)} already downloaded.`));
+        card.append(
+          el("p", "", "First, ApplyAgent needs one download. After that it writes answers on this computer, and your details are never sent anywhere."),
+          el("p", "draft-note", `Size: ${gb(model.bytes)}, about ${downloadMinutes(model.bytes)} on home Wi-Fi. Please use Wi-Fi, not mobile data. You only do this once.`),
+        );
+        if (file && file.done > 0 && !file.complete) card.append(el("p", "draft-note", `${Math.floor((file.done / file.bytes) * 100)}% already downloaded.`));
         if (problem) card.append(el("p", "draft-note writer-problem", problem));
         const row = el("div", "button-row");
         row.append(
-          btn(file && file.done > 0 ? "Continue download" : "Download", "primary", () => void startDownload(model)),
-          btn("Not now", "ghost", reset),
+          btn(file && file.done > 0 ? "Continue the download" : "Download now (one time)", "primary", () => void startDownload(model)),
+          btn("Not now", "ghost", () => { draftAllAfterDownload = false; reset(); }),
         );
         card.append(row);
       }
     }
     if (choice.offerNano) card.append(nanoBlock());
     if (!model && !choice.offerNano) {
-      card.append(el("p", "", "This computer is too slow for the on-device writer. Please write this answer yourself."));
+      card.append(el("p", "", "This computer is not powerful enough to write answers by itself. Please write this answer yourself. The word counter below the box still helps you."));
       card.append(btn("OK", "ghost", reset));
     } else if (!model) {
-      card.append(btn("Not now", "ghost", reset));
+      card.append(btn("Not now", "ghost", () => { draftAllAfterDownload = false; reset(); }));
     }
     show(card);
   }
@@ -417,13 +447,14 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
   function showDrafting(text: string, status?: WriterStatus): void {
     mode = "drafting";
     draftBtn.disabled = true;
-    draftBtn.textContent = "Drafting…";
+    draftBtn.hidden = false;
+    draftBtn.textContent = "Writing…";
     const s = status ?? writer.status;
     const line = el("p", "draft-note writer-line");
     const ahead = s ? s.queue.indexOf(id) + (s.running && s.running !== id ? 1 : 0) : 0;
-    if (s?.loading) line.textContent = "Loading the writing model…";
-    else if (s && s.running !== id && ahead > 0) line.textContent = `Waiting: ${ahead} answer${ahead > 1 ? "s" : ""} before this one.`;
-    else line.textContent = "Writing on this computer… This can take a few minutes. Nothing is typed until you press Use.";
+    if (s?.loading) line.textContent = "Getting the writer ready. This can take up to a minute…";
+    else if (s && s.running !== id && ahead > 0) line.textContent = `Waiting: ${ahead} answer${ahead > 1 ? "s" : ""} will be written before this one.`;
+    else line.textContent = "Writing your answer on this computer. This usually takes 2 to 5 minutes. You can keep filling other questions meanwhile. Nothing goes into the form until you press \"Use this answer\".";
     // Updated in place while words stream in, so the Stop button stays put under the pointer.
     const oldLine = previewBox.querySelector<HTMLElement>(".writer-line");
     const oldLive = previewBox.querySelector<HTMLElement>(".draft-live");
@@ -434,9 +465,18 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
     }
     const live = el("div", "draft-live", text);
     live.setAttribute("aria-label", "Draft so far");
+    // A clock that keeps moving: during a wait of minutes, it shows the computer is still working, not stuck.
+    const clock = el("p", "draft-note writer-clock");
+    const began = Date.now();
+    const tick = () => {
+      if (mode !== "drafting" || !clock.isConnected) return clearInterval(timer);
+      clock.textContent = `Time so far: ${minutes(Date.now() - began)}`;
+    };
+    const timer = setInterval(tick, 1000);
     const row = el("div", "button-row");
     row.append(btn("Stop", "ghost", () => void writer.send({ type: "stop", id })));
-    show(line, live, row);
+    show(line, clock, live, row);
+    tick();
   }
 
   let seen = false;
@@ -464,7 +504,11 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
           const m = lastChoice.local;
           if (s.files[m.id]?.complete && !s.download) {
             await saveWriterSettings({ downloading: false });
-            void startLocal(m);
+            void startLocal(m).then(async () => {
+              if (!draftAllAfterDownload) return;
+              draftAllAfterDownload = false;
+              for (const w of liveWidgets()) if (w.id !== id) await w.start(true);
+            });
           } else showSetup(lastChoice, s);
         } else if (mode === "drafting" && (s.queue.includes(id) || s.running === id)) {
           const live = previewBox.querySelector(".draft-live")?.textContent ?? "";
@@ -481,7 +525,7 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
           const settings = await loadWriterSettings();
           await saveWriterSettings({ tokensPerSec: { ...(settings.tokensPerSec ?? {}), [localModel.id]: msg.tokensPerSec } });
         }
-        await showResult(msg.raw, `Written on this computer${localModel ? ` by ${localModel.name}` : ""} in ${minutes(msg.ms)}.`);
+        await showResult(msg.raw, `Written on this computer in ${minutes(msg.ms)}. Nothing was sent anywhere.`);
         return;
       case "draft-error":
         if (msg.id !== id) return;
@@ -493,7 +537,7 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
           await saveWriterSettings({ downloading: false });
           const plain = msg.code === "mismatch" ? "The downloaded file was damaged, so it was deleted. Please try again."
             : msg.code === "aborted" ? "Download paused."
-              : "The download stopped (check your internet connection). It continues from where it stopped.";
+              : "The download stopped. Check that your internet is on, then press \"Continue the download\". It goes on from where it stopped.";
           showSetup(lastChoice, await writer.fetchStatus(), plain);
         }
         return;
@@ -518,7 +562,7 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
   async function start(queued: boolean): Promise<void> {
     if (mode === "drafting" || mode === "setup") return;
     draftBtn.disabled = true;
-    draftBtn.textContent = "Checking on-device model...";
+    draftBtn.textContent = "Getting ready…";
     try {
       const choice = await resolveWriter();
       lastChoice = choice;
@@ -549,7 +593,7 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
     const s = await writer.fetchStatus().catch(() => undefined);
     if (!s || mode !== "idle") return;
     const done = s.finished[id];
-    if (done) await showResult(done.raw, `Written on this computer${localModel ? ` by ${localModel.name}` : ""} in ${minutes(done.ms)}.`);
+    if (done) await showResult(done.raw, `Written on this computer in ${minutes(done.ms)}. Nothing was sent anywhere.`);
     else if (s.running === id || s.queue.includes(id)) showDrafting("", s);
   })().catch(() => undefined);
 
@@ -561,7 +605,7 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
 export function createDraftAllBar(): HTMLElement {
   const box = el("div", "draft-all");
   const go = btn("Draft all answers", "secondary", () => void run());
-  const line = el("p", "draft-note", "Writes a draft for each long question, one at a time, on this computer. Nothing is typed until you press Use.");
+  const line = el("p", "draft-note", "Writes a first answer for every long question, one after another, on this computer. Nothing goes into the form until you press \"Use this answer\" under each one.");
   line.setAttribute("aria-live", "polite");
   box.append(go, line);
   let ids: string[] = [];
@@ -571,10 +615,10 @@ export function createDraftAllBar(): HTMLElement {
     const done = ids.filter((i) => s.finished[i]).length;
     const runningAt = ids.indexOf(s.running ?? "");
     if (runningAt >= 0 || ids.some((i) => s.queue.includes(i))) {
-      line.textContent = `Drafting ${done + 1} of ${ids.length}…`;
+      line.textContent = `Writing answer ${done + 1} of ${ids.length}…`;
       go.disabled = true;
     } else {
-      line.textContent = done ? `${done} draft${done > 1 ? "s" : ""} ready to review. Nothing is typed until you press Use.` : line.textContent;
+      line.textContent = done ? `${done} draft${done > 1 ? "s" : ""} ready. Please read each one, then press \"Use this answer\" under it.` : line.textContent;
       go.disabled = false;
     }
   };
@@ -591,6 +635,8 @@ export function createDraftAllBar(): HTMLElement {
       const status = await writer.fetchStatus();
       if (!status.files[choice.local.id]?.complete) {
         go.disabled = false;
+        ids = all.map((w) => w.id);
+        draftAllAfterDownload = true; // the rest are written when the download is done
         return all[0]!.start(false); // shows the consent and download card
       }
       ids = all.map((w) => w.id);
