@@ -31,7 +31,7 @@ describe("manifest", () => {
   it("is Manifest V3 with exactly the permissions we justify to the Chrome Web Store", () => {
     expect(manifest.manifest_version).toBe(3);
     expect([...manifest.permissions].sort()).toEqual(
-      ["activeTab", "alarms", "contextMenus", "offscreen", "scripting", "sidePanel", "storage", "unlimitedStorage"],
+      ["activeTab", "alarms", "contextMenus", "offscreen", "scripting", "sidePanel", "storage", "system.cpu", "system.memory", "unlimitedStorage"],
     );
     expect(manifest.host_permissions ?? []).toEqual([]); // sites are allowed one by one, at runtime
     // Asked for only when the user turns on automatic backup (a file on their own PC; nothing is uploaded).
@@ -39,6 +39,9 @@ describe("manifest", () => {
     expect(manifest.content_scripts).toBeUndefined(); // nothing runs on pages the user did not allow
     // The default strict MV3 policy, plus WebAssembly for the local question model (no remote code, no eval).
     expect(manifest.content_security_policy).toEqual({ extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'" });
+    // Cross-origin isolation for multi-threaded on-device models; "credentialless" keeps cross-site fetches working.
+    expect(manifest.cross_origin_embedder_policy).toEqual({ value: "credentialless" });
+    expect(manifest.cross_origin_opener_policy).toEqual({ value: "same-origin" });
     expect(manifest.externally_connectable).toBeUndefined(); // web pages cannot message the extension
   });
 

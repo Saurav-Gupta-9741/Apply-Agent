@@ -3,7 +3,7 @@
  * The model may only rephrase facts from the profile; anything it cannot ground becomes "INSUFFICIENT". */
 
 import type { Profile } from "./types";
-import { limitInstruction, type LengthLimit } from "./length-limit";
+import { countWords, limitInstruction, type LengthLimit } from "./length-limit";
 
 interface LanguageModelSession {
   prompt(input: string): Promise<string>;

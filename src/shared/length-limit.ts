@@ -137,14 +137,38 @@ export function lengthLimit(text: string, maxLength?: number): LengthLimit | und
   return Object.keys(limit).filter((k) => k !== "approximate").length ? limit : undefined;
 }
 
-/** Words as a reader counts them; Chinese and Japanese text, written without spaces, counts each character. */
-export function countWords(text: string): number {
-  const cjk = (text.match(/[぀-ヿ㐀-鿿豈-﫿]/g) ?? []).length;
-  const rest = text.replace(/[぀-ヿ㐀-鿿豈-﫿]/g, " ").trim().split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
-  return cjk + rest;
+/** Scripts written without spaces between words, where a dictionary is needed to find word ends: Thai, Lao, Khmer
+ * and Myanmar. Chinese and Japanese are counted per character instead (the way their limits are stated). */
+const UNSPACED = /[฀-໿က-႟ក-៿᧠-᧿]/;
+const UNSPACED_RUN = /[฀-໿က-႟ក-៿᧠-᧿]+/g;
+let wordSegmenter: Intl.Segmenter | null | undefined;
+function unspacedWords(run: string): number {
+  if (wordSegmenter === undefined) {
+    try { wordSegmenter = typeof Intl !== "undefined" && "Segmenter" in Intl ? new Intl.Segmenter("und", { granularity: "word" }) : null; } catch { wordSegmenter = null; }
+  }
+  if (!wordSegmenter) return Math.max(1, Math.round(run.length / 5)); // about 5 characters per Thai/Khmer word
+  let n = 0;
+  for (const seg of wordSegmenter.segment(run)) if (seg.isWordLike) n++;
+  return n;
 }
 
-const SENTENCE_END = /[^.!?。！？]+(?:[.!?。！？]+["')\]]*|$)/g;
+/** Words as a reader counts them. Chinese and Japanese text, written without spaces, counts each character; Thai,
+ * Lao, Khmer and Myanmar text is split into dictionary words. */
+export function countWords(text: string): number {
+  const cjk = (text.match(/[぀-ヿ㐀-鿿豈-﫿]/g) ?? []).length;
+  let unspaced = 0;
+  let rest = text.replace(/[぀-ヿ㐀-鿿豈-﫿]/g, " ");
+  if (UNSPACED.test(rest)) {
+    rest = rest.replace(UNSPACED_RUN, (run) => { unspaced += unspacedWords(run); return " "; });
+  }
+  const spaced = rest.trim().split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
+  return cjk + unspaced + spaced;
+}
+
+/** Sentence ends in every script: Latin, CJK (。！？｡), Hindi/Bengali danda (। ॥), Arabic/Urdu question mark and full
+ * stop (؟ ۔), Armenian (։), Ethiopic (። ፧) and Myanmar (။). */
+const ENDS = ".!?。！？｡।॥؟۔։።፧။";
+const SENTENCE_END = new RegExp(String.raw`[^${ENDS}]+(?:[${ENDS}]+["'”’»)\]]*|$)`, "g");
 export function sentences(text: string): string[] {
   return (text.match(SENTENCE_END) ?? []).map((s) => s.trim()).filter(Boolean);
 }

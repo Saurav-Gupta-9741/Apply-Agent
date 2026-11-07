@@ -63,6 +63,7 @@ and the final submission to the user.
 | `alarms` | Resumes the application queue after Chrome restarts, and times out stuck steps. |
 | `contextMenus` | The "Fill this application with ApplyAgent" right-click entry. |
 | `offscreen` | Runs the offline question-understanding model (WebAssembly) in an offscreen page; no data leaves the computer. |
+| `system.memory`, `system.cpu` | Reads this computer's memory size and processor count, on this device only, to pick an essay-writing model small enough to run well here. Nothing is sent anywhere. |
 | Optional host permissions (`https://*/*`) | Requested per site, only when the user allows a careers site (one click for the common job-application platforms). Never used on LinkedIn, Indeed, Naukri and similar platforms. |
 | Remote code | None. All code and the model ship inside the package. |
 
