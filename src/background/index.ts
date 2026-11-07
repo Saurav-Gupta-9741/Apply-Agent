@@ -286,7 +286,7 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse: (r
       return false;
     case "WRITER_OPEN":
       // The side panel's on-device writer runs in the offscreen page: start it (extension pages only).
-      if (sender.tab) return false;
+      if (!sender.url?.startsWith(chrome.runtime.getURL(""))) return false;
       ensurePage().then(() => sendResponse(true), () => sendResponse(false));
       return true;
     case "DETECTION_SYNC":

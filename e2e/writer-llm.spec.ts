@@ -65,6 +65,8 @@ test.describe("on-device writer with the real model", () => {
     if (!worker) worker = await context.waitForEvent("serviceworker");
     const extensionId = new URL(worker.url()).host;
     const ext = await context.newPage();
+    ext.on("console", (m) => m.type() === "error" || m.type() === "warning" ? console.log(`PANEL ${m.type()}: ${m.text()}`) : undefined);
+    ext.on("pageerror", (e) => console.log(`PANEL pageerror: ${e.message}`));
     await ext.goto(`chrome-extension://${extensionId}/sidepanel.html`);
     return { context, ext, extensionId };
   }
@@ -101,10 +103,12 @@ test.describe("on-device writer with the real model", () => {
     test.setTimeout(25 * 60_000);
     const dir = mkdtempSync(join(tmpdir(), "applyagent-writer-e2e-"));
     const timings: Record<string, number> = {};
+    const opened: BrowserContext[] = [];
     try {
       // ---- 1. First session: consent, download starts, the browser closes mid-way. ----
       await fetch(`${MODEL_BASE}/reset?throttle=25000000`); // ~25 MB/s: time to interrupt it
       let { context, ext } = await launch(dir);
+      opened.push(context);
       await ext.evaluate((v) => chrome.storage.local.set(v), { profile: PROFILE, answers: [], license: PRO_LICENSE, writerTest: { baseUrl: MODEL_BASE, modelId: MODEL_ID } });
       await ext.reload();
       await fillEssayPage(context, ext);
@@ -123,6 +127,7 @@ test.describe("on-device writer with the real model", () => {
       // ---- 2. The browser opens again: the download continues where it stopped. ----
       await fetch(`${MODEL_BASE}/reset`); // full speed now
       ({ context, ext } = await launch(dir));
+      opened.push(context);
       const before = await writerStatus(ext);
       const saved = before.files[MODEL_ID]!.done;
       expect(saved).toBeGreaterThan(0);
@@ -132,7 +137,7 @@ test.describe("on-device writer with the real model", () => {
       const t1 = Date.now();
       // Opening the panel resumed the download by itself (the user agreed before); the card shows its progress.
       await card2.getByRole("button", { name: "Draft answer" }).click();
-      await expect(card2.locator(".draft-live, .writer-line")).toBeVisible({ timeout: 10 * 60_000 }); // downloaded + verified
+      await expect(card2.locator(".writer-line")).toBeVisible({ timeout: 10 * 60_000 }); // downloaded + verified
       timings.downloadSeconds = (firstPart + (Date.now() - t1)) / 1000;
       const log2 = (await (await fetch(`${MODEL_BASE}/log`)).json()) as Array<{ range: string }>;
       expect(Number(/bytes=(\d+)-/.exec(log2[0]!.range)![1])).toBe(saved); // resumed, not restarted
@@ -164,7 +169,12 @@ test.describe("on-device writer with the real model", () => {
       await expect(page.locator("#why")).toHaveValue(text, { timeout: 30_000 });
       await context.close();
     } finally {
-      rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 500 });
+      for (const c of opened) await c.close().catch(() => undefined);
+      try {
+        rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 1000 });
+      } catch {
+        /* Chrome may hold a file a moment longer: the temp folder is left behind */
+      }
     }
   });
 });
