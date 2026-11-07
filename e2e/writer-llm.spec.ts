@@ -167,9 +167,11 @@ test.describe("on-device writer with the real model", () => {
       await expect(page.locator("#why")).toHaveValue(""); // nothing typed before Use
       await card2.getByRole("button", { name: "Use" }).click();
       await expect(page.locator("#why")).toHaveValue(text, { timeout: 30_000 });
-      await context.close();
+      console.log("WRITER E2E USE OK: the draft was typed into the page box only after Use");
     } finally {
-      for (const c of opened) await c.close().catch(() => undefined);
+      // Closing a browser whose offscreen page still holds the model can take minutes; never wait on it.
+      const closeQuickly = (c: { close(): Promise<void> }) => Promise.race([c.close().catch(() => undefined), new Promise((r) => setTimeout(r, 20_000))]);
+      for (const c of opened) await closeQuickly(c);
       try {
         rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 1000 });
       } catch {

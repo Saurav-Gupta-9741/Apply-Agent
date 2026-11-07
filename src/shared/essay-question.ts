@@ -10,7 +10,7 @@
 const FACTUAL = new RegExp(
   [
     String.raw`\b(?:links?|urls?|linkedin|github|gitlab|website|web ?site|portfolio|blog|behance|dribbble)\b`,
-    String.raw`\bhow did you (?:hear|learn|find out|come across)\b|\bwhere did you (?:hear|see|find)\b|\brefer(?:red|ral|rer)\b`,
+    String.raw`\bhow did (?:you|your|u) (?:first )?(?:hear|learn|find out|come across)\b|\bwhere did (?:you|your) (?:first )?(?:hear|see|find)\b|\brefer(?:red|ral|rer)\b`,
     String.raw`\b(?:salary|compensation|pay range|base pay|ctc|ote|on target earnings|equity|bonus)\b`,
     String.raw`\b(?:visa|sponsor(?:ship)?|work (?:permit|authori[sz]ation)|authori[sz]ed to work|citizenship|passport|immigration)\b`,
     String.raw`\b(?:start date|earliest (?:possible )?(?:start|date)|notice period|available to start|availability)\b`,
@@ -44,12 +44,16 @@ const YES_NO_START = /^\s*(?:are|is|will|would|do|does|did|can|could|have|has|we
 /** A bare follow-up ("If yes, please describe:", "If (f) Other, please explain:"): no subject to write about. */
 const BARE_FOLLOW_UP = /^\s*(?:if\b[^.?:]{0,50}[,:]?\s*(?:please\s+)?(?:describe|explain|specify|elaborate|list|tell us|provide (?:details|more information))\b[^a-z]*$|if (?:yes|no|not|so|other)\b)/i;
 
+/** A follow-up that leans on another question ("If you answered Yes to the above question, …"): the AI cannot see what
+ * that question was, so any draft would be invented. */
+const REFERS_TO_OTHER_QUESTION = /\b(?:above|previous|prior|preceding|earlier) question\b|\bquestion above\b|\bif you answered\b|\bpregunta anterior\b|\bpergunta anterior\b|\bquestion pr[eé]c[eé]dente\b|\bvorherige[nr]? frage\b|上一題|上一题|前の質問/i;
+
 /** Whether an AI draft may be offered for this question. `multiLine` is true for a text area. */
 export function isEssayQuestion(label: string, multiLine: boolean): boolean {
   const text = label.replace(/\s+/g, " ").trim();
   if (text.length < (/[぀-ヿ㐀-鿿가-힯]/.test(text) ? 4 : 12)) return false;
   if (FACTUAL.test(text) || FACTUAL_WORLD.test(text)) return false;
-  if (BARE_FOLLOW_UP.test(text)) return false;
+  if (BARE_FOLLOW_UP.test(text) || REFERS_TO_OTHER_QUESTION.test(text)) return false;
   const asks = ESSAY_ASK.test(text) || ESSAY_ASK_WORLD.test(text) || PROSE_LENGTH.test(text) || /\d+\s*字/.test(text);
   // "Are you able to attend … ? If not, please elaborate" is a fact about the candidate, not an essay; "Have you led a
   // team? If yes, describe your experience" asks for an account, so it stays.

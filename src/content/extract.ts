@@ -513,8 +513,11 @@ function hintOf(el: HTMLInputElement | HTMLTextAreaElement, label: string): { hi
   const parts: string[] = [];
   for (const id of (el.getAttribute("aria-describedby") ?? "").split(/\s+/).filter(Boolean)) {
     const d = el.ownerDocument.getElementById(id);
-    if (d) parts.push(d.textContent ?? "");
+    // A custom dropdown points at its own "Select..." placeholder: that is not help text.
+    if (d && !/placeholder/i.test(id)) parts.push(d.textContent ?? "");
   }
+  const own = descriptionOf(el);
+  if (own) parts.push(own);
   // The nearest neighbours only (help text sits next to its box), up to the next field or label in either direction.
   for (const node of [el, el.parentElement]) {
     if (!node) continue;
@@ -529,6 +532,20 @@ function hintOf(el: HTMLInputElement | HTMLTextAreaElement, label: string): { hi
   }
   const hint = [...new Set(parts.map((p) => p.replace(/\s+/g, " ").trim()).filter((p) => p && p !== label))].join(" ").slice(0, 500);
   return hint ? { hint } : {};
+}
+
+/** The question's own description paragraph (Greenhouse renders it as "<field id>-description", linked only from text
+ * boxes). Read for every kind of field, so an employer's rule written under a Yes/No question ("AI policy", "you
+ * confirm your answers are your own") is seen. One id lookup per field. */
+function descriptionOf(el: Element): string | undefined {
+  const name = el.getAttribute("name") ?? "";
+  // A checkbox group shares one description: "question_1[]" → "question_1-description".
+  for (const id of new Set([el.id, name, name.replace(/\[\]$/, "")])) {
+    if (!id) continue;
+    const t = el.ownerDocument.getElementById(`${id}-description`)?.textContent?.replace(/\s+/g, " ").trim();
+    if (t) return t.slice(0, 500);
+  }
+  return undefined;
 }
 
 export function extractFields(root: ParentNode): ExtractedField[] {
@@ -590,7 +607,9 @@ export function extractFields(root: ParentNode): ExtractedField[] {
         autocomplete: el.getAttribute("autocomplete") ?? "",
         placeholder: el.getAttribute("placeholder") ?? "",
         maxLength: (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && el.maxLength > 0 ? el.maxLength : undefined,
-        ...(el instanceof HTMLTextAreaElement || (el instanceof HTMLInputElement && el.type === "text") ? hintOf(el, label) : {}),
+        ...(el instanceof HTMLTextAreaElement || (el instanceof HTMLInputElement && el.type === "text")
+          ? hintOf(el, label)
+          : ((d) => (d && d !== label ? { hint: d } : {}))(descriptionOf(el))),
       },
     });
   }
@@ -605,6 +624,7 @@ export function extractFields(root: ParentNode): ExtractedField[] {
         descriptor: {
           key: `f${counter++}`, label: cleanLabel(raw), control: "checkbox", required: isRequired(group, raw), options: [],
           name: first.name, autocomplete: "", placeholder: "",
+          ...((d) => (d ? { hint: d } : {}))(descriptionOf(first)),
         },
       });
       continue;
@@ -627,6 +647,7 @@ export function extractFields(root: ParentNode): ExtractedField[] {
         name: key.slice(key.indexOf(":") + 1),
         autocomplete: "",
         placeholder: "",
+        ...((d) => (d ? { hint: d } : {}))(descriptionOf(first)),
       },
     });
   }

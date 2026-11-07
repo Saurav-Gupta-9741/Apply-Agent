@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T22:30:56.837Z",
+  "generatedAt": "2026-11-07T10:23:55.390Z",
   "draws": 20,
   "formsPoolSize": 256,
   "checkpoints": [
@@ -17,7 +17,7 @@
         "minAutoShare": "18.8%",
         "maxAutoShare": "75.0%",
         "meanReused": 0.4,
-        "meanAssisted": 0.7,
+        "meanAssisted": 0.4,
         "meanAsk": 8.5,
         "meanHumanOnly": 0.8,
         "wrong": {
@@ -34,7 +34,7 @@
         "minAutoShare": "22.7%",
         "maxAutoShare": "76.9%",
         "meanReused": 2.1,
-        "meanAssisted": 0.7,
+        "meanAssisted": 0.4,
         "meanAsk": 7.8,
         "meanHumanOnly": 0.4,
         "wrong": {
@@ -51,7 +51,7 @@
         "minAutoShare": "0.0%",
         "maxAutoShare": "88.0%",
         "meanReused": 2.8,
-        "meanAssisted": 0.7,
+        "meanAssisted": 0.1,
         "meanAsk": 6.2,
         "meanHumanOnly": 0.7,
         "wrong": {
@@ -68,7 +68,7 @@
         "minAutoShare": "28.6%",
         "maxAutoShare": "92.9%",
         "meanReused": 2.8,
-        "meanAssisted": 1.3,
+        "meanAssisted": 0.8,
         "meanAsk": 7.2,
         "meanHumanOnly": 0.6,
         "wrong": {
@@ -88,7 +88,7 @@
         "minAutoShare": "18.8%",
         "maxAutoShare": "75.0%",
         "meanReused": 0.3,
-        "meanAssisted": 0.7,
+        "meanAssisted": 0.4,
         "meanAsk": 8.3,
         "meanHumanOnly": 0.8,
         "wrong": {
@@ -105,7 +105,7 @@
         "minAutoShare": "22.7%",
         "maxAutoShare": "81.8%",
         "meanReused": 2,
-        "meanAssisted": 0.7,
+        "meanAssisted": 0.4,
         "meanAsk": 7.5,
         "meanHumanOnly": 0.4,
         "wrong": {
@@ -122,7 +122,7 @@
         "minAutoShare": "0.0%",
         "maxAutoShare": "88.0%",
         "meanReused": 2.6,
-        "meanAssisted": 0.7,
+        "meanAssisted": 0.1,
         "meanAsk": 6,
         "meanHumanOnly": 0.7,
         "wrong": {
@@ -139,7 +139,7 @@
         "minAutoShare": "28.6%",
         "maxAutoShare": "92.9%",
         "meanReused": 2.5,
-        "meanAssisted": 1.3,
+        "meanAssisted": 0.8,
         "meanAsk": 7.2,
         "meanHumanOnly": 0.6,
         "wrong": {
@@ -159,7 +159,7 @@
         "minAutoShare": "18.8%",
         "maxAutoShare": "75.0%",
         "meanReused": 0.3,
-        "meanAssisted": 0.7,
+        "meanAssisted": 0.4,
         "meanAsk": 8.2,
         "meanHumanOnly": 0.8,
         "wrong": {
@@ -176,7 +176,7 @@
         "minAutoShare": "26.7%",
         "maxAutoShare": "84.6%",
         "meanReused": 2.1,
-        "meanAssisted": 0.7,
+        "meanAssisted": 0.4,
         "meanAsk": 7.3,
         "meanHumanOnly": 0.4,
         "wrong": {
@@ -193,7 +193,7 @@
         "minAutoShare": "0.0%",
         "maxAutoShare": "88.0%",
         "meanReused": 2.6,
-        "meanAssisted": 0.7,
+        "meanAssisted": 0.1,
         "meanAsk": 5.9,
         "meanHumanOnly": 0.7,
         "wrong": {
@@ -210,7 +210,7 @@
         "minAutoShare": "28.6%",
         "maxAutoShare": "92.9%",
         "meanReused": 2.5,
-        "meanAssisted": 1.3,
+        "meanAssisted": 0.8,
         "meanAsk": 7.2,
         "meanHumanOnly": 0.6,
         "wrong": {
@@ -230,7 +230,7 @@
         "minAutoShare": "18.8%",
         "maxAutoShare": "75.0%",
         "meanReused": 0.3,
-        "meanAssisted": 0.6,
+        "meanAssisted": 0.4,
         "meanAsk": 7.5,
         "meanHumanOnly": 0.8,
         "wrong": {
@@ -247,7 +247,7 @@
         "minAutoShare": "26.7%",
         "maxAutoShare": "85.7%",
         "meanReused": 1.3,
-        "meanAssisted": 0.7,
+        "meanAssisted": 0.4,
         "meanAsk": 7.2,
         "meanHumanOnly": 0.4,
         "wrong": {
@@ -264,7 +264,7 @@
         "minAutoShare": "0.0%",
         "maxAutoShare": "88.0%",
         "meanReused": 1.6,
-        "meanAssisted": 0.7,
+        "meanAssisted": 0.1,
         "meanAsk": 5.8,
         "meanHumanOnly": 0.7,
         "wrong": {
@@ -281,7 +281,7 @@
         "minAutoShare": "35.7%",
         "maxAutoShare": "92.9%",
         "meanReused": 1.1,
-        "meanAssisted": 1.3,
+        "meanAssisted": 0.8,
         "meanAsk": 6.6,
         "meanHumanOnly": 0.6,
         "wrong": {

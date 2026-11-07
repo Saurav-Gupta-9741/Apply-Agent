@@ -71,7 +71,7 @@ interface Row {
   /** Fields whose value changed while reading (must be none). */
   changed?: string[];
   error?: string;
-  fields?: Array<{ label: string; control: string; required: boolean; options: number; section?: string; workBlock?: number;
+  fields?: Array<{ label: string; hint?: string; control: string; required: boolean; options: number; section?: string; workBlock?: number;
     decision: string; status: string }>;
 }
 
@@ -185,7 +185,7 @@ test("coverage of real application forms (read-only)", async ({ ext, context }) 
         row.changed = changedFields(before, await valuesOf(page));
         row.untouched = !row.changed.length;
         row.fields = report.fields.map((f) => ({
-          label: f.field.label, control: f.field.control, required: f.field.required, options: f.field.options.length,
+          label: f.field.label, hint: f.field.hint, control: f.field.control, required: f.field.required, options: f.field.options.length,
           section: f.field.section, workBlock: f.field.workBlock, decision: describeDecision(f.decision), status: f.status,
         }));
         if ((saved[job.platform] ?? 0) < CORPUS_PER_PLATFORM && report.fields.length >= 4) {

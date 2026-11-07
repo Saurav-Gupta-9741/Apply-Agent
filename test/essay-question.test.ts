@@ -77,3 +77,13 @@ describe("essay questions in other languages (real wordings)", () => {
   ])("not an essay: %s", (label) => expect(ta(label)).toBe(false));
   it.each(["請分享你目前所任職的公司", "請分享你目前的職稱"])("one-line fact: %s", (label) => expect(tx(label)).toBe(false));
 });
+
+describe("flaws found on live forms (2026-11-07)", () => {
+  it.each([
+    "How did your hear about this position?",
+    'If you answered "Yes" to the above question, please provide additional information here:',
+    "If you answered yes to the previous question, tell us more.",
+    "Caso tenha respondido SIM na pergunta anterior, por favor, descreva",
+  ])("no draft: %s", (label) => expect(ta(label)).toBe(false));
+  it("still drafts a normal essay", () => expect(ta("Why do you want to work at Discord?")).toBe(true));
+});
