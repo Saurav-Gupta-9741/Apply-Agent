@@ -31,10 +31,10 @@ test("questions the rules don't know are filled through the model, safely", asyn
   const report = await runIn(ext, page, { type: "RUN", mode: "review" });
   const by = (label: string) => report?.fields.find((f) => f.field.label === label);
   console.log("FIELDS", JSON.stringify(report?.fields.map((f) => [f.field.label, f.status, f.decision.kind])));
-  await expect(page.locator("#heard")).toHaveValue("LinkedIn"); // "Where did you FIRST hear…": no rule matches the wording
+  await expect(page.locator("#heard")).toHaveValue("LinkedIn"); // "Through which source did you find this job?": no rule matches the wording (the rules learnt "Where did you first hear…" from the live run)
   await expect(page.locator("#sex")).toHaveValue("Female");
   // Round 5: the panel marks these "AI" (the model read the wording); a field the rules knew is not marked.
-  expect(by("Where did you first hear about this role?")?.understood).toBe(true);
+  expect(by("Through which source did you find this job?")?.understood).toBe(true);
   expect(by("First name")?.understood).toBeUndefined();
   // Someone else's details and a yes/no question stay with the user, whatever the model reads.
   await expect(page.locator("#mentor")).toHaveValue("");
