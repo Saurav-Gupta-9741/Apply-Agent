@@ -154,7 +154,7 @@ function judge(f, row) {
     return (want === "yes" ? YES.test(c) : NO.test(c)) ? r("correct", "qa_travel", `travel up to ${facts.travelPercent}%`) : r("wrong", "qa_travel", `"${chosen ?? value}" for ${pct}% travel`);
   }
   if (qa === "relocation") {
-    if (/located|location|based|reside|resident|live|living|currently in|are you in/.test(label)) return r("wrong", "qa_relocation_residence", "relocation and where the candidate lives in one question");
+    if (/located|based|reside|resident|live|living|currently in|are you in/.test(label)) return r("wrong", "qa_relocation_residence", "relocation and where the candidate lives in one question");
     return YES.test(c) ? r("correct", "qa_relocation", "willing to relocate, as saved") : r("unclear", "qa_relocation", "");
   }
   if (qa === "how you heard") return /linkedin/.test(c) ? r("correct", "qa_heard", "LinkedIn, as saved") : r("unclear", "qa_heard", "");

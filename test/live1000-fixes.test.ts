@@ -398,7 +398,7 @@ describe("live run 3: salary only in the job's own currency; pronoun follow-up b
     const q = field("What are your salary expectations?", "text");
     expect(decide(q, me, [], job("India"))).toMatchObject({ kind: "answer", value: "18 LPA" });
     for (const c of ["United States", "Germany", "Brazil"]) expect(decide(q, me, [], job(c))).not.toMatchObject({ kind: "answer" });
-    expect(decide(q, me, [])).not.toMatchObject({ kind: "answer" }); // job country unknown
+    expect(decide(q, me, [])).toMatchObject({ kind: "answer", value: "18 LPA" }); // job country unknown: the value names its currency
   });
   it("a question that names rupees is filled wherever the job is", () => {
     expect(decide(field("Please share your expected total CTC in INR (Lakhs per annum).", "text"), me, [], job("United States"))).toMatchObject({ kind: "answer", value: "18 LPA" });
@@ -413,5 +413,12 @@ describe("live run 3: salary only in the job's own currency; pronoun follow-up b
       expect(decide(field(l, "text"), me, [])).not.toMatchObject({ kind: "answer" });
     }
     expect(decide(field("Pronouns", "text"), me, [])).toMatchObject({ kind: "answer", value: "she/her" });
+  });
+});
+
+describe("live run 3: the plain relocation question keeps its answer", () => {
+  it("'Are you willing to relocate to the required job location?' still uses the Quick answer", () => {
+    const me = { ...INDIA_PROFILE, facts: { workCountries: "India", noticePeriod: "", currentCtc: "", expectedCtc: "", relocate: "Yes" as const, heardFrom: "", gender: "" as const, hispanic: "" as const, race: "", veteran: "" as const, disability: "" as const } };
+    expect(decide(field("Are you willing to relocate to the required job location?", "select", ["Yes", "No"]), me, [])).toMatchObject({ kind: "answer", value: "Yes" });
   });
 });

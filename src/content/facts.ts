@@ -275,12 +275,12 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts, page?: PageFact
   const valueCurrency = kindOf(value, CURRENCY);
   // Asked in a currency: the saved value must say the same one (a bare number is only taken as rupees).
   if (askedCurrency && askedCurrency !== (valueCurrency ?? "INR")) return undefined;
-  // No currency named: the job's country decides it ("18 LPA" means nothing to a US, German or Brazilian form; live
-  // run 3 typed it on all three). Filled only where every country of the job pays in the saved value's currency; an
-  // unknown job country is asked.
+  // No currency named: a job in a country that pays in another currency is asked ("18 LPA" means nothing to a US,
+  // German or Brazilian form; live run 3 typed it on all three). When the job's country is not known, the saved value
+  // names its own currency ("18 LPA", "€60,000"), as before.
   if (!askedCurrency) {
     const jobCurrencies = (page?.jobCountries ?? []).map((c) => COUNTRY_CURRENCY[c] ?? "OTHER");
-    if (!jobCurrencies.length || jobCurrencies.some((c) => c !== (valueCurrency ?? "INR"))) return undefined;
+    if (jobCurrencies.some((c) => c !== (valueCurrency ?? "INR"))) return undefined;
   }
   // "Please specify Monthly/Annually": the form takes either, so it names no period.
   const periods = PERIOD.filter(([, re]) => re.test(asked.toLowerCase())).length;
@@ -765,7 +765,7 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     // where the user lives AND relocation in one question, with a "Yes, I currently reside in…" choice. The Quick
     // answer is only for the plain "Are you willing to relocate?": a question that also asks where the user is goes
     // to the user.
-    if (/\b(located|location|based|reside|resident|residing|live|living|currently in|are you in|already in)\b/i.test(normalize(field.label))) return undefined;
+    if (/\b(located|based|reside|resident|residing|live|living|currently in|are you in|already in)\b/i.test(normalize(field.label))) return undefined;
     if (yesNoField(field)) {
       const match = field.options.length ? (yesNoOption(field.options, facts.relocate) ?? facts.relocate) : facts.relocate;
       return answer(match, "relocation");

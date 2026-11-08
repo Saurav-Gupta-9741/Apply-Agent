@@ -1,4 +1,5 @@
 {
-  "autoFilled": 583,
-  "wrong": 0
+  "autoFilled": 520,
+  "wrong": 0,
+  "note": "2026-11-08: lowered from 583. The eval uses one Indian candidate (salary in rupees) for US/UK/DE jobs; live run 3 showed rupee salaries typed on non-Indian jobs are wrong, so those are now asked (63), and located-or-relocate questions are asked (4). India: 583 auto, 0 wrong. Every country: 0 wrong."
 }
