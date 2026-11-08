@@ -1,0 +1,163 @@
+{
+ "answer | Are you willing to relocate? | are you willing to relocate? | yes": {
+  "verdict": "correct",
+  "reason": "the saved answer to the same question"
+ },
+ "profile | degree | what is your highest level of completed education? | bachelor's degree": {
+  "verdict": "correct",
+  "reason": "highest education = the profile degree"
+ },
+ "profile | degree | what is your highest level of education? | bachelor's degree": {
+  "verdict": "correct",
+  "reason": "highest education = the profile degree"
+ },
+ "profile | degree | what is your highest level of education completed? | bachelors degree": {
+  "verdict": "correct",
+  "reason": "highest education = the profile degree"
+ },
+ "profile | postalCode | zip code / postal code (non-u.s. based candidates, please enter \"00000\") | 00000": {
+  "verdict": "correct",
+  "reason": "the form tells non-US candidates to enter 00000"
+ },
+ "resume |  | 添付 | ": {
+  "verdict": "correct",
+  "reason": "resume in the attachment box (Japanese form)"
+ },
+ "profile | firstName | 名 | asha": {
+  "verdict": "correct",
+  "reason": "名 = given name"
+ },
+ "profile | lastName | 姓 | verma": {
+  "verdict": "correct",
+  "reason": "姓 = family name"
+ },
+ "profile | email | 電子メール | asha.verma.test@example.com": {
+  "verdict": "correct",
+  "reason": "email"
+ },
+ "profile | phone | 電話 | +91 90000 00000": {
+  "verdict": "correct",
+  "reason": "phone"
+ },
+ "profile | school | in which school are you enrolled for this work-study program (apprentissage) ? | state technical university": {
+  "verdict": "wrong",
+  "override": true,
+  "reason": "the candidate graduated in 2021; the question asks which school she is enrolled in now (the existing guard never fired: its \\b were backspace characters)"
+ },
+ "profile | fullName | first & last name | asha verma": {
+  "verdict": "correct",
+  "reason": "first and last name in one box"
+ },
+ "profile | fullName | name and surname | asha verma": {
+  "verdict": "correct",
+  "reason": "name and surname in one box"
+ },
+ "profile | country | please select the country you are applying from. | india": {
+  "verdict": "correct",
+  "reason": "the candidate applies from India"
+ },
+ "profile | fullName | preferred first name & last name | asha verma": {
+  "verdict": "correct",
+  "reason": "the candidate has no other preferred name"
+ },
+ "answer | Veteran status | what is your military status? | i don't wish to answer": {
+  "verdict": "correct",
+  "reason": "the saved veteran decline"
+ },
+ "answer | Will you now or in the future require visa sponsorship to work in the United States? | do you now or will you in the future require immigration sponsorship to work at cloudflare? | yes": {
+  "verdict": "correct",
+  "reason": "the job is in the US; the candidate needs sponsorship there"
+ },
+ "answer | Will you now or in the future require visa sponsorship to work in the United States? | would you need a visa / work permit for the role in the location you are applying for? | yes": {
+  "verdict": "correct",
+  "reason": "the job is in the US; the candidate needs sponsorship there"
+ },
+ "profile | email | get industry insights and updates from stripe | asha.verma.test@example.com": {
+  "verdict": "wrong",
+  "reason": "a marketing newsletter box on the page, not the application: typing the email subscribes the user"
+ },
+ "profile | location | which location are you the closest to? | pune": {
+  "verdict": "wrong",
+  "reason": "asks which of the employer offices is closest (London/SF/NY/Paris/Toronto/Montreal); Pune is not an answer"
+ },
+ "answer | Quick answers › where you live | are you currently residing in canada? | no": {
+  "verdict": "correct",
+  "reason": "the candidate lives in Pune, India"
+ },
+ "resume |  | anhangen | ": {
+  "verdict": "correct",
+  "reason": "the resume upload box (German: attach)"
+ },
+ "answer | Quick answers › where you live | are you currently based in the london area? | no": {
+  "verdict": "correct",
+  "reason": "the candidate lives in Pune, India"
+ },
+ "answer | How did you hear about this job? | how did you find this job? | linkedin": {
+  "verdict": "correct",
+  "reason": "the saved How did you hear answer"
+ },
+ "answer | Quick answers › where you live | are you currently located in pune? | yes": {
+  "verdict": "correct",
+  "reason": "the candidate lives in Pune"
+ },
+ "answer | Will you now or in the future require visa sponsorship to work in the United States? | do you, now or in the future, require a work permit, visa, or additional right to work support for the country where you are applying to work? | yes": {
+  "verdict": "correct",
+  "reason": "the job is in the US; the candidate needs sponsorship there"
+ },
+ "answer | Quick answers › notice period | please indicate your notice period in months | 1": {
+  "verdict": "correct",
+  "reason": "the saved 30-day notice period in the unit asked"
+ },
+ "answer | Race / Ethnicity | voce se identifica com qual raca e/ou cor? | prefiro nao declarar": {
+  "verdict": "correct",
+  "reason": "the saved EEO decline, in the form language"
+ },
+ "answer | Gender | qual a sua identidade de genero? | prefiro nao responder": {
+  "verdict": "correct",
+  "reason": "the saved EEO decline, in the form language"
+ },
+ "answer | Disability status | voce se autodeclara pessoa com deficiencia (pcd), nos termos da legislacao brasileira? | prefiro nao responder": {
+  "verdict": "correct",
+  "reason": "the saved EEO decline, in the form language"
+ },
+ "answer | Gender | com qual genero voce se auto identifica? | prefiro nao responder": {
+  "verdict": "correct",
+  "reason": "the saved EEO decline, in the form language"
+ },
+ "answer | Race / Ethnicity | com qual raca voce se auto identifica? | prefiro nao responder": {
+  "verdict": "correct",
+  "reason": "the saved EEO decline, in the form language"
+ },
+ "answer | Quick answers › notice period | notice period (months) | 1": {
+  "verdict": "correct",
+  "reason": "the saved 30-day notice period in the unit asked"
+ },
+ "answer | Disability status | en cabify nos comprometemos a crear un entorno inclusivo para todas las personas. si cuentas con un certificado de discapacidad superior al 33%, nos gustaria sa | prefiero no responder": {
+  "verdict": "correct",
+  "reason": "the saved EEO decline, in the form language"
+ },
+ "answer | Quick answers › sponsorship | do you currently, or will you in the future, require visa sponsorship to work in the country where this position is based? | no": {
+  "verdict": "correct",
+  "reason": "the job is in India (Bangalore / Tamil Nadu): no sponsorship needed"
+ },
+ "answer | Quick answers › sponsorship | do you, now or in the future, require a work permit, visa, or additional right to work support for the country where you are applying to work? | no": {
+  "verdict": "correct",
+  "reason": "the job is in India (Bangalore / Tamil Nadu): no sponsorship needed"
+ },
+ "answer | Disability status | voce possui alguma deficiencia/neurodiversidade? | prefiro nao informar": {
+  "verdict": "correct",
+  "reason": "the saved EEO decline, in the form language"
+ },
+ "answer | Disability status | qual seu tipo de deficiencia? | prefiro nao informar": {
+  "verdict": "correct",
+  "reason": "the saved EEO decline, in the form language"
+ },
+ "answer | Disability status | besteht eine schwerbehinderung oder bist du einer schwerbehinderten person gleichgestellt? | keine angabe": {
+  "verdict": "correct",
+  "reason": "the saved EEO decline, in the form language"
+ },
+ "answer | Quick answers › notice period | what is your notice period (in days)? | 30": {
+  "verdict": "correct",
+  "reason": "the saved 30-day notice period in the unit asked"
+ }
+}

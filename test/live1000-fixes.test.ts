@@ -361,3 +361,57 @@ describe("live run 3: the future-sponsorship Quick answer is only about the user
     expect(decide(yn("Will you now or in the future require visa sponsorship to work in India?"), declined, [])).not.toMatchObject({ kind: "answer" });
   });
 });
+
+// Live run 3 (Quick answers on): two more wrong fills.
+describe("live run 3: transgender decline and located-or-relocate questions", () => {
+  const base = { workCountries: "India", noticePeriod: "", currentCtc: "", expectedCtc: "", relocate: "Yes" as const, heardFrom: "", gender: "" as const, hispanic: "" as const, race: "", veteran: "" as const, disability: "" as const };
+  const withFacts = (extra: object) => ({ ...INDIA_PROFILE, facts: { ...base, ...extra } });
+  const SAME = "Is your gender identity the same as the sex you were assigned at birth?";
+  it("gocardless / gymshark: a saved Decline stays a decline on 'same as assigned at birth' (never 'No')", () => {
+    const d = decide(field(SAME, "select", ["Yes", "No", "I prefer not to say"]), withFacts({ transgender: "Decline" }), []);
+    expect(d).toMatchObject({ kind: "answer", value: "I prefer not to say" });
+    const noDecline = decide(field(SAME, "select", ["Yes", "No"]), withFacts({ transgender: "Decline" }), []);
+    expect(noDecline).not.toMatchObject({ kind: "answer", value: "No" });
+    expect(noDecline).not.toMatchObject({ kind: "answer", value: "Yes" });
+  });
+  it("the reversal still holds for Yes / No answers", () => {
+    expect(decide(field(SAME, "select", ["Yes", "No"]), withFacts({ transgender: "No" }), [])).toMatchObject({ kind: "answer", value: "Yes" });
+    expect(decide(field(SAME, "select", ["Yes", "No"]), withFacts({ transgender: "Yes" }), [])).toMatchObject({ kind: "answer", value: "No" });
+  });
+  it("bill.com: 'currently located in, or open to relocating to' is left for the user (never 'Yes, I currently reside…')", () => {
+    const label = "Are you currently located in, or open to relocating to, one BILL's remote-eligible states?";
+    const d = decide(field(label, "select", ["Yes, I currently reside in one of the eligible states", "Yes, I am open to relocating", "No"]), withFacts({}), []);
+    expect(d).not.toMatchObject({ kind: "answer" });
+    expect(decide(field("Are you in Catalonia (Spain) or willing to relocate?", "select", ["Yes", "No"]), withFacts({}), [])).not.toMatchObject({ kind: "answer" });
+  });
+  it("the plain relocation question still uses the Quick answer", () => {
+    expect(decide(field("Are you willing to relocate?", "select", ["Yes", "No"]), withFacts({}), [])).toMatchObject({ kind: "answer", value: "Yes" });
+    expect(decide(field("Are you open to relocation?", "select", ["Yes", "No"]), withFacts({}), [])).toMatchObject({ kind: "answer", value: "Yes" });
+  });
+});
+
+describe("live run 3: salary only in the job's own currency; pronoun follow-up boxes", () => {
+  const base = { workCountries: "India", noticePeriod: "30 days", currentCtc: "12 LPA", expectedCtc: "18 LPA", relocate: "" as const, heardFrom: "", gender: "" as const, hispanic: "" as const, race: "", veteran: "" as const, disability: "" as const, pronouns: "she/her" };
+  const me = { ...INDIA_PROFILE, facts: base };
+  const job = (c: string) => ({ jobCountries: [c], url: "https://job-boards.greenhouse.io/x/jobs/1", company: "x" }) as unknown as PageFacts;
+  it("'What are your salary expectations?' is filled for a job in India, and left for the user on US / German / Brazilian jobs", () => {
+    const q = field("What are your salary expectations?", "text");
+    expect(decide(q, me, [], job("India"))).toMatchObject({ kind: "answer", value: "18 LPA" });
+    for (const c of ["United States", "Germany", "Brazil"]) expect(decide(q, me, [], job(c))).not.toMatchObject({ kind: "answer" });
+    expect(decide(q, me, [])).not.toMatchObject({ kind: "answer" }); // job country unknown
+  });
+  it("a question that names rupees is filled wherever the job is", () => {
+    expect(decide(field("Please share your expected total CTC in INR (Lakhs per annum).", "text"), me, [], job("United States"))).toMatchObject({ kind: "answer", value: "18 LPA" });
+  });
+  it("questions about salary that do not ask for the figure are left for the user", () => {
+    for (const l of ["If there's anything else you'd like to mention regarding expected salary, please let us know here", "Salary growth expectations", "What is your current fixed/variable compensation breakdown?"]) {
+      expect(decide(field(l, "text"), me, [], job("India"))).not.toMatchObject({ kind: "answer" });
+    }
+  });
+  it("pronoun follow-up boxes for pronouns not in the list are left empty", () => {
+    for (const l of ["If your Personal Pronoun is not listed above, how would you like to be addressed?", "Self describe - I prefer to use the following pronouns:"]) {
+      expect(decide(field(l, "text"), me, [])).not.toMatchObject({ kind: "answer" });
+    }
+    expect(decide(field("Pronouns", "text"), me, [])).toMatchObject({ kind: "answer", value: "she/her" });
+  });
+});

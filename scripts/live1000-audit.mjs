@@ -131,6 +131,37 @@ function judge(f, row) {
     if (!ok) return r("wrong", "option_not_offered", `"${pickedText}" is not one of the question's options (${apiOpts.slice(0, 8).join(" / ")}${apiOpts.length > 8 ? " / ..." : ""})`);
   }
   if (chosen && /\+\d{1,4}\b/.test(chosen) && f.name !== "country" && !/phone|dial|country code|telefono/.test(q)) return r("wrong", "option_not_offered", `"${chosen}" is a phone country code: picked from the phone's list`);
+  // Quick answers (the candidate's onboarding settings), judged against those settings.
+  const qa = String(f.matched ?? "").startsWith("Quick answers") ? String(f.matched).replace(/^Quick answers › /, "") : "";
+  const facts = candidate.profile?.facts ?? {};
+  if (qa === "pronouns") {
+    if (/not listed|self[- ]?describ|if (other|not|none)|otherwise/.test(label)) return r("wrong", "qa_pronoun_followup", "a box only for pronouns the list leaves out");
+    return /she/.test(c) ? r("correct", "qa_pronouns", "the candidate's pronouns") : r("wrong", "qa_pronouns", `"${chosen ?? value}" is not she/her`);
+  }
+  if (qa === "expected CTC" || qa === "current CTC") {
+    if (/anything else|growth|breakdown|split|of this amount/.test(label)) return r("wrong", "qa_salary_question", "the question does not ask for the figure");
+    const jc = jobCountries(META[row?.url]);
+    const rupees = /\binr\b|rupee|lakh|lpa|\bctc\b|₹/.test(q);
+    if (rupees || (jc.length && jc.every((x) => x === "India"))) return r("correct", "qa_salary", "the saved figure, in rupees, for a job in India or a question in rupees");
+    return r("wrong", "qa_salary_currency", `rupees typed for a job in ${jc.join(", ") || "an unknown country"}`);
+  }
+  if (qa === "notice period") return /30 days|1 month|1 mes|un mes|1 mois|30 dias/.test(c) ? r("correct", "qa_notice", "the saved notice period") : r("unclear", "qa_notice", "");
+  if (qa === "accommodation") return /^(no|none|nao|non|nein|keine)\b/.test(c) ? r("correct", "qa_accommodation", "no accommodation needed, as saved") : r("unclear", "qa_accommodation", "");
+  if (qa === "onsite" || qa === "work mode") return YES.test(c) || /^oui|^si|^sim/.test(c) ? r("correct", "qa_onsite", "work mode: any") : r("unclear", "qa_onsite", "");
+  if (qa === "travel") {
+    const pct = Number((label.match(/(\d{1,3}) ?%/) ?? [])[1]);
+    const want = Number.isFinite(pct) ? (pct <= Number(facts.travelPercent ?? 100) ? "yes" : "no") : "yes";
+    return (want === "yes" ? YES.test(c) : NO.test(c)) ? r("correct", "qa_travel", `travel up to ${facts.travelPercent}%`) : r("wrong", "qa_travel", `"${chosen ?? value}" for ${pct}% travel`);
+  }
+  if (qa === "relocation") {
+    if (/located|location|based|reside|resident|live|living|currently in|are you in/.test(label)) return r("wrong", "qa_relocation_residence", "relocation and where the candidate lives in one question");
+    return YES.test(c) ? r("correct", "qa_relocation", "willing to relocate, as saved") : r("unclear", "qa_relocation", "");
+  }
+  if (qa === "how you heard") return /linkedin/.test(c) ? r("correct", "qa_heard", "LinkedIn, as saved") : r("unclear", "qa_heard", "");
+  if (/^(gender|race|veteran|disability|hispanic|sexual orientation|transgender)$/.test(qa)) {
+    if (/same as|assigned at birth/.test(label)) return DECLINE.test(c) ? r("correct", "qa_eeo", "declined") : r("wrong", "qa_transgender_reversed", `"${chosen ?? value}" though the candidate declined`);
+    return DECLINE.test(c) || /prefiro nao|prefiero no|keine angabe/.test(c) ? r("correct", "qa_eeo", "declined, as saved") : r("wrong", "qa_eeo", `"${chosen ?? value}" though the candidate declined`);
+  }
   // Consent and attestation boxes: a legal act the extension never performs on its own.
   const consentish = /\bi (hereby )?(certify|attest|acknowledge|agree|consent|confirm|declare|understand|authori[sz]e)\b|privacy (policy|notice)|terms (of|and) |arbitrat|attestation|by (checking|ticking|submitting)/;
   if ((f.control === "checkbox" || consentish.test(label)) && consentish.test(q) && !(f.decision === "answer" && loose(f.matched) === loose(f.label))) {
@@ -177,6 +208,9 @@ function judge(f, row) {
       return yes ? r("correct", "sponsor_other_country", `needs sponsorship for ${cs.join(", ")}`) : r("wrong", "sponsor_other_country", `answered "${chosen ?? value}" though sponsorship is needed outside India`);
     }
     if (inverted && yes) return r("wrong", "sponsor_inverted", `inverted question ("do NOT require") answered "${chosen ?? value}"`);
+    // "…to continue working in your country of residence?", "…to work where you reside?": India, where the candidate
+    // needs no sponsorship.
+    if (!inverted && /resid|where you (currently )?live|you (currently )?live in|your (current |home )?country/.test(label)) return no ? r("correct", "sponsor_residence", "no sponsorship where the candidate lives (India)") : r("wrong", "sponsor_residence", `"${chosen ?? value}" though no sponsorship is needed where the candidate lives`);
     const jc = jobCountries(META[row?.url]);
     if (!inverted && jc.length === 1 && jc[0] === "India") return no ? r("correct", "sponsor_job_country", "no sponsorship for a job in India") : r("wrong", "sponsor_job_country", `"${chosen ?? value}" for a job in India`);
     if (!inverted && jc.length && !jc.includes("India")) return yes ? r("correct", "sponsor_job_country", `needs sponsorship for a job in ${jc.join(", ")}`) : no ? r("wrong", "sponsor_job_country", `No for a job in ${jc.join(", ")} (${META[row.url].location}); needs sponsorship outside India`) : r("unclear", "sponsor", "");
