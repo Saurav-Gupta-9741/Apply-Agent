@@ -31,26 +31,28 @@ const FULL: Profile = {
 };
 
 describe("rule probes from audit", () => {
-  function testField(label: string, control: FieldDescriptor["control"] = "text") {
+  // jobCountries: a salary in rupees is typed only for a job paid in rupees (live run 3), so the salary probes use a job
+  // in India; the others keep the US job.
+  function testField(label: string, control: FieldDescriptor["control"] = "text", jobCountries = ["United States"]) {
     return decide(
       { key: "k", label, control, required: true, options: [], name: "", autocomplete: "", placeholder: "" },
       FULL,
       [],
-      { jobCountries: ["United States"] }
+      { jobCountries }
     );
   }
 
   it("never fills city into salary questions", () => {
-    const s1 = testField("What is your expected salary in your city of residence?");
+    const s1 = testField("What is your expected salary in your city of residence?", "text", ["India"]);
     expect(s1).toEqual({ kind: "answer", question: "Quick answers › expected CTC", value: "20 LPA" });
 
-    const s2 = testField("Expected compensation (city and state cost-of-living adjusted)");
+    const s2 = testField("Expected compensation (city and state cost-of-living adjusted)", "text", ["India"]);
     expect(s2).toEqual({ kind: "answer", question: "Quick answers › expected CTC", value: "20 LPA" });
 
-    const s3 = testField("Current salary in your city of residence");
+    const s3 = testField("Current salary in your city of residence", "text", ["India"]);
     expect(s3).toEqual({ kind: "answer", question: "Quick answers › current CTC", value: "6 LPA" });
 
-    const s4 = testField("Desired annual salary for the city and state you will work in");
+    const s4 = testField("Desired annual salary for the city and state you will work in", "text", ["India"]);
     expect(s4).toEqual({ kind: "answer", question: "Quick answers › expected CTC", value: "20 LPA" });
   });
 

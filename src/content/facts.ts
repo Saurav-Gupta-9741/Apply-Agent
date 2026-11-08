@@ -15,7 +15,9 @@ import { parseRequirement } from "../shared/requirements";
 import { extractTechTerms } from "../shared/techterms";
 
 /** "How did you hear about this job?" in its many wordings. */
-export const HEARD_ABOUT = /how did you (hear|learn|find out|come across)|where did you (hear|learn|find)|how did you find (out about )?(us|this)|where have you (learned|heard) about|how you heard about|source of (your )?application|referral source/;
+// Live run: "How did you first hear about Cockroach Labs?", "How did you first learn about Affirm as an employer?",
+// "Where did you see or hear about this job?", "How did your hear about this position?" were left for the user.
+export const HEARD_ABOUT = /how did you(r)? (first |initially |originally )?(hear|learn|find out|come across)|where did you (first |initially |originally )?(see or hear|hear|learn|find)|how did you find (out about )?(us|this)|where have you (learned|heard) about|how you heard about|source of (your )?application|referral source/;
 
 const answer = (value: string, what: string): Decision => ({ kind: "answer", value, question: `Quick answers › ${what}` });
 
@@ -127,12 +129,21 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   // right to work).
   const needs = NEEDS.test(asked) || /sponsor|parrainage|patrocinio/.test(asked);
   let yes: boolean;
-  if (needs && facts.needsFutureSponsorship) {
-    yes = facts.needsFutureSponsorship === "Yes";
-  } else if (needs) {
-    if (canWorkIn(places[0]!, allowed)) {
+  if (needs) {
+    // "Will you need sponsorship in the future?" in Quick answers is about the countries the user may work in now
+    // (on a temporary permit, or permanently): it never answers for a country the user may not work in at all. Live
+    // run 3 (Affirm, a US job, a user allowed to work in India only): it answered "No" to "Do you require immigration
+    // sponsorship to work … in the United States?". Such a country gets Yes when the user listed it as one they cannot
+    // work in, and is asked otherwise.
+    const inAllowed = canWorkIn(places[0]!, allowed);
+    const inTemp = canWorkIn(places[0]!, tempAllowed);
+    // A user who declined to say is asked: the old code turned a "Decline" into "No".
+    if ((inAllowed || inTemp) && facts.needsFutureSponsorship === "Decline") return undefined;
+    if ((inAllowed || inTemp) && facts.needsFutureSponsorship) {
+      yes = facts.needsFutureSponsorship === "Yes";
+    } else if (inAllowed) {
       yes = false;
-    } else if (canWorkIn(places[0]!, tempAllowed) || isExplicitlyUnauth[0]) {
+    } else if (inTemp || isExplicitlyUnauth[0]) {
       yes = true;
     } else {
       // Unlisted country: the user may hold a visa there that needs no sponsorship. ASK, same as authorization.
@@ -151,6 +162,45 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   const raw = yes ? "Yes" : "No";
   const val = field.options.length ? (yesNoOption(field.options, raw) ?? bestOption(field.options, raw) ?? raw) : raw;
   return answer(val, needs ? "sponsorship" : "work authorization");
+}
+
+/** A saved answer about ONE country ("Will you … require visa sponsorship to work in the United States?" → Yes, saved
+ * with topic and country) answers the same plain question about that same country in other words: "Will you now or in
+ * the future require sponsorship for employment visa status?" on a job in the US (live run: 71 sponsorship and 56
+ * work-authorization questions were left for a user who had saved exactly these). The question must be one plain
+ * yes/no about working (no "not", no second question, no details wanted), about exactly that one country: named in
+ * it, or (when it names none) the job's only country. Anything else stays for the user. */
+export function countryAnswer(field: FieldDescriptor, profile: Profile, answers: Array<{ question: string; answer: string; topic?: SensitiveTopic; country?: string }>, topic: SensitiveTopic, page?: PageFacts): Decision | undefined {
+  if (topic !== "sponsorship" && topic !== "work_authorization") return undefined;
+  const saved = answers.filter((a) => a.topic === topic && a.country && countriesIn(a.country).length === 1 && /^(yes|no)$/i.test(a.answer.trim()));
+  if (!saved.length || !yesNoField(field)) return undefined;
+  const q = theQuestion(field.label);
+  const asked = q?.replace(/\bwithout\b.*$/, "") ?? "";
+  // A yes/no asked with a verb first ("Will you…", "Do you…"): "Your authorization to work in the country where you
+  // live. Please choose the option that describes it." wants a status, not a Yes.
+  if (!q || !YES_NO_QUESTION.test(q) || !ABOUT_WORKING.test(q) || NOT_A_PLAIN_ASK.test(asked) || /\bif (yes|no|so|not)\b/.test(normalize(field.label))) return undefined;
+  const sponsorWords = /sponsor|visa|visum|immigration|parrainage|patrocinio/.test(asked);
+  const authWords = /authori[sz]|right to work|eligib|entitled|legally|lawfully|permit|permis|arbeitserlaubnis|berechtigt/.test(asked);
+  if (sponsorWords && authWords && /\b(and|&)\b/.test(asked)) return undefined; // two questions in one
+  if (topic === "sponsorship" ? !(sponsorWords && NEEDS.test(asked)) : !(authWords && !sponsorWords)) return undefined;
+  let places = countriesIn(field.label);
+  const whole = normalize(field.label);
+  // "…in your country of residence?", "…a visa to remain in your current location?" (GitLab, a US job): where the user
+  // lives, never the job's country. "…in that country?" points at an earlier answer: the user's to recall.
+  if (!places.length && /country (of (your )?(current )?residence|(where|that|which|in which) you (currently )?(live|reside)|you (currently )?(live|reside) in)|where you (currently )?(live|reside)|your (current |home )?(country|location)|current(ly)? (location|based)/.test(whole)) {
+    places = countriesIn(profile.country);
+  } else if (!places.length && /\b(that|this|same) (country|location|place)\b|you selected|previous (response|question|answer)|above/.test(whole)) {
+    return undefined;
+  }
+  // No country named ("…for employment visa status?", "…in the country where this job is located?"): the job's
+  // country, only when the page names exactly one.
+  if (!places.length && page?.jobCountries.length === 1) places = page.jobCountries;
+  if (places.length !== 1) return undefined;
+  const entry = saved.find((a) => countriesIn(a.country!)[0] === places[0]);
+  if (!entry) return undefined;
+  const raw = /^yes$/i.test(entry.answer.trim()) ? "Yes" : "No";
+  const val = field.options.length ? yesNoOption(field.options, raw) : raw;
+  return val ? { kind: "answer", value: val, question: entry.question, reused: true } : undefined;
 }
 
 const CURRENCY: Array<[string, RegExp]> = [
@@ -178,8 +228,19 @@ const kindOf = (text: string, kinds: Array<[string, RegExp]>) => kinds.find(([, 
 
 /** Salary from the quick answers, only when the question asks for exactly that value in the same currency and over
  * the same period (never converted), as one answer (not "current and expected"), and not as a yes/no question. */
-function salaryAnswer(field: FieldDescriptor, facts: QuickFacts): Decision | undefined {
+/** The currency a job's country pays in (for a salary question that names none). */
+const COUNTRY_CURRENCY: Record<string, string> = {
+  India: "INR", "United States": "USD", "United Kingdom": "GBP", Canada: "CAD", Australia: "AUD", Singapore: "SGD", Japan: "JPY",
+  Brazil: "BRL", Mexico: "MXN", Switzerland: "CHF", Germany: "EUR", France: "EUR", Spain: "EUR", Italy: "EUR", Netherlands: "EUR",
+  Ireland: "EUR", Portugal: "EUR", Belgium: "EUR", Austria: "EUR", Finland: "EUR", Greece: "EUR", Luxembourg: "EUR", Estonia: "EUR",
+  Latvia: "EUR", Lithuania: "EUR", Slovakia: "EUR", Slovenia: "EUR", Croatia: "EUR", Malta: "EUR", Cyprus: "EUR",
+};
+
+function salaryAnswer(field: FieldDescriptor, facts: QuickFacts, page?: PageFacts): Decision | undefined {
   const q = normalize(field.label);
+  // Not a request for the figure itself (live run 3): "If there's anything else you'd like to mention regarding expected
+  // salary…", "Salary growth expectations", "…fixed/variable compensation breakdown", "Of this amount, how much…".
+  if (/\b(anything else|growth|breakdown|split|of this amount|how much (of|do you expect for))\b/.test(q)) return undefined;
   // "Is your current salary negotiable?" asks yes or no. "Could you please share your expectations?" asks for the amount.
   const politeAsk = /^(could|can|would) you (please )?(let us know|tell|share|specify|provide|give|indicate|state)\b/.test(q);
   if (YES_NO_QUESTION.test(q) && !politeAsk && field.control !== "number") return undefined;
@@ -214,6 +275,13 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts): Decision | und
   const valueCurrency = kindOf(value, CURRENCY);
   // Asked in a currency: the saved value must say the same one (a bare number is only taken as rupees).
   if (askedCurrency && askedCurrency !== (valueCurrency ?? "INR")) return undefined;
+  // No currency named: a job in a country that pays in another currency is asked ("18 LPA" means nothing to a US,
+  // German or Brazilian form; live run 3 typed it on all three). When the job's country is not known, the saved value
+  // names its own currency ("18 LPA", "€60,000"), as before.
+  if (!askedCurrency) {
+    const jobCurrencies = (page?.jobCountries ?? []).map((c) => COUNTRY_CURRENCY[c] ?? "OTHER");
+    if (jobCurrencies.some((c) => c !== (valueCurrency ?? "INR"))) return undefined;
+  }
   // "Please specify Monthly/Annually": the form takes either, so it names no period.
   const periods = PERIOD.filter(([, re]) => re.test(asked.toLowerCase())).length;
   const askedPeriod = periods > 1 ? "year" : kindOf(asked, PERIOD) ?? "year";
@@ -242,7 +310,11 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts): Decision | und
   return answer(value, what);
 }
 
-const DECLINE = /decline|don ?t (wish|want)|do not (wish|want)|prefer not|choose not|not to (say|answer|disclose|self identify)|rather not/;
+// Also the declines of Spanish, Portuguese, French, German, Italian, Dutch, Japanese and Chinese forms (live run 2:
+// "Prefiero no responder" on Cabify and "Prefiro não responder" on C6 Bank were missed). Matched on normalized text.
+const DECLINE = /decline|don ?t (wish|want)|do not (wish|want)|prefer not|choose not|not to (say|answer|disclose|self identify)|rather not|prefier[oe] no (responder|decir|contestar|indicar|especificar)|prefiro nao (responder|informar|dizer|declarar)|prefere ne pas|ne (souhaite|veux) pas (repondre|le dire|le preciser)|keine angabe|mochte (ich )?(das |es )?nicht angeben|nicht angeben|preferisco non (rispondere|dirlo|specificare)|liever niet|wil ik niet zeggen|回答しない|答えたくない|回答を控え|不愿透露|不想回答|不愿回答|不願透露|不想回答/;
+/** An answer (or a listed choice) that declines to say ("Decline to self identify", "I don't wish to answer"). */
+export const isDeclineAnswer = (text: string): boolean => DECLINE.test(normalize(text));
 
 /** The form's choice that clearly means the user's answer, or (for search-as-you-type lists whose choices are not
  * known yet) the words to type that find it. */
@@ -308,6 +380,9 @@ function diversityAnswer(field: FieldDescriptor, facts: QuickFacts, topic: Sensi
   }
   if (topic === "pronouns" && facts.pronouns) {
     if (/\bif\s+["']?other["']?\s+is\s+selected\b/i.test(q)) return undefined;
+    // The box for pronouns NOT in the list ("If your personal pronoun is not listed above, how would you like to be
+    // addressed?", "Self describe - I prefer to use the following pronouns:"): only for someone the list leaves out.
+    if (/\b(not listed|isn ?t listed|self[- ]?describ\w*|if (other|not|none)|otherwise)\b/i.test(q)) return undefined;
     if (field.control === "text") return answer(facts.pronouns, "pronouns");
     const v = choice(field, facts.pronouns, {
       "she/her": /she\/her|she \/ her|she\/hers|female/i,
@@ -325,7 +400,11 @@ function diversityAnswer(field: FieldDescriptor, facts: QuickFacts, topic: Sensi
     return v ? answer(v, "sexual orientation") : undefined;
   }
   if (topic === "transgender" && facts.transgender) {
-    const target = /\b(same as|assigned at birth)\b/i.test(q) ? (facts.transgender === "No" ? "Yes" : "No") : facts.transgender;
+    // "Is your gender identity the same as the sex you were assigned at birth?" asks the reverse of "Are you
+    // transgender?": Yes and No swap, a Decline stays a Decline. (Live run 3: a saved Decline became "No", which says
+    // the user IS transgender, on GoCardless and Gymshark.)
+    const reversed = /\b(same as|assigned at birth)\b/i.test(q);
+    const target = !reversed || facts.transgender === "Decline" ? facts.transgender : facts.transgender === "No" ? "Yes" : "No";
     const v = choice(field, target, { Yes: /^yes\b/, No: /^no\b/, Decline: DECLINE }, { Yes: "Yes", No: "No", Decline: "Decline" });
     return v ? answer(v, "transgender") : undefined;
   }
@@ -571,7 +650,7 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
   const q = normalize(field.label);
   if (!answerableLength(field.label)) return undefined; // a declaration to read, not a question to answer for the user
   if (topic === "work_authorization" || topic === "sponsorship") return facts.workCountries ? workAnswer(field, profile, facts, page) : undefined;
-  if (topic === "salary") return salaryAnswer(field, facts);
+  if (topic === "salary") return salaryAnswer(field, facts, page);
   if (topic === "notice_period") {
     if (isStartImmediatelyQuestion(field.label)) {
       if (!yesNoField(field)) return undefined;
@@ -682,6 +761,11 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     if (!facts.relocate) return undefined;
     if (field.control === "textarea" || field.control === "text") return undefined;
     if (!/\b(relocat|open to (?:relocation|relocating)|willing to relocate)\b/i.test(q)) return undefined;
+    // "Are you currently located in, or open to relocating to, one of BILL's remote-eligible states?" (live run 3):
+    // where the user lives AND relocation in one question, with a "Yes, I currently reside in…" choice. The Quick
+    // answer is only for the plain "Are you willing to relocate?": a question that also asks where the user is goes
+    // to the user.
+    if (/\b(located|based|reside|resident|residing|live|living|currently in|are you in|already in)\b/i.test(normalize(field.label))) return undefined;
     if (yesNoField(field)) {
       const match = field.options.length ? (yesNoOption(field.options, facts.relocate) ?? facts.relocate) : facts.relocate;
       return answer(match, "relocation");

@@ -7,7 +7,7 @@ import {
 import { bestOption, normalize, sameQuestionScore, yesNoOption } from "../shared/text";
 import { parseRequirement } from "../shared/requirements";
 import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion, screeningKey } from "../shared/screening";
-import { factDecision, hasConfirmedApplication, HEARD_ABOUT, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, educationStatusAnswer, type PageFacts } from "./facts";
+import { countryAnswer, factDecision, hasConfirmedApplication, HEARD_ABOUT, isDeclineAnswer, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, educationStatusAnswer, type PageFacts } from "./facts";
 
 /** Secrets and one-time codes: payment cards, passwords, PINs, one-time codes, security questions, captchas and
  * Indian/US/UK identity numbers the main list misses. Checked on the normalized label and name (apostrophes and
@@ -40,7 +40,7 @@ const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   ["sexual_orientation", /\bsexual orientation\b|\blgbt|\bmember of the (lesbian|lgbt)/],
   ["transgender", /\btransgender\b|sex.*assigned at birth/],
   ["gender", /gender|geschlecht|\bgenre\b|\bsexe\b|genero|\bgenere\b|\bsexo\b|\bsesso\b|geslacht/],
-  ["race", /\brace\b|ethnic|hispanic|latin[oax]|\betnia\b|etnicidad|origine ethnique/],
+  ["race", /\brace\b|ethnic|hispanic|latin[oax]|\betnia\b|etnicidad|origine ethnique|\braca\b|\braza\b/],
   ["veteran", /veteran|military|armed forces/],
   ["accommodation", /\baccommodat|ajustements?|adjustments? (to|during|for)|recursos ou adaptacoes|necessidade de acessibilidade/],
   ["disability", /disabilit|behinderung|schwerbehindert|handicap|discapacidad|deficiencia|disabile/],
@@ -328,11 +328,21 @@ const SAME_FACT_TOPICS = new Set<SensitiveTopic>(["gender", "race", "veteran", "
 const BARE_YES_NO = /^(yes|no|y|n|true|false|oui|non|si|ja|nein|sim|nao)$/;
 
 function sameFactAnswer(field: FieldDescriptor, answers: AnswerEntry[], topic: SensitiveTopic): AnswerEntry | undefined {
-  if (!SAME_FACT_TOPICS.has(topic) || !field.options.length) return undefined;
+  if (!SAME_FACT_TOPICS.has(topic)) return undefined;
+  // A list that shows its choices only once opened (react-select on Greenhouse: "Are you Hispanic/Latino?", "How do
+  // you identify your gender?"): only a saved decline, and the fill then picks only a declining choice (agent.ts).
+  if (!field.options.length) {
+    if (field.control !== "combobox" && field.control !== "dropdown") return undefined;
+    return [...answers]
+      .filter((a) => a.topic === topic && isDeclineAnswer(a.answer))
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))[0];
+  }
   return [...answers]
     .filter((a) => a.topic === topic && !BARE_YES_NO.test(normalize(a.answer)))
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
-    .find((a) => bestOption(field.options, a.answer, 0.75) !== undefined);
+    // The answer is one of the listed choices; a saved decline also matches the list's own decline in any wording or
+    // language ("Prefiro não responder", live run 2).
+    .find((a) => bestOption(field.options, a.answer, 0.75) !== undefined || (isDeclineAnswer(a.answer) && field.options.some(isDeclineAnswer)));
 }
 
 export function profileValue(profile: Profile, key: ProfileKey | "fullName"): string {
@@ -548,8 +558,14 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
     if (entry) {
       let val = entry.answer;
       if (field.options.length) {
-        const match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
-        if (match) val = match;
+        let match = yesNoOption(field.options, val) ?? bestOption(field.options, val);
+        // A saved decline lands on the list's own declining choice, whatever its wording or language ("Decline to
+        // self identify" → "Prefiro não responder", live run 2), and never on "Other".
+        if (isDeclineAnswer(val) && !(match && isDeclineAnswer(match))) {
+          const declines = field.options.filter(isDeclineAnswer);
+          match = declines.length === 1 ? declines[0] : (bestOption(declines, val, 0.3) ?? undefined);
+        }
+        if (match && !(isDeclineAnswer(val) && !isDeclineAnswer(match))) val = match;
         else return { kind: "ask", reason: "unknown" };
       }
       const isExact = normalize(entry.question) === normalize(field.label);
@@ -560,7 +576,9 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
     // The user's quick answers, only where the question clearly is that question (see facts.ts).
     const someoneElse = OTHER_PERSON.test(normalize(field.label)) || SOMEONE_ELSES.test(field.label)
       || (!!field.section && OTHER_PERSON_SECTION.test(normalize(field.section)));
-    return (someoneElse ? undefined : factDecision(field, profile, topic, page)) ?? { kind: "ask", reason: "sensitive", topic };
+    if (someoneElse) return { kind: "ask", reason: "sensitive", topic };
+    // A saved yes/no about one country, for the same plain question about that country (see facts.ts).
+    return factDecision(field, profile, topic, page) ?? countryAnswer(field, profile, answers, topic, page) ?? { kind: "ask", reason: "sensitive", topic };
   }
 
   if (field.control === "file") {
