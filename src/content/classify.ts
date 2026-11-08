@@ -7,7 +7,7 @@ import {
 import { bestOption, normalize, sameQuestionScore, yesNoOption } from "../shared/text";
 import { parseRequirement } from "../shared/requirements";
 import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion, screeningKey } from "../shared/screening";
-import { countryAnswer, factDecision, hasConfirmedApplication, HEARD_ABOUT, isDeclineAnswer, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, educationStatusAnswer, type PageFacts } from "./facts";
+import { countryAnswer, factDecision, outsideUsAnswer, selfDeclarationAnswer, startMonthYearAnswer, hasConfirmedApplication, HEARD_ABOUT, isDeclineAnswer, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, educationStatusAnswer, type PageFacts } from "./facts";
 
 /** Secrets and one-time codes: payment cards, passwords, PINs, one-time codes, security questions, captchas and
  * Indian/US/UK identity numbers the main list misses. Checked on the normalized label and name (apostrophes and
@@ -609,6 +609,10 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
     const tr = travelAnswer(field, profile.facts);
     if (tr) return tr;
   }
+  // The user's one-time declarations (non-compete, relatives, clearance), the start month/year from the notice
+  // period, and "not in the US" on US-state lists (live run 2026-11-08).
+  const declared = selfDeclarationAnswer(field, profile) ?? startMonthYearAnswer(field, profile) ?? outsideUsAnswer(field, profile);
+  if (declared) return declared;
   const la = languageAnswer(field, profile);
   if (la) return la;
   const edu = educationStatusAnswer(field, profile);

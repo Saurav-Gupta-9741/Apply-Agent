@@ -143,7 +143,8 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
       yes = facts.needsFutureSponsorship === "Yes";
     } else if (inAllowed) {
       yes = false;
-    } else if (inTemp || isExplicitlyUnauth[0]) {
+    } else if (inTemp || isExplicitlyUnauth[0] || facts.otherCountries === "sponsorship") {
+      // "For jobs in any other country: I would need visa sponsorship there" (Quick answers) covers every unlisted one.
       yes = true;
     } else {
       // Unlisted country: the user may hold a visa there that needs no sponsorship. ASK, same as authorization.
@@ -152,7 +153,7 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   } else {
     if (can[0]) {
       yes = true;
-    } else if (isExplicitlyUnauth[0]) {
+    } else if (isExplicitlyUnauth[0] || facts.otherCountries === "sponsorship") {
       yes = false;
     } else {
       // Unlisted country and not explicitly unauthorized: ASK! Never guess "No".
@@ -267,11 +268,24 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts, page?: PageFact
       return undefined; // two values in one box, or neither specified
     }
   }
-  const value = (asksExpected ? facts.expectedCtc?.trim() : asksCurrent ? facts.currentCtc?.trim() : "") ?? "";
-  if (!value) return undefined;
-  const what = asksExpected ? "expected CTC" : "current CTC";
+  let value = (asksExpected ? facts.expectedCtc?.trim() : asksCurrent ? facts.currentCtc?.trim() : "") ?? "";
+  let what = asksExpected ? "expected CTC" : "current CTC";
   const asked = `${field.label} ${field.placeholder}`;
   const askedCurrency = kindOf(asked, CURRENCY);
+  // The currency this form wants: the one it names, or the one every country of the job pays in.
+  const jobCurrencyList = [...new Set((page?.jobCountries ?? []).map((c) => COUNTRY_CURRENCY[c] ?? "OTHER"))];
+  const wanted = askedCurrency ?? (jobCurrencyList.length === 1 && jobCurrencyList[0] !== "OTHER" ? jobCurrencyList[0] : undefined);
+  // Expected salary for a job paid in another currency: the user's figure in THAT currency, when they gave one
+  // ("USD 70000, EUR 60000"; Quick answers). A current salary is never converted or swapped.
+  if (asksExpected && wanted && wanted !== (kindOf(value, CURRENCY) ?? "INR") && facts.expectedSalaryAbroad) {
+    // Entries split at ";", a new line, or a comma before the next currency ("USD 70,000, EUR 60,000").
+    const abroad = facts.expectedSalaryAbroad.split(/[;\n]|,\s*(?=[A-Z]{3}\b|[$€£¥₹])/).map((x) => x.trim()).find((x) => x && kindOf(x, CURRENCY) === wanted);
+    if (abroad) {
+      value = abroad;
+      what = "expected salary abroad";
+    }
+  }
+  if (!value) return undefined;
   const valueCurrency = kindOf(value, CURRENCY);
   // Asked in a currency: the saved value must say the same one (a bare number is only taken as rupees).
   if (askedCurrency && askedCurrency !== (valueCurrency ?? "INR")) return undefined;
@@ -1357,3 +1371,68 @@ export function skillsExperienceAnswer(field: FieldDescriptor, profile: Profile)
   return undefined;
 }
 
+
+// ------------------------------------------------------------------------------------------------------------------
+// Self-declarations from Quick answers (live run 2026-11-08: ~100 required asks on 1,198 forms). Each answers only a
+// plain yes/no question about the user, never a follow-up that wants details or names.
+
+const DETAIL_FOLLOW_UP = /\b(if (yes|so|applicable)|please (describe|explain|list|provide|specify|share|name|tell)|details?|who|whom|which|their (name|names|position))\b/;
+const yesNo = (field: FieldDescriptor, raw: "Yes" | "No"): string | undefined =>
+  field.options.length ? yesNoOption(field.options, raw) : raw;
+
+/** "Are you bound by a non-compete or non-solicitation agreement?", "Do you have any relatives employed by X?", "Do
+ * you hold an active security clearance?" from the user's one-time declarations. */
+export function selfDeclarationAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
+  const facts = profile.facts;
+  if (!facts || !yesNoField(field)) return undefined;
+  const q = normalize(field.label);
+  if (DETAIL_FOLLOW_UP.test(q) || /\bnot\b/.test(q) || !/^(are|do|does|have|has|is|were|did)\b/.test(q)) return undefined;
+  if (facts.nonCompete && /\bnon ?-?compete|non ?-?solicit\w*|restrictive covenant/.test(q) && !/\bour\b/.test(q)) {
+    const v = yesNo(field, facts.nonCompete);
+    return v ? answer(v, "non-compete") : undefined;
+  }
+  if (facts.relativesAtCompanies === "No" && /\b(relatives?|family members?|related to|spouse|partner|siblings?|immediate family|household)\b/.test(q)
+    && /\b(work|works|working|employ\w*|currently at)\b/.test(q)) {
+    const v = yesNo(field, "No");
+    return v ? answer(v, "relatives at the company") : undefined;
+  }
+  // "Do you have / hold an active security clearance?" (never "Are you able / willing to obtain one?").
+  if (facts.securityClearance === "None" && /security clearance|clearance (level|status)|\b(ts\/sci|top secret|secret) clearance/.test(q)
+    && !/\b(able|willing|eligible|obtain|get|apply|maintain)\b/.test(q)) {
+    const v = yesNo(field, "No");
+    return v ? answer(v, "security clearance") : undefined;
+  }
+  return undefined;
+}
+
+/** "Start date month" / "Start date year" (and "Earliest start month/year") from the notice period, counted from
+ * today. Only a list of months or years, so a typed date is never invented. */
+export function startMonthYearAnswer(field: FieldDescriptor, profile: Profile, today = new Date()): Decision | undefined {
+  const notice = profile.facts?.noticePeriod?.trim();
+  if (!notice || !field.options.length) return undefined;
+  const q = normalize(field.label);
+  const asksMonth = /\b(start|joining|availability|available)\b[\s\S]{0,30}\bmonth\b|\bmonth\b[\s\S]{0,30}\b(start|join)/.test(q);
+  const asksYear = /\b(start|joining|availability|available)\b[\s\S]{0,30}\byear\b|\byear\b[\s\S]{0,30}\b(start|join)/.test(q);
+  if (asksMonth === asksYear) return undefined;
+  const days = parseNoticeDays(notice);
+  if (days === undefined) return undefined;
+  const start = new Date(today.getTime() + days * 86_400_000);
+  if (asksYear) {
+    const y = String(start.getFullYear());
+    const opt = field.options.find((o) => o.trim() === y);
+    return opt ? answer(opt, "notice period (start year)") : undefined;
+  }
+  const names = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+  const m = start.getMonth();
+  const opt = field.options.find((o) => { const n = normalize(o); return n === names[m] || n === names[m]!.slice(0, 3) || n === String(m + 1) || n === String(m + 1).padStart(2, "0"); });
+  return opt ? answer(opt, "notice period (start month)") : undefined;
+}
+
+/** A US-state or ZIP list that offers "I am not in the US" / "Outside the US", for a user who lives elsewhere. */
+export function outsideUsAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
+  if (!field.options.length || !profile.country?.trim() || /united states|^usa?$/i.test(profile.country.trim())) return undefined;
+  const q = normalize(field.label);
+  if (!/\b(state|states|zip|u ?s resident|which us)\b/.test(q) || /\bcountry\b/.test(q)) return undefined;
+  const outside = field.options.filter((o) => /\b(not (currently )?(in|based in|located in|living in|residing in) (the )?(us|u ?s ?a?|united states)|outside (of )?(the )?(us|u ?s ?a?|united states)|non ?-?us\b|international|i do not live in the us)\b/i.test(normalize(o)));
+  return outside.length === 1 ? answer(outside[0]!, "where you live (outside the US)") : undefined;
+}

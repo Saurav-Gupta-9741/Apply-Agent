@@ -39,6 +39,17 @@ export interface QuickFacts {
   unauthorizedCountries?: string;
   /** Independent future sponsorship declaration ("Yes" if requiring H-1B/Skilled Worker later, "No" if permanent). */
   needsFutureSponsorship?: "" | "Yes" | "No" | "Decline";
+  /** Jobs in any country NOT listed above: "sponsorship" = the user is not authorized there and would need visa
+   * sponsorship (authorization questions: No; sponsorship questions: Yes); "ask" or empty = ask each time. */
+  otherCountries?: "" | "sponsorship" | "ask";
+  /** Bound by a non-compete / non-solicitation agreement. */
+  nonCompete?: "" | "Yes" | "No";
+  /** "No": no relatives or partner work at companies the user applies to (any other case: asked each time). */
+  relativesAtCompanies?: "" | "No";
+  /** "None": the user has never held a government security clearance. */
+  securityClearance?: "" | "None";
+  /** Expected salary for jobs paid in other currencies, one per currency ("USD 70000, EUR 60000, GBP 50000"). */
+  expectedSalaryAbroad?: string;
   /** Notice period / earliest start ("Immediate", "30 days", "June 2027"). */
   noticePeriod: string;
   currentCtc: string;
