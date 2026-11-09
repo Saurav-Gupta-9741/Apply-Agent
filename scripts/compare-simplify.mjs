@@ -5,7 +5,9 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 const rows = (f) => (existsSync(f) ? readFileSync(f, "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l)) : []);
 const last = (list) => { const m = new Map(); for (const r of list) m.set(r.url, r); return m; };
 const jobs = JSON.parse(readFileSync("reports/compare/jobs-60.json", "utf8"));
-const aa = last([...rows("reports/live1000/results-a.jsonl"), ...rows("reports/live1000/results-b.jsonl")]);
+// The newest run of each form wins: round 6 re-ran every Breezy form after the work-history change.
+const aa = last([...rows("reports/live1000/results-a.jsonl"), ...rows("reports/live1000/results-b.jsonl"),
+  ...rows("reports/live1000/round6/results-r6-a.jsonl"), ...rows("reports/live1000/round6/results-r6-b.jsonl")]);
 const sp = last(rows("reports/compare/simplify-60.jsonl"));
 const SENSITIVE = [
   ["work authorization", /authori[sz]ed to work|right to work|eligible to work|legally (authorized|able)/i],

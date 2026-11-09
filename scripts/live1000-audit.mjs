@@ -119,6 +119,18 @@ function judge(f, row) {
     const same = loose(f.onPage) === loose(value) || loose(f.onPage).includes(loose(value)) || (f.decision === "profile" && f.key === "phone" && digits(f.onPage).endsWith(digits(value).slice(-10)));
     if (!same) return r("wrong", "onpage_mismatch", `the page holds "${String(f.onPage).slice(0, 80)}", not "${value.slice(0, 80)}"`);
   }
+  // A job block ("Company" of job #2 on Breezy): the value must be that job's own part from the candidate's work
+  // history, and the box must be asking for that part (never a salary question or a date in a Company box).
+  if (f.decision === "work") {
+    const m = /^(\w+)#(\d+)$/.exec(f.key ?? "");
+    const job = m ? candidate.profile?.workHistory?.[Number(m[2]) - 1] : undefined;
+    if (!m || !job) return r("wrong", "work_block", `no job behind "${f.key}"`);
+    const part = m[1];
+    const PART_LABEL = { company: /company|employer|organi[sz]ation/, title: /^(job )?title$|position|designation|^role$/, summary: /summary|description|responsibilit|duties/, start: /start|from|begin/, end: /\bend\b|\bto\b|until/, location: /location|city/, current: /current|present/ };
+    if (PART_LABEL[part] && !PART_LABEL[part].test(label)) return r("wrong", "work_block", `job ${part} typed into "${f.label.slice(0, 60)}"`);
+    const want = part === "current" ? (job.current ? "yes" : "no") : norm(String(job[part] ?? ""));
+    return want && (v === want || c === want) ? r("correct", "work_block", `job #${m[2]} ${part} from the work history`) : r("wrong", "work_block", `job #${m[2]} ${part} should be "${want}"`);
+  }
   // An option was chosen that the field does not offer (only when the full option list was recorded).
   const opts = f.options ?? [];
   if (opts.length && opts.length < 40 && ["select", "radio", "combobox", "radio_group"].includes(f.control) && chosen === undefined && value) {

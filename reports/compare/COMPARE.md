@@ -4,7 +4,7 @@ Forms: 57 chosen (10 per portal); compared where both reached the form: **52**. 
 
 | | ApplyAgent | Simplify |
 |---|---|---|
-| Fields filled (total) | 384 | 170 |
+| Fields filled (total) | 450 | 170 |
 | Required fields left empty | 123 of 399 (30.8%) | 253 of 371 (68.2%) |
 | Median time per form | 21 s (open + fill) | 41 s (fill only) |
 | Essay boxes filled | 0 (only with the user's click; never on its own) | 0 (cloud AI) |
@@ -60,16 +60,16 @@ Forms: 57 chosen (10 per portal); compared where both reached the form: **52**. 
 | recruitee:hostpointag | 5 filled, 1/5 required left | 3 filled, 0/3 required left | 9 s | 18 s | | |
 | recruitee:partejobs | 4 filled, 1/5 required left | 3 filled, 0/3 required left | 24 s | 32 s | | |
 | recruitee:aikidosecurity | 4 filled, 0/4 required left | 3 filled, 0/3 required left | 11 s | 20 s | | |
-| breezy:zero-hash | 6 filled, 2/6 required left | 2 filled, 0/3 required left | 26 s | 69 s | | |
+| breezy:zero-hash | 17 filled, 2/6 required left | 2 filled, 0/3 required left | 29 s | 69 s | | |
 | breezy:social-discovery-ventures | filled | no_form | | | | |
-| breezy:north-wind-group | 4 filled, 0/4 required left | 0 filled, 11/27 required left | 26 s | 62 s | | |
-| breezy:beex | 4 filled, 2/6 required left | 4 filled, 1/6 required left | 28 s | 55 s | | |
-| breezy:bear-robotics | 4 filled, 0/4 required left | 13 filled, 5/11 required left | 27 s | 118 s | | |
-| breezy:taqar-consulting-co-l-l-c | 4 filled, 1/5 required left | 0 filled, 4/4 required left | 35 s | 23 s | | |
-| breezy:zeno-power | 9 filled, 14/23 required left | 0 filled, 14/20 required left | 27 s | 218 s | | |
+| breezy:north-wind-group | 15 filled, 0/4 required left | 0 filled, 11/27 required left | 30 s | 62 s | | |
+| breezy:beex | 4 filled, 2/6 required left | 4 filled, 1/6 required left | 24 s | 55 s | | |
+| breezy:bear-robotics | 15 filled, 0/4 required left | 13 filled, 5/11 required left | 29 s | 118 s | | |
+| breezy:taqar-consulting-co-l-l-c | 15 filled, 1/5 required left | 0 filled, 4/4 required left | 28 s | 23 s | | |
+| breezy:zeno-power | 9 filled, 14/23 required left | 0 filled, 14/20 required left | 25 s | 218 s | | |
 | breezy:small-batch-standard | 6 filled, 7/13 required left | 9 filled, 3/8 required left | 25 s | 62 s | | |
-| breezy:prolift-rigging | 10 filled, 4/14 required left | 18 filled, 3/7 required left | 27 s | 56 s | | |
-| breezy:totalsecurityltd | 5 filled, 3/8 required left | 3 filled, 2/6 required left | 25 s | 39 s | | |
+| breezy:prolift-rigging | 21 filled, 4/14 required left | 18 filled, 3/7 required left | 30 s | 56 s | | |
+| breezy:totalsecurityltd | 16 filled, 3/8 required left | 3 filled, 2/6 required left | 29 s | 39 s | | |
 | workable:revisionz | no_form | no_form | | | | |
 | workable:interpath-advisory | 6 filled, 5/11 required left | 0 filled, 0/0 required left | 9 s | 25 s | | |
 | workable:the-pod-group | 5 filled, 3/8 required left | 0 filled, 0/0 required left | 9 s | 9 s | | |
