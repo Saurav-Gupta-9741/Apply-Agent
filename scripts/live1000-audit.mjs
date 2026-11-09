@@ -374,7 +374,9 @@ for (const row of rows) {
   // Required lists that are not single boxes (Breezy "Work History*"): recorded by the harness since round 7.
   for (const sec of row.requiredSections ?? []) {
     S.requiredSections++; pp.required++;
-    if (!sec.filled) { S.requiredSectionsLeft++; inc(S.requiredSectionsLeftByName, sec.name); pc.requiredLeft++; pp.requiredLeft++; }
+    // The resume section is its file box: attached when that field was filled.
+    const filled = sec.filled || (sec.name === "resume" && (row.fields ?? []).some((f) => f.control === "file" && /resume|cv/i.test(`${f.label} ${f.name}`) && f.status === "filled"));
+    if (!filled) { S.requiredSectionsLeft++; inc(S.requiredSectionsLeftByName, sec.name); pc.requiredLeft++; pp.requiredLeft++; }
   }
 }
 const filledForms = rows.filter((r) => r.outcome === "filled");
