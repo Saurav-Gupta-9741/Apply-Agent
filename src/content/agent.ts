@@ -13,7 +13,7 @@ import { currentValue, fillCombobox, fillDropdown, fillField, fillPhone, type Fi
 import { pickSchool, schoolQueries } from "./schools";
 import { deepQueryAll } from "./dom";
 import { isDeclineAnswer, type PageFacts } from "./facts";
-import { jobCountries } from "./joblocation";
+import { jobCountriesWithApi } from "./joblocation";
 import { bestOption, normalize } from "../shared/text";
 import { pruneDisconnectedCorrections, trackCorrection } from "./corrections";
 import { isConsentLabel } from "../shared/consent-review";
@@ -123,7 +123,7 @@ export async function scanForm(doc: Document, ctx: Omit<AgentContext, "mode">): 
     };
   }
   if (!root) return report;
-  const page: PageFacts = ctx.page ?? { jobCountries: jobCountries(doc), url: doc.location?.href ?? "", applications: ctx.applications };
+  const page: PageFacts = ctx.page ?? { jobCountries: await jobCountriesWithApi(doc), url: doc.location?.href ?? "", applications: ctx.applications };
   const fields = extractFields(root);
   await translateFieldsOnDevice(fields.map((f) => f.descriptor), doc.documentElement?.lang ?? "");
   const meanings = await readMeanings(fields, ctx);
@@ -378,7 +378,7 @@ export async function fillForm(doc: Document, context: AgentContext): Promise<Ru
 
 async function fillFormUnguarded(doc: Document, context: AgentContext): Promise<RunReport> {
   // Where the job is, read once: it answers "Will you require sponsorship to work here?" (see facts.ts).
-  const ctx: AgentContext = { ...context, page: context.page ?? { jobCountries: jobCountries(doc), url: doc.location?.href ?? "", applications: context.applications } };
+  const ctx: AgentContext = { ...context, page: context.page ?? { jobCountries: await jobCountriesWithApi(doc), url: doc.location?.href ?? "", applications: context.applications } };
   const { adapter, root } = locate(doc);
   const report = baseReport(doc, adapter.platform, adapter.jobTitle(doc));
   const stopOnChallenge = ctx.stopOnChallenge !== false;

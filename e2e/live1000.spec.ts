@@ -78,7 +78,7 @@ const US_RESUME = [
   "B.S. in Computer Science, Lone Star State University, 2021.",
 ].join("\n");
 const US_CANDIDATE: Profile = {
-  firstName: "Emily", lastName: "Carter", email: "emily.carter.test@example.com", phone: "+1 512 555 0142", location: "Austin, TX", country: "United States",
+  firstName: "Emily", lastName: "Carter", email: "emily.carter.test@example.com", phone: "+1 512 555 0142", location: "Austin, TX", state: "Texas", country: "United States",
   linkedin: "https://www.linkedin.com/in/emily-carter-test", github: "https://github.com/emily-carter-test", portfolio: "", currentCompany: "Northwind Analytics", currentTitle: "Data Engineer",
   school: "Lone Star State University", degree: "Bachelor's Degree", discipline: "Computer Science", graduationYear: "2021", experienceYears: "5",
   targetRoles: "Data Engineer", preferredLocations: "Austin, Remote", skills: "Python, SQL, BigQuery, Apache Airflow, Docker",
@@ -131,10 +131,20 @@ async function requiredSections(page: Page): Promise<Array<{ name: string; fille
       const out: Array<{ name: string; filled: boolean }> = [];
       for (const flag of document.querySelectorAll<HTMLInputElement>("input[type=hidden][id$='_required']")) {
         if (flag.value.trim().toLowerCase() !== "required") continue;
+        // A list section (work history, education): its list items. Otherwise (resume, summary) the boxes of the
+        // section itself, up to the next section flag; a file box counts when a file is attached.
         let list: Element | null = flag.nextElementSibling;
-        while (list && list.tagName !== "UL") list = list.nextElementSibling;
-        const boxes = list ? [...list.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("li input, li textarea")] : [];
-        out.push({ name: flag.id.replace(/_required$/, ""), filled: boxes.some((b) => b.value.trim() !== "") });
+        while (list && list.tagName !== "UL" && !(list instanceof HTMLInputElement && /_required$/.test(list.id))) list = list.nextElementSibling;
+        let boxes: Array<HTMLInputElement | HTMLTextAreaElement> = [];
+        if (list?.tagName === "UL") boxes = [...list.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("li input, li textarea")];
+        else {
+          for (let el = flag.nextElementSibling; el && el !== list; el = el.nextElementSibling) {
+            if (el.matches("input, textarea")) boxes.push(el as HTMLInputElement);
+            boxes.push(...el.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input:not([type=hidden]), textarea"));
+          }
+        }
+        const has = (b: HTMLInputElement | HTMLTextAreaElement) => (b instanceof HTMLInputElement && b.type === "file" ? (b.files?.length ?? 0) > 0 : b.value.trim() !== "");
+        out.push({ name: flag.id.replace(/_required$/, ""), filled: boxes.some(has) });
       }
       return out;
     }).catch(() => []);

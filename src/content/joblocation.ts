@@ -42,14 +42,38 @@ function fromStructuredData(doc: Document): string[] {
   return countries;
 }
 
-const LOCATION_LINE = ".job__location, .location, .posting-categories .location, [class*='job-location' i], [class*='jobLocation'], [data-testid*='location' i], [data-automation-id='locations']";
+// Greenhouse's current job boards name the line with a generated class ("_location_1xewh_43", live run 7: the job's
+// country was never read there, so "…in the country where this position is based?" went to the user on 26 US forms).
+const LOCATION_LINE = "[class^='_location_'], [class*=' _location_'], .job__location, .location, .posting-categories .location, [class*='job-location' i], [class*='jobLocation'], [data-testid*='location' i], [data-automation-id='locations']";
+
+/** Breezy's apply page shows the location only from the position's data in an inline script
+ * ("location":{"country":{"name":"United States","id":"US"},…}): live run 7, Breezy's standard "Desired Salary" box
+ * was left for the user on every form because the job's country was unknown. */
+function fromBreezyData(doc: Document): string[] {
+  let host = "";
+  try { host = new URL(doc.location?.href ?? "").hostname; } catch { return []; }
+  if (!/(^|\.)breezy\.hr$/.test(host)) return [];
+  const out: string[] = [];
+  for (const script of Array.from(doc.querySelectorAll("script:not([src])"))) {
+    const text = script.textContent ?? "";
+    if (!text.includes("\"friendly_id\"")) continue;
+    for (const m of text.matchAll(/"location":\{"country":\{"name":"([^"]{2,60})"/g)) out.push(...countriesInLocation(m[1]!));
+  }
+  return out;
+}
 
 /** The countries the job is in (usually one). */
 export function jobCountries(doc: Document): string[] {
   const found = fromStructuredData(doc);
+  if (!found.length) found.push(...fromBreezyData(doc));
   if (!found.length) {
-    const line = deepQueryAll<HTMLElement>(doc, LOCATION_LINE).map((el) => (el.textContent ?? "").replace(/\s+/g, " ").trim()).find((t) => t && t.length < 200);
-    if (line) found.push(...countriesInLocation(line));
+    // The first line that names a place: a bare "Locations" heading (CircleCI) is passed over.
+    for (const el of deepQueryAll<HTMLElement>(doc, LOCATION_LINE)) {
+      const line = (el.textContent ?? "").replace(/\s+/g, " ").trim();
+      if (!line || line.length >= 200) continue;
+      const here = countriesInLocation(line);
+      if (here.length) { found.push(...here); break; }
+    }
   }
   if (!found.length) {
     // Last: a "Locations: Austin, US" line in the description (seen on Cloudflare, whose location line says "Hybrid").
@@ -60,4 +84,34 @@ export function jobCountries(doc: Document): string[] {
     }
   }
   return [...new Set(found)];
+}
+
+/** The job's countries, also for a Greenhouse form embedded on the company's own careers page
+ * (job-boards.greenhouse.io/embed/job_app?for=datadog&token=8257324): that frame shows no location, and most Greenhouse
+ * job links now lead there (live run 7: block.xyz, careers.datadoghq.com, circleci.com…, so "…in the country where
+ * this job is based?" went to the user on 19 US forms). Greenhouse's public job API names it: one read-only GET about
+ * the job, open to every site, sending nothing about the user. */
+export async function jobCountriesWithApi(doc: Document, fetcher: typeof fetch = fetch): Promise<string[]> {
+  const found = jobCountries(doc);
+  if (found.length) return found;
+  try {
+    const url = new URL(doc.location?.href ?? "");
+    if (url.hostname !== "job-boards.greenhouse.io" && url.hostname !== "boards.greenhouse.io") return found;
+    if (!/^\/embed\/job_app\b/.test(url.pathname)) return found;
+    const board = url.searchParams.get("for") ?? "";
+    const id = url.searchParams.get("token") ?? url.searchParams.get("gh_jid") ?? "";
+    if (!/^[\w-]{1,80}$/.test(board) || !/^\d{1,20}$/.test(id)) return found;
+    const stop = new AbortController();
+    const timer = setTimeout(() => stop.abort(), 4000);
+    try {
+      const res = await fetcher(`https://boards-api.greenhouse.io/v1/boards/${board}/jobs/${id}`, { signal: stop.signal, credentials: "omit" });
+      if (!res.ok) return found;
+      const job = (await res.json()) as { location?: { name?: string } };
+      return [...new Set(countriesInLocation(job.location?.name ?? ""))];
+    } finally {
+      clearTimeout(timer);
+    }
+  } catch {
+    return found; // offline, blocked or slow: the user answers
+  }
 }

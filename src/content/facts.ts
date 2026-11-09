@@ -39,10 +39,23 @@ export function answerableLength(label: string): boolean {
   return normalize(label).split(" ").length <= MAX_ANSWERABLE_WORDS;
 }
 
-export function yesNoField(field: FieldDescriptor): boolean {
+/** A one-line preface before a short question about working: "Your response is mandatory when applying for a
+ * U.S.-based position. Do you need … any immigration related support or sponsorship from Twitch …?" (live run 7: over
+ * the word limit for declarations, so it was left for the user). The preface must ask nothing and agree to nothing. */
+export function prefacedWorkQuestion(label: string): boolean {
+  if (label.length > 500) return false;
+  const sentences = splitSentences(label);
+  const asked = sentences.filter((x) => /\?\s*$/.test(x));
+  if (asked.length !== 1 || asked[0] !== sentences[sentences.length - 1] || sentences.length > 3) return false;
+  const preface = normalize(sentences.slice(0, -1).join(" "));
+  if (/\b(certify|agree|acknowledge|understand|attest|confirm|declare|consent|accept|i am|i have|i will)\b/.test(preface)) return false;
+  return answerableLength(asked[0]!) && normalize(label).split(" ").length <= 60;
+}
+
+export function yesNoField(field: FieldDescriptor, allowPreface = false): boolean {
   if (field.control === "textarea" || field.control === "checkbox_group" || field.control === "file") return false;
   const q = normalize(field.label);
-  if (WANTS_DETAILS.test(q) || WH_QUESTION.test(q) || !answerableLength(field.label)) return false;
+  if (WANTS_DETAILS.test(q) || WH_QUESTION.test(q) || !(answerableLength(field.label) || (allowPreface && prefacedWorkQuestion(field.label)))) return false;
   // A text box takes "Yes"/"No" only when it asks a yes/no question: "Visa situation" or "Please confirm type of
   // right to work document" want words. Lists that open on click show their choices only then.
   if (!field.options.length) {
@@ -67,8 +80,14 @@ export interface PageFacts {
 /** The question itself: brackets and statements around it ("This role is not eligible for visa sponsorship.") are
  * context. Several questions in one label ("Are you authorized…? If not, will you need sponsorship?") have no single
  * yes or no: undefined. */
+/** Sentences of a label; "U.S." / "U.K." / "e.g." do not end one ("…authorized to work for any U.S. employer?" was
+ * read as the question "employer?", live run 7). */
+function splitSentences(label: string): string[] {
+  return label.replace(/\([^)]*\)|\[[^\]]*\]/g, " ").split(/(?<=[.?!])(?<!\b[A-Za-z]\.)(?<!\be\.g\.|\bi\.e\.)\s+/).map((x) => x.trim()).filter(Boolean);
+}
+
 function theQuestion(label: string): string | undefined {
-  const sentences = label.replace(/\([^)]*\)|\[[^\]]*\]/g, " ").split(/(?<=[.?!])\s+/).map((x) => x.trim()).filter(Boolean);
+  const sentences = splitSentences(label);
   const asked = sentences.filter((x) => /\?\s*$/.test(x));
   if (asked.length > 1) return undefined;
   return normalize(asked[0] ?? sentences[sentences.length - 1] ?? "");
@@ -87,7 +106,7 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   const tempAllowed = canonicalCountries(facts.temporaryWorkCountries ?? "");
   const unauth = canonicalCountries(facts.unauthorizedCountries ?? "");
   const allAllowed = [...new Set([...allowed, ...tempAllowed])];
-  if (!allAllowed.length || !yesNoField(field)) return undefined;
+  if (!allAllowed.length || !yesNoField(field, true)) return undefined;
   const q = theQuestion(field.label);
   // What follows "without" is what the user would not need ("…without the need for a visa", "…without restriction"):
   // it neither makes the question another one nor turns it round.
@@ -178,7 +197,7 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
 export function countryAnswer(field: FieldDescriptor, profile: Profile, answers: Array<{ question: string; answer: string; topic?: SensitiveTopic; country?: string }>, topic: SensitiveTopic, page?: PageFacts): Decision | undefined {
   if (topic !== "sponsorship" && topic !== "work_authorization") return undefined;
   const saved = answers.filter((a) => a.topic === topic && a.country && countriesIn(a.country).length === 1 && /^(yes|no)$/i.test(a.answer.trim()));
-  if (!saved.length || !yesNoField(field)) return undefined;
+  if (!saved.length || !yesNoField(field, true)) return undefined;
   const q = theQuestion(field.label);
   const asked = q?.replace(/\bwithout\b.*$/, "") ?? "";
   // A yes/no asked with a verb first ("Will you…", "Do you…"): "Your authorization to work in the country where you
@@ -676,7 +695,8 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
   const facts = profile.facts;
   if (!facts) return undefined;
   const q = normalize(field.label);
-  if (!answerableLength(field.label)) return undefined; // a declaration to read, not a question to answer for the user
+  // A declaration to read, not a question to answer for the user (a short preface before a work question is fine).
+  if (!answerableLength(field.label) && !((topic === "work_authorization" || topic === "sponsorship") && prefacedWorkQuestion(field.label))) return undefined;
   if (topic === "work_authorization" || topic === "sponsorship") return facts.workCountries ? workAnswer(field, profile, facts, page) : undefined;
   if (topic === "salary") return salaryAnswer(field, facts, page, profile.country);
   if (topic === "notice_period") {
