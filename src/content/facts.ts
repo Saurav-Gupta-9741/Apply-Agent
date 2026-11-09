@@ -100,10 +100,11 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   }
   let places = countriesIn(field.label);
   // "…in the country you currently reside in?", "Your authorization to work in the country where you live. Please
-  // choose…": the country of residence is the profile's country (read on the whole label: the asked sentence may be
+  // choose…", "…at your current location of residence?" (Appier), "…in the location in which you currently reside?"
+  // (Hopper): the country of residence is the profile's country (read on the whole label: the asked sentence may be
   // the instruction after it).
   const whole = normalize(field.label);
-  const RESIDENCE = /country (of (your )?(current )?residence|(where|that|which|in which) you (currently )?(live|reside)|you (currently )?(live|reside) in)|where you (currently )?(live|reside)|your (current |home )?country(?! of application)/;
+  const RESIDENCE = /(country|location|place) (of (your )?(current )?residence|(where|that|which|in which) you (currently )?(live|reside)|you (currently )?(live|reside) in)|where you (currently )?(live|reside)|your (current |home )?country(?! of application)/;
   if (!places.length && (RESIDENCE.test(q) || RESIDENCE.test(whole))) {
     places = countriesIn(profile.country);
     if (!places.length) return undefined; // where the user lives is not known
@@ -188,7 +189,7 @@ export function countryAnswer(field: FieldDescriptor, profile: Profile, answers:
   const whole = normalize(field.label);
   // "…in your country of residence?", "…a visa to remain in your current location?" (GitLab, a US job): where the user
   // lives, never the job's country. "…in that country?" points at an earlier answer: the user's to recall.
-  if (!places.length && /country (of (your )?(current )?residence|(where|that|which|in which) you (currently )?(live|reside)|you (currently )?(live|reside) in)|where you (currently )?(live|reside)|your (current |home )?(country|location)|current(ly)? (location|based)/.test(whole)) {
+  if (!places.length && /(country|location|place) (of (your )?(current )?residence|(where|that|which|in which) you (currently )?(live|reside)|you (currently )?(live|reside) in)|where you (currently )?(live|reside)|your (current |home )?(country|location)|current(ly)? (location|based)/.test(whole)) {
     places = countriesIn(profile.country);
   } else if (!places.length && /\b(that|this|same) (country|location|place)\b|you selected|previous (response|question|answer)|above/.test(whole)) {
     return undefined;
