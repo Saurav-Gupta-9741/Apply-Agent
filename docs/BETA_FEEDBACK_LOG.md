@@ -130,6 +130,31 @@ send blocked, nothing submitted. SmartRecruiters (bot check) and Lever (robots.t
 
 Round 5 accuracy: 2 wrong of 13,140 filled fields (both 8.4, fixed). Round 6 (78 re-run forms): 0 wrong of 1,020. 0 application sends in any run.
 
+## Round 9: a US-based candidate, essay writer shipped, rating follow-ups (2026-11-10) → 1.0.15
+
+Live round 7: a second fictional candidate living in Austin, TX (all earlier runs used one India-based candidate),
+225 real US-heavy forms on Greenhouse, Ashby, BambooHR and Breezy; every send blocked, nothing submitted.
+
+| # | Flaw found | Status | What changed |
+|---|---|---|---|
+| 9.1 | Fill shortcut Alt+Shift+F clashed with Simplify's (Chrome drops one) | Fixed (1.0.15) | Now Alt+Shift+G |
+| 9.2 | A salary saved without a currency ("120000") was always read as rupees, so a US user's salary was never typed | Fixed (1.0.15) | A bare figure is in the money of the user's own country |
+| 9.3 | Most Greenhouse job links now redirect to the company's own careers page; the embedded form shows no location, so "…in the country where this job is based?" and sponsorship questions went to the user (26 US forms) | Fixed (1.0.15) | The job's country from Greenhouse's public job API (read-only, nothing about the user); Greenhouse's new location class read; a bare "Locations" heading skipped |
+| 9.4 | "…for any U.S. employer?" split at "U.S."; a one-line preface before a sponsorship question counted as a long declaration | Fixed (1.0.15) | Abbreviation-safe sentences; short prefaces read past (not ones that agree to anything) |
+| 9.5 | Breezy "Desired Salary" never answered (job country unknown); currency list left on its default | Fixed (1.0.15) | Job country from Breezy's position data; the currency list follows the salary typed |
+| 9.6 | Plain "State" boxes never got the profile's state; lists written "(US) Texas" or "TX" never matched | Fixed (1.0.15) | Label-only rule for state; state codes and tagged names match (codes only in a list of state codes) |
+| 9.7 | "We're able to accommodate employment in most states" read as a disability-accommodation question | Fixed (1.0.15) | Accommodation topic excludes "accommodate employment / hiring" |
+| 9.8 | Essay writer only on a branch | Shipped (1.0.15) | On-device writer, employer AI-rule detection and every-script word counts merged to main; privacy policy names the one-time model download |
+| 9.9 | Workday | Not testable under our rules | A live probe on 5 Workday jobs (NVIDIA, Salesforce, Adobe, Intel, Target) cannot reach the apply step without letting Workday's own requests out, and an account is needed after it; the adapter stays tested on saved pages only |
+
+Results (every unclear answer checked by hand):
+- Round 7 (US candidate, 225 forms, before the fixes): 0 wrong of 2,392 filled; 60.3% of fields filled; 66 forms ready.
+- Re-run with 9.3/9.4: 0 wrong of 2,407; sponsorship answered 48 → 62 of 75, work authorization 36 → 44 of 55.
+- Targeted re-runs: state questions 5 → 11 of 19 (0 wrong of 636); the India candidate on 36 US forms: visa
+  questions 18 → 42 of 61 (0 wrong of 487).
+- Harness now counts required sections (Breezy "Work History*"): 79 seen, 74 filled; the 5 left are the free-text
+  "Experience Summary".
+
 ## Still open
 
 | Item | Why open |
@@ -137,3 +162,6 @@ Round 5 accuracy: 2 wrong of 13,140 filled fields (both 8.4, fixed). Round 6 (78
 | Cover letter generator (on-device AI) | Planned feature, not started |
 | AI matching for reworded questions | Question model retrained on 3,465 real questions (7.5); a writing model failed the laptop test (7.1) |
 | Address existence check | Needs an online lookup; conflicts with "data never leaves the browser" |
+| Workday, iCIMS, Taleo live testing | Need accounts (user's decision); adapters tested on saved pages only (9.9) |
+| Essay writer tier thresholds and fine-tuning | Waiting on the user's Chrome-only model test on their laptop |
+| Long state questions with a note ("Please select your current state of residence. Select 'Not in the US'…") | Over the word limit for profile facts; 5 seen in round 7 |
