@@ -239,7 +239,9 @@ describe("Step 4b: Non-English form translation & safety traps", () => {
       const res = inspectAndTranslateField("Huidig salaris", [], "nl");
       expect(res.label).toBe("Current salary");
       const f = makeField(res.label, [], "text");
-      const d = decide(f, me, []);
+      // A job known to pay in the saved figure's currency (the profile's bare numbers are rupees): an unknown job
+      // country is asked since live run 4.
+      const d = decide(f, me, [], { jobCountries: ["India"], url: "https://boards.greenhouse.io/acme/jobs/1" } as never);
       expect(d.kind).toBe("answer");
       if (d.kind === "answer") expect(d.value).toBe("75000"); // currentCtc, not 85000
     });

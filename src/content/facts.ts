@@ -205,7 +205,7 @@ export function countryAnswer(field: FieldDescriptor, profile: Profile, answers:
 }
 
 const CURRENCY: Array<[string, RegExp]> = [
-  ["INR", /₹|\brs\.?\b|\binr\b|rupees?|\blpa\b|lakhs?|lacs?|crores?/i],
+  ["INR", /₹|\brs\.?\b|\binr\b|rupees?|\blpa\b|lakhs?|lacs?|crores?|\bctc\b/i],
   ["EUR", /€|\beur\b|euros?/i],
   ["GBP", /£|\bgbp\b|\bpounds?\b/i],
   ["JPY", /¥|\bjpy\b|\byen\b|万円|円/i],
@@ -289,12 +289,13 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts, page?: PageFact
   const valueCurrency = kindOf(value, CURRENCY);
   // Asked in a currency: the saved value must say the same one (a bare number is only taken as rupees).
   if (askedCurrency && askedCurrency !== (valueCurrency ?? "INR")) return undefined;
-  // No currency named: a job in a country that pays in another currency is asked ("18 LPA" means nothing to a US,
-  // German or Brazilian form; live run 3 typed it on all three). When the job's country is not known, the saved value
-  // names its own currency ("18 LPA", "€60,000"), as before.
+  // No currency named: filled only for a job whose country is known to pay in the saved figure's currency ("18 LPA"
+  // means nothing to a US, German or Brazilian form; live run 3 typed it on all three, and live run 4 on 29 forms whose
+  // page said only "Remote", "Seoul" or "Amsterdam"). An unknown job country is asked. "CTC" in the question is the
+  // Indian word for a salary and counts as asking in rupees (CURRENCY above).
   if (!askedCurrency) {
     const jobCurrencies = (page?.jobCountries ?? []).map((c) => COUNTRY_CURRENCY[c] ?? "OTHER");
-    if (jobCurrencies.some((c) => c !== (valueCurrency ?? "INR"))) return undefined;
+    if (!jobCurrencies.length || jobCurrencies.some((c) => c !== (valueCurrency ?? "INR"))) return undefined;
   }
   // "Please specify Monthly/Annually": the form takes either, so it names no period.
   const periods = PERIOD.filter(([, re]) => re.test(asked.toLowerCase())).length;

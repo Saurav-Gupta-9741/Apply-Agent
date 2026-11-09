@@ -398,7 +398,7 @@ describe("live run 3: salary only in the job's own currency; pronoun follow-up b
     const q = field("What are your salary expectations?", "text");
     expect(decide(q, me, [], job("India"))).toMatchObject({ kind: "answer", value: "18 LPA" });
     for (const c of ["United States", "Germany", "Brazil"]) expect(decide(q, me, [], job(c))).not.toMatchObject({ kind: "answer" });
-    expect(decide(q, me, [])).toMatchObject({ kind: "answer", value: "18 LPA" }); // job country unknown: the value names its currency
+    expect(decide(q, me, [])).not.toMatchObject({ kind: "answer" }); // job country unknown: asked (live run 4: 29 wrong when filled)
   });
   it("a question that names rupees is filled wherever the job is", () => {
     expect(decide(field("Please share your expected total CTC in INR (Lakhs per annum).", "text"), me, [], job("United States"))).toMatchObject({ kind: "answer", value: "18 LPA" });
