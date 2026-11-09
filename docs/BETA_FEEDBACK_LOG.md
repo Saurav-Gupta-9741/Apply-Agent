@@ -112,6 +112,22 @@ Status: **Fixed** (in a released build, with a test), **Not a bug** (works as de
 | 7.6 | Respect word / character limits on answers | Fixed | Limits read from the question, help text and box (words, characters, sentences, paragraphs; 10+ languages). AI drafts told the limit and cut at a whole sentence; over-limit answers never typed; live counter in the panel |
 | 7.7 | (found by the tests) Help-text reading made 500-field forms slow (7.5 s) | Fixed | Only the box's nearest neighbours are read |
 
+## Round 8: rigorous testing on real live application forms (2026-11-07 to 2026-11-09) → 1.0.12, 1.0.13
+
+Real job postings on 6 portals (Greenhouse, Ashby, Workable, BambooHR, Breezy, Recruitee), a fictional candidate, every
+send blocked, nothing submitted. SmartRecruiters (bot check) and Lever (robots.txt) skipped; Workday needs accounts.
+
+| # | Flaw found | Status | What changed |
+|---|---|---|---|
+| 8.1 | CRITICAL: "future sponsorship: No" Quick answer used for every country (US jobs got "No sponsorship needed") | Fixed (1.0.12) | Only for the user's own work countries; others Yes or asked |
+| 8.2 | Rupee salary typed on jobs in other countries / unknown countries | Fixed (1.0.12, 1.0.13) | Salary only in the job's own currency; unknown country is asked; a salary per currency for jobs abroad |
+| 8.3 | Fill share on real forms too low | Improved (1.0.13) | New Quick answers (other countries, non-compete, relatives, clearance, salary abroad, work history), start month/year, outside-US questions. Round 5: 1,581 forms, 61.0% of fields filled, 29.3% of required fields left (was 35.6%) |
+| 8.4 | "…at your current location of residence?" / "…the location in which you currently reside?" answered for the job's country | Fixed (1.0.13) | Read as where the user lives; both live forms re-run correct |
+| 8.5 | Head-to-head with Simplify on the same 57 live forms | Measured | ApplyAgent 384 fields filled vs 170; required left 30.8% vs 68.2%; median 21 s vs 41 s. Simplify fills Breezy work-history/education blocks ApplyAgent does not yet (8.6). Report: reports/compare/COMPARE.md on the essay-writer branch, with the live-run tools |
+| 8.6 | Breezy "Work History" / "Education" add-blocks not filled | Open | Next improvement |
+
+Round 5 accuracy: 2 wrong of 13,140 filled fields (both 8.4, fixed); 0 application sends.
+
 ## Still open
 
 | Item | Why open |
