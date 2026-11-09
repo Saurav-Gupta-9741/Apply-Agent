@@ -260,6 +260,32 @@ const COUNTRY_CURRENCY: Record<string, string> = {
   Latvia: "EUR", Lithuania: "EUR", Slovakia: "EUR", Slovenia: "EUR", Croatia: "EUR", Malta: "EUR", Cyprus: "EUR",
 };
 
+/** How currency lists name each currency ("US Dollar ($)", "Canadian Dollar ($)", "Euro (€)" on Breezy). */
+const CURRENCY_OPTION: Record<string, RegExp> = {
+  USD: /^(us|u\.s\.|united states) dollars?\b|^usd\b|\(usd\)/i, CAD: /^canadian dollars?\b|^cad\b|\(cad\)/i, EUR: /^euros?\b|^eur\b|\(eur\)/i,
+  GBP: /^(british pounds?|pounds? sterling)\b|^gbp\b|\(gbp\)/i, INR: /^indian rupees?\b|^inr\b|\(inr\)/i, AUD: /^australian dollars?\b|^aud\b|\(aud\)/i,
+  SGD: /^singapore dollars?\b|^sgd\b|\(sgd\)/i, JPY: /^japanese yen\b|^jpy\b|\(jpy\)/i, BRL: /^brazilian real\b|^brl\b|\(brl\)/i,
+  MXN: /^mexican pesos?\b|^mxn\b|\(mxn\)/i, CHF: /^swiss francs?\b|^chf\b|\(chf\)/i,
+};
+
+/** The currency list next to a salary box (Breezy "Desired Salary" + "salaryCurrency", live run 7: it stayed on its
+ * default "US Dollar" beside a "CAD 140,000" typed for a Canadian job). Picked only when the salary box itself would be
+ * filled: the job's one currency, and a saved figure in that currency. */
+function salaryCurrencyAnswer(field: FieldDescriptor, facts: QuickFacts, page: PageFacts | undefined, homeCountry?: string): Decision | undefined {
+  if (!field.options.length || !/\bcurrency\b|currency$/i.test(`${field.label} ${field.name}`) || /\bpreferred\b.*\bpaid\b/i.test(field.label)) return undefined;
+  const home = COUNTRY_CURRENCY[canonicalCountries(homeCountry ?? "")[0] ?? ""] ?? "INR";
+  const job = [...new Set((page?.jobCountries ?? []).map((c) => COUNTRY_CURRENCY[c] ?? "OTHER"))];
+  if (job.length !== 1 || job[0] === "OTHER") return undefined;
+  const wanted = job[0]!;
+  const saved = facts.expectedCtc?.trim() ?? "";
+  const savedCurrency = saved ? kindOf(saved, CURRENCY) ?? home : undefined;
+  const abroad = (facts.expectedSalaryAbroad ?? "").split(/[;\n]|,\s*(?=[A-Z]{3}\b|[$€£¥₹])/).map((x) => x.trim()).some((x) => x && kindOf(x, CURRENCY) === wanted);
+  if (savedCurrency !== wanted && !abroad) return undefined;
+  const re = CURRENCY_OPTION[wanted];
+  const hits = re ? field.options.filter((o) => re.test(o.trim())) : [];
+  return hits.length === 1 ? answer(hits[0]!, "salary currency") : undefined;
+}
+
 function salaryAnswer(field: FieldDescriptor, facts: QuickFacts, page?: PageFacts, homeCountry?: string): Decision | undefined {
   // A figure saved without a currency ("120000") is in the money of the country the user lives in (rupees when none is
   // saved): a US user's "120000" is dollars, not rupees (live run 7, a US-based candidate).
@@ -698,7 +724,7 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
   // A declaration to read, not a question to answer for the user (a short preface before a work question is fine).
   if (!answerableLength(field.label) && !((topic === "work_authorization" || topic === "sponsorship") && prefacedWorkQuestion(field.label))) return undefined;
   if (topic === "work_authorization" || topic === "sponsorship") return facts.workCountries ? workAnswer(field, profile, facts, page) : undefined;
-  if (topic === "salary") return salaryAnswer(field, facts, page, profile.country);
+  if (topic === "salary") return salaryCurrencyAnswer(field, facts, page, profile.country) ?? salaryAnswer(field, facts, page, profile.country);
   if (topic === "notice_period") {
     if (isStartImmediatelyQuestion(field.label)) {
       if (!yesNoField(field)) return undefined;

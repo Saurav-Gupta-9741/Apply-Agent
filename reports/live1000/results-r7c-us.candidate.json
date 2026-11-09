@@ -1,0 +1,137 @@
+{
+ "profile": {
+  "firstName": "Emily",
+  "lastName": "Carter",
+  "email": "emily.carter.test@example.com",
+  "phone": "+1 512 555 0142",
+  "location": "Austin, TX",
+  "state": "Texas",
+  "country": "United States",
+  "linkedin": "https://www.linkedin.com/in/emily-carter-test",
+  "github": "https://github.com/emily-carter-test",
+  "portfolio": "",
+  "currentCompany": "Northwind Analytics",
+  "currentTitle": "Data Engineer",
+  "school": "Lone Star State University",
+  "degree": "Bachelor's Degree",
+  "discipline": "Computer Science",
+  "graduationYear": "2021",
+  "experienceYears": "5",
+  "targetRoles": "Data Engineer",
+  "preferredLocations": "Austin, Remote",
+  "skills": "Python, SQL, BigQuery, Apache Airflow, Docker",
+  "resume": {
+   "name": "Emily_Carter_Resume.txt"
+  },
+  "facts": {
+   "workCountries": "United States",
+   "needsFutureSponsorship": "No",
+   "noticePeriod": "2 weeks",
+   "currentCtc": "105000",
+   "expectedCtc": "120000",
+   "relocate": "Yes",
+   "heardFrom": "LinkedIn",
+   "gender": "Decline",
+   "hispanic": "Decline",
+   "race": "Decline",
+   "veteran": "Decline",
+   "disability": "Decline",
+   "workMode": "any",
+   "travel": "Yes",
+   "travelPercent": "25",
+   "needsAccommodation": "No",
+   "pronouns": "she/her",
+   "sexualOrientation": "Decline",
+   "transgender": "Decline",
+   "over18": "Yes",
+   "otherCountries": "sponsorship",
+   "nonCompete": "No",
+   "relativesAtCompanies": "No",
+   "securityClearance": "None",
+   "expectedSalaryAbroad": "EUR 95,000; GBP 85,000; CAD 140,000"
+  },
+  "workHistory": [
+   {
+    "title": "Data Engineer",
+    "company": "Northwind Analytics",
+    "location": "Austin, TX",
+    "start": "2021-07",
+    "end": "",
+    "current": true,
+    "summary": "Batch and streaming data pipelines in Python and Apache Airflow."
+   },
+   {
+    "title": "Software Engineering Intern",
+    "company": "Contoso Labs",
+    "location": "Dallas, TX",
+    "start": "2021-01",
+    "end": "2021-06",
+    "current": false,
+    "summary": "Django REST API for internal reporting."
+   }
+  ],
+  "workHistoryComplete": true
+ },
+ "answers": [
+  {
+   "question": "Are you legally authorized to work in the United States?",
+   "answer": "Yes",
+   "topic": "work_authorization",
+   "country": "United States",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "Will you now or in the future require visa sponsorship to work in the United States?",
+   "answer": "No",
+   "topic": "sponsorship",
+   "country": "United States",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "Are you willing to relocate?",
+   "answer": "Yes",
+   "topic": "relocation",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "Gender",
+   "answer": "Decline to self identify",
+   "topic": "gender",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "Race / Ethnicity",
+   "answer": "Decline to self identify",
+   "topic": "race",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "Veteran status",
+   "answer": "I don't wish to answer",
+   "topic": "veteran",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "Disability status",
+   "answer": "I do not want to answer",
+   "topic": "disability",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "How did you hear about this job?",
+   "answer": "LinkedIn",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "How many years of experience do you have with Python?",
+   "answer": "5",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "What is your notice period?",
+   "answer": "2 weeks",
+   "topic": "notice_period",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  }
+ ]
+}

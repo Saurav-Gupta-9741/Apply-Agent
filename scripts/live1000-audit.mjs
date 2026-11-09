@@ -228,7 +228,8 @@ function judge(f, row) {
   if (isSponsor(q) && !authWithout && !needsWorkAuth && (f.decision === "answer" || YES.test(c) || NO.test(c))) {
     const cs = countriesIn(q);
     // Judged on the question only: help text often explains both answers ("Mark NO if you will NOT require…").
-    const inverted = INVERTED.test(label);
+    // Bracketed notes ("(…applies even if you don't need sponsorship immediately…)") do not turn the question round.
+    const inverted = INVERTED.test(label.replace(/\([^)]*\)|\[[^\]]*\]/g, " "));
     const yes = YES.test(c);
     const no = NO.test(c);
     if (cs.length === 1 && cs[0] === HOME) return (inverted ? yes : no) ? r("correct", "sponsor_india", `no sponsorship needed in ${HOME}`) : r("wrong", "sponsor_india", `"${chosen ?? value}" for ${HOME} (needs none there)`);
