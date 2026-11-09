@@ -6,7 +6,8 @@
 
 import { describe, expect, it, vi } from "vitest";
 import { jobCountries, jobCountriesWithApi } from "../src/content/joblocation";
-import { decide } from "../src/content/classify";
+import { decide, questionTopic } from "../src/content/classify";
+import { bestOption } from "../src/shared/text";
 import type { PageFacts } from "../src/content/facts";
 import type { FieldDescriptor } from "../src/shared/types";
 import { PROFILE } from "./fixtures";
@@ -27,6 +28,36 @@ describe("live run 7: work questions the rules misread", () => {
     const q = list("Your response is mandatory when applying for a U.S.-based position. Do you need, or will you need in the future, any immigration related support or sponsorship from Twitch in order to begin or continue employment?");
     expect(decide(q, US_USER, [], inUS)).toMatchObject({ kind: "answer", value: "No" });
     expect(decide(q, INDIA_USER, [], inUS)).toMatchObject({ kind: "answer", value: "Yes" });
+  });
+  it("Breezy's salary currency list follows the salary typed beside it", () => {
+    const options = ["US Dollar ($)", "Canadian Dollar ($)", "Euro (€)", "Argentine Peso ($)", "Australian Dollar ($)", "Indian Rupee (₹)"];
+    const cur = { ...list("salaryCurrency"), name: "salaryCurrency", control: "select", required: false, options } as FieldDescriptor;
+    const usUser = { ...US_USER, facts: { ...facts, expectedCtc: "120000", expectedSalaryAbroad: "EUR 95,000; CAD 140,000" } };
+    const at = (c: string) => ({ jobCountries: [c], url: "https://x.breezy.hr/p/1/apply" }) as PageFacts;
+    expect(decide(cur, usUser, [], at("United States"))).toMatchObject({ kind: "answer", value: "US Dollar ($)" });
+    expect(decide(cur, usUser, [], at("Canada"))).toMatchObject({ kind: "answer", value: "Canadian Dollar ($)" });
+    expect(decide(cur, usUser, [], at("Germany"))).toMatchObject({ kind: "answer", value: "Euro (€)" });
+    expect(decide(cur, usUser, [], at("Japan"))).not.toMatchObject({ kind: "answer" }); // no figure in yen
+    expect(decide(cur, usUser, [], { jobCountries: [], url: "" } as PageFacts)).not.toMatchObject({ kind: "answer" });
+    const inUser = { ...INDIA_USER, facts: { ...facts, workCountries: "India", expectedCtc: "18 LPA" } };
+    expect(decide(cur, inUser, [], at("India"))).toMatchObject({ kind: "answer", value: "Indian Rupee (₹)" });
+  });
+  it("a plain 'State' box gets the profile's state; lists that write it '(US) Texas', 'Texas (TX)' or 'TX' match", () => {
+    const me = { ...US_USER, state: "Texas" };
+    const state = { ...list("State"), name: "question_20216471004", autocomplete: "" } as FieldDescriptor;
+    expect(decide(state, me, [], inUS)).toMatchObject({ kind: "profile", key: "state", value: "Texas" });
+    expect(bestOption(["(US) Alabama", "(US) Texas", "(CA) Ontario"], "Texas")).toBe("(US) Texas");
+    expect(bestOption(["Texas (TX)", "Utah (UT)"], "Texas")).toBe("Texas (TX)");
+    expect(bestOption(["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "TX"], "Texas")).toBe("TX");
+    // A country list with codes: "GA" is Gabon, never the US state or the country Georgia.
+    expect(bestOption(["GA", "GB", "DE", "FR", "IN"], "Georgia")).toBeUndefined();
+    // Outside the US: a state list with "Not in the US" still gets that choice.
+    const india = { ...INDIA_USER, state: "Maharashtra" };
+    expect(decide({ ...state, control: "select", options: ["Alabama", "Texas", "Not in the US"] } as FieldDescriptor, india, [], inUS)).toMatchObject({ kind: "answer", value: "Not in the US" });
+  });
+  it("'we are able to accommodate employment in most states' is not a disability-accommodation question", () => {
+    expect(questionTopic("In which state do you currently reside? Note: We're able to accommodate employment in most U.S. States but not all.")).not.toBe("accommodation");
+    expect(questionTopic("Do you require any accommodations during the interview process?")).toBe("accommodation");
   });
   it("a preface that agrees to something, or a long declaration, still goes to the user", () => {
     const agree = list("I certify that the information I provide is true and complete and I understand that false statements may lead to my application being rejected. Will you require sponsorship?");

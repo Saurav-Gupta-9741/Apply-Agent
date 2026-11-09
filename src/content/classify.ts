@@ -42,7 +42,7 @@ const SENSITIVE: Array<[SensitiveTopic, RegExp]> = [
   ["gender", /gender|geschlecht|\bgenre\b|\bsexe\b|genero|\bgenere\b|\bsexo\b|\bsesso\b|geslacht/],
   ["race", /\brace\b|ethnic|hispanic|latin[oax]|\betnia\b|etnicidad|origine ethnique|\braca\b|\braza\b/],
   ["veteran", /veteran|military|armed forces/],
-  ["accommodation", /\baccommodat|ajustements?|adjustments? (to|during|for)|recursos ou adaptacoes|necessidade de acessibilidade/],
+  ["accommodation", /\baccommodat(?!e (employment|employees|hiring|candidates|remote work)\b)|ajustements?|adjustments? (to|during|for)|recursos ou adaptacoes|necessidade de acessibilidade/],
   ["disability", /disabilit|behinderung|schwerbehindert|handicap|discapacidad|deficiencia|disabile/],
   ["age", /geburtsdatum|\balter\b|date de naissance|fecha de nacim(i)?ento|\bedad\b|data de nascimento|\bidade\b|data di nascita|geboortedatum|date of birth|\bdob\b|\bage\b|birth ?date|18 years of age|18 years old|over the age of 18|18 or older|current age|how old are you|what is your age/],
   ["criminal", /vorstrafe|fuhrungszeugnis|casier judiciaire|antecedentes penales|antecedentes criminais|casellario|convict|criminal|felony|background check/],
@@ -83,7 +83,7 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["postalCode", /^(?!.*\b(street address|full.*address|adresse)\b).*\b(zip( code)?|postal code|pin ?code|postleitzahl|\bplz\b|code postal|codigo postal|\bcep\b|\bcap\b|codice postale|postcode)\b/],
   // Where both city and state are requested, it is a location question:
   ["location", /\b(?:city\s*(?:and|,|\/|or)?\s*state|state\s*(?:and|,|\/|or)?\s*city)\b/],
-  ["state", /^(?!.*\bcity\b).*\b(state\s*\/\s*province|province\s*\/\s*state|^province state$|^state province$|^state region$|state or province|province or state|state\s*\/\s*region|u\.s\.\s*state|canadian province|^state$|^province$|canton|departement|bundesland|provincia|regione|provincie)\b|^(what|which) (state|province) (are|do) you (currently )?(live|reside|located|based)\b|^(what|which) (state|province) are you (currently )?(located|based|living) in\b/],
+  ["state", /^(?!.*\bcity\b).*\b(state\s*\/\s*province|province\s*\/\s*state|^province state$|^state province$|^state region$|state or province|province or state|state\s*\/\s*region|u\.s\.\s*state|canadian province|^state$|^province$|canton|departement|bundesland|provincia|regione|provincie)\b|^(what|which) (state|province) (are|do) you (currently )?(live|reside|located|based)\b|^(what|which) (state|province) are you (currently )?(located|based|living) in\b|^in which (state|province) do you (currently )?(live|reside)\b|\bcurrent state of residence\b|\bselect the (state|province) (that )?you (are )?(currently )?(located|based|living|live|reside) in\b/],
   // Where both city and country are requested in one field ("City, Country" or "country and city"), it is a location question:
   ["location", /\b(?:city\s*country|country\s*city|city\s*(?:and|,|\/)\s*country|country\s*(?:and|,|\/)\s*city)\b/],
   ["country", /country|^land$|\bpays\b|\bpais\b|\bpaese\b/],
@@ -478,7 +478,9 @@ export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" |
   const labelOnly = normalize(field.label);
   for (const [key, pattern] of PROFILE_RULES) {
     if (key === "phone" && NOT_THE_NUMBER.test(text)) continue;
-    if (key === "fullName" ? pattern.test(labelOnly) : pattern.test(text)) return key;
+    // The label alone too: "State" with the id "question_20216471004" reads "state question 20216471004", which the
+    // whole-label rule ("^state$") never matched (live run 7, 4 US forms).
+    if (key === "fullName" ? pattern.test(labelOnly) : pattern.test(text) || (key === "state" && pattern.test(labelOnly))) return key;
   }
   return undefined;
 }

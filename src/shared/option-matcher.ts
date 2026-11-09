@@ -5,6 +5,7 @@
  */
 
 import { normalize } from "./text";
+import { stateCode, stateName } from "./state-codes";
 
 export interface MatchResult {
   option: string;
@@ -1091,6 +1092,21 @@ export function matchOptionWithEngine(options: string[], wanted: string, minScor
   if (wantedCompact.length >= 4) {
     const compact = unique(candidates.filter((c) => c.normalized.replace(/ /g, "") === wantedCompact && sameSymbols(c)));
     if (compact) return { option: compact.raw, stage: "exact", confidence: 0.99 };
+  }
+  // A US state / Canadian province written another way (live run 7): "(US) Texas" (Instacart), "Texas (TX)",
+  // "TX - Texas", or only the code "TX" (Oura). Only one option may fit.
+  const region = stateCode(wantedNorm) ? wantedNorm : stateName(wantedTrimmed) && wantedTrimmed.length === 2 ? stateName(wantedTrimmed)! : undefined;
+  if (region) {
+    const code = stateCode(region)!.toLowerCase();
+    // A bare code counts only in a list of state codes ("GA" is Gabon in a country list, not Georgia).
+    const codeList = candidates.filter((c) => /^[A-Za-z]{2}$/.test(c.trimmed) && stateName(c.trimmed)).length >= 10;
+    const tagged = unique(candidates.filter((c) => {
+      const n = c.normalized;
+      if (n === code) return codeList;
+      const bare = n.replace(/^(us|usa|ca|can|canada|united states)\s+/, "").replace(/\s+(us|usa|ca|can)$/, "").replace(new RegExp(`^${code}\\s+|\\s+${code}$`), "");
+      return bare === region;
+    }));
+    if (tagged) return { option: tagged.raw, stage: "exact", confidence: 0.98 };
   }
 
   // STAGE 0: Contextual ATS Domain Specializations
