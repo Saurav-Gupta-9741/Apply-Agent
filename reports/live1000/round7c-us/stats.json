@@ -1,0 +1,435 @@
+{
+ "generatedAt": "2026-11-09T21:47:20.454Z",
+ "inputs": [
+  "results-r7c-us.jsonl"
+ ],
+ "forms": 43,
+ "byOutcome": {
+  "filled": 43
+ },
+ "byPlatformOutcome": {
+  "greenhouse": {
+   "filled": 15
+  },
+  "ashby": {
+   "filled": 2
+  },
+  "bamboohr": {
+   "filled": 1
+  },
+  "breezy": {
+   "filled": 25
+  }
+ },
+ "runStatus": {
+  "needs_user": 40,
+  "ready_to_submit": 3
+ },
+ "fields": 1097,
+ "byStatus": {
+  "filled": 636,
+  "skipped": 210,
+  "failed": 19,
+  "needs_user": 174,
+  "already_filled": 58
+ },
+ "byDecision": {
+  "resume": 43,
+  "skip": 222,
+  "profile": 271,
+  "answer": 176,
+  "ask": 205,
+  "work": 180
+ },
+ "byDecisionStatus": {
+  "resume": {
+   "filled": 43
+  },
+  "skip": {
+   "skipped": 210,
+   "already_filled": 12
+  },
+  "profile": {
+   "filled": 259,
+   "failed": 12
+  },
+  "answer": {
+   "filled": 154,
+   "failed": 7,
+   "already_filled": 15
+  },
+  "ask": {
+   "needs_user": 174,
+   "already_filled": 31
+  },
+  "work": {
+   "filled": 180
+  }
+ },
+ "required": 544,
+ "requiredLeftForUser": 185,
+ "requiredFilled": 359,
+ "requiredSections": 34,
+ "requiredSectionsLeft": 3,
+ "requiredSectionsLeftByName": {
+  "summary": 3
+ },
+ "asks": {
+  "missing_profile_value": 4,
+  "relocation": 5,
+  "salary": 26,
+  "unknown": 147,
+  "sponsorship": 4,
+  "work_authorization": 1,
+  "notice_period": 12,
+  "consent": 4,
+  "signature": 1,
+  "pronouns": 1
+ },
+ "asksRequired": {
+  "missing_profile_value": 4,
+  "relocation": 5,
+  "unknown": 147,
+  "sponsorship": 3,
+  "work_authorization": 1,
+  "notice_period": 12,
+  "consent": 4,
+  "salary": 12,
+  "signature": 1,
+  "pronouns": 1
+ },
+ "skips": {
+  "optional attachment (not your resume)": 15,
+  "optional, not in profile": 110,
+  "optional choice": 34,
+  "no addressLine1 in profile": 1,
+  "no postalCode in profile": 1,
+  "current job: no end date": 20,
+  "study dates are not in your profile": 40,
+  "no portfolio in profile": 1
+ },
+ "failedByKey": {
+  "profile:location (combobox)": 12,
+  "answer:How did you hear about this job? (checkbox_group)": 2,
+  "answer:Disability status (combobox)": 1,
+  "answer:Quick answers › expected salary abroad (text)": 3,
+  "answer:Quick answers › previous employer (combobox)": 1
+ },
+ "seconds": {
+  "forms": 43,
+  "median": 29,
+  "mean": 27.7,
+  "medianFilled": 29,
+  "max": 44
+ },
+ "perCompany": {
+  "greenhouse:billcom": {
+   "forms": 1,
+   "fields": 21,
+   "filled": 17,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:coreweave": {
+   "forms": 2,
+   "fields": 52,
+   "filled": 34,
+   "needsUser": 13,
+   "ready": 0,
+   "requiredLeft": 11
+  },
+  "greenhouse:faire": {
+   "forms": 2,
+   "fields": 35,
+   "filled": 21,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "greenhouse:instacart": {
+   "forms": 2,
+   "fields": 41,
+   "filled": 35,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:calendly": {
+   "forms": 1,
+   "fields": 20,
+   "filled": 13,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:scopely": {
+   "forms": 1,
+   "fields": 18,
+   "filled": 14,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:sproutsocial": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 31,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "ashby:abridge": {
+   "forms": 1,
+   "fields": 17,
+   "filled": 5,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "ashby:helpscout": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 8,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "bamboohr:familiesforvaccines": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 8,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "breezy:vagaro": {
+   "forms": 2,
+   "fields": 75,
+   "filled": 41,
+   "needsUser": 16,
+   "ready": 0,
+   "requiredLeft": 16
+  },
+  "breezy:totalsecurityltd": {
+   "forms": 1,
+   "fields": 32,
+   "filled": 15,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "breezy:prime-philippines": {
+   "forms": 1,
+   "fields": 25,
+   "filled": 15,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "breezy:prolift-rigging": {
+   "forms": 4,
+   "fields": 148,
+   "filled": 84,
+   "needsUser": 21,
+   "ready": 1,
+   "requiredLeft": 21
+  },
+  "breezy:t3-services-group": {
+   "forms": 1,
+   "fields": 35,
+   "filled": 19,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "breezy:beex": {
+   "forms": 1,
+   "fields": 7,
+   "filled": 4,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "greenhouse:affirm": {
+   "forms": 1,
+   "fields": 23,
+   "filled": 17,
+   "needsUser": 0,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "greenhouse:calm": {
+   "forms": 1,
+   "fields": 25,
+   "filled": 18,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 5
+  },
+  "greenhouse:oura": {
+   "forms": 1,
+   "fields": 22,
+   "filled": 19,
+   "needsUser": 0,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "greenhouse:newrelic": {
+   "forms": 1,
+   "fields": 20,
+   "filled": 17,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "breezy:zeno-power": {
+   "forms": 1,
+   "fields": 27,
+   "filled": 10,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 12
+  },
+  "breezy:spark-power": {
+   "forms": 3,
+   "fields": 90,
+   "filled": 45,
+   "needsUser": 11,
+   "ready": 0,
+   "requiredLeft": 14
+  },
+  "breezy:segal-mccambridge": {
+   "forms": 3,
+   "fields": 34,
+   "filled": 17,
+   "needsUser": 2,
+   "ready": 1,
+   "requiredLeft": 2
+  },
+  "breezy:inallmedia-llc": {
+   "forms": 4,
+   "fields": 154,
+   "filled": 68,
+   "needsUser": 40,
+   "ready": 0,
+   "requiredLeft": 40
+  },
+  "breezy:north-wind-group": {
+   "forms": 1,
+   "fields": 27,
+   "filled": 16,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "breezy:helpware-inc": {
+   "forms": 3,
+   "fields": 78,
+   "filled": 45,
+   "needsUser": 5,
+   "ready": 1,
+   "requiredLeft": 4
+  }
+ },
+ "perPlatform": {
+  "greenhouse": {
+   "forms": 15,
+   "fields": 319,
+   "filled": 236,
+   "needsUser": 43,
+   "failed": 14,
+   "skipped": 26,
+   "ready": 0,
+   "required": 232,
+   "requiredLeft": 53,
+   "seconds": 34
+  },
+  "ashby": {
+   "forms": 2,
+   "fields": 33,
+   "filled": 13,
+   "needsUser": 5,
+   "failed": 2,
+   "skipped": 13,
+   "ready": 0,
+   "required": 12,
+   "requiredLeft": 5,
+   "seconds": 15
+  },
+  "bamboohr": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 8,
+   "needsUser": 2,
+   "failed": 0,
+   "skipped": 3,
+   "ready": 0,
+   "required": 4,
+   "requiredLeft": 2,
+   "seconds": 20
+  },
+  "breezy": {
+   "forms": 25,
+   "fields": 732,
+   "filled": 379,
+   "needsUser": 124,
+   "failed": 3,
+   "skipped": 168,
+   "ready": 3,
+   "required": 330,
+   "requiredLeft": 128,
+   "seconds": 29
+  }
+ },
+ "blocked": {
+  "total": 444,
+  "forms": 42,
+  "applicationSends": []
+ },
+ "urlChanged": [
+  "https://job-boards.greenhouse.io/billcom/jobs/6217056004",
+  "https://job-boards.greenhouse.io/coreweave/jobs/4718149006",
+  "https://job-boards.greenhouse.io/coreweave/jobs/4688540006"
+ ],
+ "errors": {},
+ "filledShare": 57.98,
+ "requiredLeftShare": 34.01,
+ "formsReady": 3,
+ "formsNeedingUser": 40,
+ "accuracy": {
+  "filled": 636,
+  "correct": 636,
+  "wrong": 0,
+  "unclear": 0,
+  "byRule": {
+   "correct:resume": 43,
+   "correct:profile_kind": 250,
+   "correct:manual:none": 10,
+   "correct:sponsor_job_country": 12,
+   "correct:manual:profile_kind": 9,
+   "correct:eeo_decline": 66,
+   "correct:workauth_job_country": 3,
+   "correct:sponsor_india": 7,
+   "correct:qa_onsite": 2,
+   "correct:qa_eeo": 5,
+   "correct:hear": 15,
+   "correct:workauth_other_country": 1,
+   "correct:workauth_india": 12,
+   "correct:manual:sponsor_unnamed_country": 1,
+   "correct:qa_pronouns": 2,
+   "correct:qa_salary": 17,
+   "correct:work_block": 180,
+   "correct:qa_accommodation": 1
+  },
+  "wrongByRule": {},
+  "wrongShare": 0,
+  "correctShare": 100,
+  "unclearPairs": 0,
+  "clearedAfterFill": 1,
+  "clearedForms": 1,
+  "clearedByName": {
+   "city.value": 1
+  }
+ }
+}
