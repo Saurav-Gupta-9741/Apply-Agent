@@ -43,7 +43,15 @@ export const CANDIDATE: Profile = {
       relocate: "Yes", heardFrom: "LinkedIn", gender: "Decline", hispanic: "Decline", race: "Decline", veteran: "Decline", disability: "Decline",
       workMode: "any", travel: "Yes", travelPercent: "25", needsAccommodation: "No", pronouns: "she/her", sexualOrientation: "Decline",
       transgender: "Decline", over18: "Yes",
+      // Quick answers added 2026-11-08 (improvements measured in live run 5).
+      otherCountries: "sponsorship", nonCompete: "No", relativesAtCompanies: "No", securityClearance: "None",
+      expectedSalaryAbroad: "USD 70,000; EUR 60,000; GBP 55,000",
     },
+    workHistory: [
+      { title: "Data Engineer", company: "Acme Pay", location: "Bengaluru, India", start: "2021-07", end: "", current: true, summary: "Batch and streaming data pipelines in Python and Apache Airflow." },
+      { title: "Software Engineering Intern", company: "Bluefin Labs", location: "Pune, India", start: "2021-01", end: "2021-06", current: false, summary: "Django REST API for internal reporting." },
+    ],
+    workHistoryComplete: true,
   }),
 };
 const now = "2026-11-07T00:00:00Z";
@@ -140,7 +148,9 @@ test("real-life: the extension fills live application forms (nothing submitted o
         }
         if (embedded) {
           row.openedEmbeddedForm = embedded.slice(0, 200);
-          await page.goto(embedded, { waitUntil: "domcontentloaded", timeout: 45_000 });
+          // The form opened on this same page (BambooHR shows it in a pop-up after "Apply for This Job"): never
+          // reload, which would close it. Only a form at another address is opened.
+          if (embedded !== page.url()) await page.goto(embedded, { waitUntil: "domcontentloaded", timeout: 45_000 });
           await page.waitForTimeout(3000);
           await page.locator("input:not([type=hidden]), textarea").first().waitFor({ timeout: 15_000 }).catch(() => undefined);
           report = await send(ext, page, { type: "RUN", mode: "review", fillOnly: true, continuing: true });
