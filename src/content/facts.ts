@@ -241,7 +241,10 @@ const COUNTRY_CURRENCY: Record<string, string> = {
   Latvia: "EUR", Lithuania: "EUR", Slovakia: "EUR", Slovenia: "EUR", Croatia: "EUR", Malta: "EUR", Cyprus: "EUR",
 };
 
-function salaryAnswer(field: FieldDescriptor, facts: QuickFacts, page?: PageFacts): Decision | undefined {
+function salaryAnswer(field: FieldDescriptor, facts: QuickFacts, page?: PageFacts, homeCountry?: string): Decision | undefined {
+  // A figure saved without a currency ("120000") is in the money of the country the user lives in (rupees when none is
+  // saved): a US user's "120000" is dollars, not rupees (live run 7, a US-based candidate).
+  const home = COUNTRY_CURRENCY[canonicalCountries(homeCountry ?? "")[0] ?? ""] ?? "INR";
   const q = normalize(field.label);
   // Not a request for the figure itself (live run 3): "If there's anything else you'd like to mention regarding expected
   // salary…", "Salary growth expectations", "…fixed/variable compensation breakdown", "Of this amount, how much…".
@@ -285,7 +288,7 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts, page?: PageFact
   const wanted = askedCurrency ?? (jobCurrencyList.length === 1 && jobCurrencyList[0] !== "OTHER" ? jobCurrencyList[0] : undefined);
   // Expected salary for a job paid in another currency: the user's figure in THAT currency, when they gave one
   // ("USD 70000, EUR 60000"; Quick answers). A current salary is never converted or swapped.
-  if (asksExpected && wanted && wanted !== (kindOf(value, CURRENCY) ?? "INR") && facts.expectedSalaryAbroad) {
+  if (asksExpected && wanted && wanted !== (kindOf(value, CURRENCY) ?? home) && facts.expectedSalaryAbroad) {
     // Entries split at ";", a new line, or a comma before the next currency ("USD 70,000, EUR 60,000").
     const abroad = facts.expectedSalaryAbroad.split(/[;\n]|,\s*(?=[A-Z]{3}\b|[$€£¥₹])/).map((x) => x.trim()).find((x) => x && kindOf(x, CURRENCY) === wanted);
     if (abroad) {
@@ -296,14 +299,14 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts, page?: PageFact
   if (!value) return undefined;
   const valueCurrency = kindOf(value, CURRENCY);
   // Asked in a currency: the saved value must say the same one (a bare number is only taken as rupees).
-  if (askedCurrency && askedCurrency !== (valueCurrency ?? "INR")) return undefined;
+  if (askedCurrency && askedCurrency !== (valueCurrency ?? home)) return undefined;
   // No currency named: filled only for a job whose country is known to pay in the saved figure's currency ("18 LPA"
   // means nothing to a US, German or Brazilian form; live run 3 typed it on all three, and live run 4 on 29 forms whose
   // page said only "Remote", "Seoul" or "Amsterdam"). An unknown job country is asked. "CTC" in the question is the
   // Indian word for a salary and counts as asking in rupees (CURRENCY above).
   if (!askedCurrency) {
     const jobCurrencies = (page?.jobCountries ?? []).map((c) => COUNTRY_CURRENCY[c] ?? "OTHER");
-    if (!jobCurrencies.length || jobCurrencies.some((c) => c !== (valueCurrency ?? "INR"))) return undefined;
+    if (!jobCurrencies.length || jobCurrencies.some((c) => c !== (valueCurrency ?? home))) return undefined;
   }
   // "Please specify Monthly/Annually": the form takes either, so it names no period.
   const periods = PERIOD.filter(([, re]) => re.test(asked.toLowerCase())).length;
@@ -675,7 +678,7 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
   const q = normalize(field.label);
   if (!answerableLength(field.label)) return undefined; // a declaration to read, not a question to answer for the user
   if (topic === "work_authorization" || topic === "sponsorship") return facts.workCountries ? workAnswer(field, profile, facts, page) : undefined;
-  if (topic === "salary") return salaryAnswer(field, facts, page);
+  if (topic === "salary") return salaryAnswer(field, facts, page, profile.country);
   if (topic === "notice_period") {
     if (isStartImmediatelyQuestion(field.label)) {
       if (!yesNoField(field)) return undefined;

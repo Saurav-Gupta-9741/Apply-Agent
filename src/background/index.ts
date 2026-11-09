@@ -9,7 +9,7 @@ import { applyCorrection, isLearnableCorrection, type CorrectionMessage } from "
 import { isHandsOff } from "../shared/platforms";
 import { clearDetection, recordDetection, syncDetector } from "./detector";
 import { setWorking } from "./icon";
-import { modelFits, understand } from "./understand";
+import { ensurePage, modelFits, understand } from "./understand";
 import { isValidJobUrl } from "./queue";
 import { backOff, onTabClosed, onTabReport, PACE_ALARM, pendingQuestions, pump, queueStatusFor, runInTab, updateQueue, working } from "./runner";
 import { PENDING_MS, pendingSubmission, type PendingSubmission } from "../shared/frames";
@@ -284,6 +284,11 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse: (r
     case "AGENT_BUSY":
       if (sender.tab?.id !== undefined) void setWorking(sender.tab.id, message.busy);
       return false;
+    case "WRITER_OPEN":
+      // The side panel's on-device writer runs in the offscreen page: start it (extension pages only).
+      if (!sender.url?.startsWith(chrome.runtime.getURL(""))) return false;
+      ensurePage().then(() => sendResponse(true), () => sendResponse(false));
+      return true;
     case "DETECTION_SYNC":
       (async () => {
         await syncDetector((await loadSettings()).detection).catch(() => undefined);

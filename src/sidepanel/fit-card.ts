@@ -25,6 +25,10 @@ export function hasFitProfile(profile: Profile): boolean {
 export const MIN_JD_CHARS = 200;
 
 let token = 0;
+/** The job description last read for the shown tab ("" when none): the on-device writer tells the model about the job
+ * with it, and the fact checker knows which tools only the job names. */
+let lastJobText = "";
+export const currentJobText = (): string => lastJobText;
 
 /** Show (or hide) the fit card for this tab. `canRead`: the page is allowed (or opened once) and not hands-off. */
 export async function renderFitCard(tabId: number | undefined, canRead: boolean, showProfile: () => void): Promise<FitSummary | undefined> {
@@ -32,11 +36,13 @@ export async function renderFitCard(tabId: number | undefined, canRead: boolean,
   if (!box) return undefined;
   const mine = ++token;
   if (tabId === undefined || !canRead) {
+    lastJobText = "";
     box.hidden = true;
     return undefined;
   }
   const [text, profile] = await Promise.all([jobText(tabId), loadProfile()]);
   if (mine !== token) return undefined; // the user moved to another tab meanwhile
+  lastJobText = text.length >= MIN_JD_CHARS ? text : "";
   if (text.length < MIN_JD_CHARS) {
     box.hidden = true;
     return undefined;

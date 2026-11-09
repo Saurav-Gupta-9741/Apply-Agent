@@ -37,6 +37,11 @@ cpSync(`${MODEL}/onnx/model_quantized.onnx`, `${outdir}/intent/model_quantized.o
 cpSync(`${MODEL}/tokenizer.json`, `${outdir}/intent/tokenizer.json`);
 mkdirSync(`${outdir}/ort`, { recursive: true });
 for (const f of ["ort-wasm-simd-threaded.wasm", "ort-wasm-simd-threaded.mjs"]) cpSync(`node_modules/onnxruntime-web/dist/${f}`, `${outdir}/ort/${f}`);
+// The on-device answer writer: llama.cpp compiled to WebAssembly (wllama, MIT). The models themselves are not bundled:
+// they are downloaded once, on the user's consent (src/shared/writer/download.ts).
+mkdirSync(`${outdir}/wllama`, { recursive: true });
+cpSync("node_modules/@wllama/wllama/esm/wasm/wllama.wasm", `${outdir}/wllama/wllama.wasm`);
+cpSync("node_modules/@wllama/wllama/LICENCE", `${outdir}/wllama/LICENSE.txt`);
 if (existsSync("node_modules/pdfjs-dist/build/pdf.worker.min.mjs")) cpSync("node_modules/pdfjs-dist/build/pdf.worker.min.mjs", `${outdir}/pdf.worker.mjs`);
 // Beta builds carry a fixed public key, so Chrome gives every beta the same extension ID whatever folder it is loaded
 // from: testers keep their data across updates. (Only the public half exists; the Web Store build has no key: the
@@ -48,9 +53,17 @@ if (betaBuild) {
 }
 if (testBuild) {
   const manifest = JSON.parse(readFileSync(`${outdir}/manifest.json`, "utf8"));
-  manifest.host_permissions = TEST_ORIGINS;
+  // LIVE_ALL_SITES=1 (the live real-form runs only): every https site counts as allowed, as if the user had pressed
+  // "Allow this site" in the panel on a company's own careers site.
+  manifest.host_permissions = process.env.LIVE_ALL_SITES ? [...TEST_ORIGINS, "https://*/*"] : TEST_ORIGINS;
   // Granted up front in tests (optional in real builds), so the automatic backup can be tested without a prompt.
   manifest.permissions = [...manifest.permissions, "downloads"];
+  // The writer needs these in every build (the lead adds them to static/manifest.json); added here when still missing
+  // so the test build always runs the writer as shipped: memory read for the PC tier, cross-origin isolation for
+  // multi-threaded WebAssembly.
+  for (const p of ["system.memory", "system.cpu"]) if (!manifest.permissions.includes(p)) manifest.permissions.push(p);
+  manifest.cross_origin_embedder_policy ??= { value: "require-corp" };
+  manifest.cross_origin_opener_policy ??= { value: "same-origin" };
   writeFileSync(`${outdir}/manifest.json`, JSON.stringify(manifest, null, 2));
 }
 
@@ -60,11 +73,16 @@ const common = {
   target: "chrome116",
   sourcemap: watch ? "inline" : false,
   logLevel: testBuild ? "warning" : "info",
-  define: { __APPLYAGENT_BETA__: betaBuild ? "true" : "false" },
+  // __APPLYAGENT_TEST__: test builds only (e.g. the writer may download its model from the local test server).
+  define: { __APPLYAGENT_BETA__: betaBuild ? "true" : "false", __APPLYAGENT_TEST__: testBuild ? "true" : "false" },
 };
 
 const configs = [
-  { ...common, format: "esm", splitting: true, entryPoints: { background: "src/background/index.ts", sidepanel: "src/sidepanel/index.ts", offscreen: "src/offscreen/index.ts" } },
+  { ...common, format: "esm", splitting: true, entryPoints: {
+    background: "src/background/index.ts", sidepanel: "src/sidepanel/index.ts", offscreen: "src/offscreen/index.ts",
+    // The writer's model download runs in a worker of the offscreen page (it writes the file in place).
+    "writer-download": "src/offscreen/writer-download.ts",
+  } },
   // Injected scripts cannot be ES modules, so the content script is a classic script (IIFE).
   { ...common, format: "iife", entryPoints: { content: "src/content/index.ts" } },
 ];

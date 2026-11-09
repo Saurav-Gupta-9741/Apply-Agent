@@ -43,7 +43,8 @@ import { mountFormStructureButton } from "./form-structure";
 // <<< L3
 import { headline, rowState, summarize, type LiveField } from "./checklist";
 // >>> L4 ai drafts
-import { createDraftWidget, isDraftableField, limitCounter, limitOfField } from "./drafts";
+import { createDraftAllBar, createDraftWidget, isDraftableField, limitCounter, limitOfField } from "./drafts";
+import { AI_TRAP_MESSAGE, aiPolicyMessage, aiPolicyOfForm, aiTrapOf, draftsForbidden, type AiPolicy } from "../shared/ai-policy";
 import { checkLength } from "../shared/length-limit";
 import { factHints, focusQuickAnswer } from "./fact-hints";
 // <<< L4
@@ -748,6 +749,19 @@ interface CardContext {
   onSaved: () => Promise<void>;
   /** Scroll to the field on the page, when the page is open. */
   showOnPage?: () => void;
+  /** The employer's rule about AI on this form (no drafts when it bans AI or asks for the candidate's own work). */
+  aiRule?: AiPolicy;
+}
+
+/** The form's texts the AI rule is read from: every question with its help text. */
+const formTexts = (fields: Array<{ label: string; hint?: string }>) => fields.map((f) => `${f.label} ${f.hint ?? ""}`);
+
+/** A line above the questions telling the user the employer's AI rule. */
+function aiRuleNotice(rule: AiPolicy | undefined): HTMLElement | undefined {
+  if (!rule) return undefined;
+  const note = h("p", { class: `ai-rule-note${draftsForbidden(rule) ? " forbidden" : ""}`, title: rule.quote, role: "note" });
+  note.append(icon(draftsForbidden(rule) ? "shield" : "info", 14), h("span", {}, aiPolicyMessage(rule)));
+  return note;
 }
 
 const NEVER_TEXT: Record<string, string> = {
@@ -769,7 +783,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
           : r.decision.kind === "ask" && r.decision.reason === "missing_profile_value" ? "Missing from your saved profile."
             : r.status === "failed"
               ? (/^the list shows/.test(r.detail ?? "") ? `${r.detail!.replace(/^the list/, "The list on the page")}: choose the right one there.` : "Could not fill on page: please choose it there.")
-              : "New question: saved for future forms.";
+              : "New question. ApplyAgent remembers your answer for next time.";
   const whyRow = h("span", { class: "question-why" });
   whyRow.append(icon(youOnly ? "lock" : appliedBefore ? "lock" : sensitive ? "shield" : upload ? "upload" : "info", 14), h("span", {}, why));
   const card = h("div", { class: `question${sensitive || youOnly || appliedBefore ? " sensitive" : ""}`, "data-key": r.field.key, "data-label": r.field.label },
@@ -811,8 +825,14 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     });
     card.append(chipBtn);
   }
-  // >>> L4 ai drafts
-  if (isDraftableField(r.field) && r.decision.kind === "ask" && !onPageOnly) {
+  // >>> L4 ai drafts (never on a form whose employer bans AI, and never for a question with a planted AI test)
+  const trap = isDraftableField(r.field) ? aiTrapOf(`${r.field.label} ${r.field.hint ?? ""}`) : undefined;
+  if (trap) {
+    const note = h("p", { class: "ai-rule-note forbidden", title: trap, role: "note" });
+    note.append(icon("shield", 14), h("span", {}, AI_TRAP_MESSAGE));
+    card.append(note);
+  }
+  if (isDraftableField(r.field) && r.decision.kind === "ask" && !onPageOnly && !trap && !draftsForbidden(ctx.aiRule)) {
     const draftWidget = createDraftWidget({
       question: r.field.label,
       field: r.field,
@@ -915,9 +935,17 @@ function renderQuestions(report: RunReport): void {
   const corrections = cachedCorrections;
 
   const job = { title: report.jobTitle, company: companyFromUrl(report.url) };
+  const aiRule = aiPolicyOfForm(formTexts(report.fields.map((f) => f.field)));
+  const notice = aiRuleNotice(aiRule);
+  if (notice) box.append(notice);
+  // Two or more essay boxes: one button drafts them all, one at a time, on this computer (shown only, never filled).
+  // Never on a form whose employer bans AI; questions with a planted AI test do not count (they get no draft).
+  const draftable = pending.filter((r) => isDraftableField(r.field) && r.decision.kind === "ask" && !aiTrapOf(`${r.field.label} ${r.field.hint ?? ""}`));
+  if (!draftsForbidden(aiRule) && draftable.length >= 2) box.append(createDraftAllBar());
   for (const r of pending) {
     box.append(questionCard(r, {
       job,
+      aiRule,
       corrections,
       onSaved: async () => {
         toast("Answer saved");
@@ -2245,6 +2273,8 @@ async function renderInbox(queue: QueueItem[]): Promise<void> {
   for (const { question, jobs } of unique.values()) {
     const card = questionCard(asFieldResult(question), {
       job: { title: jobs[0]?.title ?? "", company: jobs[0]?.company ?? "" },
+      // The strictest rule of any job this question is waiting for: a draft is shared by all of them.
+      aiRule: aiPolicyOfForm(formTexts(jobs.flatMap((j) => (j.questions ?? []).map((q) => asFieldResult(q).field)))),
       onSaved: async () => {
         // Re-run every waiting job whose questions are now all answered.
         const nowAnswers = await loadAnswers();

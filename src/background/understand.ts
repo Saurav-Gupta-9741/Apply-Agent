@@ -8,12 +8,12 @@ const PAGE = "offscreen.html";
 let creating: Promise<void> | undefined;
 const remembered = new Map<string, Reading>();
 
-async function ensurePage(): Promise<void> {
+export async function ensurePage(): Promise<void> {
   const url = chrome.runtime.getURL(PAGE);
   const open = await chrome.runtime.getContexts({ contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT], documentUrls: [url] });
   if (open.length) return;
   creating ??= chrome.offscreen.createDocument({
-    url: PAGE, reasons: [chrome.offscreen.Reason.WORKERS], justification: "Runs ApplyAgent's local question-understanding model, offline",
+    url: PAGE, reasons: [chrome.offscreen.Reason.WORKERS], justification: "Runs ApplyAgent's local models (question understanding and the answer writer), offline",
   }).finally(() => (creating = undefined));
   await creating;
 }

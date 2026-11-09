@@ -230,12 +230,12 @@ describe("Word Limit Constraints & Length Instructions", () => {
     // Too short (below 50 words)
     const tooShort = "I am a staff engineer with 7 years of experience in distributed systems.";
     const warningsUnder = checkDraft(tooShort, CANDIDATE, JOB, shortQuestion);
-    expect(warningsUnder.some((w) => w.includes("Below recommended word count"))).toBe(true);
+    expect(warningsUnder.some((w) => w.includes("This question asks for at least"))).toBe(true);
 
     // Too long (over 100 words)
     const tooLong = new Array(125).fill("word").join(" ");
     const warningsOver = checkDraft(tooLong, CANDIDATE, JOB, shortQuestion);
-    expect(warningsOver.some((w) => w.includes("Exceeds word limit"))).toBe(true);
+    expect(warningsOver.some((w) => w.includes("This question allows"))).toBe(true);
 
     // Ideal (75 words)
     const ideal = new Array(75).fill("experience").join(" ");
@@ -249,12 +249,12 @@ describe("Word Limit Constraints & Length Instructions", () => {
     // Too short (< 150 words)
     const tooShort = new Array(90).fill("architecture").join(" ");
     const warningsUnder = checkDraft(tooShort, CANDIDATE, JOB, mediumQuestion);
-    expect(warningsUnder.some((w) => w.includes("Below recommended word count"))).toBe(true);
+    expect(warningsUnder.some((w) => w.includes("This question asks for at least"))).toBe(true);
 
     // Too long (> 250 words)
     const tooLong = new Array(285).fill("systems").join(" ");
     const warningsOver = checkDraft(tooLong, CANDIDATE, JOB, mediumQuestion);
-    expect(warningsOver.some((w) => w.includes("Exceeds word limit"))).toBe(true);
+    expect(warningsOver.some((w) => w.includes("This question allows"))).toBe(true);
 
     // Ideal (200 words)
     const ideal = new Array(200).fill("systems").join(" ");
@@ -268,12 +268,12 @@ describe("Word Limit Constraints & Length Instructions", () => {
     // Too short (< 300 words)
     const tooShort = new Array(210).fill("engineering").join(" ");
     const warningsUnder = checkDraft(tooShort, CANDIDATE, JOB, longQuestion);
-    expect(warningsUnder.some((w) => w.includes("Below recommended word count"))).toBe(true);
+    expect(warningsUnder.some((w) => w.includes("This question asks for at least"))).toBe(true);
 
     // Too long (> 500 words)
     const tooLong = new Array(540).fill("engineering").join(" ");
     const warningsOver = checkDraft(tooLong, CANDIDATE, JOB, longQuestion);
-    expect(warningsOver.some((w) => w.includes("Exceeds word limit"))).toBe(true);
+    expect(warningsOver.some((w) => w.includes("This question allows"))).toBe(true);
 
     // Ideal (380 words)
     const ideal = new Array(380).fill("engineering").join(" ");
@@ -299,7 +299,7 @@ describe("Tone Calibration & Anti-Fluff Enforcement", () => {
       "I am excited to synergize with your team! As a 10x rockstar ninja and dynamic self-starter who always thinks outside the box, I bring thought leadership and strong alignment.";
 
     const warnings = checkDraft(fluffyDraft, CANDIDATE, JOB);
-    expect(warnings.some((w) => w.includes("generic corporate fluff"))).toBe(true);
+    expect(warnings.some((w) => w.includes("sound empty"))).toBe(true);
     expect(warnings.some((w) => /synergize|rockstar|ninja|outside the box/i.test(w))).toBe(true);
   });
 

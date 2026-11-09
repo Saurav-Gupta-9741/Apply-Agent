@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@huggingface/transformers": "^3.8.1",
+    "@wllama/wllama": "3.8.1",
     "pdfjs-dist": "^4.10.38"
   }
 }

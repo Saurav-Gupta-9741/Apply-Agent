@@ -444,6 +444,8 @@ export type Message =
   | { type: "PING" }
   /** What the local question model reads in these questions (content script → background → offscreen page). */
   | { type: "UNDERSTAND"; texts: string[] }
+  /** Start the offscreen page that hosts the on-device answer writer (side panel → background). */
+  | { type: "WRITER_OPEN" }
   /** The agent started or finished working in this tab (the toolbar icon animates meanwhile). */
   | { type: "AGENT_BUSY"; busy: boolean }
   /** The toolbar icon was clicked: the panel re-reads the page (one-time access may have been granted). */

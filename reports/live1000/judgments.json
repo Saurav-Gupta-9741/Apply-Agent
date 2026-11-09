@@ -1,0 +1,55 @@
+{
+ "answer | Are you willing to relocate? | are you willing to relocate? | yes": {
+  "verdict": "correct",
+  "reason": "the saved answer to the same question"
+ },
+ "profile | degree | what is your highest level of completed education? | bachelor's degree": {
+  "verdict": "correct",
+  "reason": "highest education = the profile degree"
+ },
+ "profile | degree | what is your highest level of education? | bachelor's degree": {
+  "verdict": "correct",
+  "reason": "highest education = the profile degree"
+ },
+ "profile | degree | what is your highest level of education completed? | bachelors degree": {
+  "verdict": "correct",
+  "reason": "highest education = the profile degree"
+ },
+ "profile | postalCode | zip code / postal code (non-u.s. based candidates, please enter \"00000\") | 00000": {
+  "verdict": "correct",
+  "reason": "the form tells non-US candidates to enter 00000"
+ },
+ "resume |  | 添付 | ": {
+  "verdict": "correct",
+  "reason": "resume in the attachment box (Japanese form)"
+ },
+ "profile | firstName | 名 | asha": {
+  "verdict": "correct",
+  "reason": "名 = given name"
+ },
+ "profile | lastName | 姓 | verma": {
+  "verdict": "correct",
+  "reason": "姓 = family name"
+ },
+ "profile | email | 電子メール | asha.verma.test@example.com": {
+  "verdict": "correct",
+  "reason": "email"
+ },
+ "profile | phone | 電話 | +91 90000 00000": {
+  "verdict": "correct",
+  "reason": "phone"
+ },
+ "profile | school | in which school are you enrolled for this work-study program (apprentissage) ? | state technical university": {
+  "verdict": "wrong",
+  "override": true,
+  "reason": "the candidate graduated in 2021; the question asks which school she is enrolled in now (the existing guard never fired: its \\b were backspace characters)"
+ },
+ "profile | fullName | first & last name | asha verma": {
+  "verdict": "correct",
+  "reason": "first and last name in one box"
+ },
+ "profile | fullName | name and surname | asha verma": {
+  "verdict": "correct",
+  "reason": "name and surname in one box"
+ }
+}

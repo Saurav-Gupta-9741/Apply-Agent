@@ -1,0 +1,2651 @@
+{
+ "generatedAt": "2026-11-07T16:08:21.999Z",
+ "inputs": [
+  "results-a.jsonl",
+  "results-b.jsonl"
+ ],
+ "forms": 476,
+ "byOutcome": {
+  "filled": 417,
+  "no_form": 52,
+  "closed": 5,
+  "error": 2
+ },
+ "byPlatformOutcome": {
+  "greenhouse": {
+   "filled": 305,
+   "no_form": 52,
+   "closed": 1,
+   "error": 2
+  },
+  "ashby": {
+   "filled": 112,
+   "closed": 4
+  }
+ },
+ "runStatus": {
+  "needs_user": 347,
+  "ready_to_submit": 70
+ },
+ "fields": 6981,
+ "byStatus": {
+  "filled": 3733,
+  "skipped": 967,
+  "needs_user": 2175,
+  "failed": 106
+ },
+ "byDecision": {
+  "resume": 416,
+  "skip": 937,
+  "profile": 2978,
+  "ask": 2205,
+  "answer": 445
+ },
+ "byDecisionStatus": {
+  "resume": {
+   "filled": 416
+  },
+  "skip": {
+   "skipped": 937
+  },
+  "profile": {
+   "filled": 2904,
+   "failed": 74
+  },
+  "ask": {
+   "needs_user": 2175,
+   "skipped": 30
+  },
+  "answer": {
+   "filled": 413,
+   "failed": 32
+  }
+ },
+ "required": 4507,
+ "requiredLeftForUser": 1806,
+ "requiredFilled": 2701,
+ "asks": {
+  "missing_profile_value": 31,
+  "work_authorization": 157,
+  "sponsorship": 215,
+  "unknown": 914,
+  "race": 170,
+  "pronouns": 62,
+  "gender": 74,
+  "consent": 134,
+  "notice_period": 67,
+  "salary": 124,
+  "relocation": 53,
+  "identity": 12,
+  "disability": 48,
+  "sexual_orientation": 41,
+  "transgender": 22,
+  "veteran": 42,
+  "age": 5,
+  "accommodation": 24,
+  "criminal": 4,
+  "signature": 6
+ },
+ "asksRequired": {
+  "missing_profile_value": 31,
+  "work_authorization": 144,
+  "sponsorship": 192,
+  "unknown": 913,
+  "race": 42,
+  "pronouns": 7,
+  "consent": 99,
+  "relocation": 45,
+  "salary": 98,
+  "identity": 12,
+  "notice_period": 35,
+  "sexual_orientation": 15,
+  "gender": 39,
+  "veteran": 29,
+  "disability": 26,
+  "transgender": 7,
+  "criminal": 4,
+  "accommodation": 15,
+  "age": 2,
+  "signature": 6
+ },
+ "skips": {
+  "optional attachment (not your resume)": 271,
+  "optional, not in profile": 442,
+  "no portfolio in profile": 24,
+  "optional address line 2 empty": 3,
+  "optional attachment": 13,
+  "identity: entered by you only": 2,
+  "optional choice": 179,
+  "not sure this saved answer fits: left for you": 3
+ },
+ "failedByKey": {
+  "profile:school (combobox)": 44,
+  "answer:How did you hear about this job? (combobox)": 24,
+  "answer:How did you hear about this job? (checkbox_group)": 4,
+  "profile:preferredLocations (combobox)": 1,
+  "profile:graduationYear (combobox)": 3,
+  "profile:location (combobox)": 18,
+  "answer:What is your notice period? (combobox)": 1,
+  "profile:country (combobox)": 2,
+  "profile:email (combobox)": 2,
+  "profile:degree (combobox)": 2,
+  "profile:discipline (combobox)": 2,
+  "answer:What is your notice period? (number)": 1,
+  "answer:Gender (combobox)": 1,
+  "answer:Veteran status (combobox)": 1
+ },
+ "seconds": {
+  "forms": 476,
+  "median": 12,
+  "mean": 16.3,
+  "medianFilled": 12,
+  "max": 54
+ },
+ "perCompany": {
+  "greenhouse:abnormalsecurity": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 26,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 12
+  },
+  "greenhouse:affirm": {
+   "forms": 2,
+   "fields": 43,
+   "filled": 21,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:airbnb": {
+   "forms": 2,
+   "fields": 37,
+   "filled": 21,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 14
+  },
+  "greenhouse:algolia": {
+   "forms": 2,
+   "fields": 45,
+   "filled": 28,
+   "needsUser": 11,
+   "ready": 0,
+   "requiredLeft": 13
+  },
+  "greenhouse:apolloio": {
+   "forms": 2,
+   "fields": 35,
+   "filled": 18,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:attentive": {
+   "forms": 2,
+   "fields": 36,
+   "filled": 20,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:bandwidth": {
+   "forms": 2,
+   "fields": 30,
+   "filled": 20,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "greenhouse:billcom": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 30,
+   "needsUser": 10,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:braze": {
+   "forms": 2,
+   "fields": 39,
+   "filled": 20,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "greenhouse:cabify": {
+   "forms": 2,
+   "fields": 35,
+   "filled": 14,
+   "needsUser": 21,
+   "ready": 0,
+   "requiredLeft": 20
+  },
+  "greenhouse:calm": {
+   "forms": 1,
+   "fields": 25,
+   "filled": 10,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "greenhouse:carta": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 20,
+   "needsUser": 10,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "greenhouse:checkr": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 17,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "greenhouse:circleci": {
+   "forms": 2,
+   "fields": 37,
+   "filled": 18,
+   "needsUser": 16,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:cockroachlabs": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 27,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 5
+  },
+  "greenhouse:collibra": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 22,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:coreweave": {
+   "forms": 2,
+   "fields": 52,
+   "filled": 24,
+   "needsUser": 23,
+   "ready": 0,
+   "requiredLeft": 19
+  },
+  "greenhouse:cresta": {
+   "forms": 2,
+   "fields": 22,
+   "filled": 18,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "greenhouse:cultureamp": {
+   "forms": 2,
+   "fields": 40,
+   "filled": 21,
+   "needsUser": 15,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:datadog": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 20,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 11
+  },
+  "greenhouse:deliveroo": {
+   "forms": 2,
+   "fields": 21,
+   "filled": 16,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:discord": {
+   "forms": 2,
+   "fields": 54,
+   "filled": 34,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:faire": {
+   "forms": 2,
+   "fields": 35,
+   "filled": 18,
+   "needsUser": 11,
+   "ready": 0,
+   "requiredLeft": 12
+  },
+  "greenhouse:figma": {
+   "forms": 2,
+   "fields": 38,
+   "filled": 22,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "greenhouse:fireblocks": {
+   "forms": 2,
+   "fields": 23,
+   "filled": 18,
+   "needsUser": 1,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "greenhouse:fivetran": {
+   "forms": 2,
+   "fields": 54,
+   "filled": 26,
+   "needsUser": 20,
+   "ready": 0,
+   "requiredLeft": 18
+  },
+  "greenhouse:gemini": {
+   "forms": 2,
+   "fields": 33,
+   "filled": 20,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "greenhouse:gitlab": {
+   "forms": 2,
+   "fields": 36,
+   "filled": 22,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:gocardless": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 17,
+   "needsUser": 20,
+   "ready": 0,
+   "requiredLeft": 12
+  },
+  "greenhouse:graphcore": {
+   "forms": 2,
+   "fields": 49,
+   "filled": 19,
+   "needsUser": 27,
+   "ready": 0,
+   "requiredLeft": 28
+  },
+  "greenhouse:groww": {
+   "forms": 2,
+   "fields": 25,
+   "filled": 16,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "greenhouse:gymshark": {
+   "forms": 2,
+   "fields": 48,
+   "filled": 20,
+   "needsUser": 24,
+   "ready": 0,
+   "requiredLeft": 18
+  },
+  "greenhouse:hootsuite": {
+   "forms": 2,
+   "fields": 48,
+   "filled": 16,
+   "needsUser": 26,
+   "ready": 0,
+   "requiredLeft": 18
+  },
+  "greenhouse:inflectionai": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 24,
+   "needsUser": 2,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "greenhouse:instacart": {
+   "forms": 2,
+   "fields": 41,
+   "filled": 21,
+   "needsUser": 18,
+   "ready": 0,
+   "requiredLeft": 18
+  },
+  "greenhouse:jetbrains": {
+   "forms": 2,
+   "fields": 25,
+   "filled": 17,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:justworks": {
+   "forms": 2,
+   "fields": 50,
+   "filled": 22,
+   "needsUser": 26,
+   "ready": 0,
+   "requiredLeft": 26
+  },
+  "greenhouse:klaviyo": {
+   "forms": 2,
+   "fields": 37,
+   "filled": 22,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "greenhouse:labelbox": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 20,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:launchdarkly": {
+   "forms": 2,
+   "fields": 53,
+   "filled": 24,
+   "needsUser": 17,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:lucidmotors": {
+   "forms": 2,
+   "fields": 65,
+   "filled": 28,
+   "needsUser": 29,
+   "ready": 0,
+   "requiredLeft": 13
+  },
+  "greenhouse:medium": {
+   "forms": 2,
+   "fields": 45,
+   "filled": 22,
+   "needsUser": 17,
+   "ready": 0,
+   "requiredLeft": 13
+  },
+  "greenhouse:mirakl": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 16,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 14
+  },
+  "greenhouse:mongodb": {
+   "forms": 2,
+   "fields": 56,
+   "filled": 26,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 16
+  },
+  "greenhouse:monzo": {
+   "forms": 2,
+   "fields": 47,
+   "filled": 18,
+   "needsUser": 23,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "greenhouse:netlify": {
+   "forms": 2,
+   "fields": 50,
+   "filled": 18,
+   "needsUser": 27,
+   "ready": 0,
+   "requiredLeft": 18
+  },
+  "greenhouse:newrelic": {
+   "forms": 2,
+   "fields": 37,
+   "filled": 22,
+   "needsUser": 13,
+   "ready": 0,
+   "requiredLeft": 13
+  },
+  "greenhouse:nice": {
+   "forms": 2,
+   "fields": 22,
+   "filled": 15,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 5
+  },
+  "greenhouse:oura": {
+   "forms": 2,
+   "fields": 47,
+   "filled": 30,
+   "needsUser": 13,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "greenhouse:paypay": {
+   "forms": 2,
+   "fields": 20,
+   "filled": 12,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:pendo": {
+   "forms": 2,
+   "fields": 31,
+   "filled": 18,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 11
+  },
+  "greenhouse:planetscale": {
+   "forms": 2,
+   "fields": 20,
+   "filled": 16,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 1
+  },
+  "greenhouse:raisin": {
+   "forms": 2,
+   "fields": 29,
+   "filled": 16,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "greenhouse:riotgames": {
+   "forms": 2,
+   "fields": 51,
+   "filled": 16,
+   "needsUser": 28,
+   "ready": 0,
+   "requiredLeft": 28
+  },
+  "greenhouse:robinhood": {
+   "forms": 2,
+   "fields": 53,
+   "filled": 22,
+   "needsUser": 18,
+   "ready": 0,
+   "requiredLeft": 18
+  },
+  "greenhouse:rocketlab": {
+   "forms": 2,
+   "fields": 57,
+   "filled": 24,
+   "needsUser": 27,
+   "ready": 0,
+   "requiredLeft": 23
+  },
+  "greenhouse:samsara": {
+   "forms": 2,
+   "fields": 58,
+   "filled": 27,
+   "needsUser": 25,
+   "ready": 0,
+   "requiredLeft": 24
+  },
+  "greenhouse:scopely": {
+   "forms": 2,
+   "fields": 36,
+   "filled": 24,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:sigmacomputing": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 20,
+   "needsUser": 11,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:smartsheet": {
+   "forms": 2,
+   "fields": 47,
+   "filled": 23,
+   "needsUser": 23,
+   "ready": 0,
+   "requiredLeft": 21
+  },
+  "greenhouse:sproutsocial": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 23,
+   "needsUser": 17,
+   "ready": 0,
+   "requiredLeft": 13
+  },
+  "greenhouse:stabilityai": {
+   "forms": 1,
+   "fields": 3,
+   "filled": 0,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "greenhouse:stockx": {
+   "forms": 1,
+   "fields": 15,
+   "filled": 9,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:sumologic": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 10,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:tailscale": {
+   "forms": 1,
+   "fields": 20,
+   "filled": 9,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "greenhouse:tanium": {
+   "forms": 1,
+   "fields": 20,
+   "filled": 11,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "greenhouse:tenstorrent": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 10,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "greenhouse:truelayer": {
+   "forms": 1,
+   "fields": 19,
+   "filled": 7,
+   "needsUser": 10,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:turing": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 8,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:twitch": {
+   "forms": 1,
+   "fields": 37,
+   "filled": 12,
+   "needsUser": 20,
+   "ready": 0,
+   "requiredLeft": 16
+  },
+  "greenhouse:typeform": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 7,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:vercel": {
+   "forms": 1,
+   "fields": 25,
+   "filled": 9,
+   "needsUser": 13,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "greenhouse:vonage": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 8,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:wallapop": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 8,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:wise": {
+   "forms": 1,
+   "fields": 19,
+   "filled": 12,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:workato": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 7,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:yugabyte": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 10,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:zoominfo": {
+   "forms": 1,
+   "fields": 19,
+   "filled": 14,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:intercom": {
+   "forms": 1,
+   "fields": 27,
+   "filled": 12,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:purestorage": {
+   "forms": 1,
+   "fields": 11,
+   "filled": 8,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "greenhouse:warp": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 9,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:cleo": {
+   "forms": 1,
+   "fields": 20,
+   "filled": 11,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:stone": {
+   "forms": 1,
+   "fields": 23,
+   "filled": 8,
+   "needsUser": 10,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "greenhouse:c6bank": {
+   "forms": 1,
+   "fields": 27,
+   "filled": 7,
+   "needsUser": 16,
+   "ready": 0,
+   "requiredLeft": 15
+  },
+  "greenhouse:staffbase": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 8,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:dcard": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 7,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:lovable": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 8,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "greenhouse:luno": {
+   "forms": 1,
+   "fields": 21,
+   "filled": 8,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 12
+  },
+  "greenhouse:ebanx": {
+   "forms": 1,
+   "fields": 20,
+   "filled": 8,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "greenhouse:slice": {
+   "forms": 1,
+   "fields": 11,
+   "filled": 8,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:bird": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 7,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:xai": {
+   "forms": 1,
+   "fields": 28,
+   "filled": 15,
+   "needsUser": 10,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "greenhouse:storyblok": {
+   "forms": 1,
+   "fields": 18,
+   "filled": 8,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "greenhouse:ramp": {
+   "forms": 1,
+   "fields": 24,
+   "filled": 8,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "greenhouse:cognite": {
+   "forms": 1,
+   "fields": 15,
+   "filled": 10,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:housinganywhere": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 8,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "ashby:abridge": {
+   "forms": 1,
+   "fields": 17,
+   "filled": 6,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "ashby:airbyte": {
+   "forms": 1,
+   "fields": 5,
+   "filled": 5,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:alan": {
+   "forms": 1,
+   "fields": 23,
+   "filled": 11,
+   "needsUser": 2,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:alephalpha": {
+   "forms": 1,
+   "fields": 8,
+   "filled": 5,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:andela": {
+   "forms": 1,
+   "fields": 4,
+   "filled": 4,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:ashby": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 5,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "ashby:babbel": {
+   "forms": 1,
+   "fields": 11,
+   "filled": 5,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "ashby:benchling": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 6,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "ashby:cerebras": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 5,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:clearco": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 5,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:clickhouse": {
+   "forms": 1,
+   "fields": 8,
+   "filled": 6,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:cognition": {
+   "forms": 1,
+   "fields": 7,
+   "filled": 6,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:deepl": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 5,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "ashby:doctolib": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 5,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:elevenlabs": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 4,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:farfetch": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 9,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:fullstory": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:gorgias": {
+   "forms": 1,
+   "fields": 5,
+   "filled": 4,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:helpscout": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 7,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:hopper": {
+   "forms": 1,
+   "fields": 18,
+   "filled": 5,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "ashby:improbable": {
+   "forms": 1,
+   "fields": 11,
+   "filled": 7,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:insitro": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 5,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:koho": {
+   "forms": 1,
+   "fields": 8,
+   "filled": 4,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:kustomer": {
+   "forms": 1,
+   "fields": 8,
+   "filled": 5,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:langchain": {
+   "forms": 1,
+   "fields": 4,
+   "filled": 3,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:lightspeed": {
+   "forms": 1,
+   "fields": 4,
+   "filled": 4,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:llamaindex": {
+   "forms": 1,
+   "fields": 7,
+   "filled": 4,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:mapbox": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 6,
+   "needsUser": 2,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:mintlify": {
+   "forms": 1,
+   "fields": 7,
+   "filled": 4,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:modal": {
+   "forms": 1,
+   "fields": 3,
+   "filled": 3,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:moneybox": {
+   "forms": 1,
+   "fields": 19,
+   "filled": 9,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "ashby:nubank": {
+   "forms": 1,
+   "fields": 11,
+   "filled": 6,
+   "needsUser": 2,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:oyster": {
+   "forms": 1,
+   "fields": 22,
+   "filled": 4,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "ashby:patreon": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 7,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:pinecone": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 6,
+   "needsUser": 2,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:pleo": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 7,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "ashby:poshmark": {
+   "forms": 1,
+   "fields": 7,
+   "filled": 5,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:qonto": {
+   "forms": 1,
+   "fields": 18,
+   "filled": 8,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "ashby:railway": {
+   "forms": 1,
+   "fields": 4,
+   "filled": 3,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:render": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 7,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:resend": {
+   "forms": 1,
+   "fields": 11,
+   "filled": 7,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:runway": {
+   "forms": 1,
+   "fields": 5,
+   "filled": 3,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:sentry": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 7,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:snowflake": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:sorare": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:substack": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 5,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:synthesia": {
+   "forms": 1,
+   "fields": 8,
+   "filled": 5,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:thinkific": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 5,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:thumbtack": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 6,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:uipath": {
+   "forms": 1,
+   "fields": 11,
+   "filled": 7,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:watershed": {
+   "forms": 1,
+   "fields": 11,
+   "filled": 5,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:wealthsimple": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 6,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:webflow": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:writer": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 6,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:zapier": {
+   "forms": 1,
+   "fields": 17,
+   "filled": 9,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "greenhouse:adyen": {
+   "forms": 2,
+   "fields": 36,
+   "filled": 13,
+   "needsUser": 19,
+   "ready": 0,
+   "requiredLeft": 13
+  },
+  "greenhouse:agoda": {
+   "forms": 2,
+   "fields": 45,
+   "filled": 18,
+   "needsUser": 19,
+   "ready": 0,
+   "requiredLeft": 23
+  },
+  "greenhouse:airtable": {
+   "forms": 2,
+   "fields": 33,
+   "filled": 20,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "greenhouse:anthropic": {
+   "forms": 2,
+   "fields": 48,
+   "filled": 18,
+   "needsUser": 21,
+   "ready": 0,
+   "requiredLeft": 18
+  },
+  "greenhouse:asana": {
+   "forms": 1,
+   "fields": 25,
+   "filled": 8,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 12
+  },
+  "greenhouse:backblaze": {
+   "forms": 2,
+   "fields": 27,
+   "filled": 20,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:betterment": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 22,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:block": {
+   "forms": 2,
+   "fields": 67,
+   "filled": 30,
+   "needsUser": 26,
+   "ready": 0,
+   "requiredLeft": 27
+  },
+  "greenhouse:brex": {
+   "forms": 2,
+   "fields": 50,
+   "filled": 26,
+   "needsUser": 16,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:calendly": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 20,
+   "needsUser": 20,
+   "ready": 0,
+   "requiredLeft": 20
+  },
+  "greenhouse:starburst": {
+   "forms": 2,
+   "fields": 35,
+   "filled": 22,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "greenhouse:sumup": {
+   "forms": 2,
+   "fields": 23,
+   "filled": 15,
+   "needsUser": 3,
+   "ready": 1,
+   "requiredLeft": 1
+  },
+  "greenhouse:tamara": {
+   "forms": 2,
+   "fields": 32,
+   "filled": 17,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 14
+  },
+  "greenhouse:taskrabbit": {
+   "forms": 2,
+   "fields": 37,
+   "filled": 22,
+   "needsUser": 13,
+   "ready": 0,
+   "requiredLeft": 11
+  },
+  "greenhouse:togetherai": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 22,
+   "needsUser": 5,
+   "ready": 1,
+   "requiredLeft": 3
+  },
+  "greenhouse:trustpilot": {
+   "forms": 2,
+   "fields": 31,
+   "filled": 16,
+   "needsUser": 13,
+   "ready": 0,
+   "requiredLeft": 13
+  },
+  "greenhouse:twilio": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 20,
+   "needsUser": 20,
+   "ready": 0,
+   "requiredLeft": 20
+  },
+  "greenhouse:typeface": {
+   "forms": 2,
+   "fields": 24,
+   "filled": 16,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:careem": {
+   "forms": 2,
+   "fields": 40,
+   "filled": 22,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 14
+  },
+  "greenhouse:celonis": {
+   "forms": 2,
+   "fields": 44,
+   "filled": 22,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 12
+  },
+  "greenhouse:chime": {
+   "forms": 2,
+   "fields": 44,
+   "filled": 22,
+   "needsUser": 20,
+   "ready": 0,
+   "requiredLeft": 20
+  },
+  "greenhouse:cloudflare": {
+   "forms": 2,
+   "fields": 29,
+   "filled": 20,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:contentful": {
+   "forms": 2,
+   "fields": 27,
+   "filled": 17,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 5
+  },
+  "greenhouse:coursera": {
+   "forms": 2,
+   "fields": 32,
+   "filled": 18,
+   "needsUser": 10,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:cribl": {
+   "forms": 1,
+   "fields": 17,
+   "filled": 12,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:databricks": {
+   "forms": 2,
+   "fields": 36,
+   "filled": 20,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 11
+  },
+  "greenhouse:dataiku": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 24,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 13
+  },
+  "greenhouse:dialpad": {
+   "forms": 2,
+   "fields": 39,
+   "filled": 25,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 5
+  },
+  "greenhouse:dremio": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 21,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "greenhouse:druva": {
+   "forms": 2,
+   "fields": 25,
+   "filled": 19,
+   "needsUser": 4,
+   "ready": 1,
+   "requiredLeft": 2
+  },
+  "greenhouse:esri": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 22,
+   "needsUser": 10,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:fastly": {
+   "forms": 2,
+   "fields": 47,
+   "filled": 26,
+   "needsUser": 16,
+   "ready": 0,
+   "requiredLeft": 13
+  },
+  "greenhouse:figureai": {
+   "forms": 2,
+   "fields": 20,
+   "filled": 17,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "greenhouse:five9": {
+   "forms": 2,
+   "fields": 33,
+   "filled": 20,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:flatironhealth": {
+   "forms": 2,
+   "fields": 49,
+   "filled": 20,
+   "needsUser": 26,
+   "ready": 0,
+   "requiredLeft": 26
+  },
+  "greenhouse:formlabs": {
+   "forms": 2,
+   "fields": 26,
+   "filled": 18,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:ginkgobioworks": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 20,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:glance": {
+   "forms": 2,
+   "fields": 22,
+   "filled": 18,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:grafanalabs": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 23,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:greenhouse": {
+   "forms": 2,
+   "fields": 49,
+   "filled": 21,
+   "needsUser": 24,
+   "ready": 0,
+   "requiredLeft": 24
+  },
+  "greenhouse:gusto": {
+   "forms": 2,
+   "fields": 51,
+   "filled": 25,
+   "needsUser": 24,
+   "ready": 0,
+   "requiredLeft": 23
+  },
+  "greenhouse:honeycomb": {
+   "forms": 2,
+   "fields": 36,
+   "filled": 23,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 5
+  },
+  "greenhouse:inmobi": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 18,
+   "needsUser": 10,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:isaraerospace": {
+   "forms": 2,
+   "fields": 35,
+   "filled": 17,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 14
+  },
+  "greenhouse:khanacademy": {
+   "forms": 2,
+   "fields": 47,
+   "filled": 24,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 11
+  },
+  "greenhouse:komodohealth": {
+   "forms": 2,
+   "fields": 31,
+   "filled": 19,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "greenhouse:lattice": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 23,
+   "needsUser": 15,
+   "ready": 0,
+   "requiredLeft": 11
+  },
+  "greenhouse:lightmatter": {
+   "forms": 2,
+   "fields": 54,
+   "filled": 25,
+   "needsUser": 24,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "greenhouse:lyft": {
+   "forms": 2,
+   "fields": 60,
+   "filled": 14,
+   "needsUser": 33,
+   "ready": 0,
+   "requiredLeft": 34
+  },
+  "greenhouse:mercury": {
+   "forms": 2,
+   "fields": 30,
+   "filled": 16,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:mixpanel": {
+   "forms": 2,
+   "fields": 49,
+   "filled": 27,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:moniepoint": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 17,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "greenhouse:neo4j": {
+   "forms": 2,
+   "fields": 48,
+   "filled": 18,
+   "needsUser": 20,
+   "ready": 0,
+   "requiredLeft": 20
+  },
+  "greenhouse:nextdoor": {
+   "forms": 2,
+   "fields": 31,
+   "filled": 20,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:nuro": {
+   "forms": 2,
+   "fields": 33,
+   "filled": 20,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "greenhouse:pagerduty": {
+   "forms": 2,
+   "fields": 29,
+   "filled": 20,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 5
+  },
+  "greenhouse:polyai": {
+   "forms": 1,
+   "fields": 23,
+   "filled": 12,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:quintoandar": {
+   "forms": 1,
+   "fields": 32,
+   "filled": 8,
+   "needsUser": 22,
+   "ready": 0,
+   "requiredLeft": 20
+  },
+  "greenhouse:reddit": {
+   "forms": 1,
+   "fields": 17,
+   "filled": 11,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:ripple": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 10,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:scaleai": {
+   "forms": 1,
+   "fields": 21,
+   "filled": 13,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:shakepay": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 7,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:singlestore": {
+   "forms": 1,
+   "fields": 23,
+   "filled": 13,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:snorkelai": {
+   "forms": 1,
+   "fields": 20,
+   "filled": 13,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:spacex": {
+   "forms": 1,
+   "fields": 30,
+   "filled": 14,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 12
+  },
+  "greenhouse:squarespace": {
+   "forms": 1,
+   "fields": 26,
+   "filled": 11,
+   "needsUser": 11,
+   "ready": 0,
+   "requiredLeft": 12
+  },
+  "greenhouse:upwork": {
+   "forms": 1,
+   "fields": 18,
+   "filled": 8,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:verkada": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 8,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "greenhouse:vtex": {
+   "forms": 1,
+   "fields": 22,
+   "filled": 8,
+   "needsUser": 13,
+   "ready": 0,
+   "requiredLeft": 13
+  },
+  "greenhouse:wasabi": {
+   "forms": 1,
+   "fields": 20,
+   "filled": 11,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "greenhouse:wildlifestudios": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 9,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:wolt": {
+   "forms": 1,
+   "fields": 17,
+   "filled": 7,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "greenhouse:xendit": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 8,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:zocdoc": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 7,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:zscaler": {
+   "forms": 1,
+   "fields": 24,
+   "filled": 11,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "greenhouse:sas": {
+   "forms": 1,
+   "fields": 23,
+   "filled": 11,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 5
+  },
+  "greenhouse:stackblitz": {
+   "forms": 1,
+   "fields": 18,
+   "filled": 12,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:porter": {
+   "forms": 1,
+   "fields": 21,
+   "filled": 13,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 5
+  },
+  "greenhouse:mentimeter": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 9,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:appier": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 8,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "greenhouse:inter": {
+   "forms": 1,
+   "fields": 31,
+   "filled": 7,
+   "needsUser": 22,
+   "ready": 0,
+   "requiredLeft": 22
+  },
+  "greenhouse:gympass": {
+   "forms": 1,
+   "fields": 37,
+   "filled": 9,
+   "needsUser": 20,
+   "ready": 0,
+   "requiredLeft": 17
+  },
+  "greenhouse:jumia": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 7,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "greenhouse:krafton": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 7,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "greenhouse:flexport": {
+   "forms": 1,
+   "fields": 15,
+   "filled": 8,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:blockchain": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 7,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:eucalyptus": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 7,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "greenhouse:tripactions": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 10,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:consensys": {
+   "forms": 1,
+   "fields": 17,
+   "filled": 9,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "greenhouse:showpad": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 8,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:veriff": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 8,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:commercetools": {
+   "forms": 1,
+   "fields": 19,
+   "filled": 11,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "greenhouse:solarisbank": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 7,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 5
+  },
+  "greenhouse:branch": {
+   "forms": 1,
+   "fields": 15,
+   "filled": 11,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "ashby:1password": {
+   "forms": 1,
+   "fields": 30,
+   "filled": 9,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 5
+  },
+  "ashby:acorns": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 10,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:airwallex": {
+   "forms": 1,
+   "fields": 11,
+   "filled": 8,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:alchemy": {
+   "forms": 1,
+   "fields": 11,
+   "filled": 7,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:amplitude": {
+   "forms": 1,
+   "fields": 7,
+   "filled": 5,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:anyscale": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 8,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:atlan": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 9,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "ashby:backmarket": {
+   "forms": 1,
+   "fields": 15,
+   "filled": 7,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "ashby:benevity": {
+   "forms": 1,
+   "fields": 8,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:circle": {
+   "forms": 1,
+   "fields": 7,
+   "filled": 5,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:clerk": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 3,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:clickup": {
+   "forms": 1,
+   "fields": 8,
+   "filled": 5,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:cohere": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:dave": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 6,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:docker": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 5,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:drata": {
+   "forms": 1,
+   "fields": 8,
+   "filled": 7,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:epidemic-sound": {
+   "forms": 1,
+   "fields": 5,
+   "filled": 5,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:faculty": {
+   "forms": 1,
+   "fields": 7,
+   "filled": 5,
+   "needsUser": 2,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:gainsight": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:harvey": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 10,
+   "needsUser": 2,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:hex": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 5,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "ashby:illumio": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 7,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:influxdata": {
+   "forms": 1,
+   "fields": 7,
+   "filled": 4,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:iterable": {
+   "forms": 1,
+   "fields": 11,
+   "filled": 8,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:kong": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 7,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:lambda": {
+   "forms": 1,
+   "fields": 8,
+   "filled": 7,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:ledger": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 4,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:linear": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 7,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "ashby:magic": {
+   "forms": 1,
+   "fields": 7,
+   "filled": 4,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:marshmallow": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 6,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:miro": {
+   "forms": 1,
+   "fields": 8,
+   "filled": 5,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:mollie": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 3,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:notion": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:openai": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:paddle": {
+   "forms": 1,
+   "fields": 7,
+   "filled": 5,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:perplexity": {
+   "forms": 1,
+   "fields": 8,
+   "filled": 5,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "ashby:plaid": {
+   "forms": 1,
+   "fields": 34,
+   "filled": 10,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:poolside": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 5,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:primer": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 5,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:quora": {
+   "forms": 1,
+   "fields": 27,
+   "filled": 10,
+   "needsUser": 2,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:redis": {
+   "forms": 1,
+   "fields": 7,
+   "filled": 6,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:replit": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 7,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:rohlik": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 5,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:satispay": {
+   "forms": 1,
+   "fields": 41,
+   "filled": 8,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:skydio": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 5,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:snyk": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 8,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:strava": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:supabase": {
+   "forms": 1,
+   "fields": 11,
+   "filled": 8,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:surveymonkey": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 8,
+   "needsUser": 2,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:temporal": {
+   "forms": 1,
+   "fields": 17,
+   "filled": 9,
+   "needsUser": 2,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:thought-machine": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:tractable": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 4,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:vanta": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 8,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:wayve": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 6,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:weaviate": {
+   "forms": 1,
+   "fields": 7,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:whoop": {
+   "forms": 1,
+   "fields": 17,
+   "filled": 8,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:xero": {
+   "forms": 1,
+   "fields": 15,
+   "filled": 4,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "greenhouse:imply": {
+   "forms": 1,
+   "fields": 15,
+   "filled": 10,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 2
+  }
+ },
+ "perPlatform": {
+  "greenhouse": {
+   "forms": 305,
+   "fields": 5770,
+   "filled": 3060,
+   "needsUser": 1988,
+   "failed": 93,
+   "skipped": 629,
+   "ready": 16,
+   "required": 3910,
+   "requiredLeft": 1688,
+   "seconds": 12
+  },
+  "ashby": {
+   "forms": 112,
+   "fields": 1211,
+   "filled": 673,
+   "needsUser": 187,
+   "failed": 13,
+   "skipped": 338,
+   "ready": 54,
+   "required": 597,
+   "requiredLeft": 118,
+   "seconds": 13
+  }
+ },
+ "blocked": {
+  "total": 4785,
+  "forms": 466,
+  "applicationSends": []
+ },
+ "urlChanged": [],
+ "errors": {
+  "page.evaluate: Target page, context or browser has been closed": 1,
+  "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://job-boards.greenhouse.io/rob": 1
+ },
+ "filledShare": 53.47,
+ "requiredLeftShare": 40.07,
+ "formsReady": 70,
+ "formsNeedingUser": 347,
+ "accuracy": {
+  "filled": 3733,
+  "correct": 3701,
+  "wrong": 32,
+  "unclear": 0,
+  "byRule": {
+   "correct:resume": 416,
+   "correct:profile_kind": 2868,
+   "correct:eeo_decline": 271,
+   "correct:manual:answer_relocation": 3,
+   "correct:hear": 116,
+   "wrong:option_not_offered": 25,
+   "correct:where_live": 5,
+   "correct:manual:profile_kind": 4,
+   "wrong:residence_as_plan": 4,
+   "correct:answer_same_topic": 14,
+   "correct:sponsor_other_country": 3,
+   "correct:years_generic": 1,
+   "wrong:manual_override:profile_kind": 1,
+   "wrong:eeo_not_decline": 1,
+   "wrong:profile_country_citizenship": 1
+  },
+  "wrongByRule": {
+   "option_not_offered": 25,
+   "residence_as_plan": 4,
+   "profile_kind": 1,
+   "eeo_not_decline": 1,
+   "profile_country_citizenship": 1
+  },
+  "wrongShare": 0.857,
+  "correctShare": 99.143,
+  "unclearPairs": 0,
+  "clearedAfterFill": 65,
+  "clearedForms": 30,
+  "clearedByName": {
+   "first_name": 30,
+   "last_name": 19,
+   "preferred_name": 6,
+   "email": 10
+  }
+ }
+}

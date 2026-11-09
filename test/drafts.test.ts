@@ -83,36 +83,7 @@ describe("Draft Grounding and Accuracy Checks", () => {
   it("flags corporate buzzwords and fluff", () => {
     const fluffyDraft = "I am a dynamic self-starter and rockstar ninja ready to synergize outside the box.";
     const warnings = checkDraft(fluffyDraft, profile, job);
-    expect(warnings.some((w) => w.includes("generic corporate fluff"))).toBe(true);
+    expect(warnings.some((w) => w.includes("sound empty"))).toBe(true);
   });
 });
 
-describe("1-Click Draft Flow Widget UI", () => {
-  it("renders trigger button and shows Chrome AI guidance when unavailable", async () => {
-    mount("<div id='card'></div>");
-    const container = document.getElementById("card")!;
-
-    let usedText = "";
-    const widget = createDraftWidget({
-      question: "Why Salesforce?",
-      field: { key: "f1", label: "Why Salesforce?", control: "textarea", required: true, options: [], name: "", autocomplete: "", placeholder: "" },
-      profile: PROFILE,
-      job: { title: "Developer", company: "Salesforce" },
-      onUse: (text) => { usedText = text; },
-    });
-    container.append(widget);
-
-    const trigger = widget.querySelector<HTMLButtonElement>(".draft-trigger");
-    expect(trigger).not.toBeNull();
-    expect(trigger!.textContent).toContain("Draft answer with Chrome AI");
-
-    // Click trigger (global LanguageModel is undefined in JSDOM, simulating unavailable)
-    trigger!.click();
-    await new Promise((r) => setTimeout(r, 50));
-
-    const preview = widget.querySelector<HTMLElement>(".draft-preview-box");
-    expect(preview).not.toBeNull();
-    expect(preview!.textContent).toContain("Drafts need Chrome's built-in AI");
-    expect(usedText).toBe(""); // Never typed onto page without clicking Use
-  });
-});

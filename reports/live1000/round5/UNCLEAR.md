@@ -1,0 +1,400 @@
+# Unclear filled answers (132 unique pairs, 358 fields)
+
+Judge each in judgments.json by its key.
+
+- [24] `answer | Quick answers › expected salary abroad | desired pay | usd 70,000`
+  - hinterlandgroup (Project Manager): Q: Desired Pay
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [9] `answer | Quick answers › expected salary abroad | what are your salary expectations? | usd 70,000`
+  - cockroachlabs (Deal Desk Manager, AMER): Q: What are your salary expectations?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [8] `answer | Quick answers › expected salary abroad | what are your salary expectations? | eur 60,000`
+  - cockroachlabs (Account Executive, DACH): Q: What are your salary expectations?
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [7] `answer | Quick answers › expected salary abroad | what are your salary expectations for this role? | usd 70,000`
+  - justworks (Associate, Ancillary Benefits): Q: What are your salary expectations for this role?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [7] `answer | Quick answers › expected salary abroad | what is your desired salary range? | usd 70,000`
+  - replit (Senior/Product Marketing Manager): Q: What is your desired salary range?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [6] `answer | Quick answers › expected salary abroad | what are your compensation expectations? | usd 70,000`
+  - poshmark (Software Engineer II, Cloud Platform): Q: What are your compensation expectations?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [5] `answer | Quick answers › expected salary abroad | salary expectations | usd 70,000`
+  - ginkgobioworks (Cheminformatics & Synthesis Prediction): Q: Salary Expectations
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [4] `answer | Quick answers › previous employer | are you currently or have you ever worked for airbnb in any capacity? this could include, but is not limited to, a full-time employee, intern, apprentice, or co | no`
+  - airbnb (AirCover Specialist, Claims Experience): Q: Are you currently or have you ever worked for Airbnb in any capacity? This could include, but is not limited to, a full-time employee, intern, apprentice, or contingent worker.
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › relatives at the company | do you have any relatives employed by bandwidth? | no`
+  - bandwidth (Applied AI Engineer): Q: Do you have any relatives employed by Bandwidth?
+  - value: No; options: -; matched: Quick answers › relatives at the company
+- [4] `answer | Quick answers › previous employer | are you a former employee or contractor of bill, invoice2go, divvy? | no`
+  - billcom (Alliance Partnerships Manager): Q: Are you a former employee or contractor of BILL, Invoice2Go, Divvy?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | have you worked for carta at any other time previously? | no`
+  - carta (Account Executive, Legal Services): Q: Have you worked for Carta at any other time previously?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | have you been employed by cockroach labs in the past? | no`
+  - cockroachlabs (Account Executive, DACH): Q: Have you been employed by Cockroach Labs in the past?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | are you a former coreweave employee? | no`
+  - coreweave (Accountant, JV & VIE): Q: Are you a former CoreWeave employee?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | are you now or have you ever been employed by coreweave? | no`
+  - coreweave (Accountant, JV & VIE): Q: Are you now or have you ever been employed by CoreWeave?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | have you ever worked for figma before, as an employee or a contractor/consultant? | no`
+  - figma (Account Executive, Enterprise): Q: Have you ever worked for Figma before, as an employee or a contractor/consultant?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | have you been employed by gemini in the past? | no`
+  - gemini (Associate, Growth Marketing (Advanced Trading Products)): Q: Have you been employed by Gemini in the past?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › relatives at the company | do you have a relative/ family member working currently in groww? | no`
+  - groww (Assistant Manager - Internal Audit): Q: Do you have a relative/ family member working currently in Groww?
+  - value: No; options: -; matched: Quick answers › relatives at the company
+- [4] `answer | Quick answers › previous employer | have you previously been employed by groww in any capacity (e.g., full-time, intern, contractor)? | no`
+  - groww (Assistant Manager - Internal Audit): Q: Have you previously been employed by Groww in any capacity (e.g., full-time, intern, contractor)?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | have you previously worked at hootsuite? | no`
+  - hootsuite (Account Executive, Enterprise Sales (Spanish and Portuguese Speaking)): Q: Have you previously worked at Hootsuite?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › relatives at the company | do you have any relatives or domestic partners currently working for n26? | no`
+  - n26 (AFC Associate - SAR Delegate): Q: Do you have any relatives or domestic partners currently working for N26? | hint: If yes, please disclose this to the Hiring Team as soon as possible.
+  - value: No; options: -; matched: Quick answers › relatives at the company
+- [4] `answer | Quick answers › previous employer | have you ever been employed by new relic? | no`
+  - newrelic (Account Executive - Enterprise Sales): Q: Have you ever been employed by New Relic?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | have you been employed by pendo before? | no`
+  - pendo (Account Director Commercial Sales (Mid-Market)): Q: Have you been employed by Pendo before?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | are you currently a twitch employee? | no`
+  - twitch (Applied Scientist): Q: Are you currently a Twitch employee?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | have you ever been employed by vonage or any other company within the ericsson group, including ericsson, redbee media, fyi television (us), cradlepoint, iconec | no`
+  - vonage (Credit and Collections Analyst): Q: Have you ever been employed by Vonage or any other company within the Ericsson Group, including Ericsson, RedBee Media, FYI Television (US), Cradlepoint, Iconectiv (Telcordia), or Emodo?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › expected salary abroad | what are your salary expectations (eur gross/annually)? | eur 60,000`
+  - babbel (Senior Product Manager - AI Content Creation (all genders)): Q: What are your salary expectations (EUR gross/annually)?
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [4] `answer | Quick answers › previous employer | have you been employed, or otherwise engaged, by an asana entity in the past? (previous independent contractors, select "yes.") | no`
+  - asana (AI GTM Account Executive): Q: Have you been employed, or otherwise engaged, by an Asana entity in the past? (Previous independent contractors, select "Yes.")
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | do you currently work for, or have you previously worked for zscaler? | no, i have never worked for zscaler`
+  - zscaler (Account Executive -  Commercial): Q: Do you currently work for, or have you previously worked for Zscaler?
+  - value: No (chose "No, I have never worked for Zscaler"); options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | voce trabalha atualmente no inter? | nao, nao trabalho no inter`
+  - inter ([BANCO DE TALENTOS] OPORTUNIDADES DE ESTÁGIO \| INTER ): Q: Você trabalha atualmente no Inter?
+  - value: No (chose "Não, não trabalho no Inter"); options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | have you previously been employed by flexport or any of its entities; or by an agency representing flexport? | no`
+  - flexport (Account Executive, Enterprise): Q: Have you previously been employed by Flexport or any of its entities; or by an agency representing Flexport?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › expected salary abroad | what is the beginning of your desired annual base salary range? (please format with no commas, i.e. $50000, £50000) | gbp 55,000`
+  - 1password (Senior Developer Marketing Manager, Social & Content): Q: What is the beginning of your desired annual base salary range? (please format with no commas, i.e. $50000, £50000)
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [4] `answer | Quick answers › expected salary abroad | what is the end of your desired annual base salary range? (please format with no commas, i.e. $70000, £70000) | gbp 55,000`
+  - 1password (Senior Developer Marketing Manager, Social & Content): Q: What is the end of your desired annual base salary range? (please format with no commas, i.e. $70000, £70000)
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [4] `answer | Quick answers › previous employer | have you previously been employed by ripple? | no`
+  - ripple (Business Development Senior Director - Capital Markets): Q: Have you previously been employed by Ripple?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | have you previously worked at careem? | no`
+  - careem (Product Operations Manager): Q: Have you previously worked at Careem?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | are you currently, or have you been employed by kpmg within the past 36 months? | no`
+  - fastly (Contracts Manager): Q: Are you currently, or have you been employed by KPMG within the past 36 months?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | have you ever worked for flatiron health before? | no`
+  - flatironhealth (Clinical Genomics Advanced Practice Provider): Q: Have you ever worked for Flatiron Health before?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › previous employer | have you ever, or are you currently working at gusto or symmetry in any capacity (ie: employee or contingent worker)? | no`
+  - gusto (CX Business Intelligence Analyst): Q: Have you ever, or are you currently working at Gusto or Symmetry in any capacity (ie: employee or contingent worker)?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [4] `answer | Quick answers › expected salary abroad | what are your salary expectations for this role? please note that final compensation is determined by various factors such as years of relevant work experience, | usd 70,000`
+  - zeno-power (Accountant): Q: What are your salary expectations for this role? Please note that final compensation is determined by various factors such as years of relevant work experience, skills, qualifications, certifications, and other business considerations.
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [3] `answer | Quick answers › expected salary abroad | desired total compensation? | usd 70,000`
+  - bandwidth (Applied AI Engineer): Q: Desired Total Compensation?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [3] `answer | Quick answers › previous employer | have you previously worked at or consulted for gitlab? | no`
+  - gitlab (AI Transformation Owner, CRO): Q: Have you previously worked at or consulted for GitLab?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [3] `answer | Quick answers › previous employer | are you currently, or have you previously, worked for instacart? | no`
+  - instacart (Account Manager): Q: Are you currently, or have you previously, worked for Instacart?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [3] `answer | Quick answers › previous employer | have you ever worked at mongodb before? | no`
+  - mongodb (2027 - Software Engineering Intern, AMER): Q: Have you ever worked at MongoDB before?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [3] `answer | Quick answers › expected salary abroad | please share with us your salary expectations. | usd 70,000`
+  - rocketlab (Accounts Payable Specialist): Q: Please share with us your salary expectations.
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [3] `answer | Quick answers › previous employer | have you ever been employed by pricewaterhousecoopers (pwc)? | no`
+  - sproutsocial (Account Executive, Corporate): Q: Have you ever been employed by PricewaterhouseCoopers (PWC)?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [3] `answer | Quick answers › expected salary abroad | what are your salary expectations? | gbp 55,000`
+  - cockroachlabs (Account Executive, UK ): Q: What are your salary expectations?
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [3] `answer | Quick answers › relatives at the company | do you have any first-degree relatives (spouse, parent, child, sibling) that are currently employed by nice or any of its subsidiaries? | no`
+  - nice (Account Executive - DACH): Q: Do you have any first-degree relatives (spouse, parent, child, sibling) that are currently employed by NICE or any of its subsidiaries?
+  - value: No; options: -; matched: Quick answers › relatives at the company
+- [3] `answer | Quick answers › previous employer | have you previously worked at samsara? | no`
+  - samsara (Account Executive, Commercial): Q: Have you previously worked at Samsara?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [3] `answer | Quick answers › expected salary abroad | what is your salary expectation? | usd 70,000`
+  - nubank (Staff Software Engineer (Crypto, SV) - US - IC7 - 2026): Q: What is your salary expectation? | hint: Add the currency of your Country of residence, for example: BRL 10.000, USD 10.000, MXN 10.000 and so on
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [3] `answer | Quick answers › expected salary abroad | please share an estimate of your annual base salary expectations. | 55000`
+  - pleo (Account Manager UKI): Q: Please share an estimate of your annual base salary expectations.
+  - value: 55000; options: -; matched: Quick answers › expected salary abroad
+- [3] `answer | Quick answers › expected salary abroad | what is your desired salary? | usd 70,000`
+  - backblaze (Data Center Technician I (On-site in Chandler, AZ)): Q: What is your desired salary?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [3] `answer | Quick answers › non-compete | are you subject to any contractual obligations or post-employment restrictions that may apply to or would limit your employment at squarespace? (e.g., non-compe | no`
+  - squarespace (Director, Corporate Communications): Q: Are you subject to any contractual obligations or post-employment restrictions that may apply to or would limit your employment at Squarespace? (e.g., non-compete)?
+  - value: No; options: -; matched: Quick answers › non-compete
+- [3] `answer | Quick answers › sponsorship | do you, now or in the future, require a work permit, visa, or additional right to work support for the country where you are applying to work? | yes`
+  - zscaler (Account Executive, Enterprise): Q: Do you, now or in the future, require a work permit, visa, or additional right to work support for the country where you are applying to work?
+  - value: Yes; options: -; matched: Quick answers › sponsorship
+- [3] `answer | Quick answers › work authorization | are you legally authorized to work in the country from which you plan to perform this work, without requiring visa or work-permit sponsorship? | no`
+  - xai (AI Tutor, Humanities - Temporary): Q: Are you legally authorized to work in the country from which you plan to perform this work, without requiring visa or work-permit sponsorship?
+  - value: No; options: -; matched: Quick answers › work authorization
+- [3] `answer | Quick answers › expected salary abroad | what is the beginning of your desired annual on target earnings (ote)? (please format with no commas, i.e. $70000) | usd 70,000`
+  - 1password (Account Executive, Enterprise — Future Opportunities (San Francisco, Chicago, New York)): Q: What is the beginning of your desired annual On Target Earnings (OTE)? (please format with no commas, i.e. $70000)
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [3] `answer | Quick answers › previous employer | have you ever been employed by coursera or udemy? | no, i have not previously been employed by coursera or udemy`
+  - coursera (AI Specialist II): Q: Have you ever been employed by Coursera or Udemy?
+  - value: No (chose "No, I have not previously been employed by Coursera or Udemy"); options: -; matched: Quick answers › previous employer
+- [3] `answer | Quick answers › expected salary abroad | what are your gross annual salary expectations? | eur 60,000`
+  - solarisbank (Cyber Security Staff Engineer - Application Security ): Q: What are your gross annual salary expectations? | hint: Please specify with local currency of the work location (example: 60000 EUR)
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [3] `answer | Quick answers › expected salary abroad | expected salary (gross annual gbp) | 55000`
+  - marshmallow (Staff Data Scientist): Q: Expected salary (gross annual GBP)
+  - value: 55000; options: -; matched: Quick answers › expected salary abroad
+- [3] `answer | Quick answers › where you live | do you currently reside in cyprus? | no`
+  - icmarkets (Back Office & Accounts Officer ): Q: Do you currently reside in Cyprus?
+  - value: No; options: Yes / No; matched: Quick answers › where you live
+- [3] `answer | Quick answers › expected salary abroad | what are your gross annual salary expectations in € for this role? | eur 60,000`
+  - icmarkets (Back Office & Accounts Officer ): Q: What are your gross annual salary expectations in € for this role?
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [3] `profile | fullName | volledige naam | asha verma`
+  - partejobs (Technical Support Engineer): Q: Volledige naam
+  - value: Asha Verma; options: -; matched: 
+- [3] `profile | phone | telefoonnummer | +91 90000 00000`
+  - partejobs (Technical Support Engineer): Q: Telefoonnummer
+  - value: +91 90000 00000; options: -; matched: 
+- [3] `answer | Quick answers › sponsorship | will you now or in the future require sponsorship for employment visa status (e.g., h-1b visa)? | yes`
+  - prolift-rigging (Assistant Project Manager): Q: Will you now or in the future require sponsorship for employment visa status (e.g., H-1B visa)?
+  - value: Yes; options: Yes / No; matched: Quick answers › sponsorship
+- [3] `answer | Quick answers › expected salary abroad | salary expectation | usd 70,000`
+  - celonis (Account Executive - CPG): Q: Salary Expectation
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [3] `answer | Quick answers › expected salary abroad | what is your desired salary for this role? | usd 70,000`
+  - komodohealth (Account Executive - AVP, Sales (Emerging)): Q: What is your desired salary for this role?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [3] `answer | Quick answers › previous employer | have you previously been employed by moniepoint? | no`
+  - moniepoint (Analytics Manager): Q: Have you previously been employed by Moniepoint?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [3] `answer | Quick answers › previous employer | have you worked at neo4j before? | no`
+  - neo4j (AI Solutions Architect): Q: Have you worked at Neo4j before?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [3] `answer | Quick answers › expected salary abroad | what is your desired salary? | 55000`
+  - thought-machine (Senior Software Engineer (Quality Engineering)): Q: What is your desired salary?
+  - value: 55000; options: -; matched: Quick answers › expected salary abroad
+- [3] `answer | Quick answers › previous employer | have you previously worked for everpure (formerly pure storage)? | no`
+  - purestorage (Account Executive, AI/HPC, Neo / Sovereign Cloud (EMEA)): Q: Have you previously worked for Everpure (formerly Pure Storage)?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [2] `answer | Quick answers › previous employer | have you previously worked at abnormal | no`
+  - abnormalsecurity (Account Executive, SLED (Sacramento only)): Q: Have you previously worked at Abnormal
+  - value: No; options: -; matched: Quick answers › previous employer
+- [2] `answer | Quick answers › expected salary abroad | what are your salary expectations (per annum) for this role? | usd 70,000`
+  - gymshark (Department Manager ): Q: What are your salary expectations (per annum) for this role?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [2] `answer | Quick answers › expected salary abroad | salary expectation : what is your expected total annual gross salary for this role, including both base salary or/and any variable components (e.g., based paid  | eur 60,000`
+  - mirakl (Account Executive (German Speaking), Mirakl Connect ): Q: Salary Expectation : What is your expected total annual gross salary for this role, including both base salary or/and any variable components (e.g., based paid and bonus or commission)?
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [2] `answer | Quick answers › expected salary abroad | expected salary | eur 60,000`
+  - alephalpha (Senior AI R&D Engineer - Performance - Pre-training (f/m/d)): Q: Expected salary
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [2] `answer | Quick answers › expected salary abroad | what is your salary expectation? | eur 60,000`
+  - raisin (B2B Partner Operations Manager (m/f/d)): Q: What is your salary expectation? | hint: Please share your expected salary in the local currency of the posting location. Eg. 65000
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [2] `answer | Quick answers › previous employer | have you been employed full time at upwork before? | no`
+  - upwork (General Upwork Application): Q: Have you been employed full time at Upwork before?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [2] `answer | Quick answers › previous employer | have you previously worked at branch as an employee or contractor? | no`
+  - branch (Enterprise Account Executive, Marketplaces): Q: Have you previously worked at Branch as an employee or contractor?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [2] `answer | Quick answers › expected salary abroad | what is your desired salary range for this role, including base and any variable or on-target earnings? | usd 70,000`
+  - clickup (Staff Backend Engineer, Hierarchy): Q: What is your desired salary range for this role, including base and any variable or on-target earnings?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [2] `answer | Quick answers › expected salary abroad | desired base salary | 70000`
+  - gainsight (Chief of Staff, CEO): Q: Desired Base Salary
+  - value: 70000; options: -; matched: Quick answers › expected salary abroad
+- [2] `answer | Quick answers › expected salary abroad | what are your salary expectations? (optional — we believe in flexible, transparent conversations about compensation and this helps us have that conversation ear | usd 70,000`
+  - realtimeboardglobal (Expression of Interest: Enterprise & Strategic Account Executive): Q: What are your salary expectations? (Optional — we believe in flexible, transparent conversations about compensation and this helps us have that conversation early.)
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [2] `answer | Quick answers › sponsorship | do you now or will you in the future require immigration sponsorship to work at cloudflare? | yes`
+  - cloudflare (Associate, Strategic Finance & Investor Relations): Q: Do you now or will you in the future require immigration sponsorship to work at Cloudflare?
+  - value: Yes; options: -; matched: Quick answers › sponsorship
+- [2] `answer | Quick answers › expected salary abroad | salary expectation (gross/year in eur) | eur 60,000`
+  - isaraerospace (AIT Technician): Q: Salary expectation (gross/year in EUR)
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [2] `answer | Quick answers › sponsorship | would you need a visa / work permit for the role in the location you are applying for? | yes`
+  - nice (Account Executive - Healthcare (Northeast)): Q: Would you need a visa / work permit for the role in the location you are applying for?
+  - value: Yes; options: -; matched: Quick answers › sponsorship
+- [2] `answer | Quick answers › expected salary abroad | what is your salary expectation? | 55000`
+  - faculty (Lead Machine Learning Engineer): Q: What is your salary expectation?
+  - value: 55000; options: -; matched: Quick answers › expected salary abroad
+- [2] `answer | Quick answers › sponsorship | will you now or in the future require visa sponsorship (h-1b, tn, o-1, e-3, opt/cpt, etc.)? | yes`
+  - vagaro (Data Engineer): Q: Will you now or in the future require visa sponsorship (H-1B, TN, O-1, E-3, OPT/CPT, etc.)?
+  - value: Yes; options: Yes / No; matched: Quick answers › sponsorship
+- [2] `answer | Quick answers › previous employer | have you previously been employed by fastly? | no`
+  - fastly (Assistant General Counsel, Commercial): Q: Have you previously been employed by Fastly?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [2] `answer | Quick answers › expected salary abroad | salary expectations? | usd 70,000`
+  - wayve (Staff Machine Learning Engineer, Data Curation & Dataset Strategy): Q: Salary Expectations?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what are your salary expectations for this role? (base/ote) | usd 70,000`
+  - justworks (Account Executive - In-Territory  (Austin, TX)): Q: What are your salary expectations for this role? (Base/OTE)
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › relatives at the company | do you have any friends or relatives currently employed at zoominfo? | no`
+  - zoominfo ( Account Executive  - GTM Overlay): Q: Do you have any friends or relatives currently employed at ZoomInfo?
+  - value: No; options: -; matched: Quick answers › relatives at the company
+- [1] `answer | Quick answers › expected salary abroad | bitte nenne uns deine gehaltsvorstellungen (brutto/jahrlich, in €) | eur 60,000`
+  - doctolib (Account Executive - Köln (x/f/m)): Q: Bitte nenne uns deine Gehaltsvorstellungen (brutto/jährlich, in €)
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | salary expections? | gbp 55,000`
+  - moneybox (Senior Data Engineer): Q: Salary expections?
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › previous employer | are you currently, or have you previously, worked at instacart? | no`
+  - instacart (Activation Sales Development Representative II): Q: Are you currently, or have you previously, worked at Instacart?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [1] `answer | Quick answers › expected salary abroad | what is your salary expectation (in pounds, gross)? | gbp 55,000`
+  - sumup (Account Sales Executive ): Q: What is your salary expectation (in pounds, gross)?
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | salary expectations | 60000`
+  - oyster (Oyster Talent Community Sign Up): Q: Salary Expectations
+  - value: 60000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what are your salary expectations for this role? | gbp 55,000`
+  - polyai (Staff Product Manager (Runtime Team) ): Q: What are your salary expectations for this role?
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › previous employer | have you been employed by ernst & young within the last 24 months? | no`
+  - toast (Associate of R&D Strategic Finance (FP&A)): Q: Have you been employed by Ernst & Young within the last 24 months?
+  - value: No; options: Yes / No; matched: Quick answers › previous employer
+- [1] `answer | Quick answers › expected salary abroad | considering your experience & relevant skills for this position - what compensation expectations do you have? | eur 60,000`
+  - mentimeter (Account Manager - DACH Enterprise): Q: Considering your experience & relevant skills for this position - what compensation expectations do you have? | hint: We ask this question to ensure alignment and transparency early in the process. Your response will not be used as a negotiation tool, but rather to as
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what is your salary expectation? | 60000`
+  - mollie (Business Support Specialist -  Polish speaking): Q: What is your salary expectation?
+  - value: 60000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › work authorization | can you legally work for any employer in canada? | no`
+  - wealthsimple (Future Opportunities - North Star: Calling all Canadians Abroad): Q: Can you legally work for any employer in Canada?
+  - value: No; options: Yes / No / I require sponsorship; matched: Quick answers › work authorization
+- [1] `answer | Quick answers › expected salary abroad | desired total salary? | gbp 55,000`
+  - bandwidth (Carrier Account Executive): Q: Desired total salary?
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | salary expectation | eur 60,000`
+  - celonis (Account Executive - Public Sector Germany - Defense (Bundeswehr)): Q: Salary Expectation
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › relatives at the company | do you have any relatives or close family members currently employed with druva? | no`
+  - druva (Customer Success Manager): Q: Do you have any relatives or close family members currently employed with Druva?
+  - value: No; options: -; matched: Quick answers › relatives at the company
+- [1] `answer | Quick answers › expected salary abroad | what is your annual salary expectation? (please provide a number or range) | eur 60,000`
+  - cognite (Business Development Director – Supply Chain Center of Excellence (CoE)): Q: What is your annual salary expectation? (Please provide a number or range)
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what are your compensation expectations for this role? | usd 70,000`
+  - atlan (Enterprise Account Executive - SF/Bay Area): Q: What are your compensation expectations for this role?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | bitte teile uns deine gehaltsvorstellungen mit | eur 60,000`
+  - doctolib (Team Manager Customer Success (x/f/m)): Q: Bitte teile uns deine Gehaltsvorstellungen mit
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what is your desired salary? | 60000`
+  - thought-machine (Software Engineer): Q: What is your desired salary?
+  - value: 60000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what are your base salary expectations? please state the amount in usd, gross, per year, as an employee. | 70000`
+  - snapsoft (AI/ML Solution Architect (LATAM/US)): Q: What are your base salary expectations? Please state the amount in USD, gross, per year, as an employee.
+  - value: 70000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what is your desired salary? | gbp 55,000`
+  - backblaze (AE Neo Cloud - UK): Q: What is your desired salary?
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what are your salary expectations? (yearly gross) | gbp 55,000`
+  - mollie (Senior Product Marketing Manager - Online Payments): Q: What are your salary expectations? (Yearly gross)
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | your salary expectations | 60000`
+  - satispay (Software Engineer III, Backend - Business Domain): Q: Your Salary Expectations
+  - value: 60000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what are your base salary expectations for this role? | gbp 55,000`
+  - polyai (Senior Marketing Manager, EMEA): Q: What are your base salary expectations for this role?
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what is your expected compensation? | usd 70,000`
+  - workato (Account Manager): Q: What is your expected compensation?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what is your annual salary expectation? (please provide a number or range) | usd 70,000`
+  - cognite (Account Executive): Q: What is your annual salary expectation? (Please provide a number or range)
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what are your salary expectations (based on 40 hours, including holiday allowance)? | eur 60,000`
+  - housinganywhere (Senior Product Designer - Listing & Finding experience): Q: What are your salary expectations (based on 40 hours, including Holiday Allowance)?
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what is your annual salary expectation? | usd 70,000`
+  - deepl (VP of Sales, AMER): Q: What is your annual salary expectation?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what are your salary expectations? (yearly gross) | eur 60,000`
+  - mollie (Application Engineer II): Q: What are your salary expectations? (Yearly gross)
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | salary expectations? | gbp 55,000`
+  - wayve (Technical Lead Manager, Synthetic Data ): Q: Salary Expectations?
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what are your salary expectations for this role? | eur 60,000`
+  - weaviate (Finance Associate (Part-time/ Dutch Speaker)): Q: What are your salary expectations for this role?
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what are your compensation expectations for the role? (please do not say negotiable) | usd 70,000`
+  - apolloio (Account Executive, New Business (Mid-Market)): Q: What are your compensation expectations for the role? (Please do not say negotiable)
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | gehaltsvorstellung (brutto / jahr in eur) | eur 60,000`
+  - isaraerospace (Additive Manufacturing Operator (m/f/d)): Q: Gehaltsvorstellung (brutto / Jahr in EUR)
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what is your desired base salary? | usd 70,000`
+  - nice (Account Executive, Enterprise AI, West Coast): Q: What is your desired base salary?
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what is your salary expectation? | gbp 55,000`
+  - raisin (Chief of Staff, Strategic Growth & Partnerships (UK)): Q: What is your salary expectation? | hint: Please share your expected salary in the local currency of the posting location. Eg. 65000
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what are your salary expectations? | 55000`
+  - faculty (Senior Research Scientist - AI Safety): Q: What are your salary expectations?
+  - value: 55000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | if you're comfortable doing so, please outline your salary expectations. | usd 70,000`
+  - synthesia (Strategic Account Executive): Q: If you're comfortable doing so, please outline your salary expectations.
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what are your salary expectations (per annum) for this role? | gbp 55,000`
+  - gymshark (Mobile Engineer - IOS): Q: What are your salary expectations (per annum) for this role?
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › previous employer | have you previously worked for riot games as a contractor or full-time rioter? | no`
+  - riotgames (Associate Art Director - League Cosmetics): Q: Have you previously worked for Riot Games as a contractor or Full-Time Rioter?
+  - value: No; options: -; matched: Quick answers › previous employer
+- [1] `answer | Quick answers › expected salary abroad | desired pay | gbp 55,000`
+  - storeforce (APAC Business Development Executive (B2B SaaS)): Q: Desired Pay
+  - value: GBP 55,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `profile | currentTitle | list previous employment( job title, duties, dates ,contact info) | data engineer`
+  - hsvarc ( Residential Aide Part-Time): Q: List previous employment( job title, duties, dates ,contact info)
+  - value: Data Engineer; options: -; matched: 
+- [1] `profile | currentTitle | list prior work experience (job title, job responsibilities, dates) | data engineer`
+  - hsvarc (Community Support Personnel): Q: List prior work experience (Job Title, Job Responsibilities, Dates)
+  - value: Data Engineer; options: -; matched: 
+- [1] `answer | Quick answers › previous employer | have you ever been employed to a couples resorts property? | no`
+  - couples (Watersports Attendant - Couples Sans Souci): Q: Have you ever been employed to a Couples Resorts property?
+  - value: No; options: Yes / No; matched: Quick answers › previous employer
+- [1] `answer | Quick answers › relatives at the company | do you have any relatives employed to any of the couples resorts' companies? | no`
+  - couples (Watersports Attendant - Couples Sans Souci): Q: Do you have any relatives employed to any of the Couples Resorts' companies?
+  - value: No; options: Yes / No; matched: Quick answers › relatives at the company
+- [1] `answer | Quick answers › expected salary abroad | desired pay | eur 60,000`
+  - corcym (Account Manager/Cardiology Education Specialist): Q: Desired Pay
+  - value: EUR 60,000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › expected salary abroad | what are your base salary expectations? please state the amount in usd, gross, per year or per month, as an employee. | 70000`
+  - snapsoft (AWS Cloud Architect (LATAM)): Q: What are your base salary expectations? Please state the amount in USD, gross, per year or per month, as an employee.
+  - value: 70000; options: -; matched: Quick answers › expected salary abroad
+- [1] `answer | Quick answers › sponsorship | do you require visa sponsorship either now or in the future? | yes`
+  - bear-robotics (Channel Sales Director): Q: Do you require visa sponsorship either now or in the future?
+  - value: Yes; options: -; matched: Quick answers › sponsorship
+- [1] `answer | Quick answers › expected salary abroad | what are your compensation expectations? (salary) | usd 70,000`
+  - t3-services-group (Recruiter): Q: What are your compensation expectations? (Salary)
+  - value: USD 70,000; options: -; matched: Quick answers › expected salary abroad

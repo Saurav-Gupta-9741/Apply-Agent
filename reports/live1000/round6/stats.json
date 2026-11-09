@@ -1,0 +1,397 @@
+{
+ "generatedAt": "2026-11-09T18:01:23.846Z",
+ "inputs": [
+  "results-r6-a.jsonl",
+  "results-r6-b.jsonl"
+ ],
+ "forms": 78,
+ "byOutcome": {
+  "filled": 78
+ },
+ "byPlatformOutcome": {
+  "breezy": {
+   "filled": 72
+  },
+  "bamboohr": {
+   "filled": 3
+  },
+  "ashby": {
+   "filled": 2
+  },
+  "greenhouse": {
+   "filled": 1
+  }
+ },
+ "runStatus": {
+  "needs_user": 60,
+  "ready_to_submit": 18
+ },
+ "fields": 1838,
+ "byStatus": {
+  "filled": 1020,
+  "skipped": 485,
+  "needs_user": 253,
+  "already_filled": 65,
+  "failed": 15
+ },
+ "byDecision": {
+  "resume": 78,
+  "profile": 378,
+  "skip": 495,
+  "ask": 308,
+  "work": 479,
+  "answer": 100
+ },
+ "byDecisionStatus": {
+  "resume": {
+   "filled": 78
+  },
+  "profile": {
+   "filled": 377,
+   "failed": 1
+  },
+  "skip": {
+   "skipped": 483,
+   "already_filled": 12
+  },
+  "ask": {
+   "needs_user": 253,
+   "already_filled": 53,
+   "skipped": 2
+  },
+  "work": {
+   "filled": 479
+  },
+  "answer": {
+   "filled": 86,
+   "failed": 14
+  }
+ },
+ "required": 641,
+ "requiredLeftForUser": 252,
+ "requiredFilled": 389,
+ "asks": {
+  "unknown": 198,
+  "consent": 22,
+  "salary": 52,
+  "pronouns": 4,
+  "missing_profile_value": 4,
+  "notice_period": 18,
+  "relocation": 1,
+  "work_authorization": 1,
+  "gender": 2,
+  "disability": 2,
+  "age": 2,
+  "signature": 1,
+  "sponsorship": 1
+ },
+ "asksRequired": {
+  "unknown": 198,
+  "consent": 20,
+  "salary": 22,
+  "pronouns": 4,
+  "missing_profile_value": 4,
+  "notice_period": 16,
+  "relocation": 1,
+  "work_authorization": 1,
+  "signature": 1,
+  "sponsorship": 1
+ },
+ "skips": {
+  "optional choice": 64,
+  "current job: no end date": 56,
+  "optional, not in profile": 252,
+  "study dates are not in your profile": 112,
+  "no addressLine1 in profile": 3,
+  "no postalCode in profile": 3,
+  "no portfolio in profile": 2,
+  "not sure this saved answer fits: left for you": 2,
+  "optional attachment (not your resume)": 1
+ },
+ "failedByKey": {
+  "answer:Quick answers › expected salary abroad (text)": 14,
+  "profile:school (combobox)": 1
+ },
+ "seconds": {
+  "forms": 78,
+  "median": 28,
+  "mean": 27,
+  "medianFilled": 28,
+  "max": 46
+ },
+ "perCompany": {
+  "breezy:zero-hash": {
+   "forms": 4,
+   "fields": 102,
+   "filled": 68,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "breezy:social-discovery-ventures": {
+   "forms": 4,
+   "fields": 40,
+   "filled": 25,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "breezy:north-wind-group": {
+   "forms": 4,
+   "fields": 80,
+   "filled": 49,
+   "needsUser": 1,
+   "ready": 3,
+   "requiredLeft": 2
+  },
+  "breezy:beex": {
+   "forms": 4,
+   "fields": 40,
+   "filled": 27,
+   "needsUser": 3,
+   "ready": 1,
+   "requiredLeft": 3
+  },
+  "breezy:bear-robotics": {
+   "forms": 4,
+   "fields": 99,
+   "filled": 62,
+   "needsUser": 6,
+   "ready": 3,
+   "requiredLeft": 6
+  },
+  "breezy:taqar-consulting-co-l-l-c": {
+   "forms": 4,
+   "fields": 89,
+   "filled": 60,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "breezy:zeno-power": {
+   "forms": 4,
+   "fields": 110,
+   "filled": 47,
+   "needsUser": 44,
+   "ready": 0,
+   "requiredLeft": 45
+  },
+  "breezy:small-batch-standard": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 12,
+   "needsUser": 14,
+   "ready": 0,
+   "requiredLeft": 14
+  },
+  "breezy:prolift-rigging": {
+   "forms": 4,
+   "fields": 148,
+   "filled": 80,
+   "needsUser": 21,
+   "ready": 1,
+   "requiredLeft": 22
+  },
+  "breezy:totalsecurityltd": {
+   "forms": 4,
+   "fields": 109,
+   "filled": 61,
+   "needsUser": 19,
+   "ready": 0,
+   "requiredLeft": 19
+  },
+  "breezy:spark-power": {
+   "forms": 4,
+   "fields": 116,
+   "filled": 60,
+   "needsUser": 16,
+   "ready": 0,
+   "requiredLeft": 17
+  },
+  "breezy:wealthy-recruiting": {
+   "forms": 4,
+   "fields": 100,
+   "filled": 60,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 12
+  },
+  "breezy:segal-mccambridge": {
+   "forms": 4,
+   "fields": 46,
+   "filled": 19,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "breezy:prime-philippines": {
+   "forms": 4,
+   "fields": 88,
+   "filled": 60,
+   "needsUser": 1,
+   "ready": 3,
+   "requiredLeft": 1
+  },
+  "breezy:inallmedia-llc": {
+   "forms": 4,
+   "fields": 134,
+   "filled": 48,
+   "needsUser": 40,
+   "ready": 0,
+   "requiredLeft": 40
+  },
+  "breezy:aimpoint-digital": {
+   "forms": 4,
+   "fields": 90,
+   "filled": 60,
+   "needsUser": 1,
+   "ready": 3,
+   "requiredLeft": 1
+  },
+  "breezy:helpware-inc": {
+   "forms": 4,
+   "fields": 109,
+   "filled": 63,
+   "needsUser": 7,
+   "ready": 1,
+   "requiredLeft": 4
+  },
+  "breezy:vagaro": {
+   "forms": 4,
+   "fields": 120,
+   "filled": 64,
+   "needsUser": 20,
+   "ready": 0,
+   "requiredLeft": 22
+  },
+  "bamboohr:storeforce": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 9,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:1password": {
+   "forms": 2,
+   "fields": 55,
+   "filled": 23,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "bamboohr:hsvarc": {
+   "forms": 2,
+   "fields": 36,
+   "filled": 15,
+   "needsUser": 4,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "breezy:t3-services-group": {
+   "forms": 2,
+   "fields": 56,
+   "filled": 35,
+   "needsUser": 3,
+   "ready": 1,
+   "requiredLeft": 3
+  },
+  "greenhouse:xai": {
+   "forms": 1,
+   "fields": 27,
+   "filled": 13,
+   "needsUser": 11,
+   "ready": 0,
+   "requiredLeft": 10
+  }
+ },
+ "perPlatform": {
+  "breezy": {
+   "forms": 72,
+   "fields": 1704,
+   "filled": 960,
+   "needsUser": 228,
+   "failed": 14,
+   "skipped": 437,
+   "ready": 16,
+   "required": 596,
+   "requiredLeft": 235,
+   "seconds": 28
+  },
+  "bamboohr": {
+   "forms": 3,
+   "fields": 52,
+   "filled": 24,
+   "needsUser": 6,
+   "failed": 0,
+   "skipped": 22,
+   "ready": 2,
+   "required": 4,
+   "requiredLeft": 1,
+   "seconds": 21
+  },
+  "ashby": {
+   "forms": 2,
+   "fields": 55,
+   "filled": 23,
+   "needsUser": 8,
+   "failed": 0,
+   "skipped": 24,
+   "ready": 0,
+   "required": 21,
+   "requiredLeft": 6,
+   "seconds": 12
+  },
+  "greenhouse": {
+   "forms": 1,
+   "fields": 27,
+   "filled": 13,
+   "needsUser": 11,
+   "failed": 1,
+   "skipped": 2,
+   "ready": 0,
+   "required": 20,
+   "requiredLeft": 10,
+   "seconds": 21
+  }
+ },
+ "blocked": {
+  "total": 662,
+  "forms": 78,
+  "applicationSends": []
+ },
+ "urlChanged": [],
+ "errors": {},
+ "filledShare": 55.5,
+ "requiredLeftShare": 39.31,
+ "formsReady": 18,
+ "formsNeedingUser": 60,
+ "accuracy": {
+  "filled": 1020,
+  "correct": 1020,
+  "wrong": 0,
+  "unclear": 0,
+  "byRule": {
+   "correct:resume": 78,
+   "correct:profile_kind": 377,
+   "correct:work_block": 479,
+   "correct:eeo_decline": 42,
+   "correct:manual:years_specific": 4,
+   "correct:hear": 12,
+   "correct:workauth_other_country": 8,
+   "correct:manual:none": 11,
+   "correct:manual:sponsor_unnamed_country": 6,
+   "correct:qa_travel": 1,
+   "correct:qa_pronouns": 2
+  },
+  "wrongByRule": {},
+  "wrongShare": 0,
+  "correctShare": 100,
+  "unclearPairs": 0,
+  "clearedAfterFill": 3,
+  "clearedForms": 3,
+  "clearedByName": {
+   "city.value": 3
+  }
+ }
+}
