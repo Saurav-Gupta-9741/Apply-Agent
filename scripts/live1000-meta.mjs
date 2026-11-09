@@ -37,6 +37,19 @@ for (const r of rows) {
       meta[r.url] = { location: j.location?.name ?? "", offices: (j.offices ?? []).map((o) => o.location || o.name).filter(Boolean), options };
       fetched++;
       await sleep(300);
+    } else if (r.platform === "bamboohr") {
+      // BambooHR's public job detail (the careers page reads it): city and country.
+      const m = /^https:\/\/([^.]+)\.bamboohr\.com\/careers\/(\d+)/.exec(r.url);
+      if (!m) continue;
+      const res = await fetch(`https://${m[1]}.bamboohr.com/careers/${m[2]}/detail`);
+      if (!res.ok) { meta[r.url] = { error: res.status }; continue; }
+      // `location` is the posting's address; `atsLocation` fills in when that is empty (Corcym: Delhi, India).
+      const job = (await res.json()).result?.jobOpening ?? {};
+      const loc = job.location ?? {};
+      const ats = job.atsLocation ?? {};
+      meta[r.url] = { location: [loc.city ?? ats.city, loc.state ?? ats.state].filter(Boolean).join(", "), country: loc.addressCountry ?? ats.country ?? "", options: {} };
+      fetched++;
+      await sleep(300);
     } else if (r.platform === "ashby") {
       if (!ashbyBoards.has(r.company)) {
         const res = await fetch(`https://api.ashbyhq.com/posting-api/job-board/${r.company}`);

@@ -14,3 +14,6 @@ release/
 
 reports/round7/gh-raw.jsonl
 reports/live1000/logs/
+
+# Simplify runs hold the user's own Simplify profile (name, email, phone): never committed
+reports/compare/simplify-*.jsonl

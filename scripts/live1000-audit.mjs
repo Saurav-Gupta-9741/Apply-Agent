@@ -86,6 +86,9 @@ const INDIA_PLACES = /\b(india|bengaluru|bangalore|mumbai|pune|hyderabad|chennai
 const CITY_COUNTRY = [[/\b(london|manchester|edinburgh|cambridge, uk)\b/i, "United Kingdom"], [/\bparis\b/i, "France"], [/\b(madrid|barcelona)\b/i, "Spain"], [/\b(berlin|munich|hamburg)\b/i, "Germany"], [/\b(toronto|vancouver|montreal)\b/i, "Canada"], [/\bamsterdam\b/i, "Netherlands"], [/\bdublin\b/i, "Ireland"], [/\b(sydney|melbourne)\b/i, "Australia"], [/\btokyo\b/i, "Japan"], [/\bbangkok|thailand\b/i, "Thailand"], [/\b(amman|jordan)\b/i, "Jordan"], [/\btel aviv\b/i, "Israel"], [/\bs[aã]o paulo\b/i, "Brazil"], [/\b(lisbon)\b/i, "Portugal"], [/\b(warsaw)\b/i, "Poland"], [/\b(mexico city)\b/i, "Mexico"], [/\b(serbia|belgrade)\b/i, "Serbia"], [/\b(dubai)\b/i, "UAE"]];
 /** The countries a job is in, from its location text ("Remote - USA", "Bengaluru-VTP, India", "Raleigh, NC"). */
 function jobCountries(meta) {
+  // The API's own country wins: "IN Tamil Nadu (Chennai) - Office" (Poshmark) read as Indiana.
+  const own = meta?.country ? countriesIn(meta.country) : [];
+  if (own.length) return own;
   const loc = [meta?.location, meta?.country].filter(Boolean).join("; ");
   if (!loc) return [];
   const out = new Set(countriesIn(loc));
@@ -180,8 +183,18 @@ function judge(f, row) {
   }
   // Work authorization.
   // "Do you need a visa / work permit…" asks about sponsorship, not current authorization: judged below.
-  const needsAsk = /\b(need|require|requir(es|ing))\b[^?]{0,60}\b(visa|work permit|sponsor\w*|right to work support)\b/.test(label);
-  if (isWorkAuth(q) && !needsAsk && (f.decision === "answer" || YES.test(c) || NO.test(c))) {
+  const RESIDES = /(country|location|place) of (your )?(current )?residence|(where|in which) you (currently )?(live|reside)|you (currently )?(live|reside) in|your (current |home )?country/;
+  // "Are you authorized to work in Poland without requiring sponsorship?" asks about authorization: No is right.
+  const authWithout = /(authori[sz]ed|right to work|legally|eligible)[^?]*\bwithout\b[^?]{0,60}(sponsor|visa)/.test(label);
+  // "Do you require work authorization?" asks whether the candidate needs a visa: Yes for a job outside India.
+  const needsWorkAuth = /\b(do|will) you (need|require) (a |any )?(work authori[sz]ation|a work permit)\b/.test(label);
+  if (needsWorkAuth && (YES.test(c) || NO.test(c))) {
+    const jc = jobCountries(META[row?.url]);
+    if (jc.length && !jc.includes("India")) return YES.test(c) ? r("correct", "needs_workauth", `needs work authorization for ${jc.join(", ")}`) : r("wrong", "needs_workauth", `No though the candidate needs work authorization for ${jc.join(", ")}`);
+    if (jc.length === 1 && jc[0] === "India") return NO.test(c) ? r("correct", "needs_workauth", "no work authorization needed in India") : r("wrong", "needs_workauth", "Yes for a job in India");
+  }
+  const needsAsk = !authWithout && /\b(need|require|requir(es|ing))\b[^?]{0,60}\b(visa|work permit|sponsor\w*|right to work support)\b/.test(label);
+  if ((isWorkAuth(q) || authWithout) && !needsAsk && !needsWorkAuth && (f.decision === "answer" || YES.test(c) || NO.test(c))) {
     const cs = countriesIn(q);
     const yes = YES.test(c) || /authori[sz]ed|eligible/.test(c) && !/not/.test(c);
     const no = NO.test(c);
@@ -189,14 +202,14 @@ function judge(f, row) {
     if (cs.length && !cs.includes("India")) return yes ? r("wrong", "workauth_other_country", `answered Yes for ${cs.join(", ")}; authorized in India only`) : no ? r("correct", "workauth_other_country", "No for a country other than India") : r("unclear", "workauth", "");
     // "…in your country of residence?", "…the country you currently reside in?": the candidate lives in India and is
     // authorized there, whatever the job's country.
-    if (/resid|where you (currently )?live|you (currently )?live in|your (current |home )?country/.test(label)) return yes ? r("correct", "workauth_residence", "authorized where the candidate lives (India)") : r("wrong", "workauth_residence", `"${chosen ?? value}" though authorized in the country of residence`);
+    if (RESIDES.test(label)) return yes ? r("correct", "workauth_residence", "authorized where the candidate lives (India)") : r("wrong", "workauth_residence", `"${chosen ?? value}" though authorized in the country of residence`);
     const jc = jobCountries(META[row?.url]);
     if (jc.length === 1 && jc[0] === "India") return yes ? r("correct", "workauth_job_country", "the job is in India") : r("wrong", "workauth_job_country", `"${chosen ?? value}" for a job in India`);
     if (jc.length && !jc.includes("India")) return yes ? r("wrong", "workauth_job_country", `Yes for a job in ${jc.join(", ")} (${META[row.url].location}); authorized in India only`) : no ? r("correct", "workauth_job_country", `No for a job in ${jc.join(", ")}`) : r("unclear", "workauth", "");
     if (yes) return r("unclear", "workauth_unnamed_country", "Yes where the country is not named (depends on the job location)");
   }
   // Sponsorship.
-  if (isSponsor(q) && (f.decision === "answer" || YES.test(c) || NO.test(c))) {
+  if (isSponsor(q) && !authWithout && !needsWorkAuth && (f.decision === "answer" || YES.test(c) || NO.test(c))) {
     const cs = countriesIn(q);
     // Judged on the question only: help text often explains both answers ("Mark NO if you will NOT require…").
     const inverted = INVERTED.test(label);
@@ -210,7 +223,7 @@ function judge(f, row) {
     if (inverted && yes) return r("wrong", "sponsor_inverted", `inverted question ("do NOT require") answered "${chosen ?? value}"`);
     // "…to continue working in your country of residence?", "…to work where you reside?": India, where the candidate
     // needs no sponsorship.
-    if (!inverted && /resid|where you (currently )?live|you (currently )?live in|your (current |home )?country/.test(label)) return no ? r("correct", "sponsor_residence", "no sponsorship where the candidate lives (India)") : r("wrong", "sponsor_residence", `"${chosen ?? value}" though no sponsorship is needed where the candidate lives`);
+    if (!inverted && RESIDES.test(label)) return no ? r("correct", "sponsor_residence", "no sponsorship where the candidate lives (India)") : r("wrong", "sponsor_residence", `"${chosen ?? value}" though no sponsorship is needed where the candidate lives`);
     const jc = jobCountries(META[row?.url]);
     if (!inverted && jc.length === 1 && jc[0] === "India") return no ? r("correct", "sponsor_job_country", "no sponsorship for a job in India") : r("wrong", "sponsor_job_country", `"${chosen ?? value}" for a job in India`);
     if (!inverted && jc.length && !jc.includes("India")) return yes ? r("correct", "sponsor_job_country", `needs sponsorship for a job in ${jc.join(", ")}`) : no ? r("wrong", "sponsor_job_country", `No for a job in ${jc.join(", ")} (${META[row.url].location}); needs sponsorship outside India`) : r("unclear", "sponsor", "");
@@ -438,6 +451,8 @@ W.push("| Class | Wrong fields |", "|---|---:|");
 for (const [k, v] of top(A.wrongByRule, 50)) W.push(`| ${k} | ${v} |`);
 // Root causes found for each class (the fixes are on the audit branch, with regression tests in test/live1000-fixes.test.ts).
 const CAUSES = {
+  sponsor_residence: "Live run 5 (Appier): \"…require visa sponsorship … at your current location of residence?\" on a Netherlands/UK job got Yes: `workAnswer` in src/content/facts.ts knew \"country of residence\" but not \"location of residence\", so it used the job's country. Fixed: \"location / place of residence\" and \"the location in which you currently reside\" are where the user lives; re-run on the live form: No.",
+  workauth_residence: "Live run 5 (Hopper): \"Are you legally able to work in the location in which you currently reside?\" on a Philippines job got No, for the same reason as sponsor_residence. Fixed in the same change; re-run on the live form: Yes.",
   option_not_offered: "A country question's react-select list picked \"India+91\" from the PHONE's country list, which was still open: `listNear()` in src/content/fill.ts took the only open list on the page (or every option on the page) without checking whose it was, and `fillCombobox` accepted the pick although the question's own widget showed nothing chosen. Fixed: lists named by, or sitting in, another dropdown's widget are never used; a react-select that shows no choice after the pick is reported as not filled.",
   eeo_not_decline: "A saved \"Decline to self identify\" was matched to \"Other\": the pronoun bucket DECLINE in src/shared/option-matcher.ts listed \"other\" and \"not listed\", and pronoun mapping runs before gender mapping. Fixed: those words removed; and decide() (src/content/classify.ts) never lets a saved decline land on a choice that does not decline.",
   residence_as_plan: "The profile residence (Pune / India) typed for where the candidate PLANS to work (\"Which country do you intend to work from?\", \"What city/country will you work from?\") or for her work location. Fixed with a guard in src/content/meaning.ts NOT_THIS_FACT: plans, intentions and work location are asked.",
