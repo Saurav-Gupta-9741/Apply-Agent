@@ -422,3 +422,22 @@ describe("live run 3: the plain relocation question keeps its answer", () => {
     expect(decide(field("Are you willing to relocate to the required job location?", "select", ["Yes", "No"]), me, [])).toMatchObject({ kind: "answer", value: "Yes" });
   });
 });
+
+// Live run 5 (1,581 live forms): the two wrong fills that were ApplyAgent's own.
+describe("live run 5: 'location of residence' is where the user lives, not the job's country", () => {
+  const facts = { workCountries: "India", needsFutureSponsorship: "No" as const, otherCountries: "sponsorship" as const, noticePeriod: "", currentCtc: "", expectedCtc: "", relocate: "" as const, heardFrom: "", gender: "" as const, hispanic: "" as const, race: "", veteran: "" as const, disability: "" as const };
+  const me = { ...INDIA_PROFILE, facts };
+  const job = (c: string) => ({ jobCountries: [c], url: "https://job-boards.greenhouse.io/x/jobs/1", company: "x" }) as unknown as PageFacts;
+  it("appier (a Netherlands / UK job): sponsorship 'at your current location of residence' is No", () => {
+    const q = field("Will you now, or in the future, require visa sponsorship to be engaged in full-time employment at your current location of residence?", "select", ["Yes", "No"]);
+    expect(decide(q, me, [], job("Netherlands"))).toMatchObject({ kind: "answer", value: "No" });
+  });
+  it("hopper (a Philippines job): 'legally able to work in the location in which you currently reside' is Yes", () => {
+    const q = field("Are you legally able to work in the location in which you currently reside?", "radio", ["Yes", "No", "Yes, with immigation assistance"]);
+    expect(decide(q, me, [], job("Philippines"))).toMatchObject({ kind: "answer", value: "Yes" });
+  });
+  it("the job's own location is still the job's country", () => {
+    const q = field("Will you require visa sponsorship to work in the location of this job?", "select", ["Yes", "No"]);
+    expect(decide(q, me, [], job("Netherlands"))).not.toMatchObject({ kind: "answer", value: "No" });
+  });
+});
