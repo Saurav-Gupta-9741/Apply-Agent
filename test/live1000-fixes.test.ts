@@ -9,6 +9,7 @@ import { decide, questionTopic } from "../src/content/classify";
 import { isDeclineAnswer, type PageFacts } from "../src/content/facts";
 import { decideWithMeaning } from "../src/content/meaning";
 import { bestOption } from "../src/shared/text";
+import { countriesInLocation } from "../src/shared/countries";
 import type { AnswerEntry, FieldDescriptor } from "../src/shared/types";
 import { fillCombobox } from "../src/content/fill";
 import { mount, PROFILE } from "./fixtures";
@@ -439,5 +440,40 @@ describe("live run 5: 'location of residence' is where the user lives, not the j
   it("the job's own location is still the job's country", () => {
     const q = field("Will you require visa sponsorship to work in the location of this job?", "select", ["Yes", "No"]);
     expect(decide(q, me, [], job("Netherlands"))).not.toMatchObject({ kind: "answer", value: "No" });
+  });
+});
+
+// Live run 5: the hand review of the 132 "unclear" (question, answer) pairs found these.
+describe("live run 5: place names, currency examples, plans and work-history lists", () => {
+  const facts = { workCountries: "India", noticePeriod: "30 days", currentCtc: "12 LPA", expectedCtc: "18 LPA", expectedSalaryAbroad: "USD 70,000; EUR 60,000; GBP 55,000", relocate: "" as const, heardFrom: "", gender: "" as const, hispanic: "" as const, race: "", veteran: "" as const, disability: "" as const, otherCountries: "sponsorship" as const };
+  const me = { ...INDIA_PROFILE, currentTitle: "Data Engineer", currentCompany: "Acme Analytics", facts };
+  const job = (...c: string[]) => ({ jobCountries: c, url: "https://jobs.example/1", company: "x" }) as unknown as PageFacts;
+  it("storeforce: 'New South Wales (Remote)' is Australia, not the UK; 'New England' / 'New Mexico' are the US; 'Latin America' is not", () => {
+    expect(countriesInLocation("New South Wales (Remote)")).toEqual(["Australia"]);
+    expect(countriesInLocation("Boston, New England")).toEqual(["United States"]);
+    expect(countriesInLocation("Albuquerque, New Mexico")).toEqual(["United States"]);
+    expect(countriesInLocation("Remote - Latin America")).not.toContain("United States");
+    expect(countriesInLocation("Cardiff, Wales")).toEqual(["United Kingdom"]);
+    expect(countriesInLocation("Mexico City, Mexico")).toEqual(["Mexico"]);
+  });
+  it("…so an Australian job's 'Desired Pay' gets no pounds (the user saved no AUD figure: asked)", () => {
+    expect(decide(field("Desired Pay", "text"), me, [], job("Australia"))).not.toMatchObject({ kind: "answer" });
+  });
+  it("1password: '(no commas, i.e. $50000, £50000)' names format examples, not the currency: a US/Canada job is asked", () => {
+    const q = field("What is the beginning of your desired annual base salary range? (please format with no commas, i.e. $50000, £50000)", "text");
+    expect(decide(q, me, [], job("United States", "Canada"))).not.toMatchObject({ kind: "answer" });
+    expect(decide(q, me, [], job("United States"))).toMatchObject({ kind: "answer", value: "USD 70000" });
+    expect(decide(field("Expected salary in GBP", "text"), me, [], job("United States"))).toMatchObject({ kind: "answer", value: "GBP 55,000" });
+  });
+  it("xai: 'authorized to work in the country from which you plan to perform this work' is the user's to answer", () => {
+    const q = field("Are you legally authorized to work in the country from which you plan to perform this work, without requiring visa or work-permit sponsorship?", "select", ["Yes", "No"]);
+    expect(decide(q, me, [], job("United States"))).not.toMatchObject({ kind: "answer" });
+  });
+  it("hsvarc: 'List previous employment (job title, duties, dates, contact info)' is not the current title", () => {
+    for (const l of ["List previous employment( job title, duties, dates ,contact info)", "List prior work experience (Job Title, Job Responsibilities, Dates)"]) {
+      expect(decideWithMeaning(field(l, "textarea"), me, [])).not.toMatchObject({ kind: "profile" });
+    }
+    expect(decideWithMeaning(field("Current job title", "text"), me, [])).toMatchObject({ kind: "profile", key: "currentTitle" });
+    expect(decideWithMeaning(field("Current / previous employer", "text"), me, [])).toMatchObject({ kind: "profile", key: "currentCompany" });
   });
 });
