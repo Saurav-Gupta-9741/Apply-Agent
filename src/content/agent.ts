@@ -176,6 +176,24 @@ function workBlocks(scope: ParentNode): number {
   return new Set(extractFields(scope).map((f) => f.descriptor.workBlock).filter((b) => b !== undefined)).size;
 }
 
+/** "Add" controls: buttons, and links that go nowhere (Breezy's "+ Add Position" is `<a href="">` run by a script).
+ * A link with a real address would leave the form, so it is never pressed. */
+const ADD_CONTROLS = "button, [role='button'], a";
+const goesNowhere = (el: HTMLElement): boolean => {
+  if (el.tagName !== "A") return true;
+  const href = (el.getAttribute("href") ?? "").trim();
+  return href === "" || href === "#" || /^javascript:/i.test(href);
+};
+const captionOf = (el: HTMLElement): string => (el.textContent || el.getAttribute("aria-label") || "").replace(/\s+/g, " ").trim();
+
+/** Press an "Add" control. A link that goes nowhere still follows `href=""` (a reload) unless the page stops it, so the
+ * default is stopped after the page's own handler has run. */
+async function pressAdd(doc: Document, add: HTMLElement): Promise<void> {
+  if (add.tagName === "A") add.addEventListener("click", (e) => e.preventDefault(), { once: true });
+  add.click();
+  await settle(doc, 400, 4000);
+}
+
 /** Repeating work-experience sections start with fewer job blocks than the user has jobs: press the section's own
  * "Add" button until every job has a block (one click per missing job, stopping if a click adds nothing).
  * Blocks are never removed: the user may have added them on purpose. */
@@ -185,13 +203,23 @@ async function addWorkBlocks(doc: Document, ctx: AgentContext): Promise<void> {
     const blocks = workBlocks(locate(doc).root ?? doc.body);
     if (blocks >= wanted) return;
     const headings = sectionHeadings(doc);
-    const add = deepQueryAll<HTMLElement>(doc, "button, [role='button']").find((b) =>
-      ADD_TEXT.test((b.textContent || b.getAttribute("aria-label") || "").replace(/\s+/g, " ").trim()) && inWorkSection(b, headings));
+    const add = deepQueryAll<HTMLElement>(doc, ADD_CONTROLS).find((b) => ADD_TEXT.test(captionOf(b)) && goesNowhere(b) && inWorkSection(b, headings));
     if (!add) return;
-    add.click();
-    await settle(doc, 400, 4000);
+    await pressAdd(doc, add);
     if (workBlocks(locate(doc).root ?? doc.body) <= blocks) return;
   }
+}
+
+const ADD_EDUCATION = /^(\+\s*)?add( another| more| new)?( education| school| degree| qualification)$/i;
+const SCHOOL_BOX = /\b(school|university|college|institution|universit\w*|hochschule|ecole|escuela|faculdade)\b/i;
+
+/** An "Education" section with an "+ Add Education" control and no school box yet (Breezy): one block for the school in
+ * the profile. Pressed once; never when the user has no school saved or the form already shows a school box. */
+async function addEducationBlock(doc: Document, ctx: AgentContext): Promise<void> {
+  if (!ctx.profile.school?.trim()) return;
+  if (extractFields(locate(doc).root ?? doc.body).some((f) => SCHOOL_BOX.test(f.descriptor.label))) return;
+  const add = deepQueryAll<HTMLElement>(doc, ADD_CONTROLS).find((b) => ADD_EDUCATION.test(captionOf(b)) && goesNowhere(b));
+  if (add) await pressAdd(doc, add);
 }
 
 /** A country-code picker beside a phone box is part of the phone number: it gets the code of the user's number, unless
@@ -391,6 +419,7 @@ async function fillFormUnguarded(doc: Document, context: AgentContext): Promise<
   if (uploaded.size) await settle(doc, 1000, 10_000, 2000);
   // 2. One block per job in the work history ("Add another" in a repeating experience section).
   await addWorkBlocks(doc, ctx);
+  await addEducationBlock(doc, ctx);
   // 3. Everything else, read again: the page may have changed meanwhile.
   const rest: FieldResult[] = [];
   const remaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file"); // files: step 1

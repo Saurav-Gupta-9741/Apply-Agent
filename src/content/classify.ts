@@ -517,6 +517,16 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   if (topic && NEVER_REMEMBER.has(topic)) {
     return field.required ? { kind: "ask", reason: "sensitive", topic } : { kind: "skip", reason: `${topic}: entered by you only` };
   }
+  // A box inside a job block ("Start date" of a past job on Breezy) belongs to that job, not to "when can you start?".
+  if (field.workBlock !== undefined) {
+    const work = workDecision(field, profile);
+    if (work) return work;
+  }
+  // "Start date" / "End date" under an "Education" heading (Breezy) are study dates, which the profile does not hold
+  // (only a graduation year): never "when can you start?".
+  if (/^(education|ausbildung|bildung|formation|educaci[oó]n|educa[cç][aã]o|istruzione|opleiding)\b/i.test(normalize(field.section ?? "")) && (field.control === "date" || /\b(start|end|from|to|begin|finish)\w*\b[\s\S]{0,10}\bdate\b|\bdates?\b/i.test(field.label))) {
+    return field.required ? { kind: "ask", reason: "missing_profile_value" } : { kind: "skip", reason: "study dates are not in your profile" };
+  }
   if (isStartImmediatelyQuestion(field.label)) {
     // An answer the user saved for this kind of question (never a notice period such as "30 days"), else the quick answer.
     const entry = findAnswer(field, answers, "notice_period", page);

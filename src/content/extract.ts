@@ -377,6 +377,19 @@ export function questionText(el: FieldElement, group: FieldElement[] = [el], sto
 /** Status lines and captions around upload and choice widgets. */
 const NOT_A_QUESTION = /^(no file (selected|chosen)|choose file|drag (and|&) drop|or drag|max(imum)? (file )?size|accepted (file )?(types|formats)|supported (file )?(types|formats)|\.?pdf\b|optional|required)\W*$/i;
 
+/** The short caption just before a control among its siblings ("<span>Start date</span><input type=date>"), skipping
+ * empty dividers; another control in between means there is none. */
+function textJustBefore(el: Element): string {
+  for (let node = el.previousElementSibling, steps = 0; node && steps < 3; node = node.previousElementSibling, steps++) {
+    if (node.matches(CONTROLS) || node.querySelector(CONTROLS)) return "";
+    const text = (node.textContent ?? "").replace(/\s+/g, " ").trim();
+    if (!text) continue;
+    if (isHidden(node) || text.length > 60 || node.closest("button, [role='button']") || node.matches("a")) return "";
+    return text;
+  }
+  return "";
+}
+
 /** Raw question text (with its "*" markers) for one control. */
 const MACHINE_NAME = /^[a-z0-9]+([-_][a-z0-9]+)+$/;
 
@@ -397,6 +410,9 @@ function rawLabel(el: FieldElement, root: ParentNode, labelsByFor?: Map<string, 
     // A developer's name ("file-input", "text_field_3") is not a label: the question is in the text around it.
     () => (MACHINE_NAME.test(el.getAttribute("aria-label") ?? "") ? "" : el.getAttribute("aria-label") ?? ""),
     () => questionText(el, [el], root instanceof Element ? root : undefined),
+    // A date box's own caption right before it beats its placeholder: Breezy gives both date boxes of a job the
+    // placeholder "Company" and writes "Start date" / "End date" in a span before each.
+    () => (el instanceof HTMLInputElement && /^(date|month|datetime-local)$/.test(el.type) ? textJustBefore(el) : ""),
     () => el.getAttribute("placeholder") ?? "",
     () => (isChoice ? "" : labelAfter(el)),
     () => humanName(el.getAttribute("name") || el.id),
@@ -707,7 +723,9 @@ function before(a: Element, b: Element): boolean {
 export function sectionHeadings(root: ParentNode): Array<{ el: Element; work: boolean; number?: number }> {
   return deepQueryAll(root, HEADINGS).map((el) => {
     const text = cleanLabel(visibleText(el) || el.textContent || "");
-    const work = WORK_SECTION.test(text) && !/education|ausbildung|formation|educaci[oó]n/i.test(text);
+    // A section title, not a question that mentions work experience (Breezy, Zeno Power: the heading "What are your
+    // salary expectations for this role? … years of relevant work experience…" made the salary box a job title).
+    const work = WORK_SECTION.test(text) && !/education|ausbildung|formation|educaci[oó]n/i.test(text) && text.length <= 60 && !text.includes("?");
     const n = /\b(\d{1,2})\b/.exec(text)?.[1];
     return { el, work, number: work && n ? Number(n) : undefined };
   });
