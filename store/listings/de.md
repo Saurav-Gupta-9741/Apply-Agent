@@ -12,7 +12,7 @@ Bewerbungs-Autofill für Greenhouse, Lever, Workday, Personio, Ashby und Unterne
 
 WIE ES FUNKTIONIERT:
 • Profil, Lebenslauf und Quick Answers einmalig speichern (Kündigungsfrist, Arbeitserlaubnis, Gehaltsvorstellung).
-• Formular öffnen und "Ausfüllen" (Alt+Shift+F) drücken. ApplyAgent füllt Felder aus und wählt Optionen passgenau.
+• Formular öffnen und "Ausfüllen" (Alt+Shift+G) drücken. ApplyAgent füllt Felder aus und wählt Optionen passgenau.
 • Fragen, die nur Sie beantworten können (Rechtliche Erklärungen, Einwilligungen, Freitexte), werden hervorgehoben.
 • Sie prüfen das Formular und klicken selbst auf "Absenden".
 

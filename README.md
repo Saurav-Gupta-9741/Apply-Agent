@@ -47,7 +47,7 @@ ApplyAgent runs 100% locally in your browser. It does not send your profile, res
 You can verify this yourself in two minutes:
 1. Open Chrome DevTools on any career site (`F12` or `Ctrl+Shift+I` / `Cmd+Option+I`).
 2. Switch to the **Network** tab and check the **Preserve log** checkbox.
-3. Open ApplyAgent in the side panel and click **Fill** (or use `Alt+Shift+F`).
+3. Open ApplyAgent in the side panel and click **Fill** (or use `Alt+Shift+G`).
 4. Watch the Network tab: **zero network requests** are sent by ApplyAgent. The extension contains no telemetry, no tracking, and no external analytics.
 5. The only optional network request in the entire codebase is `POST /activate` when you manually enter a paid licence key to activate Pro (connecting solely to your configured licence server).
 
@@ -102,7 +102,7 @@ It is never registered on hands-off platforms.
 
 ## Ways to use it
 - **Side panel**: click the toolbar icon (or **Alt+Shift+A**) → Fill this application
-- **Shortcut**: **Alt+Shift+F** on any application page fills it (change it at `chrome://extensions/shortcuts`)
+- **Shortcut**: **Alt+Shift+G** on any application page fills it (change it at `chrome://extensions/shortcuts`)
 - **Right-click** → *Fill this application with ApplyAgent*
 - Opening ApplyAgent on a page gives it access to **that visit only** ("This visit"); allow the site to use it every time
 - **Multi-step applications**: fills each step and presses Next/Continue (sending nothing) up to the last step; works

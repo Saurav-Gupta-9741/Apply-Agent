@@ -12,7 +12,7 @@ Relleno automático de solicitudes de empleo para Greenhouse, Lever, Workday, As
 
 CÓMO FUNCIONA:
 • Guarda tu perfil, currículum y respuestas rápidas una sola vez (período de preaviso, permiso de trabajo, salario esperado).
-• Abre la solicitud y pulsa Rellenar (Alt+Shift+F). ApplyAgent introduce tus datos y elige las opciones correctas.
+• Abre la solicitud y pulsa Rellenar (Alt+Shift+G). ApplyAgent introduce tus datos y elige las opciones correctas.
 • Las preguntas confidenciales (consentimientos, antecedentes, preguntas abiertas) se dejan para ti.
 • Revisas el formulario y tú decides cuándo pulsar Enviar.
 

@@ -25,7 +25,7 @@ Saare message types `src/shared/types.ts` mein likhe hain.
 
 ## 3. Ek application kaise bharti hai (step by step)
 
-Aap kisi Greenhouse job ke page par ho aur **Fill** dabaya (ya `Alt+Shift+F`):
+Aap kisi Greenhouse job ke page par ho aur **Fill** dabaya (ya `Alt+Shift+G`):
 
 1. **Side panel** content script ko message bhejta hai: "RUN karo".
 2. **Safety check**: kya yeh LinkedIn/Naukri jaisa platform hai? Haan → turant mana. (`src/shared/platforms.ts`)

@@ -57,7 +57,7 @@ async function openPanelWindow(tab: chrome.tabs.Tab): Promise<void> {
   }).catch(() => undefined);
 }
 
-/** Keyboard shortcut (Alt+Shift+F) and right-click menu: open the panel on this tab and let it run Fill there,
+/** Keyboard shortcut (Alt+Shift+G) and right-click menu: open the panel on this tab and let it run Fill there,
  * so the user sees every question and result. Both count as the user's own action, which also gives one-time
  * access to this page (activeTab) even before the site is allowed for good. */
 function fillFromShortcut(tab: chrome.tabs.Tab | undefined): void {

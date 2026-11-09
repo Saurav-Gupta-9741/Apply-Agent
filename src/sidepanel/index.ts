@@ -206,8 +206,8 @@ if (followWindowId === undefined && pinnedTabId === undefined) {
   void chrome.windows.getCurrent().then((w) => (panelWindowId = w.id)).catch(() => undefined);
 }
 
-/** The keyboard shortcuts as this user has them (they can change them, and a Mac shows ⌥⇧F). */
-const keys = { fill: "Alt+Shift+F", open: "Alt+Shift+A" };
+/** The keyboard shortcuts as this user has them (they can change them, and a Mac shows ⌥⇧G). */
+const keys = { fill: "Alt+Shift+G", open: "Alt+Shift+A" };
 const MAC = /Mac/i.test(navigator.platform || navigator.userAgent);
 const keyLabel = (shortcut: string) => (MAC ? shortcut.replace(/Alt\+?|Option\+?/g, "⌥").replace(/Shift\+?/g, "⇧").replace(/(Command|⌘)\+?/g, "⌘").replace(/(Ctrl|MacCtrl)\+?/g, "⌃") : shortcut);
 async function loadShortcuts(): Promise<void> {
@@ -1082,7 +1082,7 @@ function afterRunElsewhere(tabId: number): void {
 
 $("run").addEventListener("click", () => void run());
 
-/** The shortcut (Alt+Shift+F) or the right-click menu asked to fill this tab: do it once, here, where the
+/** The shortcut (Alt+Shift+G) or the right-click menu asked to fill this tab: do it once, here, where the
  * user sees the questions and the result. Old requests (the panel was closed) are ignored. */
 async function runRequested(): Promise<void> {
   const { panelRun } = await chrome.storage.session.get("panelRun");

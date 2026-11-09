@@ -12,7 +12,7 @@ Preenchimento automático de candidaturas para Greenhouse, Lever, Workday, Ashby
 
 COMO FUNCIONA:
 • Salve seu perfil, currículo e respostas rápidas uma única vez (aviso prévio, autorização de trabalho, pretensão salarial).
-• Abra a vaga e clique em Preencher (Alt+Shift+F). ApplyAgent preenche seus dados e seleciona as opções adequadas.
+• Abra a vaga e clique em Preencher (Alt+Shift+G). ApplyAgent preenche seus dados e seleciona as opções adequadas.
 • Questões sensíveis (termos de consentimento, histórico, perguntas abertas) permanecem destacadas para você preencher.
 • Você revisa tudo e clica em Enviar.
 

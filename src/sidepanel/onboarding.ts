@@ -225,7 +225,7 @@ export function createOnboardingElement(options: OnboardingOptions): HTMLElement
       title.textContent = "3. Try it in 5 seconds";
       const desc = document.createElement("p");
       desc.className = "hint";
-      desc.textContent = "You're all set! Open our bundled practice form in a new tab, then click 'Fill' (or Alt+Shift+F) to see it fill instantly.";
+      desc.textContent = "You're all set! Open our bundled practice form in a new tab, then click 'Fill' (or Alt+Shift+G) to see it fill instantly.";
       body.append(desc);
 
       const demoCard = document.createElement("div");

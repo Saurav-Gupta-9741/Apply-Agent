@@ -12,7 +12,7 @@ Autoremplissage de candidatures pour Greenhouse, Lever, Workday, Ashby, Welcome 
 
 COMMENT ÇA MARCHE:
 • Enregistrez votre profil, CV et réponses clés une seule fois (préavis, autorisation de travail, salaire souhaité).
-• Ouvrez une offre et cliquez sur Remplir (ou Alt+Shift+F). ApplyAgent renseigne vos coordonnées et sélectionne les options.
+• Ouvrez une offre et cliquez sur Remplir (ou Alt+Shift+G). ApplyAgent renseigne vos coordonnées et sélectionne les options.
 • Les questions personnelles (consentements légaux, lettres de motivation) sont mises en surbrillance pour vous.
 • Vous relisez et cliquez vous-même sur Envoyer.
 

@@ -50,7 +50,7 @@
     },
     "fill-application": {
       "suggested_key": {
-        "default": "Alt+Shift+F"
+        "default": "Alt+Shift+G"
       },
       "description": "Fill the application on this page"
     }

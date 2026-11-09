@@ -67,7 +67,7 @@ test("Fill started from the shortcut or right-click menu runs in the panel for t
   await page.goto(`${BASE}/apply.html`);
   const tabId = await pinPanel(ext, page);
 
-  // What the background does on Alt+Shift+F / the menu (after opening the panel).
+  // What the background does on Alt+Shift+G / the menu (after opening the panel).
   await ext.evaluate((id) => chrome.storage.session.set({ panelRun: { tabId: id, at: Date.now() } }), tabId);
   await expect(page.locator("#first_name")).toHaveValue("Asha");
   await expect(ext.locator("#status")).toBeVisible();

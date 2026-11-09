@@ -21,7 +21,7 @@ Teamtailor, Breezy, Recruitee, Personio, SuccessFactors, iCIMS, and companies' o
 
 HOW IT WORKS
 • Save your profile, resume and a few quick answers once (notice period, work permit, expected salary).
-• Open an application and press Fill (or Alt+Shift+F). ApplyAgent types your details, attaches your resume and picks
+• Open an application and press Fill (or Alt+Shift+G). ApplyAgent types your details, attaches your resume and picks
   the right options.
 • Questions only you can answer (why this company, background checks, licences, diversity questions you did not
   fill in) are left for you, highlighted on the page.
