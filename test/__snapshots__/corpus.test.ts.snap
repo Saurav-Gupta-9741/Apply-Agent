@@ -458,7 +458,7 @@ exports[`real forms, offline > breezy-in-all-media.html 1`] = `
   "  textarea  skip                         Experience Summary",
   "  textarea  skip                         Cover Letter",
   "* text      ask:missing_profile_value    Where are you currently based (City, Country)?",
-  "* select    ask:missing_profile_value    How many years of relevant work experience do you have for this role?",
+  "* select    ask:unknown                  How many years of relevant work experience do you have for this role?",
   "* text      ask:salary                   What is your expected hourly rate in USD?",
   "* radio     ask:notice_period            Do you have a notice period at your current job before being able to start a new role?",
   "* date      ask:notice_period            What is your earliest possible start date?",

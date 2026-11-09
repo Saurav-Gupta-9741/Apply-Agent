@@ -124,9 +124,11 @@ send blocked, nothing submitted. SmartRecruiters (bot check) and Lever (robots.t
 | 8.3 | Fill share on real forms too low | Improved (1.0.13) | New Quick answers (other countries, non-compete, relatives, clearance, salary abroad, work history), start month/year, outside-US questions. Round 5: 1,581 forms, 61.0% of fields filled, 29.3% of required fields left (was 35.6%) |
 | 8.4 | "…at your current location of residence?" / "…the location in which you currently reside?" answered for the job's country | Fixed (1.0.13) | Read as where the user lives; both live forms re-run correct |
 | 8.5 | Head-to-head with Simplify on the same 57 live forms | Measured | ApplyAgent 384 fields filled vs 170; required left 30.8% vs 68.2%; median 21 s vs 41 s. Simplify fills Breezy work-history/education blocks ApplyAgent does not yet (8.6). Report: reports/compare/COMPARE.md on the essay-writer branch, with the live-run tools |
-| 8.6 | Breezy "Work History" / "Education" add-blocks not filled | Open | Next improvement |
+| 8.6 | Breezy "Work History" / "Education" add-blocks not filled | Fixed (1.0.14) | "+ Add Position" pressed once per saved job, "+ Add Education" once for the saved school; company, title, summary, dates, school and field of study filled in the right boxes (Breezy's date boxes are mislabelled "Company" in its code; the visible "Start date" is read). Live re-run of all 72 Breezy forms: fields filled 435 → 1,020, 0 wrong. Simplify comparison now 450 vs 170 fields |
+| 8.7 | (found by hand-checking 132 unclear answers) Australian job ("New South Wales") got a pound salary; "$50000, £50000" format example read as the currency; "country from which you plan to work" answered; "List previous employment" got only the job title | Fixed (1.0.14) | Australian states and cities; New England / New Mexico are the US; format examples ignored and "no commas" respected; plans and full work-history lists left for the user. Each live form re-run: correct |
+| 8.8 | (found in the 8.6 live re-run) A salary question whose text mentions "work experience" got the job title | Fixed (1.0.14) | Only a short section title, not a question, starts a work-history block; live re-run: USD salary on the US job |
 
-Round 5 accuracy: 2 wrong of 13,140 filled fields (both 8.4, fixed); 0 application sends.
+Round 5 accuracy: 2 wrong of 13,140 filled fields (both 8.4, fixed). Round 6 (78 re-run forms): 0 wrong of 1,020. 0 application sends in any run.
 
 ## Still open
 
