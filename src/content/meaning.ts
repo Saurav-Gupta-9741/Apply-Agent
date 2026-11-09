@@ -256,6 +256,10 @@ const NOT_THIS_FACT: Array<[(d: Decision) => boolean, RegExp]> = [
   // A newsletter or marketing signup on the page ("Get industry insights and updates from Stripe"): not part of the
   // application. Typing the user's email there subscribes them without asking (live run, Stripe).
   [(d) => d.kind === "profile" || d.kind === "answer", /\b(newsletter|subscribe|subscription|insights and updates|updates from|marketing (e-?mails?|communications?)|talent (community|network|pool)|job alerts?|keep me (posted|informed)|stay (in touch|connected)|news and (updates|offers))\b/i],
+  // "List previous employment (job title, duties, dates, contact info)" (live run 5, BambooHR): a whole work history,
+  // not the current title or company; one saved fact is a fraction of the answer. "Current / previous employer" keeps
+  // the current company.
+  [(d) => d.kind === "profile" && (d.key === "currentTitle" || d.key === "currentCompany"), /^(?![\s\S]*\b(current|currently|most recent|present)\b)[\s\S]*(\b(list|previous|prior|past|former|all)\b[\s\S]{0,30}\b(employment|employers?|work experience|work history|jobs|positions)\b|\b(duties|responsibilities)\b[\s\S]*\bdates?\b)/i],
   // "Passport Country" (live run, Supabase): citizenship is not the country the user lives in.
   [(d) => d.kind === "profile" && d.key === "country", /\b(passport|citizen\w*|nationalit\w*|place of birth|country of birth|born)\b/i],
   // "Located in or willing to relocate to Bangalore…?" with an option "Currently based in Bangalore": that option

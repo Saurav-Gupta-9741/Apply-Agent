@@ -104,7 +104,10 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   // (Hopper): the country of residence is the profile's country (read on the whole label: the asked sentence may be
   // the instruction after it).
   const whole = normalize(field.label);
-  const RESIDENCE = /(country|location|place) (of (your )?(current )?residence|(where|that|which|in which) you (currently )?(live|reside)|you (currently )?(live|reside) in)|where you (currently )?(live|reside)|your (current |home )?country(?! of application)/;
+  // "…in the country from which you plan to perform this work?" (xAI, a remote international job, live run 5: answered
+  // No for the US office): where the user plans to work is theirs to say.
+  if (/\b(country|location|place) (from which|where|in which|that) you (plan|intend|will|would|are going) to\b/.test(whole)) return undefined;
+  const RESIDENCE =/(country|location|place) (of (your )?(current )?residence|(where|that|which|in which) you (currently )?(live|reside)|you (currently )?(live|reside) in)|where you (currently )?(live|reside)|your (current |home )?country(?! of application)/;
   if (!places.length && (RESIDENCE.test(q) || RESIDENCE.test(whole))) {
     places = countriesIn(profile.country);
     if (!places.length) return undefined; // where the user lives is not known
@@ -272,7 +275,11 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts, page?: PageFact
   let value = (asksExpected ? facts.expectedCtc?.trim() : asksCurrent ? facts.currentCtc?.trim() : "") ?? "";
   let what = asksExpected ? "expected CTC" : "current CTC";
   const asked = `${field.label} ${field.placeholder}`;
-  const askedCurrency = kindOf(asked, CURRENCY);
+  // The currency the question names. Several named ("…no commas, i.e. $50000, £50000" on a US/Canada job, live run 5:
+  // pounds were typed) are only format examples: the job's country decides. "C$" / "A$" also read as "$".
+  const named = new Set(CURRENCY.filter(([, re]) => re.test(asked.toLowerCase())).map(([k]) => k));
+  if (named.has("USD") && ["CAD", "AUD", "SGD", "BRL", "MXN"].some((k) => named.has(k))) named.delete("USD");
+  const askedCurrency = named.size === 1 ? [...named][0] : undefined;
   // The currency this form wants: the one it names, or the one every country of the job pays in.
   const jobCurrencyList = [...new Set((page?.jobCountries ?? []).map((c) => COUNTRY_CURRENCY[c] ?? "OTHER"))];
   const wanted = askedCurrency ?? (jobCurrencyList.length === 1 && jobCurrencyList[0] !== "OTHER" ? jobCurrencyList[0] : undefined);
@@ -323,6 +330,8 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts, page?: PageFact
     if (/\d\s*(?:k|cr|crores?)\b/i.test(value) || /\b\d+\s*m\b/i.test(value)) return undefined;
     return answer(n, what);
   }
+  // "Please format with no commas" (1Password): "USD 70,000" becomes "USD 70000".
+  if (/\b(no|without) (commas?|thousands? separators?)\b/.test(q)) return answer(value.replace(/(\d),(?=\d{3}\b)/g, "$1"), what);
   return answer(value, what);
 }
 

@@ -6,8 +6,10 @@ import { normalize } from "./text";
 
 const COUNTRIES: Array<[string, RegExp]> = [
   ["India", /\b(india|indian)\b/],
-  ["United States", /\b(united states( of america)?|usa|u s a|u s|america|american)\b/],
-  ["United Kingdom", /\b(united kingdom|uk|u k|great britain|britain|england|scotland|wales|northern ireland)\b/],
+  // "Latin America", "South America" and "Central America" are not the United States.
+  ["United States", /\b(united states( of america)?|usa|u s a|u s|(?<!(?:latin|south|central) )american?)\b/],
+  // "New South Wales" is in Australia and "New England" in the US (live run 5: an Australian job got a pound salary).
+  ["United Kingdom", /\b(united kingdom|uk|u k|great britain|britain|(?<!new )england|scotland|(?<!new south )wales|northern ireland)\b/],
   ["Canada", /\bcanada\b/],
   ["European Union", /\b(european union|eu|eea|europe|schengen)\b/],
   ["Germany", /\b(germany|deutschland|allemagne|alemania|germania)\b/],
@@ -28,7 +30,7 @@ const COUNTRIES: Array<[string, RegExp]> = [
   ["Saudi Arabia", /\b(saudi arabia|ksa)\b/],
   ["Israel", /\bisrael\b/],
   ["Brazil", /\b(brazil|brasil|brasilien|bresil|brasile)\b/],
-  ["Mexico", /\bmexico\b/],
+  ["Mexico", /\b(?<!new )mexico\b/],
   ["Philippines", /\bphilippines\b/],
   ["Malaysia", /\bmalaysia\b/],
   ["South Africa", /\bsouth africa\b/],
@@ -74,7 +76,7 @@ export function canWorkIn(country: string, allowed: string[]): boolean {
 /** Big job-market cities, so "Bengaluru" or "London" in a job's location tells the country. */
 const CITIES: Array<[string, RegExp]> = [
   ["India", /\b(bengaluru|bangalore|hyderabad|pune|mumbai|bombay|delhi|new delhi|gurugram|gurgaon|noida|chennai|kolkata|ahmedabad|jaipur|kochi|chandigarh|indore|coimbatore|thiruvananthapuram|trivandrum)\b/],
-  ["United States", /\b(new york|nyc|san francisco|seattle|austin|boston|chicago|los angeles|denver|atlanta|washington dc|san jose|palo alto|mountain view|menlo park|sunnyvale|redmond|miami|dallas|houston|philadelphia|pittsburgh|portland|raleigh|redlands)\b/],
+  ["United States", /\b(new york|nyc|san francisco|seattle|austin|boston|chicago|los angeles|denver|atlanta|washington dc|san jose|palo alto|mountain view|menlo park|sunnyvale|redmond|miami|dallas|houston|philadelphia|pittsburgh|portland|raleigh|redlands|new mexico|new england)\b/],
   ["United Kingdom", /\b(london|manchester|edinburgh|cambridge uk|bristol|leeds|glasgow|belfast)\b/],
   ["Canada", /\b(toronto|vancouver|montreal|ottawa|calgary|waterloo)\b/],
   ["Germany", /\b(berlin|munich|munchen|hamburg|frankfurt|cologne|koln|dusseldorf|stuttgart)\b/],
@@ -84,7 +86,7 @@ const CITIES: Array<[string, RegExp]> = [
   ["Spain", /\b(madrid|barcelona)\b/],
   ["Poland", /\b(warsaw|krakow|wroclaw)\b/],
   ["Singapore", /\bsingapore\b/],
-  ["Australia", /\b(sydney|melbourne|brisbane|perth)\b/],
+  ["Australia", /\b(sydney|melbourne|brisbane|perth|adelaide|canberra|hobart|gold coast|new south wales|nsw|queensland|tasmania|western australia|south australia)\b/],
   ["United Arab Emirates", /\b(dubai|abu dhabi)\b/],
   ["Japan", /\b(tokyo|osaka)\b/],
 ];
