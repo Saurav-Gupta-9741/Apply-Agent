@@ -50,6 +50,18 @@ for (const r of rows) {
       meta[r.url] = { location: [loc.city ?? ats.city, loc.state ?? ats.state].filter(Boolean).join(", "), country: loc.addressCountry ?? ats.country ?? "", options: {} };
       fetched++;
       await sleep(300);
+    } else if (r.platform === "breezy") {
+      // Breezy's public job list (https://<company>.breezy.hr/json): each job's city, state and country.
+      if (!ashbyBoards.has(`breezy:${r.company}`)) {
+        const res = await fetch(`https://${r.company}.breezy.hr/json`);
+        ashbyBoards.set(`breezy:${r.company}`, res.ok ? await res.json() : []);
+        await sleep(300);
+      }
+      const id = /\/p\/([0-9a-f]+)-/.exec(r.url)?.[1];
+      const job = ashbyBoards.get(`breezy:${r.company}`).find((j) => j.id === id);
+      const locs = job ? (job.locations?.length ? job.locations : [job.location]).filter(Boolean) : [];
+      meta[r.url] = { location: locs.map((l) => l.name).filter(Boolean).join("; "), country: [...new Set(locs.map((l) => l.country?.name).filter(Boolean))].join("; "), remote: job?.location?.is_remote, options: {} };
+      fetched++;
     } else if (r.platform === "ashby") {
       if (!ashbyBoards.has(r.company)) {
         const res = await fetch(`https://api.ashbyhq.com/posting-api/job-board/${r.company}`);

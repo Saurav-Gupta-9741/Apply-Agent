@@ -38,6 +38,10 @@ for (const f of files) {
 const rows = [...byUrl.values()];
 const candFile = files.map((f) => join(IN, f.replace(/\.jsonl$/, ".candidate.json"))).find((p) => existsSync(p));
 const candidate = candFile ? JSON.parse(readFileSync(candFile, "utf8")) : { profile: {}, answers: [] };
+// The candidate's home country (the only one the candidate may work in without sponsorship) and its money words.
+const HOME = candidate.profile?.country || "India";
+const HOME_PLACE = [candidate.profile?.location, HOME].filter(Boolean).join(", ");
+const HOME_MONEY = HOME === "India" ? /\binr\b|rupee|lakh|lpa|\bctc\b|₹/ : HOME === "United States" ? /\busd\b|\$|us dollars?/ : /(?!)/;
 const judgmentsPath = join(OUT, "judgments.json");
 const judgments = existsSync(judgmentsPath) ? JSON.parse(readFileSync(judgmentsPath, "utf8")) : {};
 // Job locations and Greenhouse question options from the public APIs (scripts/live1000-meta.mjs), when fetched.
@@ -156,11 +160,11 @@ function judge(f, row) {
   if (qa === "expected CTC" || qa === "current CTC") {
     if (/anything else|growth|breakdown|split|of this amount/.test(label)) return r("wrong", "qa_salary_question", "the question does not ask for the figure");
     const jc = jobCountries(META[row?.url]);
-    const rupees = /\binr\b|rupee|lakh|lpa|\bctc\b|₹/.test(q);
-    if (rupees || (jc.length && jc.every((x) => x === "India"))) return r("correct", "qa_salary", "the saved figure, in rupees, for a job in India or a question in rupees");
+    const rupees = HOME_MONEY.test(q);
+    if (rupees || (jc.length && jc.every((x) => x === HOME))) return r("correct", "qa_salary", `the saved figure, in the home currency, for a job in ${HOME} or a question in that currency`);
     return r("wrong", "qa_salary_currency", `rupees typed for a job in ${jc.join(", ") || "an unknown country"}`);
   }
-  if (qa === "notice period") return /30 days|1 month|1 mes|un mes|1 mois|30 dias/.test(c) ? r("correct", "qa_notice", "the saved notice period") : r("unclear", "qa_notice", "");
+  if (qa === "notice period") return (/2 weeks/.test(facts.noticePeriod ?? "") ? /2 weeks|two weeks|14 days|2 semanas|2 semaines|2 wochen/ : /30 days|1 month|1 mes|un mes|1 mois|30 dias/).test(c) ? r("correct", "qa_notice", "the saved notice period") : r("unclear", "qa_notice", "");
   if (qa === "accommodation") return /^(no|none|nao|non|nein|keine)\b/.test(c) ? r("correct", "qa_accommodation", "no accommodation needed, as saved") : r("unclear", "qa_accommodation", "");
   if (qa === "onsite" || qa === "work mode") return YES.test(c) || /^oui|^si|^sim/.test(c) ? r("correct", "qa_onsite", "work mode: any") : r("unclear", "qa_onsite", "");
   if (qa === "travel") {
@@ -198,26 +202,26 @@ function judge(f, row) {
   const RESIDES = /(country|location|place) of (your )?(current )?residence|(where|in which) you (currently )?(live|reside)|you (currently )?(live|reside) in|your (current |home )?country/;
   // "Are you authorized to work in Poland without requiring sponsorship?" asks about authorization: No is right.
   const authWithout = /(authori[sz]ed|right to work|legally|eligible)[^?]*\bwithout\b[^?]{0,60}(sponsor|visa)/.test(label);
-  // "Do you require work authorization?" asks whether the candidate needs a visa: Yes for a job outside India.
+  // "Do you require work authorization?" asks whether the candidate needs a visa: Yes for a job outside the home country.
   const needsWorkAuth = /\b(do|will) you (need|require) (a |any )?(work authori[sz]ation|a work permit)\b/.test(label);
   if (needsWorkAuth && (YES.test(c) || NO.test(c))) {
     const jc = jobCountries(META[row?.url]);
-    if (jc.length && !jc.includes("India")) return YES.test(c) ? r("correct", "needs_workauth", `needs work authorization for ${jc.join(", ")}`) : r("wrong", "needs_workauth", `No though the candidate needs work authorization for ${jc.join(", ")}`);
-    if (jc.length === 1 && jc[0] === "India") return NO.test(c) ? r("correct", "needs_workauth", "no work authorization needed in India") : r("wrong", "needs_workauth", "Yes for a job in India");
+    if (jc.length && !jc.includes(HOME)) return YES.test(c) ? r("correct", "needs_workauth", `needs work authorization for ${jc.join(", ")}`) : r("wrong", "needs_workauth", `No though the candidate needs work authorization for ${jc.join(", ")}`);
+    if (jc.length === 1 && jc[0] === HOME) return NO.test(c) ? r("correct", "needs_workauth", `no work authorization needed in ${HOME}`) : r("wrong", "needs_workauth", `Yes for a job in ${HOME}`);
   }
   const needsAsk = !authWithout && /\b(need|require|requir(es|ing))\b[^?]{0,60}\b(visa|work permit|sponsor\w*|right to work support)\b/.test(label);
   if ((isWorkAuth(q) || authWithout) && !needsAsk && !needsWorkAuth && (f.decision === "answer" || YES.test(c) || NO.test(c))) {
     const cs = countriesIn(q);
     const yes = YES.test(c) || /authori[sz]ed|eligible/.test(c) && !/not/.test(c);
     const no = NO.test(c);
-    if (cs.length === 1 && cs[0] === "India") return yes ? r("correct", "workauth_india", "authorized in India") : r("wrong", "workauth_india", `answered "${chosen ?? value}" for India`);
-    if (cs.length && !cs.includes("India")) return yes ? r("wrong", "workauth_other_country", `answered Yes for ${cs.join(", ")}; authorized in India only`) : no ? r("correct", "workauth_other_country", "No for a country other than India") : r("unclear", "workauth", "");
-    // "…in your country of residence?", "…the country you currently reside in?": the candidate lives in India and is
+    if (cs.length === 1 && cs[0] === HOME) return yes ? r("correct", "workauth_india", `authorized in ${HOME}`) : r("wrong", "workauth_india", `answered "${chosen ?? value}" for ${HOME}`);
+    if (cs.length && !cs.includes(HOME)) return yes ? r("wrong", "workauth_other_country", `answered Yes for ${cs.join(", ")}; authorized in ${HOME} only`) : no ? r("correct", "workauth_other_country", `No for a country other than ${HOME}`) : r("unclear", "workauth", "");
+    // "…in your country of residence?", "…the country you currently reside in?": the candidate lives in the home country and is
     // authorized there, whatever the job's country.
-    if (RESIDES.test(label)) return yes ? r("correct", "workauth_residence", "authorized where the candidate lives (India)") : r("wrong", "workauth_residence", `"${chosen ?? value}" though authorized in the country of residence`);
+    if (RESIDES.test(label)) return yes ? r("correct", "workauth_residence", `authorized where the candidate lives (${HOME})`) : r("wrong", "workauth_residence", `"${chosen ?? value}" though authorized in the country of residence`);
     const jc = jobCountries(META[row?.url]);
-    if (jc.length === 1 && jc[0] === "India") return yes ? r("correct", "workauth_job_country", "the job is in India") : r("wrong", "workauth_job_country", `"${chosen ?? value}" for a job in India`);
-    if (jc.length && !jc.includes("India")) return yes ? r("wrong", "workauth_job_country", `Yes for a job in ${jc.join(", ")} (${META[row.url].location}); authorized in India only`) : no ? r("correct", "workauth_job_country", `No for a job in ${jc.join(", ")}`) : r("unclear", "workauth", "");
+    if (jc.length === 1 && jc[0] === HOME) return yes ? r("correct", "workauth_job_country", `the job is in ${HOME}`) : r("wrong", "workauth_job_country", `"${chosen ?? value}" for a job in ${HOME}`);
+    if (jc.length && !jc.includes(HOME)) return yes ? r("wrong", "workauth_job_country", `Yes for a job in ${jc.join(", ")} (${META[row.url].location}); authorized in ${HOME} only`) : no ? r("correct", "workauth_job_country", `No for a job in ${jc.join(", ")}`) : r("unclear", "workauth", "");
     if (yes) return r("unclear", "workauth_unnamed_country", "Yes where the country is not named (depends on the job location)");
   }
   // Sponsorship.
@@ -227,18 +231,18 @@ function judge(f, row) {
     const inverted = INVERTED.test(label);
     const yes = YES.test(c);
     const no = NO.test(c);
-    if (cs.length === 1 && cs[0] === "India") return (inverted ? yes : no) ? r("correct", "sponsor_india", "no sponsorship needed in India") : r("wrong", "sponsor_india", `"${chosen ?? value}" for India (needs none there)`);
-    if (cs.length && !cs.includes("India")) {
+    if (cs.length === 1 && cs[0] === HOME) return (inverted ? yes : no) ? r("correct", "sponsor_india", `no sponsorship needed in ${HOME}`) : r("wrong", "sponsor_india", `"${chosen ?? value}" for ${HOME} (needs none there)`);
+    if (cs.length && !cs.includes(HOME)) {
       if (inverted) return no ? r("correct", "sponsor_inverted", "inverted question answered No") : r("wrong", "sponsor_inverted", `inverted question ("do NOT require") answered "${chosen ?? value}"`);
-      return yes ? r("correct", "sponsor_other_country", `needs sponsorship for ${cs.join(", ")}`) : r("wrong", "sponsor_other_country", `answered "${chosen ?? value}" though sponsorship is needed outside India`);
+      return yes ? r("correct", "sponsor_other_country", `needs sponsorship for ${cs.join(", ")}`) : r("wrong", "sponsor_other_country", `answered "${chosen ?? value}" though sponsorship is needed outside ${HOME}`);
     }
     if (inverted && yes) return r("wrong", "sponsor_inverted", `inverted question ("do NOT require") answered "${chosen ?? value}"`);
-    // "…to continue working in your country of residence?", "…to work where you reside?": India, where the candidate
+    // "…to continue working in your country of residence?", "…to work where you reside?": the home country, where the candidate
     // needs no sponsorship.
-    if (!inverted && RESIDES.test(label)) return no ? r("correct", "sponsor_residence", "no sponsorship where the candidate lives (India)") : r("wrong", "sponsor_residence", `"${chosen ?? value}" though no sponsorship is needed where the candidate lives`);
+    if (!inverted && RESIDES.test(label)) return no ? r("correct", "sponsor_residence", `no sponsorship where the candidate lives (${HOME})`) : r("wrong", "sponsor_residence", `"${chosen ?? value}" though no sponsorship is needed where the candidate lives`);
     const jc = jobCountries(META[row?.url]);
-    if (!inverted && jc.length === 1 && jc[0] === "India") return no ? r("correct", "sponsor_job_country", "no sponsorship for a job in India") : r("wrong", "sponsor_job_country", `"${chosen ?? value}" for a job in India`);
-    if (!inverted && jc.length && !jc.includes("India")) return yes ? r("correct", "sponsor_job_country", `needs sponsorship for a job in ${jc.join(", ")}`) : no ? r("wrong", "sponsor_job_country", `No for a job in ${jc.join(", ")} (${META[row.url].location}); needs sponsorship outside India`) : r("unclear", "sponsor", "");
+    if (!inverted && jc.length === 1 && jc[0] === HOME) return no ? r("correct", "sponsor_job_country", `no sponsorship for a job in ${HOME}`) : r("wrong", "sponsor_job_country", `"${chosen ?? value}" for a job in ${HOME}`);
+    if (!inverted && jc.length && !jc.includes(HOME)) return yes ? r("correct", "sponsor_job_country", `needs sponsorship for a job in ${jc.join(", ")}`) : no ? r("wrong", "sponsor_job_country", `No for a job in ${jc.join(", ")} (${META[row.url].location}); needs sponsorship outside ${HOME}`) : r("unclear", "sponsor", "");
     return r("unclear", "sponsor_unnamed_country", "the country is not named (depends on the job location)");
   }
   // "How did you hear" answers on other questions.
@@ -311,8 +315,8 @@ function judge(f, row) {
     if (/where you live/.test(m) && /(located|based|reside|live|living)\b/.test(q)) {
       const cs = countriesIn(q);
       const yes = YES.test(c), no = NO.test(c);
-      if (cs.length === 1 && cs[0] === "India") return yes ? r("correct", "where_live", "lives in India") : r("wrong", "where_live", `"${chosen ?? value}" though the candidate lives in India`);
-      if (cs.length && !cs.includes("India")) return no ? r("correct", "where_live", `not in ${cs.join(", ")}`) : yes ? r("wrong", "where_live", `Yes for ${cs.join(", ")}; the candidate lives in Pune, India`) : r("unclear", "where_live", "");
+      if (cs.length === 1 && cs[0] === HOME) return yes ? r("correct", "where_live", `lives in ${HOME}`) : r("wrong", "where_live", `"${chosen ?? value}" though the candidate lives in ${HOME}`);
+      if (cs.length && !cs.includes(HOME)) return no ? r("correct", "where_live", `not in ${cs.join(", ")}`) : yes ? r("wrong", "where_live", `Yes for ${cs.join(", ")}; the candidate lives in ${HOME_PLACE}`) : r("unclear", "where_live", "");
     }
     if (/notice period/.test(m)) return /notice/.test(q) ? r("correct", "answer_same_topic", "") : r("unclear", "answer_topic", "");
     if (/relocate/.test(m)) {
@@ -327,7 +331,7 @@ function judge(f, row) {
 // ---------------------------------------------------------------------------------------------------- stats
 const S = {
   generatedAt: new Date().toISOString(), inputs: files, forms: rows.length, byOutcome: {}, byPlatformOutcome: {}, runStatus: {},
-  fields: 0, byStatus: {}, byDecision: {}, byDecisionStatus: {}, required: 0, requiredLeftForUser: 0, requiredFilled: 0,
+  fields: 0, byStatus: {}, byDecision: {}, byDecisionStatus: {}, required: 0, requiredLeftForUser: 0, requiredFilled: 0, requiredSections: 0, requiredSectionsLeft: 0, requiredSectionsLeftByName: {},
   asks: {}, asksRequired: {}, skips: {}, failedByKey: {}, seconds: { all: [], filled: [] }, perCompany: {}, perPlatform: {},
   blocked: { total: 0, forms: 0, applicationSends: [] }, urlChanged: [], errors: {},
 };
@@ -366,6 +370,11 @@ for (const row of rows) {
     }
     if (f.decision === "ask") { inc(S.asks, f.key ?? "?"); if (f.required) inc(S.asksRequired, f.key ?? "?"); }
     if (f.decision === "skip") inc(S.skips, f.key ?? "?");
+  }
+  // Required lists that are not single boxes (Breezy "Work History*"): recorded by the harness since round 7.
+  for (const sec of row.requiredSections ?? []) {
+    S.requiredSections++; pp.required++;
+    if (!sec.filled) { S.requiredSectionsLeft++; inc(S.requiredSectionsLeftByName, sec.name); pc.requiredLeft++; pp.requiredLeft++; }
   }
 }
 const filledForms = rows.filter((r) => r.outcome === "filled");
@@ -434,7 +443,7 @@ L.push("", `Filled forms: **${filledForms.length}**. Ready to submit (nothing le
 if (Object.keys(S.errors).length) { L.push("", "Errors:"); for (const [k, v] of top(S.errors, 10)) L.push(`- ${v} × ${mdEsc(k)}`); }
 L.push("", "## Fields", "", `Fields on filled forms: **${S.fields}** (${(S.fields / Math.max(1, filledForms.length)).toFixed(1)} per form).`, "", "| Status | Fields | Share |", "|---|---:|---:|");
 for (const [k, v] of top(S.byStatus)) L.push(`| ${k} | ${v} | ${pct(v, S.fields)} |`);
-L.push("", `- Filled by the extension: **${pct(S.byStatus.filled ?? 0, S.fields)}** of all fields.`, `- Required fields: ${S.required}; filled ${S.requiredFilled}; **left for the user: ${S.requiredLeftForUser} (${pct(S.requiredLeftForUser, S.required)})**.`);
+L.push("", `- Filled by the extension: **${pct(S.byStatus.filled ?? 0, S.fields)}** of all fields.`, `- Required fields: ${S.required}; filled ${S.requiredFilled}; **left for the user: ${S.requiredLeftForUser} (${pct(S.requiredLeftForUser, S.required)})**.`, `- Required sections (lists such as Breezy "Work History*", not in the field list): ${S.requiredSections}; **left empty: ${S.requiredSectionsLeft}**${S.requiredSectionsLeft ? ` (${Object.entries(S.requiredSectionsLeftByName).map(([k, v]) => `${k} ${v}`).join(", ")})` : ""}.`);
 L.push("", "| Decision | Fields | filled | needs_user | failed | skipped | already_filled |", "|---|---:|---:|---:|---:|---:|---:|");
 for (const [k, v] of top(S.byDecision)) { const d = S.byDecisionStatus[k]; L.push(`| ${k} | ${v} | ${d.filled ?? 0} | ${d.needs_user ?? 0} | ${d.failed ?? 0} | ${d.skipped ?? 0} | ${d.already_filled ?? 0} |`); }
 L.push("", "## Asks (fields left for the user), by reason / topic (top 30)", "", "| Topic | All | Required |", "|---|---:|---:|");

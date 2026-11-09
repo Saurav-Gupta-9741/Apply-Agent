@@ -401,6 +401,18 @@ describe("live run 3: salary only in the job's own currency; pronoun follow-up b
     for (const c of ["United States", "Germany", "Brazil"]) expect(decide(q, me, [], job(c))).not.toMatchObject({ kind: "answer" });
     expect(decide(q, me, [])).not.toMatchObject({ kind: "answer" }); // job country unknown: asked (live run 4: 29 wrong when filled)
   });
+  it("live run 7 (a US-based user): a salary saved without a currency is in the user's own money, not rupees", () => {
+    const us = { ...INDIA_PROFILE, country: "United States", location: "Austin, TX", facts: { ...base, workCountries: "United States", currentCtc: "105000", expectedCtc: "120000" } };
+    const q = field("What are your salary expectations?", "text");
+    expect(decide(q, us, [], job("United States"))).toMatchObject({ kind: "answer", value: "120000" });
+    expect(decide(q, us, [], job("India"))).not.toMatchObject({ kind: "answer" });
+    expect(decide(field("Expected salary (USD)", "text"), us, [], job("Germany"))).toMatchObject({ kind: "answer", value: "120000" });
+    expect(decide(field("Expected CTC in INR (LPA)", "text"), us, [], job("United States"))).not.toMatchObject({ kind: "answer" });
+    // An Indian user's bare figure is still rupees.
+    const inr = { ...me, facts: { ...base, expectedCtc: "1800000" } };
+    expect(decide(q, inr, [], job("India"))).toMatchObject({ kind: "answer", value: "1800000" });
+    expect(decide(q, inr, [], job("United States"))).not.toMatchObject({ kind: "answer" });
+  });
   it("a question that names rupees is filled wherever the job is", () => {
     expect(decide(field("Please share your expected total CTC in INR (Lakhs per annum).", "text"), me, [], job("United States"))).toMatchObject({ kind: "answer", value: "18 LPA" });
   });
