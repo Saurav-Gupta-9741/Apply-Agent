@@ -18,6 +18,11 @@ import type { Decision, FieldDescriptor, Profile } from "../src/shared/types";
 import { mount, PROFILE } from "./fixtures";
 import head from "../static/intent/model.json";
 
+/** The day a 30-day notice period ends, from today (the adversarial profile's notice period). */
+const START_30_DAYS = new Date(Date.now() + 30 * 86_400_000);
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const START_MONTH_IF_LISTED = (options: string[]) => { const m = MONTHS[START_30_DAYS.getMonth()]!; return options.includes(m) ? m : null; };
+
 const FULL: Profile = {
   ...PROFILE, location: "Pune, India", country: "India", github: "https://github.com/asha", portfolio: "https://asha.dev",
   currentCompany: "Initech", currentTitle: "Software Engineer", school: "IIT Jodhpur", discipline: "Computer Science",
@@ -304,8 +309,10 @@ describe("e) notice period, start dates and yes/no availability", () => {
     ["Available start date", "text", null, { placeholder: "MM/DD/YYYY" }],
     ["Start date (DD/MM/YYYY)", "text", null],
     ["Date available to start", "text", null, { placeholder: "dd/mm/yyyy" }],
-    ["Start date - Month", "select", null, { options: ["January", "February", "March"] }],
-    ["Availability – Year", "select", null, { options: ["2026", "2027"] }],
+    // A list of months / years gets the month and year the notice period ends in (counted from today; live run
+    // 2026-11-08), or nothing when that month is not listed. A typed date is never invented (the rows above).
+    ["Start date - Month", "select", { oneOf: [START_MONTH_IF_LISTED(["January", "February", "March"]), null] }, { options: ["January", "February", "March"] }],
+    ["Availability – Year", "select", { oneOf: [String(START_30_DAYS.getFullYear()), null] }, { options: ["2026", "2027"] }],
     ["Can you start immediately?", "select", { oneOf: ["No", null] }, { options: ["Yes", "No"] }],
     ["Are you currently serving your notice period?", "select", null, { options: ["Yes", "No"] }],
     ["Is your notice period negotiable?", "select", null, { options: ["Yes", "No"] }],

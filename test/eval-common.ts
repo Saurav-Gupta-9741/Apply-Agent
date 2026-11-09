@@ -90,6 +90,11 @@ export const QUICK: Record<string, string> = {
   language: "language_proficiency",
   skills: "skills_experience",
   "where you live": "residence",
+  // Live run 2026-11-08 additions.
+  "where you live (outside the US)": "residence",
+  "notice period (start year)": "notice_period",
+  "notice period (start month)": "notice_period",
+  "expected salary abroad": "salary_expected",
 };
 const WORK: Record<string, string> = {
   title: "currentTitle",

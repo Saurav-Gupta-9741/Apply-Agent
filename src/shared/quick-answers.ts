@@ -28,6 +28,14 @@ export const EDUCATION_STATUS_OPTIONS: Record<"completed" | "pursuing", string> 
   pursuing: "I am currently pursuing a degree",
 };
 
+/** The wizard's labels for QuickFacts.otherCountries. */
+export const OTHER_COUNTRIES_SPONSOR = "I would need visa sponsorship there";
+export const OTHER_COUNTRIES_ASK = "Ask me each time";
+export const RELATIVES_NO = "No, none of them";
+export const RELATIVES_ASK = "Yes, or not sure (ask me each time)";
+export const CLEARANCE_NONE = "No, never";
+export const CLEARANCE_ASK = "Yes (ask me each time)";
+
 const stats = (quickAnswerStats.stats || {}) as Record<string, { why: string; percent: number }>;
 const statWhy = (id: string, fallback: string): string => stats[id]?.why ?? fallback;
 
@@ -61,11 +69,21 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
   {
     id: "needsFutureSponsorship",
     factKey: "facts.needsFutureSponsorship",
-    prompt: "Will you require visa sponsorship now or in the future?",
+    // Only about the countries above (the old wording read as "anywhere", and was used that way: live run, 2026-11-08).
+    prompt: "In the countries above, will you need visa sponsorship in the future (for example, when a temporary permit ends)?",
     why: statWhy("needsFutureSponsorship", "Asked in technical applications"),
     kind: "choice",
     options: ["No", "Yes", "Decline"],
     defaultAnswer: "No",
+  },
+  {
+    id: "otherCountries",
+    factKey: "facts.otherCountries",
+    prompt: "For jobs in any other country (not listed above):",
+    why: "Work permit and sponsorship questions are on about half of all forms. With this, ApplyAgent answers them for every country, never guessing.",
+    kind: "choice",
+    options: [OTHER_COUNTRIES_SPONSOR, OTHER_COUNTRIES_ASK],
+    hint: "Choose the first only if you are not allowed to work in other countries without a visa.",
   },
   {
     id: "relocate",
@@ -108,6 +126,14 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     why: statWhy("expectedCtc", "Ensures truthful salary expectations without misquoting"),
     kind: "text",
     defaultAnswer: "",
+  },
+  {
+    id: "expectedSalaryAbroad",
+    factKey: "facts.expectedSalaryAbroad",
+    prompt: "Expected salary for jobs abroad, with the currency (optional; e.g. USD 70,000; EUR 60,000):",
+    why: "Jobs in other countries ask in their own money. Without this, ApplyAgent leaves those salary questions to you.",
+    kind: "text",
+    placeholder: "USD 70,000; EUR 60,000",
   },
   {
     id: "workMode",
@@ -250,6 +276,37 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     kind: "choice",
     options: ["he/him", "she/her", "they/them", "Prefer not to say"],
     defaultAnswer: "Prefer not to say",
+  },
+  {
+    id: "workHistoryComplete",
+    factKey: "workHistoryComplete",
+    prompt: "Does your Profile list every company you have ever worked for (including internships)?",
+    why: "About 1 in 5 forms asks \"Have you worked here before?\". With a complete list, ApplyAgent answers it.",
+    kind: "yesno",
+    hint: "Answer Yes only if the list is complete. Otherwise ApplyAgent asks you each time.",
+  },
+  {
+    id: "nonCompete",
+    factKey: "facts.nonCompete",
+    prompt: "Are you bound by a non-compete or non-solicitation agreement?",
+    why: "Asked on many forms. Only a plain yes/no question is answered; details are always left to you.",
+    kind: "yesno",
+  },
+  {
+    id: "relativesAtCompanies",
+    factKey: "facts.relativesAtCompanies",
+    prompt: "Do any of your relatives or your partner work at companies you apply to?",
+    why: "Forms ask \"Do you have relatives working here?\". If you choose No, ApplyAgent answers No; otherwise it asks you each time.",
+    kind: "choice",
+    options: [RELATIVES_NO, RELATIVES_ASK],
+  },
+  {
+    id: "securityClearance",
+    factKey: "facts.securityClearance",
+    prompt: "Have you ever held a government security clearance?",
+    why: "Asked on many US jobs. If you never had one, ApplyAgent answers No to \"Do you hold an active clearance?\".",
+    kind: "choice",
+    options: [CLEARANCE_NONE, CLEARANCE_ASK],
   },
   {
     id: "heardFrom",
@@ -397,7 +454,17 @@ export function quickAnswerProblem(id: string, value: string | string[]): string
 /** The answer the profile already holds for a wizard question, in the wizard's own format. */
 export function existingQuickAnswer(profile: Profile, q: QuickQuestion): string | string[] | undefined {
   let existing: string | undefined;
-  if (q.factKey.startsWith("facts.")) {
+  if (q.id === "otherCountries") {
+    const v = profile.facts?.otherCountries;
+    if (v === "sponsorship") existing = OTHER_COUNTRIES_SPONSOR;
+    else if (v === "ask") existing = OTHER_COUNTRIES_ASK;
+  } else if (q.id === "workHistoryComplete") {
+    if (profile.workHistoryComplete !== undefined) existing = profile.workHistoryComplete ? "Yes" : "No";
+  } else if (q.id === "relativesAtCompanies") {
+    if (profile.facts?.relativesAtCompanies === "No") existing = RELATIVES_NO;
+  } else if (q.id === "securityClearance") {
+    if (profile.facts?.securityClearance === "None") existing = CLEARANCE_NONE;
+  } else if (q.factKey.startsWith("facts.")) {
     const val = profile.facts?.[q.factKey.slice("facts.".length) as keyof QuickFacts];
     if (val !== undefined && val !== null && val !== "") existing = String(val);
   } else if (q.id === "languages") {
@@ -439,6 +506,10 @@ export function applyQuickAnswers(profile: Profile, answers: Record<string, stri
     const v = getStr("needsFutureSponsorship");
     next.facts!.needsFutureSponsorship = (v === "Yes" || v === "No" || v === "Decline") ? v : "";
   }
+  if ("otherCountries" in answers) {
+    const v = getStr("otherCountries");
+    next.facts!.otherCountries = v === OTHER_COUNTRIES_SPONSOR ? "sponsorship" : v === OTHER_COUNTRIES_ASK ? "ask" : "";
+  }
   if ("relocate" in answers) {
     const v = getStr("relocate");
     next.facts!.relocate = (v === "Yes" || v === "No") ? v : "";
@@ -447,6 +518,14 @@ export function applyQuickAnswers(profile: Profile, answers: Record<string, stri
   if ("noticePeriod" in answers) next.facts!.noticePeriod = getStr("noticePeriod");
   if ("currentCtc" in answers) next.facts!.currentCtc = getStr("currentCtc");
   if ("expectedCtc" in answers) next.facts!.expectedCtc = getStr("expectedCtc");
+  if ("expectedSalaryAbroad" in answers) next.facts!.expectedSalaryAbroad = getStr("expectedSalaryAbroad");
+  if ("workHistoryComplete" in answers) next.workHistoryComplete = getStr("workHistoryComplete") === "Yes";
+  if ("nonCompete" in answers) {
+    const v = getStr("nonCompete");
+    next.facts!.nonCompete = v === "Yes" || v === "No" ? v : "";
+  }
+  if ("relativesAtCompanies" in answers) next.facts!.relativesAtCompanies = getStr("relativesAtCompanies") === RELATIVES_NO ? "No" : "";
+  if ("securityClearance" in answers) next.facts!.securityClearance = getStr("securityClearance") === CLEARANCE_NONE ? "None" : "";
   if ("workMode" in answers) {
     const v = getStr("workMode");
     next.facts!.workMode = (v === "onsite" || v === "hybrid" || v === "remote" || v === "any") ? v : "";
