@@ -1,0 +1,130 @@
+{
+ "answer | Quick answers › previous employer | are you a former coreweave employee? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | are you now or have you ever been employed by coreweave? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › citizenship | please indicate whether you are a “u.s. person”. u.s. person is defined as a (i) u.s. citizen or national; (ii) u.s. lawful permanent resident; (iii) refugee un | yes": {
+  "verdict": "correct",
+  "reason": "a US citizen is a U.S. person (saved citizenship: United States) (hand-checked)"
+ },
+ "profile | address | address | 100 test street, austin, tx 78701": {
+  "verdict": "correct",
+  "reason": "the saved full address (hand-checked)"
+ },
+ "profile | summary | csummary | data engineer with 5 years of experience building batch and streaming data pipel": {
+  "verdict": "correct",
+  "reason": "the saved professional summary, in the candidate's own words (hand-checked)"
+ },
+ "answer | Quick answers › citizenship | are you a us person? | yes": {
+  "verdict": "correct",
+  "reason": "a US citizen is a U.S. person (saved citizenship: United States) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | are you currently or have you ever worked for airbnb in any capacity? this could include, but is not limited to, a full-time employee, intern, apprentice, or co | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | are you a former employee or contractor of bill, invoice2go, divvy? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "profile | state | state | texas": {
+  "verdict": "correct",
+  "reason": "the saved state (hand-checked)"
+ },
+ "profile | postalCode | postal code | 78701": {
+  "verdict": "correct",
+  "reason": "the saved ZIP code (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you been employed by cockroach labs in the past? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your salary expectation? | 85000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your salary expectations? | 85000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "profile | addressLine1 | address line 1 | 100 test street": {
+  "verdict": "correct",
+  "reason": "the saved street line (the form asks city, state and ZIP in their own boxes) (hand-checked)"
+ },
+ "profile | state | province/state | texas": {
+  "verdict": "correct",
+  "reason": "the saved state (hand-checked)"
+ },
+ "profile | postalCode | postal/zip code | 78701": {
+  "verdict": "correct",
+  "reason": "the saved ZIP code (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you been employed, or otherwise engaged, by an asana entity in the past? (previous independent contractors, select \"yes.\") | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "profile | postalCode | what's your postal code? | 78701": {
+  "verdict": "correct",
+  "reason": "the saved ZIP code (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your minimum base salary expectations? | 140000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "profile | addressLine1 | address | 100 test street": {
+  "verdict": "correct",
+  "reason": "the saved street line (the form asks city, state and ZIP in their own boxes) (hand-checked)"
+ },
+ "profile | state | province | texas": {
+  "verdict": "correct",
+  "reason": "the saved state (hand-checked)"
+ },
+ "profile | preferredLocations | where are you currently based & where would your preferred location of work be? | austin, remote": {
+  "verdict": "correct",
+  "reason": "where the candidate is based (Austin) and would work (Austin, Remote) (hand-checked)"
+ },
+ "profile | postalCode | zip | 78701": {
+  "verdict": "correct",
+  "reason": "the saved ZIP code (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | desired pay | cad 140,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "profile | postalCode | zip code | 78701": {
+  "verdict": "correct",
+  "reason": "the saved ZIP code (hand-checked)"
+ },
+ "answer | Quick answers › citizenship | 🇺🇸 are you a us person? | yes": {
+  "verdict": "correct",
+  "reason": "a US citizen is a U.S. person (saved citizenship: United States) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | salary expectations? | eur 95,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what would your salary expectations be? | eur 95,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "profile | fullName | preferred first name & last name | emily carter": {
+  "verdict": "correct",
+  "reason": "the candidate's name (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your salary expectations? | eur 95,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you ever been employed by vonage or any other company within the ericsson group, including ericsson, redbee media, fyi television (us), cradlepoint, iconec | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your salary expectations (based on 40 hours, including holiday allowance)? | eur 95,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ }
+}

@@ -66,3 +66,16 @@ describe("the PDF", () => {
     expect(letterFile("Hello", { firstName: "Emily", lastName: "Carter" }, { company: "X" })).toMatchObject({ name: "Cover_Letter_Emily_Carter.pdf", type: "application/pdf" });
   });
 });
+
+describe("the company name in the letter", () => {
+  it("reads like a name, never an address", async () => {
+    const { letterCompany } = await import("../src/shared/cover-letter");
+    expect(letterCompany("bear-robotics")).toBe("Bear Robotics");
+    expect(letterCompany("webflow")).toBe("Webflow");
+    expect(letterCompany("ElevenLabs")).toBe("ElevenLabs");
+    expect(letterCompany("127")).toBe("");
+    expect(letterCompany("localhost")).toBe("");
+    expect(wrapLetter("Body.", { firstName: "A", lastName: "B" }, { company: "127" })).toMatch(/^Dear Hiring Team,\n/);
+    expect(wrapLetter("Body.", { firstName: "A", lastName: "B" }, { company: "north-wind-group" })).toMatch(/^Dear Hiring Team at North Wind Group,\n/);
+  });
+});

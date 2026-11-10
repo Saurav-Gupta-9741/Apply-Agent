@@ -24,10 +24,21 @@ export function isCoverLetterField(field: Pick<FieldDescriptor, "label" | "name"
   return field.control === "file" || field.control === "textarea" || field.control === "text";
 }
 
+/** A company name fit for a letter, from the job site's address slug ("bear-robotics" → "Bear Robotics",
+ * "webflow" → "Webflow", "ElevenLabs" kept). Nothing for an address that is not a name ("127", "localhost"; the
+ * real-model test greeted "Dear Hiring Team at 127,"). */
+export function letterCompany(raw: string): string {
+  const s = (raw ?? "").trim();
+  if (!s || !/[a-z]/i.test(s) || /^(localhost|www|jobs|careers|apply|boards?|job-boards)$/i.test(s)) return "";
+  if (/[A-Z]/.test(s) && !/[-_]/.test(s)) return s;
+  return s.split(/[-_\s]+/).filter(Boolean).map((w) => (/^(inc|llc|ltd|co|gmbh|ag|sa|pte)$/i.test(w) ? w.toUpperCase() === "INC" ? "Inc" : w.toUpperCase() : w[0]!.toUpperCase() + w.slice(1))).join(" ");
+}
+
 /** What the writer is asked for a cover letter: the body only, grounded in the facts and resume lines it is given. */
 export function coverLetterQuestion(job: { title: string; company: string }): string {
   const role = job.title ? `the ${job.title} role` : "this role";
-  const at = job.company ? ` at ${job.company}` : "";
+  const company = letterCompany(job.company);
+  const at = company ? ` at ${company}` : "";
   return `Write the body of a cover letter for ${role}${at}. Paragraph 1: why this role fits the candidate. Paragraph 2: two concrete examples from the candidate's own experience that match the job. Paragraph 3: one or two sentences to close. Three short paragraphs, first person, no greeting and no sign-off.`;
 }
 
@@ -42,7 +53,8 @@ export const SUMMARY_LIMIT: LengthLimit = { maxWords: 80, approximate: true };
 export function wrapLetter(body: string, profile: Pick<Profile, "firstName" | "lastName">, job: { company: string }): string {
   const text = body.trim().replace(/^(dear [^\n,]{0,60},?\s*\n+)/i, "").replace(/\n+\s*(sincerely|best regards|kind regards|regards|thank you)[,.]?\s*(\n.*)?$/is, "").trim();
   const name = `${profile.firstName} ${profile.lastName}`.trim();
-  const greeting = job.company ? `Dear Hiring Team at ${job.company},` : "Dear Hiring Team,";
+  const company = letterCompany(job.company);
+  const greeting = company ? `Dear Hiring Team at ${company},` : "Dear Hiring Team,";
   return [greeting, "", text, "", "Sincerely,", name].join("\n").trim();
 }
 
@@ -137,7 +149,7 @@ const toBase64 = (bytes: Uint8Array) => {
 export function letterFile(text: string, profile: Pick<Profile, "firstName" | "lastName">, job: { company: string }): ResumeFile {
   const who = `${profile.firstName}_${profile.lastName}`.replace(/[^\p{L}\p{N}_-]+/gu, "_").replace(/^_+|_+$/g, "") || "Applicant";
   const base = `Cover_Letter_${who}`;
-  const pdf = letterPdf(text, job.company ? `Cover letter - ${job.company}` : "Cover letter");
+  const pdf = letterPdf(text, letterCompany(job.company) ? `Cover letter - ${letterCompany(job.company)}` : "Cover letter");
   if (pdf) return { name: `${base}.pdf`, type: "application/pdf", dataBase64: toBase64(pdf) };
   return { name: `${base}.txt`, type: "text/plain", dataBase64: toBase64(new TextEncoder().encode(text)) };
 }

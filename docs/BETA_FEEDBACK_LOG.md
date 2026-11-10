@@ -155,13 +155,36 @@ Results (every unclear answer checked by hand):
 - Harness now counts required sections (Breezy "Work History*"): 79 seen, 74 filled; the 5 left are the free-text
   "Experience Summary".
 
+## Round 10: cover letters, summary, citizenship, location lists; 182 fresh forms × 2 candidates (2026-11-10) → 1.0.16
+
+Live round 8: 182 jobs never used in any earlier round (70 Greenhouse, 60 Ashby, 32 Breezy, 20 BambooHR), filled once
+as the US candidate (Austin, TX) and once as the India candidate (Pune); every send blocked, nothing submitted.
+
+| # | Flaw found / gap closed | Status | What changed |
+|---|---|---|---|
+| 10.1 | No cover letters: uploads said "attach it yourself" | Done (1.0.16) | "Write a cover letter": the on-device writer drafts the body (about 250 words, grounded and fact-checked), the user reads and edits it, and Use types it or attaches it as a PDF made on this computer. Live: the PDF went into 122 of 127 real cover-letter uploads; the 5 others were a harness artifact, and the same Ashby form takes the file when the message reaches its frame |
+| 10.2 | Breezy's required "Experience Summary" (cSummary) and "Summary"/"About you" boxes always left | Fixed (1.0.16) | Profile "Professional summary"; filled from it, or "Write my summary" drafts it and saves it for the next form. A job's or a school's own "Summary" is never touched |
+| 10.3 | "Citizenship status", "Country of citizenship", "Are you a US citizen…?", "U.S. person" always asked | Fixed (1.0.16) | Quick answers: citizenship and permanent residence. Never derived from work rights. A widened "US person" definition (born in the US, a parent born there; Monzo) gets only a certain Yes |
+| 10.4 | Location type-aheads: "Austin, TX" matched nothing on 9 Ashby/Greenhouse lists | Fixed (1.0.16) | The city with its state and the city alone are searched; only the same place is taken (never Austin, Minnesota); a country-only list gets the user's country. Live: 75 of 78 → after the fix every re-checked list chose the right place |
+| 10.5 | Long state questions with a note; Breezy "Address" (cAddress); a box labelled "Address" got only the street line | Fixed (1.0.16) | Leading state question read past its notes; label-only address; the full address for "Address" |
+| 10.6 | Breezy number-only salary box: "CAD 140,000" kept as "140000" counted as failed; the currency list stayed on its default "US Dollar" (95000 euros went in as dollars) | Fixed (1.0.16) | Digits of the amount accepted; a currency list on the page's own default gets the salary's currency (a user's own choice is never replaced) |
+| 10.7 | BambooHR "Milano, MI" read as Michigan: a dollar salary on an Italian job | Fixed (1.0.16) | The job's country from that BambooHR site's public job details |
+| 10.8 | Backups dropped citizenship, summary, other-country rule, salary abroad, non-compete, relatives, clearance | Fixed (1.0.16) | All restored |
+
+Results (every unclear answer checked by hand; audit in reports/live1000/round8-us, round8-india):
+- US candidate: 182 forms (170 with a form), 68.9% of fields filled (round 7: 60.8%), required fields left for the
+  user 22.1% (was 30.4%), 75 forms ready to submit; 2 wrong of 1,834 (10.6, 10.7), both fixed and re-checked live.
+- India candidate: 171 forms, 69.4% filled, 21.8% required left, 77 ready; 1 wrong of 1,857 (10.3, Monzo), fixed and
+  re-checked live.
+- Re-check of the 12 affected forms with both candidates: every fix confirmed on the live pages.
+
 ## Still open
 
 | Item | Why open |
 |---|---|
-| Cover letter generator (on-device AI) | Planned feature, not started |
+| Citizenship-status lists inside Greenhouse dropdowns that show their options only when opened | Their options are not known when deciding; left to the user |
 | AI matching for reworded questions | Question model retrained on 3,465 real questions (7.5); a writing model failed the laptop test (7.1) |
 | Address existence check | Needs an online lookup; conflicts with "data never leaves the browser" |
 | Workday, iCIMS, Taleo live testing | Need accounts (user's decision); adapters tested on saved pages only (9.9) |
 | Essay writer tier thresholds and fine-tuning | Waiting on the user's Chrome-only model test on their laptop |
-| Long state questions with a note ("Please select your current state of residence. Select 'Not in the US'…") | Over the word limit for profile facts; 5 seen in round 7 |
+

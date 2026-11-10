@@ -55,7 +55,7 @@ test("every Profile field shows an example and what it answers", async ({ ext })
   await goTo(ext, "profile");
   await expect(ext.locator("#profile-form input[name='phone']")).toHaveAttribute("placeholder", /\+91/);
   await expect(ext.locator("#profile-form input[name='linkedin']")).toHaveAttribute("placeholder", /linkedin\.com\/in\//);
-  const inputs = ext.locator("#profile-form .card input[name]");
+  const inputs = ext.locator("#profile-form .card input[name], #profile-form .card textarea[name]");
   const help = ext.locator("#profile-form .field-help");
   expect(await help.count()).toBe(await inputs.count());
 });
