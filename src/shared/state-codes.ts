@@ -22,3 +22,6 @@ export function stateCode(name: string): string | undefined {
 export function stateName(code: string): string | undefined {
   return CODES[code.trim().toUpperCase()];
 }
+
+/** Every US state / Canadian province name, lowercase. */
+export const REGION_NAMES: readonly string[] = Object.values(CODES);

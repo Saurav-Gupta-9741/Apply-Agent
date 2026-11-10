@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Practice cover letter application · Northwind Data (local test page)</title>
+<style>
+  body { font: 15px system-ui; max-width: 640px; margin: 32px auto; padding: 0 16px; }
+  .field { display: flex; flex-direction: column; gap: 4px; margin: 12px 0; }
+  .banner { background: #fff3cd; padding: 8px 12px; border-radius: 6px; }
+</style>
+</head>
+<body>
+<p class="banner">Local practice page for ApplyAgent's cover letters and summaries. Nothing is sent anywhere.</p>
+<h1 class="app-title">Data Engineer</h1>
+<div class="job-description">
+  <p>Northwind Data builds real-time analytics for logistics companies. In this role you will build streaming pipelines
+  with Kafka and Spark, own data quality for customer-facing dashboards, and run services on Kubernetes.</p>
+</div>
+
+<form id="application-form">
+  <div class="field"><label for="first_name">First Name *</label><input id="first_name" name="first_name" required></div>
+  <div class="field"><label for="last_name">Last Name *</label><input id="last_name" name="last_name" required></div>
+  <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" required></div>
+  <div class="field"><label for="cover">Cover Letter *</label><input id="cover" name="cover_letter" type="file" accept=".pdf,.doc,.docx,.txt" required>
+    <span id="cover-name"></span></div>
+  <div class="field"><label for="summary">Professional Summary *</label><textarea id="summary" name="summary" rows="4" required></textarea></div>
+  <button type="submit">Submit Application</button>
+</form>
+<script>
+  document.getElementById("cover").addEventListener("change", (e) => {
+    const f = e.target.files[0];
+    document.getElementById("cover-name").textContent = f ? `${f.name} (${f.size} bytes)` : "";
+  });
+  document.getElementById("application-form").addEventListener("submit", (e) => { e.preventDefault(); document.body.innerHTML = "<h1>Thank you for applying</h1>"; });
+</script>
+</body>
+</html>

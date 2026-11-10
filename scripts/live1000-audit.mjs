@@ -121,7 +121,18 @@ function judge(f, row) {
   // The page does not hold what the extension typed (text-like controls, where onPage is comparable).
   if (TEXTLIKE.has(f.control) && f.onPage !== undefined && value) {
     const same = loose(f.onPage) === loose(value) || loose(f.onPage).includes(loose(value)) || (f.decision === "profile" && f.key === "phone" && digits(f.onPage).endsWith(digits(value).slice(-10)));
-    if (!same) return r("wrong", "onpage_mismatch", `the page holds "${String(f.onPage).slice(0, 80)}", not "${value.slice(0, 80)}"`);
+    // A number-only salary box keeps the digits of "EUR 95,000" (round 8): right only when the form's currency list
+    // beside it holds that currency.
+    const money = /^([A-Z]{3})\s?\d/.exec(value);
+    if (!same && money && /^[\d.,\s]+$/.test(String(f.onPage)) && digits(f.onPage) === digits(value)) {
+      const cur = (row.fields ?? []).find((x) => /currency/i.test(`${x.name ?? ""} ${x.label}`) && x.control === "select");
+      // No currency list: the number is read in the job's own money, so it is right only when that is its currency.
+      const own = { "United States": "USD", "United Kingdom": "GBP", Canada: "CAD", India: "INR", Australia: "AUD", Ireland: "EUR", Germany: "EUR", France: "EUR", Netherlands: "EUR", Spain: "EUR", Italy: "EUR", Portugal: "EUR" };
+      const jc = jobCountries(META[row?.url]);
+      if (!cur && !(jc.length === 1 && own[jc[0]] === money[1])) return r("wrong", "currency_lost", `the box keeps "${f.onPage}" and the form has no currency choice`);
+      if (!cur) return r("correct", "money_digits", `"${f.onPage}" in a number-only box, for a job paid in ${money[1]}`);
+      if (String(cur.onPage ?? "").toUpperCase() !== money[1]) return r("wrong", "currency_left_default", `the box keeps "${f.onPage}" but the currency list shows "${cur.onPage}", not ${money[1]}`);
+    } else if (!same) return r("wrong", "onpage_mismatch", `the page holds "${String(f.onPage).slice(0, 80)}", not "${value.slice(0, 80)}"`);
   }
   // A job block ("Company" of job #2 on Breezy): the value must be that job's own part from the candidate's work
   // history, and the box must be asking for that part (never a salary question or a date in a Company box).
@@ -332,7 +343,7 @@ function judge(f, row) {
 // ---------------------------------------------------------------------------------------------------- stats
 const S = {
   generatedAt: new Date().toISOString(), inputs: files, forms: rows.length, byOutcome: {}, byPlatformOutcome: {}, runStatus: {},
-  fields: 0, byStatus: {}, byDecision: {}, byDecisionStatus: {}, required: 0, requiredLeftForUser: 0, requiredFilled: 0, requiredSections: 0, requiredSectionsLeft: 0, requiredSectionsLeftByName: {},
+  fields: 0, byStatus: {}, byDecision: {}, byDecisionStatus: {}, required: 0, requiredLeftForUser: 0, requiredFilled: 0, requiredSections: 0, requiredSectionsLeft: 0, requiredSectionsLeftByName: {}, cover: { tried: 0, attached: 0, shown: 0, notShown: [] },
   asks: {}, asksRequired: {}, skips: {}, failedByKey: {}, seconds: { all: [], filled: [] }, perCompany: {}, perPlatform: {},
   blocked: { total: 0, forms: 0, applicationSends: [] }, urlChanged: [], errors: {},
 };
@@ -378,6 +389,13 @@ for (const row of rows) {
     // The resume section is its file box: attached when that field was filled.
     const filled = sec.filled || (sec.name === "resume" && (row.fields ?? []).some((f) => f.control === "file" && /resume|cv/i.test(`${f.label} ${f.name}`) && f.status === "filled"));
     if (!filled) { S.requiredSectionsLeft++; inc(S.requiredSectionsLeftByName, sec.name); pc.requiredLeft++; pp.requiredLeft++; }
+  }
+  // Round 8: the approved cover letter attached to a cover-letter upload (as the panel does after "Use").
+  if (row.coverLetter) {
+    S.cover.tried++;
+    if (row.coverLetter.ok) S.cover.attached++;
+    if (row.coverLetter.shown) S.cover.shown++;
+    else S.cover.notShown.push(`${row.company}: ${row.coverLetter.label}${row.coverLetter.detail ? ` (${row.coverLetter.detail})` : ""}`);
   }
 }
 const filledForms = rows.filter((r) => r.outcome === "filled");
@@ -503,4 +521,5 @@ writeFileSync(join(OUT, "UNCLEAR.md"), `${U.join("\n")}\n`);
 
 console.log(`${rows.length} forms (${filledForms.length} filled); ${S.fields} fields, ${S.byStatus.filled ?? 0} filled (${pct(S.byStatus.filled ?? 0, S.fields)}); required left for user ${pct(S.requiredLeftForUser, S.required)}; ready ${stats.formsReady}`);
 console.log(`accuracy: wrong ${A.wrong} / ${A.filled} (${pct(A.wrong, A.filled)}), correct ${A.correct}, unclear ${A.unclear} (${unclearPairs.size} pairs)`);
+console.log(`cover letters: ${S.cover.attached} of ${S.cover.tried} uploads took the PDF; the page shows it on ${S.cover.shown}${S.cover.notShown.length ? `; not shown: ${JSON.stringify(S.cover.notShown.slice(0, 8))}` : ""}`);
 console.log(`wrong by class: ${JSON.stringify(A.wrongByRule)}; url changed ${S.urlChanged.length}; application sends blocked ${S.blocked.applicationSends.length}`);

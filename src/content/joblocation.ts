@@ -93,6 +93,10 @@ export function jobCountries(doc: Document): string[] {
  * the job, open to every site, sending nothing about the user. */
 export async function jobCountriesWithApi(doc: Document, fetcher: typeof fetch = fetch): Promise<string[]> {
   const found = jobCountries(doc);
+  // BambooHR writes "Milano, MI": the province of Milan, read as Michigan (live round 8: a dollar salary went into an
+  // Italian job). Its own public job data names the country; it wins over the page's location line.
+  const bamboo = await bambooCountries(doc, fetcher);
+  if (bamboo) return bamboo;
   if (found.length) return found;
   try {
     const url = new URL(doc.location?.href ?? "");
@@ -113,5 +117,32 @@ export async function jobCountriesWithApi(doc: Document, fetcher: typeof fetch =
     }
   } catch {
     return found; // offline, blocked or slow: the user answers
+  }
+}
+
+/** A BambooHR job's country from the site's own public job data (/careers/<id>/detail, the same site, no cookies, no
+ * user data). Undefined when the page is not a BambooHR job or the data does not answer; [] when it names a country
+ * ApplyAgent does not know (the user answers then, never a guess from "Milano, MI"). */
+async function bambooCountries(doc: Document, fetcher: typeof fetch): Promise<string[] | undefined> {
+  try {
+    const url = new URL(doc.location?.href ?? "");
+    if (!/^[\w-]{1,80}\.bamboohr\.com$/.test(url.hostname)) return undefined;
+    const id = /^\/careers\/(\d{1,12})\b/.exec(url.pathname)?.[1];
+    if (!id) return undefined;
+    const stop = new AbortController();
+    const timer = setTimeout(() => stop.abort(), 4000);
+    try {
+      const res = await fetcher(`https://${url.hostname}/careers/${id}/detail`, { signal: stop.signal, credentials: "omit", headers: { accept: "application/json" } });
+      if (!res.ok) return undefined;
+      const data = (await res.json()) as { result?: { jobOpening?: { atsLocation?: { country?: string | null }; location?: { addressCountry?: string | null } } } };
+      const job = data.result?.jobOpening;
+      const country = job?.atsLocation?.country ?? job?.location?.addressCountry ?? "";
+      if (!country) return undefined;
+      return countriesInLocation(country).slice(0, 1);
+    } finally {
+      clearTimeout(timer);
+    }
+  } catch {
+    return undefined;
   }
 }

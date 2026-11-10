@@ -2,7 +2,7 @@
  * required is filled, no CAPTCHA is waiting, and (in review mode) the user has pressed Submit. */
 
 import { translateFieldsOnDevice } from "../shared/locale/translator";
-import type { AnswerEntry, ApplicationRecord, Decision, FieldResult, FillTag, Mode, Profile, RunReport } from "../shared/types";
+import type { AnswerEntry, ApplicationRecord, Decision, FieldResult, FillTag, Mode, Profile, ResumeFile, RunReport } from "../shared/types";
 import { detectSignInWall, generic, isGoogleForms, pickAdapter } from "./adapters";
 import { workEntries } from "./classify";
 import { codeOptionFor, dialCodePickerFor, isDialCodePicker, JUST_A_DIAL_CODE, phoneBoxFor, selectedCode, splitPhone } from "./phone";
@@ -14,6 +14,7 @@ import { pickSchool, schoolQueries } from "./schools";
 import { deepQueryAll } from "./dom";
 import { isDeclineAnswer, type PageFacts } from "./facts";
 import { jobCountriesWithApi } from "./joblocation";
+import { placeOption, placeQueries } from "../shared/place-pick";
 import { bestOption, normalize } from "../shared/text";
 import { pruneDisconnectedCorrections, trackCorrection } from "./corrections";
 import { isConsentLabel } from "../shared/consent-review";
@@ -48,6 +49,19 @@ export function highlightField(doc: Document, label: string, key?: string): bool
   }, 2500);
   (field?.elements[0] as HTMLElement | undefined)?.focus?.({ preventScroll: true });
   return true;
+}
+
+/** Puts a file the user approved (a cover letter written in the panel) into one file box of the form, found like
+ * "Show on page" finds it. Only a file box; never submits. */
+export function attachFileTo(doc: Document, label: string, key: string | undefined, file: ResumeFile): { ok: boolean; detail?: string } | undefined {
+  const { root } = locate(doc);
+  if (!root) return undefined;
+  const fields = extractFields(root).filter((f) => f.descriptor.control === "file");
+  const field = fields.find((f) => f.descriptor.key === key && f.descriptor.label === label) ?? fields.find((f) => f.descriptor.label === label);
+  // Not in this frame: another frame of the page answers (Ashby adds an empty frame after a fill; live round 8).
+  if (!field) return undefined;
+  const outcome = fillField(field, file.name, file);
+  return outcome.ok ? { ok: true } : { ok: false, detail: "The page did not take the file. Please attach it yourself." };
 }
 
 export interface AgentContext {
@@ -280,7 +294,12 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
   const decision = decideWithMeaning(field.descriptor, ctx.profile, ctx.answers, ctx.page, meaning);
   const phone = decision.kind === "profile" && decision.key === "phone";
   // A phone widget's pre-filled "+1" is not the user's number: it is replaced.
-  const existing = phone && JUST_A_DIAL_CODE.test(currentValue(field)) ? "" : currentValue(field);
+  // A salary-currency list still on the page's own default (Breezy shows "US Dollar" before anyone chooses) is not the
+  // user's choice: the currency of the salary ApplyAgent types replaces it (live round 8: "95000" went in as dollars
+  // for a euro salary on a job in Dublin).
+  const pageDefault = decision.kind === "answer" && decision.question === "Quick answers › salary currency"
+    && first instanceof HTMLSelectElement && (first.selectedIndex <= 0 || !!first.options[first.selectedIndex]?.defaultSelected);
+  const existing = (phone && JUST_A_DIAL_CODE.test(currentValue(field))) || pageDefault ? "" : currentValue(field);
   if (existing) {
     // Never overwrite, but flag a site pre-fill (e.g. resume parsing) that disagrees with the user's facts.
     const differs = (decision.kind === "profile" || decision.kind === "work") && !sameValue(existing, decision.value);
@@ -308,8 +327,14 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
     const declines = labels.filter(isDeclineAnswer);
     return bestOption(declines, value, 0.3) ?? (declines.length === 1 ? declines[0] : undefined);
   } : undefined;
+  // The user's own city in a places type-ahead: the city alone is searched too, and only the same place is taken
+  // (live run 7: "Austin, TX" found nothing on 9 Ashby and Greenhouse location lists).
+  const home = decision.kind === "profile" && decision.key === "location"
+    ? { location: value, state: ctx.profile.state, country: ctx.profile.country } : undefined;
   const outcome = field.descriptor.control === "combobox" ? await fillCombobox(el as HTMLInputElement, value, 6000,
-      school ? { queries: schoolQueries(value), pick: (labels) => pickSchool(labels, value) } : declineOnly ? { pick: declineOnly, first: ["", "decline", "wish", "prefer not"] } : {})
+      school ? { queries: schoolQueries(value), pick: (labels) => pickSchool(labels, value) }
+        : declineOnly ? { pick: declineOnly, first: ["", "decline", "wish", "prefer not"] }
+          : home ? { queries: placeQueries(home), pick: (labels) => placeOption(labels, home, (l) => bestOption(l, value)) } : {})
     : field.descriptor.control === "dropdown" || el.matches(DROPDOWN) ? await fillDropdown(el, value, 4000, declineOnly)
     // Phone boxes often format the number as it is typed, or beside a country picker keep only the national part.
     : phone && (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) ? fillPhone(el, value, splitPhone(ctx.profile.phone).code)

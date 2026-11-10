@@ -4,7 +4,7 @@ import type { Detection, Message, RunReport } from "../shared/types";
 import { loadAnswers, loadApplications, loadProfile, loadSettings } from "../shared/storage";
 import { generic, pickAdapter } from "./adapters";
 import { extractFields, type ExtractedField } from "./extract";
-import { fieldStates, highlightField, runOnce, scanForm, submitForm } from "./agent";
+import { attachFileTo, fieldStates, highlightField, runOnce, scanForm, submitForm } from "./agent";
 import { detectChallenge, detectConfirmation } from "./detect";
 import { findApplyControl, sensePage } from "./sense";
 import { isApplicationPage } from "./target";
@@ -182,7 +182,7 @@ if (!window.__applyAgentLoaded) {
 
   if (typeof chrome !== "undefined" && chrome.runtime?.onMessage?.addListener) {
     chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse: (r: unknown) => void) => {
-    const acting = ["RUN", "SUBMIT", "SCAN", "HIGHLIGHT", "FIELD_STATE", "OPEN_APPLICATION", "CONSENT_LIST", "CONSENT_SHOW", "CONSENT_TICK"].includes(message.type);
+    const acting = ["RUN", "SUBMIT", "SCAN", "HIGHLIGHT", "ATTACH_FILE", "FIELD_STATE", "OPEN_APPLICATION", "CONSENT_LIST", "CONSENT_SHOW", "CONSENT_TICK"].includes(message.type);
     if (acting && platform.policy === "hands_off") {
       // Answer once: from the top frame, or from the frame that holds the form when the page around it is not ours.
       if (window !== window.top && !formRoot()) return false;
@@ -257,6 +257,18 @@ if (!window.__applyAgentLoaded) {
     if (message.type === "HIGHLIGHT") {
       if (!formRoot()) return false;
       sendResponse(highlightField(document, message.label, message.key));
+      return false;
+    }
+    // A cover letter the user approved in the panel goes into its upload box (only on the application page).
+    if (message.type === "ATTACH_FILE") {
+      if (!formRoot()) return false;
+      if (busy) {
+        sendResponse({ ok: false, detail: "ApplyAgent is working on this page. Wait for it to finish, then press Use again." });
+        return false;
+      }
+      const attached = attachFileTo(document, message.label, message.key, message.file);
+      if (!attached) return false; // the box is in another frame: that frame answers
+      sendResponse(attached);
       return false;
     }
     if (message.type === "FIELD_STATE") {

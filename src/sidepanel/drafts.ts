@@ -26,6 +26,7 @@ import { draftId, type FromWriter, type WriterStatus } from "../shared/writer/pr
 import { chooseWriter, pickTier, probeHardware, type NoneReason, type WriterChoice } from "../shared/writer/tier";
 import { gb, modelById, type WriterModel } from "../shared/writer/catalog";
 import { currentJobText } from "./fit-card";
+import type { DraftKind } from "../shared/cover-letter";
 
 
 /** The length limit of a question: its words, help text and placeholder, and the box's maxlength. */
@@ -57,6 +58,14 @@ export interface DraftContext {
   job: { title: string; company: string };
   onUse: (draftText: string) => Promise<void> | void;
   onSkip?: () => void;
+  /** A cover letter or a professional summary: `question` is then the instruction for the writer. */
+  kind?: DraftKind;
+  /** The length to write to, when the field itself does not say (a cover letter: about 250 words). */
+  limit?: LengthLimit;
+  /** Turns the checked body into what is used (a cover letter gets its greeting and the user's name). */
+  finish?: (body: string) => string;
+  /** The main button's words ("Write a cover letter"). */
+  label?: string;
   toast?: (message: string, kind?: "ok" | "warn" | "bad") => void;
 }
 
@@ -242,14 +251,15 @@ const DRAFT_LABEL = "Draft answer";
 /** Creates the 1-click draft container UI. */
 export function createDraftWidget(ctx: DraftContext): HTMLElement {
   const container = el("div", "draft-widget");
-  const draftBtn = el("button", "btn btn-ghost btn-sm draft-trigger", DRAFT_LABEL);
+  const startLabel = ctx.label ?? DRAFT_LABEL;
+  const draftBtn = el("button", "btn btn-ghost btn-sm draft-trigger", startLabel);
   draftBtn.type = "button";
   const previewBox = el("div", "draft-preview-box");
   previewBox.style.display = "none";
   container.append(draftBtn, previewBox);
 
   const id = draftId(ctx.job, ctx.question);
-  const limit = limitOfField(ctx.field);
+  const limit = ctx.limit ?? limitOfField(ctx.field);
   let mode: "idle" | "setup" | "drafting" | "done" = "idle";
   let localModel: WriterModel | undefined;
   let lastChoice: WriterChoice | undefined;
@@ -264,7 +274,7 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
     show();
     draftBtn.hidden = false;
     draftBtn.disabled = false;
-    draftBtn.textContent = DRAFT_LABEL;
+    draftBtn.textContent = startLabel;
   };
 
   const sources = async (): Promise<FactSources> => ({
@@ -298,9 +308,9 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
       card.append(btn("I'll write it myself", "ghost", reset));
       return show(card);
     }
-    const text = r.text!;
+    const text = ctx.finish ? ctx.finish(r.text!) : r.text!;
     const textarea = el("textarea", "input draft-textarea");
-    textarea.rows = 5;
+    textarea.rows = ctx.kind === "cover_letter" ? 14 : 5;
     textarea.value = text;
     textarea.setAttribute("aria-label", `Draft answer for: ${ctx.question}`);
     // The one thing every user must do with an AI draft: read it. Said before the text, in plain words.
@@ -404,7 +414,7 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
     show(box);
     draftBtn.hidden = false;
     draftBtn.disabled = false;
-    draftBtn.textContent = DRAFT_LABEL;
+    draftBtn.textContent = startLabel;
   }
 
   function showError(err: unknown): void {
@@ -418,7 +428,7 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
     show(box);
     draftBtn.hidden = false;
     draftBtn.disabled = false;
-    draftBtn.textContent = DRAFT_LABEL;
+    draftBtn.textContent = startLabel;
   }
 
   /** The first-time card: consent and download (and the Nano download when Chrome offers it), or the honest "none". */
@@ -602,7 +612,7 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
     }
     const src = await sources();
     showDrafting("", status);
-    await writer.send({ type: "draft", modelId: model.id, request: { id, question: ctx.question, limit, profileFacts: src.profileFacts, resumeText: src.resumeText, job: src.job } });
+    await writer.send({ type: "draft", modelId: model.id, request: { id, question: ctx.question, limit, profileFacts: src.profileFacts, resumeText: src.resumeText, job: src.job, kind: ctx.kind } });
   }
 
   async function start(queued: boolean): Promise<void> {

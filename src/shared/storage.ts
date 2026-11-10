@@ -25,6 +25,7 @@ export const EMPTY_PROFILE: Profile = {
   targetRoles: "",
   preferredLocations: "",
   skills: "",
+  summary: "",
   address: "",
   addressLine1: "",
   addressLine2: "",

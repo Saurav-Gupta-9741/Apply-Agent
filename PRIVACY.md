@@ -22,6 +22,11 @@ stored **only in your browser** (Chrome local storage). We do not receive or sto
   page, it does not show where the job is. ApplyAgent then reads that job's public location from Greenhouse's
   public job list (boards-api.greenhouse.io), to know which country's work-permit and salary questions apply. The
   request names only the job; it carries no information about you and no cookies.
+- **BambooHR's public job details:** on a BambooHR application, ApplyAgent reads the job's country from that same
+  BambooHR site's public job details (a location such as "Milano, MI" could otherwise be read as Michigan). The
+  request names only the job; it carries no information about you and no cookies.
+- **Cover letters:** a cover letter you approve is turned into a PDF file on your computer and attached to the
+  form's cover-letter box only when you press "Use this answer". It is never sent anywhere else.
 - **Question understanding:** a small language model shipped inside the extension reads what form questions mean.
   It runs on your computer, offline; question text and your answers are never sent anywhere for this.
 

@@ -18,7 +18,7 @@ import { activate, BETA_ALL_FREE, buyUrl, canUseFeature, currentLicense, isLifet
 import { FREE_MONTHLY_SUBMISSIONS, SUPPORT_EMAIL } from "../shared/config";
 import { hydrateIcons, icon } from "./icons";
 import { NEVER_REMEMBER, type PendingQuestion } from "../shared/types";
-import { findAnswer, questionKey } from "../content/classify";
+import { findAnswer, profileKeyFor, questionKey } from "../content/classify";
 import { isAppliedBeforeQuestion } from "../content/facts";
 import { HANDS_OFF_MESSAGE, isHandsOff, platformFor } from "../shared/platforms";
 import { makeBackup, mergeAnswers, mergeApplications, mergeCompanies, readBackup } from "../shared/backup";
@@ -44,6 +44,7 @@ import { mountFormStructureButton } from "./form-structure";
 import { headline, rowState, summarize, type LiveField } from "./checklist";
 // >>> L4 ai drafts
 import { createDraftAllBar, createDraftWidget, isDraftableField, limitCounter, limitOfField } from "./drafts";
+import { COVER_LETTER_LIMIT, SUMMARY_LIMIT, SUMMARY_QUESTION, coverLetterQuestion, isCoverLetterField, letterFile, wrapLetter } from "../shared/cover-letter";
 import { AI_TRAP_MESSAGE, aiPolicyMessage, aiPolicyOfForm, aiTrapOf, draftsForbidden, type AiPolicy } from "../shared/ai-policy";
 import { checkLength } from "../shared/length-limit";
 import { factHints, focusQuickAnswer } from "./fact-hints";
@@ -796,6 +797,10 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     left.append(show);
   }
   if (onPageOnly) {
+    // A cover-letter upload: the writer drafts the letter here; the approved letter is attached as a PDF (round 8).
+    if (upload && isCoverLetterField(r.field) && !draftsForbidden(ctx.aiRule) && !aiTrapOf(`${r.field.label} ${r.field.hint ?? ""}`)) {
+      card.append(coverLetterUpload(r, ctx));
+    }
     // Nothing to type here: the user acts on the page itself.
     foot.append(left);
     card.append(foot);
@@ -832,17 +837,30 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
     note.append(icon("shield", 14), h("span", {}, AI_TRAP_MESSAGE));
     card.append(note);
   }
-  if (isDraftableField(r.field) && r.decision.kind === "ask" && !onPageOnly && !trap && !draftsForbidden(ctx.aiRule)) {
+  // A cover-letter box or a professional-summary box: the writer gets a clear instruction instead of the bare label.
+  const letter = isCoverLetterField(r.field) && r.field.control !== "file";
+  const summary = !letter && r.decision.kind === "ask" && profileKeyFor(r.field) === "summary";
+  if ((isDraftableField(r.field) || letter || summary) && r.decision.kind === "ask" && !onPageOnly && !trap && !draftsForbidden(ctx.aiRule)) {
     const draftWidget = createDraftWidget({
-      question: r.field.label,
+      question: letter ? coverLetterQuestion(ctx.job) : summary ? SUMMARY_QUESTION : r.field.label,
       field: r.field,
       profile,
       job: ctx.job,
+      kind: letter ? "cover_letter" : summary ? "summary" : undefined,
+      limit: letter ? limitOfField(r.field) ?? COVER_LETTER_LIMIT : summary ? limitOfField(r.field) ?? SUMMARY_LIMIT : undefined,
+      finish: letter ? (body) => wrapLetter(body, profile, ctx.job) : undefined,
+      label: letter ? "Write a cover letter" : summary ? "Write my summary" : undefined,
       onUse: async (draftText) => {
         input.value = draftText;
         input.dispatchEvent(new Event("input", { bubbles: true }));
         input.dispatchEvent(new Event("change", { bubbles: true }));
         r.tag = "drafted";
+        // A summary the user approved is kept in the profile, so the next form's summary box is filled.
+        if (summary) {
+          const current = await loadProfile();
+          if (!current.summary?.trim()) await saveProfile({ ...current, summary: draftText });
+          profile = { ...profile, summary: draftText };
+        }
         save.click();
       },
       toast,
@@ -913,6 +931,36 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   foot.append(left, save);
   card.append(foot);
   return card;
+}
+
+/** A cover-letter upload box: "Write a cover letter" → the draft to read and change → "Use this answer" attaches it to
+ * the form as a PDF made on this computer. When the page does not take the file, the user can save it and attach it. */
+function coverLetterUpload(r: FieldResult, ctx: CardContext): HTMLElement {
+  const box = h("div", { class: "cover-letter" });
+  box.append(createDraftWidget({
+    question: coverLetterQuestion(ctx.job),
+    field: { ...r.field, control: "textarea" },
+    profile,
+    job: ctx.job,
+    kind: "cover_letter",
+    limit: COVER_LETTER_LIMIT,
+    finish: (body) => wrapLetter(body, profile, ctx.job),
+    label: "Write a cover letter",
+    onUse: async (text) => {
+      const file = letterFile(text, profile, ctx.job);
+      const result = (await send({ type: "ATTACH_FILE", label: r.field.label, key: r.field.key, file })) as unknown as { ok?: boolean; detail?: string } | undefined;
+      if (result?.ok) {
+        r.tag = "drafted";
+        toast(`Cover letter attached (${file.name}). Check it on the page.`);
+        return;
+      }
+      toast(result?.detail ?? "The page did not take the file. Save it below and attach it yourself.", "warn");
+      const link = h("a", { class: "btn btn-secondary btn-sm", download: file.name, href: `data:${file.type};base64,${file.dataBase64}` }, `Save ${file.name}`);
+      box.append(link);
+    },
+    toast,
+  }));
+  return box;
 }
 
 /** "Open Quick answers" on a question card: the Answers section, scrolled to that Quick answer. */
@@ -1392,6 +1440,7 @@ const PROFILE_GROUPS: Array<{ title: string; fields: Array<[ProfileKey, string, 
     ["targetRoles", "Target roles (comma-separated)", "text", true],
     ["preferredLocations", "Preferred locations (e.g. Bangalore, Remote)", "text", true],
     ["skills", "Key skills (comma-separated)", "text", true],
+    ["summary", "Professional summary (2–4 sentences, your own words)", "textarea", true],
   ] },
 ];
 const PROFILE_KEYS = PROFILE_GROUPS.flatMap((g) => g.fields.map(([key]) => key));
@@ -1424,6 +1473,7 @@ const FIELD_HELP: Partial<Record<ProfileKey, [example: string, answers: string]>
   targetRoles: ["e.g. Software Engineer, ML Engineer", "Used by Jobs to find and rank roles (not filled into forms)"],
   preferredLocations: ["e.g. Bengaluru, Hyderabad, Remote", "Used by Jobs to find roles (not filled into forms)"],
   skills: ["e.g. Python, SQL, PyTorch", "Skills questions and job matching"],
+  summary: ["e.g. Data engineer with 4 years of batch and streaming pipelines in Python and Airflow…", "\"Summary\", \"Professional summary\" and \"About you\" boxes. A form's summary box can also write it for you."],
 };
 let profile: Profile = { ...EMPTY_PROFILE };
 const MAX_RESUME_BYTES = 5 * 1024 * 1024;
@@ -1527,7 +1577,7 @@ function ensureDatalist(id: string, values: readonly string[]): HTMLElement {
 /** The Profile form's values, as the checks read them. */
 function profileFormValues(): ProfileValues {
   const values: ProfileValues = {};
-  for (const key of PROFILE_KEYS) values[key] = document.querySelector<HTMLInputElement>(`#profile-form input[name='${key}']`)?.value ?? "";
+  for (const key of PROFILE_KEYS) values[key] = document.querySelector<HTMLInputElement | HTMLTextAreaElement>(`#profile-form input[name='${key}'], #profile-form textarea[name='${key}']`)?.value ?? "";
   values.educationStatus = document.querySelector<HTMLSelectElement>("#education-status")?.value ?? "";
   return values;
 }
@@ -1579,7 +1629,9 @@ async function renderProfile(): Promise<void> {
     for (const [key, label, type, full] of group.fields) {
       // Links are typed as text: the browser's own URL check would reject "linkedin.com/in/x"; ApplyAgent checks them.
       // Typed as text: the browser's own checks (email, url) are replaced by ApplyAgent's, which explain the problem.
-      const input = h("input", { class: "input", type: type === "tel" ? "tel" : "text", name: key, autocomplete: "off" }) as HTMLInputElement;
+      const input = type === "textarea"
+        ? h("textarea", { class: "input", name: key, rows: "4", maxlength: "2000" }) as HTMLTextAreaElement
+        : h("input", { class: "input", type: type === "tel" ? "tel" : "text", name: key, autocomplete: "off" }) as HTMLInputElement;
       input.value = profile[key] ?? "";
       const list = FIELD_LISTS[key];
       if (list) input.setAttribute("list", list);
@@ -1977,6 +2029,8 @@ type QuickField = { key: keyof QuickFacts; label: string; hint?: string; placeho
 const ASK_ME: [string, string] = ["", "Ask me on each form"];
 const QUICK_MAIN: QuickField[] = [
   { key: "workCountries", label: "Countries where you can work without a visa", placeholder: "e.g. India", hint: "e.g. India, or India, EU. Answers \"Are you authorized to work in …?\" and \"Will you need sponsorship …?\" for any country named." },
+  { key: "citizenship", label: "Countries you are a citizen of", placeholder: "e.g. India", hint: "Answers \"Country of citizenship\", \"Citizenship status\" and \"Are you a U.S. citizen?\"." },
+  { key: "permanentResidence", label: "Permanent residence (green card, PR), if any", placeholder: "Leave empty if none" },
   { key: "noticePeriod", label: "Notice period / when you can join", placeholder: "e.g. Immediate, 30 days, or June 2027" },
   { key: "currentCtc", label: "Current CTC", placeholder: "e.g. 0 if you're a fresher, or 6 LPA" },
   { key: "expectedCtc", label: "Expected CTC", placeholder: "e.g. 20 LPA" },

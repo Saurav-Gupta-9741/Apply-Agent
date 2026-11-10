@@ -118,7 +118,7 @@ function readProfile(v: unknown): Profile {
   const profile: Profile = { ...EMPTY_PROFILE };
   for (const key of Object.keys(EMPTY_PROFILE) as ProfileKey[]) {
     if (typeof EMPTY_PROFILE[key] === "string") {
-      profile[key] = str(source[key], 500) as any;
+      profile[key] = str(source[key], key === "summary" ? 2000 : 500) as any;
     }
   }
   if (source.skillsComplete === true) profile.skillsComplete = true;
@@ -162,7 +162,14 @@ function readFacts(v: unknown): QuickFacts | undefined {
   if (v.transgender !== undefined) f.transgender = oneOf(v.transgender, yesNo);
   if (v.over18 !== undefined) f.over18 = oneOf(v.over18, ["Yes", "No"] as const);
   if (v.age !== undefined) f.age = str(v.age, 10);
-  // Answers the Quick Answers setup saves (beta 1 restored a backup without them).
+  // Answers the Quick Answers setup saves (beta 1 restored a backup without them; round 8 found five more missing).
+  if (v.citizenship !== undefined) f.citizenship = str(v.citizenship, 200);
+  if (v.permanentResidence !== undefined) f.permanentResidence = str(v.permanentResidence, 200);
+  if (v.otherCountries !== undefined) f.otherCountries = oneOf(v.otherCountries, ["sponsorship", "ask"] as const);
+  if (v.expectedSalaryAbroad !== undefined) f.expectedSalaryAbroad = str(v.expectedSalaryAbroad, 300);
+  if (v.nonCompete !== undefined) f.nonCompete = oneOf(v.nonCompete, ["Yes", "No"] as const);
+  if (v.relativesAtCompanies !== undefined) f.relativesAtCompanies = oneOf(v.relativesAtCompanies, ["No"] as const);
+  if (v.securityClearance !== undefined) f.securityClearance = oneOf(v.securityClearance, ["None"] as const);
   if (v.temporaryWorkCountries !== undefined) f.temporaryWorkCountries = str(v.temporaryWorkCountries, 200);
   if (v.unauthorizedCountries !== undefined) f.unauthorizedCountries = str(v.unauthorizedCountries, 200);
   if (v.needsFutureSponsorship !== undefined) f.needsFutureSponsorship = oneOf(v.needsFutureSponsorship, yesNo);

@@ -82,9 +82,16 @@ export function fillText(el: HTMLInputElement | HTMLTextAreaElement, rawValue: s
   fire(el, "input");
   fire(el, "change");
   el.blur();
-  return el.value === value ? { ok: true } : { ok: false, detail: "value did not stick" };
+  if (el.value === value) return { ok: true };
+  // A number-only salary box (Breezy's "Desired Salary") keeps "140000" of "CAD 140,000": the same amount, in the job's
+  // currency (the reason it was chosen). Not a failure (live run 7: 7 forms said "did not stick").
+  if (MONEY.test(value) && /^[\d.,\s]+$/.test(el.value) && digitsOf(el.value) === digitsOf(value)) {
+    return { ok: true, detail: `the box keeps numbers only: "${el.value}"` };
+  }
+  return { ok: false, detail: "value did not stick" };
 }
 
+const MONEY = /^\s*(?:[A-Z]{3}|[$€£₹¥])\s?\d[\d,.\s]*$/;
 const digitsOf = (s: string) => s.replace(/\D/g, "");
 
 /** Type text key by key, the way a person does: phone boxes that format as you type, or that keep their own state and

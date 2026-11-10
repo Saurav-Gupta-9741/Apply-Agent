@@ -22,7 +22,7 @@ Practice safely first: `python -m http.server 8080 --directory testpages` → `h
 | Tab | What it does |
 |---|---|
 | **Jobs** | Loads the JobReach feed (URL or file), filters out wrong roles / places / experience in code, ranks the rest with reasons; add good matches to the queue |
-| **Apply** | Fills the form on the current page; asks sensitive/new questions; on-device AI drafts for free-text questions (you review); Submit |
+| **Apply** | Fills the form on the current page; asks sensitive/new questions; on-device AI drafts for free-text questions, cover letters (attached as a PDF) and your professional summary (you review each one); Submit |
 | **Queue** | Up to 5 applications in parallel, ≤ 2 per site, daily cap, 30-day company cooldown; review or auto-submit |
 | **Profile** | Your facts, resume, preferences, plan (Free 20/month, Pro 30-day pass, Founder 10-year pass) and licence key |
 | **Answers** | Answers you gave once, reused only for the same question |

@@ -19,6 +19,8 @@ import { BASE, expect, goTo, PRO_LICENSE, test } from "./fixtures";
 const MODEL_PORT = 8182;
 const MODEL_BASE = `http://127.0.0.1:${MODEL_PORT}`;
 const MODEL_ID = "qwen3.5-0.8b";
+/** The cover-letter test can use a bigger model (LLM_MODEL=qwen3-1.7b), as a stronger computer gets. */
+const COVER_MODEL = process.env.LLM_MODEL ?? MODEL_ID;
 
 const RESUME = [
   "Asha Verma - Data Engineer - Bengaluru, India",
@@ -194,6 +196,67 @@ test.describe("on-device writer with the real model", () => {
       } catch {
         /* Chrome may hold a file a moment longer: the temp folder is left behind */
       }
+    }
+  });
+
+  test("cover letter upload and professional summary: write → read → Use (PDF attached; summary kept in the profile)", async () => {
+    test.setTimeout(30 * 60_000);
+    const dir = mkdtempSync(join(tmpdir(), "applyagent-cover-e2e-"));
+    await fetch(`${MODEL_BASE}/reset`);
+    const { context, ext } = await launch(dir);
+    try {
+      await ext.evaluate((v) => chrome.storage.local.set(v), { profile: PROFILE, answers: [], license: PRO_LICENSE, writerTest: { baseUrl: MODEL_BASE, modelId: COVER_MODEL } });
+      await ext.reload();
+      const page = await context.newPage();
+      await page.goto(`${BASE}/cover.html`);
+      const tabId = await ext.evaluate(async (url) => (await chrome.tabs.query({})).find((t) => t.url === url)!.id!, page.url());
+      await ext.goto(`${ext.url().split("?")[0]}?tabId=${tabId}`);
+      await goTo(ext, "apply");
+      await ext.locator("#run").click();
+      const cover = ext.locator(".question", { hasText: "Cover Letter" });
+      const summary = ext.locator(".question", { hasText: "Professional Summary" });
+      await expect(cover).toBeVisible({ timeout: 60_000 });
+      await expect(summary).toBeVisible();
+
+      // ---- The cover letter: one download, then the draft. ----
+      await ext.bringToFront();
+      await cover.getByRole("button", { name: "Write a cover letter" }).click();
+      await cover.locator(".writer-setup").getByRole("button", { name: "Download now (one time)" }).click();
+      const t0 = Date.now();
+      const letterResult = cover.locator(".draft-textarea, .draft-insufficient, .draft-error");
+      await expect(letterResult).toBeVisible({ timeout: 20 * 60_000 });
+      const letterSeconds = (Date.now() - t0) / 1000;
+      await expect(cover.locator(".draft-error")).toHaveCount(0);
+      const letter = await cover.locator(".draft-textarea").inputValue();
+      console.log("COVER E2E LETTER", letterSeconds, JSON.stringify(letter), JSON.stringify(await cover.locator(".draft-removed").textContent({ timeout: 2000 }).catch(() => null)));
+      expect(letter).toMatch(/^Dear Hiring Team/);
+      expect(letter).toMatch(/Sincerely,\nAsha Verma$/);
+      expect(letter.split(/\s+/).length).toBeGreaterThan(60);
+      expect(letter).not.toMatch(/INSUFFICIENT|<think>/);
+      expect(letter).not.toMatch(/\b(?:I|we)\b[^.]*\b(?:Kafka|Spark|Kubernetes)\b/); // the job's tools, never claimed
+      expect(await page.locator("#cover").evaluate((i: HTMLInputElement) => i.files?.length ?? 0)).toBe(0); // nothing before Use
+      await cover.screenshot({ path: "test-results/cover-letter-draft-card.png", timeout: 15_000 }).catch(() => undefined);
+      await cover.getByRole("button", { name: "Use this answer" }).click({ timeout: 30_000 });
+      await expect(page.locator("#cover-name")).toHaveText(/^Cover_Letter_Asha_Verma\.pdf \(\d+ bytes\)$/, { timeout: 30_000 });
+      const head = await page.locator("#cover").evaluate(async (i: HTMLInputElement) => (await i.files![0]!.text()).slice(0, 8));
+      expect(head).toBe("%PDF-1.4");
+
+      // ---- The summary: written, then kept in the profile for the next form. ----
+      await summary.getByRole("button", { name: "Write my summary" }).click();
+      const sumResult = summary.locator(".draft-textarea, .draft-insufficient, .draft-error");
+      await expect(sumResult).toBeVisible({ timeout: 15 * 60_000 });
+      const text = await summary.locator(".draft-textarea").inputValue();
+      console.log("COVER E2E SUMMARY", JSON.stringify(text));
+      expect(text.split(/\s+/).length).toBeGreaterThan(12);
+      await summary.getByRole("button", { name: "Use this answer" }).click({ timeout: 30_000 });
+      await expect(page.locator("#summary")).toHaveValue(text, { timeout: 30_000 });
+      const saved = await ext.evaluate(async () => ((await chrome.storage.local.get("profile")).profile as { summary?: string }).summary);
+      expect(saved).toBe(text);
+      // The submit button was never pressed.
+      await expect(page.locator("#application-form")).toBeVisible();
+    } finally {
+      await Promise.race([context.close().catch(() => undefined), new Promise((r) => setTimeout(r, 20_000))]);
+      try { rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 1000 }); } catch { /* left behind */ }
     }
   });
 });

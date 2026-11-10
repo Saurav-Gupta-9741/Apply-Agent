@@ -15,6 +15,24 @@ import type { Page } from "@playwright/test";
 import { expect, setStorage, test } from "./fixtures";
 import { isReadOnly } from "./live-guard";
 import type { AnswerEntry, Message, Profile, RunReport } from "../src/shared/types";
+import { isCoverLetterField, letterFile, wrapLetter } from "../src/shared/cover-letter";
+
+/** A fixed test letter body (the on-device writer is tested on its own in writer-llm.spec.ts): what the panel attaches
+ * after the user approves a draft. */
+const TEST_LETTER = "I build and run data pipelines in Python and Apache Airflow, and this role matches that work closely.\n\nIn my current role I moved reporting queries onto partitioned tables and added data quality checks that catch schema breaks early.\n\nI would welcome the chance to talk about the role.";
+
+/** File names the page now holds or shows (every frame): did the attached file stick? */
+async function attachedNames(page: Page): Promise<string> {
+  const parts: string[] = [];
+  for (const frame of page.frames()) {
+    const v = await frame.evaluate(() => {
+      const names = Array.from(document.querySelectorAll<HTMLInputElement>("input[type=file]")).flatMap((i) => Array.from(i.files ?? []).map((f) => f.name));
+      return `${names.join(" ")} ${document.body?.innerText ?? ""}`;
+    }).catch(() => "");
+    parts.push(v);
+  }
+  return parts.join(" ");
+}
 
 test.skip(!process.env.LIVE1000, "real-life 1,000-form run: set LIVE1000=1");
 test.setTimeout(12 * 60 * 60_000);
@@ -35,11 +53,14 @@ const INDIA_CANDIDATE: Profile = {
   linkedin: "https://www.linkedin.com/in/asha-verma-test", github: "https://github.com/asha-verma-test", portfolio: "", currentCompany: "Acme Pay", currentTitle: "Data Engineer",
   school: "State Technical University", degree: "Bachelor's Degree", discipline: "Computer Science", graduationYear: "2021", experienceYears: "5",
   targetRoles: "Data Engineer", preferredLocations: "Pune, Remote", skills: "Python, SQL, BigQuery, Apache Airflow, Docker",
+  // Round 8: a fictional address, a summary in the user's words, and citizenship.
+  state: "Maharashtra", addressLine1: "12 Test Road, Kothrud", postalCode: "411038", address: "12 Test Road, Kothrud, Pune, Maharashtra 411038",
+  summary: "Data engineer with 5 years of experience building batch and streaming data pipelines in Python, SQL and Apache Airflow.",
   resume: { name: "Asha_Verma_Resume.txt", type: "text/plain", dataBase64: Buffer.from(RESUME).toString("base64") },
   // Quick answers, as a user gives them once in onboarding (LIVE1000_NO_FACTS=1 runs without them).
   ...(process.env.LIVE1000_NO_FACTS ? {} : {
     facts: {
-      workCountries: "India", needsFutureSponsorship: "No", noticePeriod: "30 days", currentCtc: "12 LPA", expectedCtc: "18 LPA",
+      workCountries: "India", citizenship: "India", needsFutureSponsorship: "No", noticePeriod: "30 days", currentCtc: "12 LPA", expectedCtc: "18 LPA",
       relocate: "Yes", heardFrom: "LinkedIn", gender: "Decline", hispanic: "Decline", race: "Decline", veteran: "Decline", disability: "Decline",
       workMode: "any", travel: "Yes", travelPercent: "25", needsAccommodation: "No", pronouns: "she/her", sexualOrientation: "Decline",
       transgender: "Decline", over18: "Yes",
@@ -82,9 +103,11 @@ const US_CANDIDATE: Profile = {
   linkedin: "https://www.linkedin.com/in/emily-carter-test", github: "https://github.com/emily-carter-test", portfolio: "", currentCompany: "Northwind Analytics", currentTitle: "Data Engineer",
   school: "Lone Star State University", degree: "Bachelor's Degree", discipline: "Computer Science", graduationYear: "2021", experienceYears: "5",
   targetRoles: "Data Engineer", preferredLocations: "Austin, Remote", skills: "Python, SQL, BigQuery, Apache Airflow, Docker",
+  addressLine1: "100 Test Street", postalCode: "78701", address: "100 Test Street, Austin, TX 78701",
+  summary: "Data engineer with 5 years of experience building batch and streaming data pipelines in Python, SQL and Apache Airflow.",
   resume: { name: "Emily_Carter_Resume.txt", type: "text/plain", dataBase64: Buffer.from(US_RESUME).toString("base64") },
   facts: {
-    workCountries: "United States", needsFutureSponsorship: "No", noticePeriod: "2 weeks", currentCtc: "105000", expectedCtc: "120000",
+    workCountries: "United States", citizenship: "United States", needsFutureSponsorship: "No", noticePeriod: "2 weeks", currentCtc: "105000", expectedCtc: "120000",
     relocate: "Yes", heardFrom: "LinkedIn", gender: "Decline", hispanic: "Decline", race: "Decline", veteran: "Decline", disability: "Decline",
     workMode: "any", travel: "Yes", travelPercent: "25", needsAccommodation: "No", pronouns: "she/her", sexualOrientation: "Decline",
     transgender: "Decline", over18: "Yes", otherCountries: "sponsorship", nonCompete: "No", relativesAtCompanies: "No", securityClearance: "None",
@@ -251,6 +274,16 @@ test("real-life: the extension fills live application forms (nothing submitted o
         };
       });
       row.requiredSections = await requiredSections(page);
+      // Round 8: a cover-letter upload gets the approved letter as a PDF made on this computer (ATTACH_FILE, as the
+      // panel sends after "Use this answer"). Uploads to the site's storage are blocked like every other send.
+      const covers = report.fields.filter((f) => f.field.control === "file" && isCoverLetterField(f.field) && f.status !== "filled");
+      if (covers.length) {
+        const text = wrapLetter(TEST_LETTER, CANDIDATE, { company: String(job.company ?? "") });
+        const file = letterFile(text, CANDIDATE, { company: String(job.company ?? "") });
+        const res = (await send(ext, page, { type: "ATTACH_FILE", label: covers[0]!.field.label, key: covers[0]!.field.key, file })) as unknown as { ok?: boolean; detail?: string } | undefined;
+        await page.waitForTimeout(1500);
+        row.coverLetter = { label: covers[0]!.field.label.slice(0, 120), ok: !!res?.ok, detail: res?.detail, shown: (await attachedNames(page)).includes(file.name), bytes: Math.round(file.dataBase64.length * 0.75) };
+      }
       row.urlUnchanged = page.url() === startUrl || page.url() === row.openedEmbeddedForm;
     } catch (e) {
       row.error = String((e as Error)?.message ?? e).split("\n")[0]!.slice(0, 200);

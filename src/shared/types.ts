@@ -33,6 +33,11 @@ export interface LanguageEntry {
 export interface QuickFacts {
   /** Countries where the user may work without sponsorship ("India, EU"). */
   workCountries: string;
+  /** Countries the user is a citizen of ("India", "United States, Ireland"). Answers "Country of citizenship",
+   * "Citizenship status" and "Are you a U.S. citizen?". */
+  citizenship?: string;
+  /** Countries where the user holds permanent residence (a US green card, Canadian PR), if any. */
+  permanentResidence?: string;
   /** Countries where user has temporary authorization (e.g. US F-1 OPT, STEM OPT, Canada PGWP, UK Graduate Route). */
   temporaryWorkCountries?: string;
   /** Countries where the user is NOT authorized to work at all. */
@@ -103,6 +108,8 @@ export interface Profile {
   targetRoles: string;
   preferredLocations: string;
   skills: string;
+  /** A short professional summary in the user's own words (2–4 sentences), for "Summary" / "About you" boxes. */
+  summary?: string;
   address?: string;
   addressLine1?: string;
   addressLine2?: string;
@@ -452,6 +459,8 @@ export type Message =
   | { type: "PANEL_REFRESH" }
   /** Scroll to a field and outline it, so the user can answer it on the page. */
   | { type: "HIGHLIGHT"; label: string; key?: string }
+  /** Attach a file the user approved in the panel (a cover letter) to one file box of the form. Never submits. */
+  | { type: "ATTACH_FILE"; label: string; key?: string; file: ResumeFile }
   /** The panel's live checklist: which fields of the application hold a value now (read-only). */
   | { type: "FIELD_STATE" }
   /** The user typed or chose something on the application after a fill (page → panel: read the fields again). */

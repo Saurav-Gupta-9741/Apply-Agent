@@ -50,6 +50,23 @@ export const QUICK_QUESTIONS: QuickQuestion[] = [
     defaultAnswer: "India",
   },
   {
+    id: "citizenship",
+    factKey: "facts.citizenship",
+    prompt: "Which countries are you a citizen of?",
+    why: "Forms ask \"Country of citizenship\", \"Citizenship status\" and \"Are you a U.S. citizen?\"",
+    kind: "multi",
+    options: ["India", "United States", "United Kingdom", "Canada", "Germany", "Australia"],
+    defaultAnswer: "India",
+  },
+  {
+    id: "permanentResidence",
+    factKey: "facts.permanentResidence",
+    prompt: "Countries where you have permanent residence (a US green card, Canadian PR), if any:",
+    why: "Answers \"Are you a citizen or permanent resident?\" without guessing",
+    kind: "text",
+    placeholder: "Leave empty if none",
+  },
+  {
     id: "temporaryWorkCountries",
     factKey: "facts.temporaryWorkCountries",
     prompt: "Countries where you have temporary authorization (OPT, STEM OPT, PGWP)?",
@@ -500,6 +517,8 @@ export function applyQuickAnswers(profile: Profile, answers: Record<string, stri
   };
 
   if ("workCountries" in answers) next.facts!.workCountries = getStr("workCountries");
+  if ("citizenship" in answers) next.facts!.citizenship = getStr("citizenship");
+  if ("permanentResidence" in answers) next.facts!.permanentResidence = getStr("permanentResidence");
   if ("temporaryWorkCountries" in answers) next.facts!.temporaryWorkCountries = getStr("temporaryWorkCountries");
   if ("unauthorizedCountries" in answers) next.facts!.unauthorizedCountries = getStr("unauthorizedCountries");
   if ("needsFutureSponsorship" in answers) {

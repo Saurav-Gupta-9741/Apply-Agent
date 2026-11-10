@@ -6,6 +6,7 @@ import {
 } from "../shared/types";
 import { bestOption, normalize, sameQuestionScore, yesNoOption } from "../shared/text";
 import { parseRequirement } from "../shared/requirements";
+import { citizenshipAnswer } from "./citizenship";
 import { hasExceptionClause, isCompanyOrPlaceSpecific, questionPolarity, sameScreeningQuestion, screeningKey } from "../shared/screening";
 import { countryAnswer, factDecision, outsideUsAnswer, selfDeclarationAnswer, startMonthYearAnswer, hasConfirmedApplication, HEARD_ABOUT, isDeclineAnswer, isAppliedBeforeQuestion, isStartImmediatelyQuestion, isPreviousEmployeeQuestion, previousEmployerAnswer, isWorkModeQuestion, workModeAnswer, isTravelQuestion, travelAnswer, isLanguageQuestion, languageAnswer, skillsExperienceAnswer, educationStatusAnswer, type PageFacts } from "./facts";
 
@@ -65,6 +66,9 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["resumeUrl", /\b(?:resume|cv|curriculum\s*vitae|lebenslauf|curriculo)\s*[\(/]?\s*(?:url|link|drive|google\s*drive|doc|web\s*link|online|lien|enlace)\b|\b(?:link|url|lien|enlace)\s*(?:to|for|vers|de|a|para)?\s*(?:your\s*|votre\s*|dein\s*|tu\s*|seu\s*)?(?:resume|cv|curriculum\s*vitae|lebenslauf|curriculo)\b|\b(?:google\s*drive|drive\s*link|cloud\s*link)\b.*\b(?:resume|cv|lebenslauf|curriculo)\b/i],
   ["introVideoUrl", /\b(?:intro(?:duction)?\s*video|video\s*(?:intro(?:duction)?|pitch|recording|url|link)|loom(?:\.com)?|youtube.*intro)\b/i],
   ["projectUrl", /\b(?:project\s*(?:url|link)|link\s*(?:to\s*)?project|demo\s*(?:url|link)|live\s*demo)\b/i],
+  // A professional summary box (Breezy's required "Experience Summary" names its box "cSummary"; live run 7). Only the
+  // whole label: "Summary of your experience with Kafka" is another question.
+  ["summary", /^(?:(?:professional|career|profile|experience|personal|executive|candidate) )?summary$|^(?:professional|career) (?:profile|overview)$|^about (?:you|yourself|me)$|^(?:short |brief )?bio(?:graphy)?$|^c ?summary\b|^kurzprofil$|^resume professionnel$|^resumen profesional$|^resumo profissional$/],
   ["currentCompany", /aktueller arbeitgeber|derzeitiger arbeitgeber|employeur actuel|entreprise actuelle|empresa actual|empresa atual|azienda attuale|huidige werkgever|current (company|employer)|present employer|(most )?recent employer|current or most recent (company|employer)|organi[sz]ation name/],
   ["currentTitle", /current (title|role|position|designation)|job title|aktuelle position|berufsbezeichnung|poste actuel|intitule du poste|cargo actual|puesto actual|cargo atual|ruolo attuale|huidige functie/],
   ["graduationYear", /graduat\w* (year|date)|year of graduation|class of|quelle annee|annee (de|d) (diplom|obtention)|abschlussjahr|jahr des abschlusses|ano de (formatura|conclusao|graduacao|graduacion|egreso)|anno di (laurea|diploma)/],
@@ -91,6 +95,8 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["preferredLocations", /preferred (job |work )?(location|cit(y|ies))|location preference|desired (job |work )?location|where would you (like|prefer) to work|bevorzugte[rn]? (arbeits)?ort|lieu souhaite|ubicacion (deseada|preferida)/],
   ["location", /\bcity\b|location|where are you (currently )?(based|located)|where do you (currently )?(live|reside)|town|wohnort|\bstadt\b|\bort\b|\bville\b|ciudad|localidad|cidade|\bcitta\b|woonplaats|lieu de residence|luogo di residenza/],
 ];
+
+const FULL_ADDRESS_LABEL = /^(?:(?:full|complete|current|permanent|mailing|home|residential) )?address$|^adresse$|^direccion$|^endereco$|^indirizzo$|^adres$|^anschrift$/;
 
 const AUTOCOMPLETE: Record<string, ProfileKey | "fullName"> = {
   "given-name": "firstName",
@@ -467,6 +473,7 @@ export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" |
   if (field.control === "url" && /\b(?:project\s*(?:url|link|demo)|link\s*(?:to\s*)?(?:your\s*|a\s*)?project|demo\s*(?:link|url)|project\s*demo)\b/i.test(asked)) {
     return "projectUrl";
   }
+  if (leadingStateQuestion(field.label)) return "state";
   if (notAProfileFact(field)) return undefined;
   const hint = AUTOCOMPLETE[field.autocomplete.toLowerCase()];
   if (hint) return hint;
@@ -476,13 +483,44 @@ export function profileKeyFor(field: FieldDescriptor): ProfileKey | "fullName" |
   const name = field.name.replace(/([a-z])([A-Z])/g, "$1 $2");
   const text = normalize(`${field.label} ${name} ${field.placeholder}`);
   const labelOnly = normalize(field.label);
+  // A box labelled just "Address" asks for the whole address, whatever its id says ("streetAddress.value": the
+  // label wins over the street-line rule matched in the id; steady-state benchmark, round 8).
+  // A box whose id is just a street word ("street", "rue") is the street line of a split address.
+  if (FULL_ADDRESS_LABEL.test(labelOnly) && !/^(street|strasse|rue|calle|rua|straat|via)$/i.test(field.name.trim())) return "address";
   for (const [key, pattern] of PROFILE_RULES) {
     if (key === "phone" && NOT_THE_NUMBER.test(text)) continue;
     // The label alone too: "State" with the id "question_20216471004" reads "state question 20216471004", which the
     // whole-label rule ("^state$") never matched (live run 7, 4 US forms).
-    if (key === "fullName" ? pattern.test(labelOnly) : pattern.test(text) || (key === "state" && pattern.test(labelOnly))) return key;
+    // The same for Breezy's "Address" (name "cAddress": "address c address" never matched "^address$", live run 7).
+    if (key === "summary" && !isSummarySection(field.section)) continue;
+    if (key === "fullName" ? pattern.test(labelOnly) : pattern.test(text) || ((key === "state" || key === "address" || key === "summary") && pattern.test(labelOnly))) return key;
   }
   return undefined;
+}
+
+/** A professional summary is asked on its own or in its own section ("Experience Summary"), never inside one job or
+ * one school, whose "Summary" box is about that job or school. */
+function isSummarySection(section: string | undefined): boolean {
+  const s = normalize(section ?? "");
+  return !s || /summary|about|profile|personal|overview|general/.test(s) || !/educat|work|employ|histor|project|position|job|experience|school|universit|volunteer|certific/.test(s);
+}
+
+/** A long state question whose first sentence asks for the state and whose rest are only notes ("In which state do you
+ * currently reside? Note: We're able to accommodate employment in most U.S. States but not all. If your state is not
+ * included, please select 'Other'."; "Please select your current state of residence. Select 'Not in the US' if you
+ * reside outside the United States."). Over the word limit for profile facts, so they went to the user (live run 7). The
+ * notes may ask nothing more and agree to nothing. */
+export function leadingStateQuestion(label: string): boolean {
+  if (label.length > 600) return false;
+  const sentences = label.replace(/\([^)]*\)/g, " ").split(/(?<=[.?!])(?<!\b[A-Za-z]\.)\s+/).map((s) => s.trim()).filter(Boolean);
+  if (sentences.length < 2) return false;
+  const lead = normalize(sentences[0]!);
+  if (lead.split(" ").length > MAX_FACT_WORDS) return false;
+  const STATE_ASK = /^(?:please )?(?:select|choose|indicate|tell us|enter|provide)? ?(?:your )?(?:current )?(?:u ?s )?(?:state|province) of residence$|^(?:in )?(what|which) (?:u ?s )?(state|province|state or province) (are|do) you (currently )?(live|reside|located|based|living)( in)?$|^(what|which) (?:u ?s )?(state|province) (do you|are you) (currently )?(live|reside|located|based|living) in$/;
+  if (!STATE_ASK.test(lead)) return false;
+  const rest = sentences.slice(1);
+  if (rest.some((s) => /\?\s*$/.test(s))) return false;
+  return !/\b(certify|agree|acknowledge|attest|declare|consent|confirm|signature)\b/.test(normalize(rest.join(" ")));
 }
 
 /** The shape a link of each kind must have. A GitHub profile is github.com/<user>, never a repository. */
@@ -623,6 +661,9 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
   }
   // The user's one-time declarations (non-compete, relatives, clearance), the start month/year from the notice
   // period, and "not in the US" on US-state lists (live run 2026-11-08).
+  // Citizenship from the user's saved citizenship only (round 8; see citizenship.ts).
+  const citizen = citizenshipAnswer(field, profile, page);
+  if (citizen) return citizen;
   const declared = selfDeclarationAnswer(field, profile) ?? startMonthYearAnswer(field, profile) ?? outsideUsAnswer(field, profile);
   if (declared) return declared;
   const la = languageAnswer(field, profile);

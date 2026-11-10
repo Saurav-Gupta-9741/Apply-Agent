@@ -43,8 +43,8 @@ const field = (label: string, control: FieldDescriptor["control"] = "text", opti
 });
 
 describe("QUICK_QUESTIONS schema catalog", () => {
-  it("contains 36 questions with distinct ids and non-empty prompt and why explanations", () => {
-    expect(QUICK_QUESTIONS.length).toBe(36); // +6 on 2026-11-08: other countries, salary abroad, work history complete, non-compete, relatives, clearance
+  it("contains 38 questions with distinct ids and non-empty prompt and why explanations", () => {
+    expect(QUICK_QUESTIONS.length).toBe(38); // +6 on 2026-11-08 (other countries, salary abroad, work history complete, non-compete, relatives, clearance); +2 in round 8 (citizenship, permanent residence)
     const ids = new Set<string>();
     for (const q of QUICK_QUESTIONS) {
       expect(ids.has(q.id), `duplicate id ${q.id}`).toBe(false);
