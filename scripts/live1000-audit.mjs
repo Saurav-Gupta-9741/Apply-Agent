@@ -192,6 +192,12 @@ function judge(f, row) {
     return (want === "yes" ? YES.test(c) : NO.test(c)) ? r("correct", "qa_travel", `travel up to ${facts.travelPercent}%`) : r("wrong", "qa_travel", `"${chosen ?? value}" for ${pct}% travel`);
   }
   if (qa === "relocation") {
+    // "If you live outside of the Detroit area, are you open to relocation?": for a candidate who lives elsewhere it is
+    // only the relocation question (round 11; both test candidates live outside every such place and would relocate).
+    const outsideOf = /^if you (currently )?(live|are based|reside|are located) outside (of )?(the )?(.+?)( area| region)?,? (are|would) you (be )?(open|willing) to relocat/.exec(label);
+    if (outsideOf && !new RegExp(`\\b${outsideOf[5].replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`).test(norm(HOME_PLACE))) {
+      return YES.test(c) ? r("correct", "qa_relocation_outside", `lives outside ${outsideOf[5]}; willing to relocate, as saved`) : r("wrong", "qa_relocation_outside", `"${chosen ?? value}" though the candidate would relocate`);
+    }
     if (/located|based|reside|resident|live|living|currently in|are you in/.test(label)) return r("wrong", "qa_relocation_residence", "relocation and where the candidate lives in one question");
     return YES.test(c) ? r("correct", "qa_relocation", "willing to relocate, as saved") : r("unclear", "qa_relocation", "");
   }

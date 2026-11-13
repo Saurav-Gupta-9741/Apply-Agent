@@ -223,6 +223,22 @@ Results (every unclear answer checked by hand; reports/live1000/round10-us, roun
 - India: 176 forms, 63.0% filled, required left 26.4%, 61 ready; 13 wrong of 1,889 (12 from 12.7, 1 from 12.8).
 - Cover letters: 74 of 75 and 75 of 75 real uploads. All wrong answers fixed and re-checked on the live pages.
 
+## Round 13: more optimisation, measured first (2026-11-14) → 1.0.19
+
+| # | Item | Status | Measured on real forms |
+|---|---|---|---|
+| 13.1 | Answer once, reuse everywhere | Measured, not loosened | If the user answers each left-over question once, today's matching already refills ~17% of later required questions (62 of 371). A looser match would add 4 of 280, one of them wrong ("valid driver licence" vs "Class 5"). Instead: "Start from my earlier answer" for long answers (never by itself) |
+| 13.2 | Faster dropdowns and blocks | Done | Same 40 forms: fill median 3.3 s (at its floor), Breezy blocks 19.7 → 16.0 s, failed fields 3 → 2 |
+| 13.3 | Lists of states and countries without cities | Fixed | Squarespace "Where do you currently live?" now gets the user's state (filled 412 → 413) |
+| 13.4 | Multilingual question model | Not done | The smallest multilingual sentence models are ~5x bigger and 3-4x slower; foreign questions are already translated on the device |
+| 13.5 | Cover letters on slow computers | Done | About 170 words when the writer is measured under 4 tokens/s (about half the time) |
+| 13.6 | Audit: "If you live outside of X, are you open to relocation?" | Fixed | Judged as the relocation question for a candidate who lives elsewhere |
+
+Results, live round 11 (182 fresh forms × 2 candidates; every unclear answer checked by hand):
+- US: 167 forms with a form, 65.6% filled, required left 22.9%, 55 ready; **0 wrong of 1,839**.
+- India: 166 forms, 65.2% filled, required left 23.4%, 55 ready; **0 wrong of 1,820**.
+- Cover letters: 68 of 69 and 69 of 69 real uploads. Whole form incl. page load: median 15 s and 14 s.
+
 ## Still open
 
 | Item | Why open |

@@ -1,0 +1,511 @@
+{
+ "answer | Quick answers › citizenship | 🇺🇸 are you a us person? | no": {
+  "verdict": "wrong",
+  "override": true,
+  "reason": "Monzo defines a US person to include anyone born in the US or with a parent born in the US: not in the profile, so a No is a guess (fixed in round 8: such definitions get only a certain Yes)"
+ },
+ "answer | Quick answers › previous employer | are you a former coreweave employee? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | are you now or have you ever been employed by coreweave? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › citizenship | please indicate whether you are a “u.s. person”. u.s. person is defined as a (i) u.s. citizen or national; (ii) u.s. lawful permanent resident; (iii) refugee un | no": {
+  "verdict": "correct",
+  "reason": "an Indian citizen without US residence or US work rights is not a U.S. person (citizen, permanent resident, refugee or asylee) (hand-checked)"
+ },
+ "profile | address | address | 12 test road, kothrud, pune, maharashtra 411038": {
+  "verdict": "correct",
+  "reason": "the saved full address (hand-checked)"
+ },
+ "answer | Quick answers › salary currency | salarycurrency | us dollar ($)": {
+  "verdict": "correct",
+  "reason": "the currency of the salary typed beside it, for the job's country (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | desired salary | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "profile | summary | csummary | data engineer with 5 years of experience building batch and streaming data pipel": {
+  "verdict": "correct",
+  "reason": "the saved professional summary, in the candidate's own words (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your desired salary range? | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › citizenship | are you a us person? | no": {
+  "verdict": "correct",
+  "reason": "an Indian citizen without US residence or US work rights is not a U.S. person (citizen, permanent resident, refugee or asylee) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your salary expectations for this role? please note that final compensation is determined by various factors such as years of relevant work experience, | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | are you currently or have you ever worked for airbnb in any capacity? this could include, but is not limited to, a full-time employee, intern, apprentice, or co | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your salary expectations for this role? | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | are you a former employee or contractor of bill, invoice2go, divvy? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "profile | postalCode | postal code | 411038": {
+  "verdict": "correct",
+  "reason": "the saved ZIP code (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you been employed by cockroach labs in the past? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your expected compensation range? | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › salary currency | salarycurrency | euro (€)": {
+  "verdict": "correct",
+  "reason": "the currency of the salary typed beside it, for the job's country (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | desired salary | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your salary expectation? | 55000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your annual base salary expectations? | 70000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your salary expectations? | 55000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "profile | addressLine1 | address line 1 | 12 test road, kothrud": {
+  "verdict": "correct",
+  "reason": "the saved street line (the form asks city, state and ZIP in their own boxes) (hand-checked)"
+ },
+ "profile | state | province/state | maharashtra": {
+  "verdict": "correct",
+  "reason": "the saved state (hand-checked)"
+ },
+ "profile | postalCode | postal/zip code | 411038": {
+  "verdict": "correct",
+  "reason": "the saved ZIP code (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you been employed, or otherwise engaged, by an asana entity in the past? (previous independent contractors, select \"yes.\") | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your annual salary range requirement? | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "profile | postalCode | what's your postal code? | 411038": {
+  "verdict": "correct",
+  "reason": "the saved ZIP code (hand-checked)"
+ },
+ "profile | state | province | maharashtra": {
+  "verdict": "correct",
+  "reason": "the saved state (hand-checked)"
+ },
+ "profile | preferredLocations | where are you currently based & where would your preferred location of work be? | pune, remote": {
+  "verdict": "correct",
+  "reason": "where the candidate is based (Austin) and would work (Austin, Remote) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | desired pay | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | desired pay | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "profile | postalCode | zip | 411038": {
+  "verdict": "correct",
+  "reason": "the saved ZIP code (hand-checked)"
+ },
+ "answer | Quick answers › notice period | notice period (months) | 1": {
+  "verdict": "correct",
+  "reason": "30 days notice = 1 month (hand-checked)"
+ },
+ "profile | postalCode | zip code | 411038": {
+  "verdict": "correct",
+  "reason": "the saved ZIP code (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your expected annual base salary? | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your compensation expectations? | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your salary expectations | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | salary expectations? | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what would your salary expectations be? | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "profile | fullName | preferred first name & last name | asha verma": {
+  "verdict": "correct",
+  "reason": "the candidate's name (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your salary expectations? | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you ever been employed by vonage or any other company within the ericsson group, including ericsson, redbee media, fyi television (us), cradlepoint, iconec | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your salary expectations for this role? (base/ote) | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your salary expectations (based on 40 hours, including holiday allowance)? | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved figure in the job country's currency (Canada CAD, UK GBP, Germany/Netherlands/Portugal EUR; checked against the job's location) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | are you currently a twitch employee? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › citizenship | in which country/region do you have citizenship? | india": {
+  "verdict": "correct",
+  "reason": "saved citizenship India (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you ever worked at mongodb before? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › relatives at the company | do you have any first-degree relatives (spouse, parent, child, sibling) that are currently employed by nice or any of its subsidiaries? | no": {
+  "verdict": "correct",
+  "reason": "the saved declaration (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your desired base salary? | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you worked for carta at any other time previously? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "profile | address | physical mailing address | 12 test road, kothrud, pune, maharashtra 411038": {
+  "verdict": "correct",
+  "reason": "the candidate profile value (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your salary expectations (eur gross/annually)? | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your salary expectation? | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "answer | Quick answers › non-compete | are you subject to any contractual obligations or post-employment restrictions that may apply to or would limit your employment at squarespace? (e.g., non-compe | no": {
+  "verdict": "correct",
+  "reason": "the saved declaration (hand-checked)"
+ },
+ "answer | Quick answers › notice period | do you have a notice period at your current job before being able to start a new role? | yes": {
+  "verdict": "correct",
+  "reason": "saved notice period 30 days: yes / today + 30 days (hand-checked)"
+ },
+ "answer | Quick answers › notice period | what is your earliest possible start date? | 2026-12-13": {
+  "verdict": "correct",
+  "reason": "saved notice period 30 days: yes / today + 30 days (hand-checked)"
+ },
+ "profile | state | what state do you live in? | maharashtra": {
+  "verdict": "correct",
+  "reason": "the candidate profile value (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | salary expectations, base and total? | gbp 55,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "profile | summary | experience summary | data engineer with 5 years of experience building batch and streaming data pipel": {
+  "verdict": "correct",
+  "reason": "the candidate profile value (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your salary expectations? | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | salary expectation : what is your expected total annual gross salary for this role, including both base salary or/and any variable components (e.g., based paid  | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your expected compensation? | gbp 55,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your expected compensation? | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your salary expectations? | gbp 55,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "profile | degree | what is your highest level of completed education? | bachelor's degree": {
+  "verdict": "correct",
+  "reason": "the candidate profile value (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you been employed by gemini in the past? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you been employed by pendo before? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your salary expectation (in gbp, gross)? | gbp 55,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | your salary expectations | 60000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "profile | state | which state do you currently reside in? | maharashtra, india": {
+  "verdict": "correct",
+  "reason": "the candidate profile value (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | salary expectations | 70000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your desired salary range for this role, including base and any variable or on-target earnings? | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your compensation expectations for this role? | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "answer | Quick answers › notice period | do you currently have a notice period? when would you available to start? | yes": {
+  "verdict": "wrong",
+  "reason": "two questions in one box: a bare Yes leaves the start date unanswered (fixed in round 9)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your desired salary? | 60000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your target compensation for this role? | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Dublin/Paris/Milan/Lisbon/Rotterdam, GBP London/Manchester) (hand-checked)"
+ },
+ "answer | Quick answers › sponsorship | would you need a visa / work permit for the role in the location you are applying for? | yes": {
+  "verdict": "correct",
+  "reason": "a US job for a candidate authorized in India only: a visa is needed (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you ever been employed by new relic? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is the beginning of your desired annual on target earnings (ote)? (please format with no commas, i.e. $70000) | usd 70000": {
+  "verdict": "correct",
+  "reason": "on-target earnings are the total expected pay: the saved expectation (judgment call, hand-checked)"
+ },
+ "answer | Quick answers › relatives at the company | do you have any relatives employed to any of the above couples resorts' companies? | no": {
+  "verdict": "correct",
+  "reason": "the saved declaration (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you ever been employed or refused employment by couples sans souci? | no": {
+  "verdict": "wrong",
+  "reason": "the work history cannot tell whether the candidate was ever refused employment there (fixed in round 10)"
+ },
+ "answer | Quick answers › previous employer | have you ever been employed or refused employment by couples tower isle? | no": {
+  "verdict": "wrong",
+  "reason": "the work history cannot tell whether the candidate was ever refused employment there (fixed in round 10)"
+ },
+ "answer | Quick answers › previous employer | have you ever been employed or refused employment by couples negril? | no": {
+  "verdict": "wrong",
+  "reason": "the work history cannot tell whether the candidate was ever refused employment there (fixed in round 10)"
+ },
+ "answer | Quick answers › previous employer | have you ever been employed or refused employment by couples swept away? | no": {
+  "verdict": "wrong",
+  "reason": "the work history cannot tell whether the candidate was ever refused employment there (fixed in round 10)"
+ },
+ "answer | Quick answers › previous employer | have you ever been employed or refused employment by couples corporate office? | no": {
+  "verdict": "wrong",
+  "reason": "the work history cannot tell whether the candidate was ever refused employment there (fixed in round 10)"
+ },
+ "answer | Quick answers › previous employer | have you ever been employed or refused employment by prestige leasing and tours limited? | no": {
+  "verdict": "wrong",
+  "reason": "the work history cannot tell whether the candidate was ever refused employment there (fixed in round 10)"
+ },
+ "answer | Quick answers › where you live | do you currently reside in cyprus? | no": {
+  "verdict": "correct",
+  "reason": "the candidate lives in India (hand-checked)"
+ },
+ "answer | Quick answers › sponsorship | will you need sponsorship for a work visa? | yes": {
+  "verdict": "correct",
+  "reason": "a job in Cyprus for a candidate authorized in India only: a visa is needed (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your gross annual salary expectations in € for this role? | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Tallinn/Limassol, GBP London) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your salary expectation? | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Tallinn/Limassol, GBP London) (hand-checked)"
+ },
+ "answer | How did you hear about this job? | how did you find this job? | linkedin": {
+  "verdict": "correct",
+  "reason": "the saved source (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you been employed by upstart before? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "profile | postalCode | zip code/postal code | 411038": {
+  "verdict": "correct",
+  "reason": "the candidate profile value (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you previously worked at abnormal | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you previously worked at or consulted for gitlab? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is the beginning of your desired annual base salary range? (please format with no commas, i.e. $50000, £50000) | usd 70000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Tallinn/Limassol, GBP London) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is the end of your desired annual base salary range? (please format with no commas, i.e. $70000, £70000) | usd 70000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Tallinn/Limassol, GBP London) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | salary expectation (local currency/gross) | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Tallinn/Limassol, GBP London) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you previously been employed by fastly? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | are you currently, or have you been employed by kpmg within the past 36 months? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you ever been employed to a couples resorts property or entity? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › relatives at the company | do you have any relatives employed to any of the couples resorts' companies? | no": {
+  "verdict": "correct",
+  "reason": "the saved declaration (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your compensation expectations ($usd/year)? | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Tallinn/Limassol, GBP London) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | desired pay | gbp 55,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Tallinn/Limassol, GBP London) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your expected annual variable compensation (ex. commission)? | usd 70,000": {
+  "verdict": "wrong",
+  "reason": "the whole salary expectation typed as the variable pay (fixed in round 10)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your compensation expectations? | gbp 55,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Tallinn/Limassol, GBP London) (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you ever been employed to a couples resorts property? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › relatives at the company | do you have any relatives currently working at any of our properties? | no": {
+  "verdict": "correct",
+  "reason": "the saved declaration (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is the beginning of your desired annual base salary range? (please format with no commas, i.e. $50000, £50000) | gbp 55000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Tallinn/Limassol, GBP London) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is the end of your desired annual base salary range? (please format with no commas, i.e. $70000, £70000) | gbp 55000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Tallinn/Limassol, GBP London) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your expected salary? | gbp 55,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (USD US jobs, EUR Berlin/Tallinn/Limassol, GBP London) (hand-checked)"
+ },
+ "profile | state | what state are you currently located in? | maharashtra": {
+  "verdict": "correct",
+  "reason": "the candidate profile value (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you worked at neo4j before? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "profile | postalCode | zip code / postal code (non-u.s. based candidates, please enter \"00000\") | 00000": {
+  "verdict": "correct",
+  "reason": "the candidate profile value; non-US candidates enter 00000 as the form asks (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you ever, or are you currently working at gusto or symmetry in any capacity (ie: employee or contingent worker)? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your annual salary expectation? | gbp 55,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (hand-checked against the job location)"
+ },
+ "profile | country | please select the country you are applying from. | india": {
+  "verdict": "correct",
+  "reason": "the candidate profile value; non-US candidates enter 00000 as the form asks (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you previously been employed by ripple? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ },
+ "answer | Quick answers › salary currency | salarycurrency | indian rupee (₹)": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (hand-checked against the job location)"
+ },
+ "answer | Quick answers › expected salary abroad | what is your desired salary? | 55000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (hand-checked against the job location)"
+ },
+ "answer | Quick answers › sponsorship | do you need a visa to work in this location? | yes": {
+  "verdict": "correct",
+  "reason": "a job in Milan for a candidate authorized elsewhere: a visa is needed (hand-checked)"
+ },
+ "answer | Quick answers › expected salary abroad | please share with us your salary expectations. | usd 70,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (hand-checked against the job location)"
+ },
+ "answer | Quick answers › expected salary abroad | expected salary | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (hand-checked against the job location)"
+ },
+ "answer | Quick answers › expected salary abroad | what are your gross annual salary expectations € for this role? | eur 60,000": {
+  "verdict": "correct",
+  "reason": "the saved salary in the job country currency (hand-checked against the job location)"
+ },
+ "answer | Quick answers › citizenship | passport country | india": {
+  "verdict": "correct",
+  "reason": "the saved citizenship (hand-checked)"
+ },
+ "answer | Quick answers › previous employer | have you previously worked at careem? | no": {
+  "verdict": "correct",
+  "reason": "the candidate never worked there (work history: two other employers) (hand-checked)"
+ }
+}
