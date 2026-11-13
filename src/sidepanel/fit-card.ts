@@ -6,6 +6,8 @@ import type { Profile } from "../shared/types";
 import { fitSummary, type FitSummary } from "../content/fit";
 import { loadProfile } from "../shared/storage";
 import { el } from "./tracker";
+import { resumeTextOf } from "./drafts";
+import { tailorTips } from "../shared/tailor";
 
 /** The job description's text from the tab: the page script's read-only reader, in whichever frame has the most. */
 async function jobText(tabId: number): Promise<string> {
@@ -67,5 +69,34 @@ export async function renderFitCard(tabId: number | undefined, canRead: boolean,
   if (fit.missing.length) children.push(chips);
   children.push(el("p", { class: "hint" }, "From the job description on this page and your profile. It never changes your answers."));
   box.replaceChildren(...children);
+  void tailorSection(text, profile).then((section) => {
+    if (section && mine === token) box.append(section);
+  });
   return fit;
+}
+
+/** "Tailor your resume for this job": advice from the job description, the resume file and the Profile, on this
+ * computer. ApplyAgent never edits the resume. */
+async function tailorSection(jobDescription: string, profile: Profile): Promise<HTMLElement | undefined> {
+  const resume = await resumeTextOf(profile);
+  if (resume.trim().length < 200) return undefined; // no readable resume: nothing to compare
+  const tips = tailorTips(jobDescription, resume, profile);
+  if (!tips.addToResume.length && !tips.leadWith.length && !tips.missing.length) return undefined;
+  const parts: (Node | string)[] = [el("summary", {}, `Tailor your resume for this job · it mentions ${tips.resumeCovers.matched} of ${tips.resumeCovers.total} skills the job asks for`)];
+  if (tips.addToResume.length) {
+    parts.push(el("p", { class: "hint" }, "In your Profile but not in your resume. Add them where they are true (keyword searches read the resume):"));
+    const chips = el("div", { class: "chips" });
+    for (const s of tips.addToResume.slice(0, 10)) chips.append(el("span", { class: "chip ok" }, s));
+    parts.push(chips);
+  }
+  if (tips.leadWith.length) {
+    parts.push(el("p", { class: "hint" }, "Lines of your resume that say most about this job. Put them first:"));
+    const list = el("ol", { class: "tailor-lines" });
+    for (const line of tips.leadWith) list.append(el("li", {}, line));
+    parts.push(list);
+  }
+  if (tips.missing.length) {
+    parts.push(el("p", { class: "hint" }, `Asked for, and in neither your resume nor your Profile: ${tips.missing.slice(0, 8).join(", ")}. Add one only if you really have it.`));
+  }
+  return el("details", { class: "tailor" }, ...parts);
 }

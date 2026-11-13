@@ -44,12 +44,12 @@ function stem(word: string): string {
   return w.replace(/(ization|isation)$/, "ize").replace(/(ing|ed|es|s)$/, "").replace(/(.)\1$/, "$1");
 }
 
-function terms(text: string): string[] {
+export function terms(text: string): string[] {
   return [...new Set(normalize(text).split(" ").filter((w) => w.length > 2 && !STOP.has(w) && !/^\d+$/.test(w)).map(stem))];
 }
 
 /** Resume lines worth quoting (bullets and sentences, not headings or contact lines). */
-function resumeLines(resume: string): string[] {
+export function resumeLines(resume: string): string[] {
   return resume.split(/\r?\n|(?<=[.;])\s+(?=[A-Z])/).map((l) => l.replace(/^[\s•▪◦●·\-–—*]+/, "").trim())
     .filter((l) => l.length >= 25 && l.length <= 300 && !/@|https?:|\+?\d[\d ()-]{8,}/.test(l));
 }
