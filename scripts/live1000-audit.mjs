@@ -67,7 +67,8 @@ const DECLINE = /decline|don'?t wish|do not wish|not wish|not want|don'?t want|p
 // Countries a question can name, with the words that name them. India is the only one the candidate may work in.
 const COUNTRIES = {
   India: /\bindia\b/,
-  "United States": /\b(united states|u\.s\.a?\.?|usa|us|america|american)\b/,
+  // Not the pronoun "us" ("Would you need us to sponsor a work visa?", round 10): only "U.S."/"USA" in any case.
+  "United States": /\b(united states|u\.s\.a?\.?|usa|america|american)\b/,
   "United Kingdom": /\b(united kingdom|u\.k\.?|uk|britain|england)\b/,
   Canada: /\bcanada\b/, Germany: /\bgermany\b/, France: /\bfrance\b/, Spain: /\bspain|espana\b/, Ireland: /\bireland\b/,
   Netherlands: /\bnetherlands\b/, Australia: /\baustralia\b/, Singapore: /\bsingapore\b/, Japan: /\bjapan\b/, Brazil: /\bbrazil\b/,
@@ -81,11 +82,12 @@ const COUNTRIES = {
   Nigeria: /\bnigeria\b/, Kenya: /\bkenya\b/, Egypt: /\begypt\b/, "South Africa": /\bsouth africa\b/, Turkey: /\b(turkey|turkiye)\b/,
   Iceland: /\biceland\b/, Estonia: /\bestonia\b/, Romania: /\bromania\b/, Ukraine: /\bukraine\b/, Pakistan: /\bpakistan\b/,
   Peru: /\bperu\b/, Uruguay: /\buruguay\b/, Taiwan: /\btaiwan\b/, Greece: /\bgreece\b/, Hungary: /\bhungary\b/,
+  Latvia: /\b(latvia|riga)\b/, Lithuania: /\b(lithuania|vilnius)\b/,
 };
 // US places and states commonly named instead of the country.
 const US_PLACES = /\b(new york|nyc|san francisco|seattle|los angeles|chicago|boston|austin|denver|california|texas|washington state|bay area|silicon valley)\b/;
 const countriesIn = (text) => {
-  const t = norm(text).replace(/\bu\.s\.?(?=\s|$|[,.?)])/g, "us");
+  const t = norm(text).replace(/\bu\.s\.?(?=\s|$|[,.?)])/g, "usa");
   const out = Object.entries(COUNTRIES).filter(([, re]) => re.test(t)).map(([c]) => c);
   if (!out.includes("United States") && US_PLACES.test(t)) out.push("United States");
   return out;
@@ -228,7 +230,7 @@ function judge(f, row) {
   }
   const needsAsk = !authWithout && /\b(need|require|requir(es|ing))\b[^?]{0,60}\b(visa|work permit|sponsor\w*|right to work support)\b/.test(label);
   if ((isWorkAuth(q) || authWithout) && !needsAsk && !needsWorkAuth && (f.decision === "answer" || YES.test(c) || NO.test(c))) {
-    const cs = countriesIn(q);
+    const cs = countriesIn(q.replace(/((?:e.?s?g.?|i.?s?e.?|for example|for instance|such as|including|like)[s.:,][^)]*)/gi, " "));
     const yes = YES.test(c) || /authori[sz]ed|eligible/.test(c) && !/not/.test(c);
     const no = NO.test(c);
     if (cs.length === 1 && cs[0] === HOME) return yes ? r("correct", "workauth_india", `authorized in ${HOME}`) : r("wrong", "workauth_india", `answered "${chosen ?? value}" for ${HOME}`);
@@ -243,7 +245,7 @@ function judge(f, row) {
   }
   // Sponsorship.
   if (isSponsor(q) && !authWithout && !needsWorkAuth && (f.decision === "answer" || YES.test(c) || NO.test(c))) {
-    const cs = countriesIn(q);
+    const cs = countriesIn(q.replace(/((?:e.?s?g.?|i.?s?e.?|for example|for instance|such as|including|like)[s.:,][^)]*)/gi, " "));
     // Judged on the question only: help text often explains both answers ("Mark NO if you will NOT require…").
     // Bracketed notes ("(…applies even if you don't need sponsorship immediately…)") do not turn the question round.
     const inverted = INVERTED.test(label.replace(/\([^)]*\)|\[[^\]]*\]/g, " "));
@@ -331,7 +333,7 @@ function judge(f, row) {
   if (f.decision === "answer") {
     const m = norm(f.matched);
     if (/where you live/.test(m) && /(located|based|reside|live|living)\b/.test(q)) {
-      const cs = countriesIn(q);
+      const cs = countriesIn(q.replace(/((?:e.?s?g.?|i.?s?e.?|for example|for instance|such as|including|like)[s.:,][^)]*)/gi, " "));
       const yes = YES.test(c), no = NO.test(c);
       // "No, and not willing to relocate": the chosen option also says whether the candidate would move, and both test
       // candidates saved "willing to relocate" (round 9, Abridge).

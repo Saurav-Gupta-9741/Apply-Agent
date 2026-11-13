@@ -140,6 +140,17 @@ describe("where the user lives and works", () => {
   });
 });
 
+describe("live round 10", () => {
+  it("countries named only as examples are not the job's country (New Relic, Tokyo)", () => {
+    const label = "Do you now or will you in the future require sponsorship for or assistance with an employment visa, authorization, or permit to work for or continue to work for New Relic in this role (e.g. U.S. F-1, H-1B, TN, E-3, or other non-immigrant visa category)?";
+    expect(decideWithMeaning(q(label, "combobox"), US, [], at("Japan"))).toMatchObject({ kind: "answer", value: "Yes" });
+    expect(decideWithMeaning(q(label, "combobox"), US, [], at("United States"))).toMatchObject({ kind: "answer", value: "No" });
+  });
+  it("'employed or refused employment by…' is not answered from the work history", () => {
+    expect(decideWithMeaning(q("Have you ever been employed or refused employment by Couples Negril?", "combobox"), US, [], at("Jamaica"))).not.toMatchObject({ kind: "answer" });
+  });
+});
+
 describe("notice period and names", () => {
   it("'Do you have a notice period…', 'If offered… how soon…', the earliest start date", () => {
     expect(decideWithMeaning(q("Do you have a notice period at your current job before being able to start a new role?"), IN, [])).toMatchObject({ kind: "answer", value: "Yes" });

@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-13T09:29:52.044Z",
+ "generatedAt": "2026-11-13T12:07:59.620Z",
  "inputs": [
   "results-r9-us-a.jsonl",
   "results-r9-us-b.jsonl"
@@ -1100,7 +1100,7 @@
    "correct:qa_heard": 1,
    "correct:manual:profile_kind": 93,
    "correct:work_block": 216,
-   "correct:sponsor_job_country": 27,
+   "correct:sponsor_job_country": 29,
    "correct:workauth_india": 12,
    "correct:eeo_decline": 116,
    "correct:manual:none": 49,
@@ -1111,7 +1111,7 @@
    "correct:manual:qa_notice": 2,
    "correct:workauth_job_country": 8,
    "correct:qa_relocation": 1,
-   "correct:sponsor_india": 7,
+   "correct:sponsor_india": 5,
    "correct:qa_eeo": 8,
    "correct:answer_same_topic": 3,
    "correct:qa_pronouns": 12,

@@ -94,6 +94,10 @@ function theQuestion(label: string): string | undefined {
   return normalize(asked[0] ?? sentences[sentences.length - 1] ?? "");
 }
 
+/** The question without its examples: "(e.g. U.S. F-1, H-1B, TN…)" names visa types, not the job's country (New Relic,
+ * a job in Tokyo, live round 10: answered for the US). */
+export const withoutExamples = (label: string): string => label.replace(/((?:e.?s?g.?|i.?s?e.?|for example|for instance|such as|including|like)[s.:,][^)]*)/gi, " ");
+
 /** What a yes/no about working there means: the user's right to work, or their need for a visa. */
 const ABOUT_WORKING = /authori[sz]|eligib|entitled|right to work|permitted|legally|sponsor|visa|immigration|work permit|permission to work|droit de travailler|droit au travail|derecho a trabajar|direito de trabalhar|arbeitsberechtigung|berechtigt|arbeitserlaubnis|arbeitsvisum|arbeitsgenehmigung|visum|autoris|permis de travail|autoriz|permiso de trabajo|autorizacao de trabalho|visto de trabalho|permissao de trabalho|werkvergunning|gerechtigd|permesso|parrainage|patrocinio/;
 /** "Do you still wish to proceed?", "Is your right to work tied to another employer?", "…in any country other than
@@ -118,7 +122,7 @@ function workAnswer(field: FieldDescriptor, profile: Profile, facts: QuickFacts,
   if (asksAuth && asksSponsor && /\b(?:and|\&)\b\s*(?:(?:do|will|would|can)\s+you\s+)?(?:require|need)\b/i.test(asked)) {
     return undefined;
   }
-  let places = countriesIn(field.label);
+  let places = countriesIn(withoutExamples(field.label));
   // "…in the country you currently reside in?", "Your authorization to work in the country where you live. Please
   // choose…", "…at your current location of residence?" (Appier), "…in the location in which you currently reside?"
   // (Hopper): the country of residence is the profile's country (read on the whole label: the asked sentence may be
@@ -208,7 +212,7 @@ export function countryAnswer(field: FieldDescriptor, profile: Profile, answers:
   const authWords = /authori[sz]|right to work|eligib|entitled|legally|lawfully|permit|permis|arbeitserlaubnis|berechtigt/.test(asked);
   if (sponsorWords && authWords && /\b(and|&)\b/.test(asked)) return undefined; // two questions in one
   if (topic === "sponsorship" ? !(sponsorWords && NEEDS.test(asked)) : !(authWords && !sponsorWords)) return undefined;
-  let places = countriesIn(field.label);
+  let places = countriesIn(withoutExamples(field.label));
   const whole = normalize(field.label);
   // "…in your country of residence?", "…a visa to remain in your current location?" (GitLab, a US job): where the user
   // lives, never the job's country. "…in that country?" points at an earlier answer: the user's to recall.
@@ -1024,6 +1028,8 @@ export function isPreviousEmployeeQuestion(field: FieldDescriptor): boolean {
   if (/\bworked (on|with)\b/.test(q)) return false;
   // "Have you been rejected for this role at Samsara…?" is about past applications, not past employment.
   if (/\b(rejected|declined|turned down|not selected)\b/.test(q)) return false;
+  // "…employed or refused employment by Couples Negril?" (live round 10): being refused is no part of a work history.
+  if (/\b(refused|denied|dismissed|terminated|fired|let go)\b/.test(q)) return false;
 
   return /^(have you (ever |previously )?been employed|have you (ever |previously )?worked (for|at)|are you currently a\b|are you a (current or )?former|do you now or have you in the past worked|history with|voce trabalha atualmente|are you (currently|now) or have you (ever|previously) (worked|been employed)|have you ever or are you currently working at|are you a current employee (with|of)|are you currently or have you previously worked for)/.test(q)
     || (/\b(employed|worked (for|at))\b/.test(q) && /\b(before|in the past|previously)\b/.test(q) && /^(have you|were you|did you)\b/.test(q));

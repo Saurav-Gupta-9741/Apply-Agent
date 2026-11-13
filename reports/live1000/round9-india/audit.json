@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-13T09:29:53.607Z",
+ "generatedAt": "2026-11-13T12:08:00.053Z",
  "accuracy": {
   "filled": 1808,
   "correct": 1806,
@@ -11,16 +11,16 @@
    "correct:qa_heard": 1,
    "correct:manual:profile_kind": 92,
    "correct:work_block": 216,
-   "correct:sponsor_job_country": 27,
-   "correct:workauth_other_country": 21,
+   "correct:sponsor_job_country": 29,
+   "correct:workauth_other_country": 20,
    "correct:eeo_decline": 116,
    "correct:manual:none": 70,
    "correct:qa_onsite": 4,
    "correct:hear": 31,
    "correct:manual:qa_notice": 2,
-   "correct:workauth_job_country": 8,
+   "correct:workauth_job_country": 9,
    "correct:qa_relocation": 1,
-   "correct:sponsor_other_country": 11,
+   "correct:sponsor_other_country": 9,
    "correct:qa_eeo": 8,
    "correct:answer_same_topic": 3,
    "correct:qa_pronouns": 12,
@@ -16287,8 +16287,8 @@
    "matched": "Quick answers › sponsorship",
    "pair": "answer | Quick answers › sponsorship | will you now or in the future require sponsorship to work in the us? | yes",
    "verdict": "correct",
-   "rule": "sponsor_other_country",
-   "reason": "needs sponsorship for United States"
+   "rule": "sponsor_job_country",
+   "reason": "needs sponsorship for a job in United States"
   },
   {
    "company": "attentive",
@@ -18157,8 +18157,8 @@
    "detail": "chose \"I do not require sponsorship now, but will in the future\"",
    "pair": "answer | Quick answers › work authorization | select which best describes your right to work in the us? | i do not require sponsorship now, but will in the future",
    "verdict": "correct",
-   "rule": "workauth_other_country",
-   "reason": "No for a country other than India"
+   "rule": "workauth_job_country",
+   "reason": "No for a job in United States"
   },
   {
    "company": "five9",
@@ -18967,8 +18967,8 @@
    "matched": "Quick answers › sponsorship",
    "pair": "answer | Quick answers › sponsorship | will you now or in the future require sponsorship to work in the us? | yes",
    "verdict": "correct",
-   "rule": "sponsor_other_country",
-   "reason": "needs sponsorship for United States"
+   "rule": "sponsor_job_country",
+   "reason": "needs sponsorship for a job in United States"
   },
   {
    "company": "attentive",
