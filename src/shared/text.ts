@@ -115,15 +115,18 @@ const YES_START = /^(yes|true|agree|i agree|ja|oui|si|sim)\b/;
 const NO_START = /^(no|false|disagree|i disagree|nein|nao|nee)\b/;
 /** Words that turn "Yes, …" into a different, qualified answer ("Yes, but I will need sponsorship"). */
 const YES_QUALIFIER = /\b(but|however|except|unless|although|though|need|require|requires|sponsorship|not|dont|never)\b/;
-const NO_QUALIFIER = /\b(but|however|except|unless|although|though)\b/;
+// "No, and not willing to relocate" adds a second claim (Abridge, live round 9: picked for a user who would relocate).
+const NO_QUALIFIER = /\b(but|however|except|unless|although|though|willing|unwilling|relocat\w*|open to)\b/;
 
 /** Match a Yes or No answer to choice options (e.g. ["Yes", "No"], ["Yes, I do", "No, I do not"], ["I agree", "I disagree"]).
  * The fallback only fires when exactly ONE option has the wanted polarity: two different "I agree …" options are
  * ambiguous and stay for the user. "N/A" is never "No" and "Yes, but …" is never a plain "Yes". */
 export function yesNoOption(options: string[], wanted: string, hint: YesNoHint = {}): string | undefined {
-  const match = bestOption(options, wanted);
-  if (match) return match;
   const w = normalize(wanted);
+  const match = bestOption(options, wanted);
+  // A plain No never lands on "No, and not willing to relocate" (a second claim), even when it reads closest.
+  const qualifiedNo = (o: string) => { const n = normalize(o); return NO_START.test(n) && NO_QUALIFIER.test(n); };
+  if (match && !(/^(no|n)$/.test(w) && qualifiedNo(match))) return match;
   const isYes = w === "y" || /^(yes|true|agree|ja|oui|si|sim)\b/.test(w);
   const isNo = w === "n" || /^(no|false|disagree|nein|non|nao|nee)\b/.test(w);
   const unique = (list: string[]): string | undefined => (list.length === 1 ? list[0] : undefined);
@@ -150,7 +153,7 @@ export function yesNoOption(options: string[], wanted: string, hint: YesNoHint =
     // employee", "I do not have a valid work permit and would need visa sponsorship…": Lucid and Mentimeter, round 8).
     const negatives = options.filter((o) => {
       const n = normalize(o);
-      return NEGATIVE_STATEMENT.test(n) && !YES_START.test(n) && !NOT_A_NO.test(n);
+      return NEGATIVE_STATEMENT.test(n) && !YES_START.test(n) && !NO_START.test(n) && !NOT_A_NO.test(n);
     });
     return negatives.length === 1 && options.length > 1 ? negatives[0] : undefined;
   }

@@ -59,8 +59,9 @@ const mdEsc = (s) => String(s ?? "").replace(/\|/g, "\\|").replace(/\n/g, " ");
 const chosenOf = (f) => { const m = /chose "([^"]*)"/.exec(f.detail ?? ""); return m ? m[1] : undefined; };
 export const pairKey = (f) => [f.decision, f.matched ?? f.key ?? "", norm(f.label).slice(0, 160), norm(chosenOf(f) ?? f.value ?? "").slice(0, 80)].join(" | ");
 
-const YES = /^(yes|y|si|sí|oui|ja|sim|true|i am|i do|i will|i have)\b/;
-const NO = /^(no|n|non|nein|nao|não|false|i am not|i do not|i don't|i will not|i won't)\b/;
+// "I do not have a valid work permit…" is a no (round 9: Mentimeter's options are sentences), never a yes for "I do".
+const YES = /^(yes|y|si|sí|oui|ja|sim|true|i am(?! not)|i do(?! not| n)|i will(?! not)|i have(?! not| never| no))\b/;
+const NO = /^(no|n|non|nein|nao|não|false|never|i am not|i do not|i don't|i dont|i will not|i won't|i wont|i have not|i haven't|i havent|i have never|i have no)\b/;
 const DECLINE = /decline|don'?t wish|do not wish|not wish|not want|don'?t want|prefer not|choose not|rather not|not to (answer|disclose|say|self)|no answer|not (to )?specif|i don'?t know|undisclosed|prefiero no|no deseo/;
 
 // Countries a question can name, with the words that name them. India is the only one the candidate may work in.
@@ -75,6 +76,11 @@ const COUNTRIES = {
   "New Zealand": /\bnew zealand\b/, Italy: /\bitaly\b/, Denmark: /\bdenmark\b/, Norway: /\bnorway\b/, Finland: /\bfinland\b/,
   Philippines: /\bphilippines\b/, Argentina: /\bargentina\b/, Colombia: /\bcolombia\b/, Chile: /\bchile\b/, "South Korea": /\bkorea\b/,
   China: /\bchina\b/, "Hong Kong": /\bhong kong\b/, Belgium: /\bbelgium\b/, Austria: /\baustria\b/, "Czech Republic": /\bczech\b/,
+  // Round 9: the countries the extension learned (src/shared/countries.ts).
+  "Costa Rica": /\bcosta rica\b/, Indonesia: /\bindonesia\b/, Thailand: /\bthailand\b/, Malaysia: /\bmalaysia\b/, Vietnam: /\bvietnam\b/,
+  Nigeria: /\bnigeria\b/, Kenya: /\bkenya\b/, Egypt: /\begypt\b/, "South Africa": /\bsouth africa\b/, Turkey: /\b(turkey|turkiye)\b/,
+  Iceland: /\biceland\b/, Estonia: /\bestonia\b/, Romania: /\bromania\b/, Ukraine: /\bukraine\b/, Pakistan: /\bpakistan\b/,
+  Peru: /\bperu\b/, Uruguay: /\buruguay\b/, Taiwan: /\btaiwan\b/, Greece: /\bgreece\b/, Hungary: /\bhungary\b/,
 };
 // US places and states commonly named instead of the country.
 const US_PLACES = /\b(new york|nyc|san francisco|seattle|los angeles|chicago|boston|austin|denver|california|texas|washington state|bay area|silicon valley)\b/;
@@ -327,6 +333,9 @@ function judge(f, row) {
     if (/where you live/.test(m) && /(located|based|reside|live|living)\b/.test(q)) {
       const cs = countriesIn(q);
       const yes = YES.test(c), no = NO.test(c);
+      // "No, and not willing to relocate": the chosen option also says whether the candidate would move, and both test
+      // candidates saved "willing to relocate" (round 9, Abridge).
+      if (/\bnot willing\b|\bunwilling\b|\bnot open\b/.test(c) && /relocat/.test(c)) return r("wrong", "where_live_relocation", `"${chosen ?? value}" though the candidate is willing to relocate`);
       if (cs.length === 1 && cs[0] === HOME) return yes ? r("correct", "where_live", `lives in ${HOME}`) : r("wrong", "where_live", `"${chosen ?? value}" though the candidate lives in ${HOME}`);
       if (cs.length && !cs.includes(HOME)) return no ? r("correct", "where_live", `not in ${cs.join(", ")}`) : yes ? r("wrong", "where_live", `Yes for ${cs.join(", ")}; the candidate lives in ${HOME_PLACE}`) : r("unclear", "where_live", "");
     }

@@ -785,7 +785,9 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     // "Do you have a notice period at your current job before being able to start a new role?": yes when it is longer
     // than nothing.
     // ("Are you subject to a notice period…?" stays the user's: the labelled set of 1,539 real questions keeps it so.)
-    if (/^do you (currently )?have( a| any)? notice period\b/.test(q) && yesNoField(field) && candidateDays !== undefined) {
+    // One question only: "Do you currently have a notice period? When would you be available to start?" wants both
+    // (Watershed, live round 9: a bare "Yes" left the second unanswered).
+    if (/^do you (currently )?have( a| any)? notice period\b/.test(q) && (field.label.match(/\?/g) ?? []).length <= 1 && yesNoField(field) && candidateDays !== undefined) {
       const raw = candidateDays > 0 ? "Yes" : "No";
       const val = field.options.length ? yesNoOption(field.options, raw) : raw;
       return val ? answer(val, "notice period") : undefined;

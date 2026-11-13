@@ -1,0 +1,1139 @@
+{
+ "generatedAt": "2026-11-13T09:29:52.044Z",
+ "inputs": [
+  "results-r9-us-a.jsonl",
+  "results-r9-us-b.jsonl"
+ ],
+ "forms": 182,
+ "byOutcome": {
+  "filled": 171,
+  "robot_check": 3,
+  "closed": 2,
+  "no_form": 6
+ },
+ "byPlatformOutcome": {
+  "greenhouse": {
+   "filled": 61,
+   "robot_check": 3,
+   "no_form": 6
+  },
+  "breezy": {
+   "filled": 32
+  },
+  "ashby": {
+   "filled": 58,
+   "closed": 2
+  },
+  "bamboohr": {
+   "filled": 20
+  }
+ },
+ "runStatus": {
+  "needs_user": 100,
+  "ready_to_submit": 71
+ },
+ "fields": 2785,
+ "byStatus": {
+  "filled": 1822,
+  "skipped": 596,
+  "needs_user": 333,
+  "already_filled": 20,
+  "failed": 14
+ },
+ "byDecision": {
+  "resume": 170,
+  "skip": 588,
+  "profile": 1107,
+  "answer": 343,
+  "ask": 361,
+  "work": 216
+ },
+ "byDecisionStatus": {
+  "resume": {
+   "filled": 170
+  },
+  "skip": {
+   "skipped": 583,
+   "already_filled": 5
+  },
+  "profile": {
+   "filled": 1099,
+   "failed": 8
+  },
+  "answer": {
+   "filled": 337,
+   "failed": 6
+  },
+  "ask": {
+   "needs_user": 333,
+   "already_filled": 15,
+   "skipped": 13
+  },
+  "work": {
+   "filled": 216
+  }
+ },
+ "required": 1317,
+ "requiredLeftForUser": 294,
+ "requiredFilled": 1023,
+ "requiredSections": 38,
+ "requiredSectionsLeft": 0,
+ "requiredSectionsLeftByName": {},
+ "cover": {
+  "tried": 65,
+  "attached": 65,
+  "shown": 8,
+  "notShown": [
+   "showpad: Cover Letter",
+   "mercury: Cover Letter",
+   "zoominfo: Cover Letter",
+   "raisin: Cover Letter",
+   "bird: Cover Letter",
+   "squarespace: Cover Letter",
+   "labelbox: Cover Letter",
+   "bird: Cover Letter",
+   "klaviyo: Cover Letter",
+   "labelbox: Cover Letter",
+   "pagerduty: Cover Letter",
+   "upwork: Cover Letter",
+   "dataiku: Cover Letter",
+   "dataiku: Cover Letter",
+   "five9: Cover Letter",
+   "coreweave: Cover Letter",
+   "verkada: Cover Letter",
+   "twitch: Cover Letter",
+   "mirakl: Cover Letter",
+   "monzo: Cover Letter",
+   "mentimeter: Cover Letter",
+   "zoominfo: Cover Letter",
+   "workato: Cover Letter",
+   "workato: Cover Letter",
+   "coreweave: Cover Letter",
+   "mongodb: Cover Letter",
+   "twitch: Cover Letter",
+   "deliveroo: Cover Letter",
+   "gemini: Cover Letter",
+   "asana: Cover Letter",
+   "attentive: Cover Letter",
+   "pagerduty: Cover Letter",
+   "housinganywhere: Cover Letter",
+   "oura: Cover Letter",
+   "mongodb: Cover Letter",
+   "mentimeter: Cover Letter",
+   "nice: Cover Letter",
+   "five9: Cover Letter",
+   "pendo: Cover Letter",
+   "appier: Cover Letter",
+   "veriff: Cover Letter",
+   "attentive: Cover Letter",
+   "carta: Cover Letter",
+   "appier: Cover Letter",
+   "sumup: Cover Letter",
+   "familypromiseofspokane: Cover Letter",
+   "nexii: Cover Letter",
+   "familypromiseofspokane: Cover Letter",
+   "verkada: Cover Letter",
+   "asana: Cover Letter",
+   "wildlifestudios: Cover Letter",
+   "monzo: Cover Letter",
+   "carta: Cover Letter",
+   "oura: Cover Letter",
+   "nice: Cover Letter",
+   "sumup: Allega",
+   "groww: Cover Letter"
+  ]
+ },
+ "asks": {
+  "work_authorization": 10,
+  "sponsorship": 14,
+  "consent": 46,
+  "unknown": 211,
+  "relocation": 9,
+  "missing_profile_value": 8,
+  "salary": 34,
+  "notice_period": 11,
+  "criminal": 1,
+  "pronouns": 9,
+  "sensitive": 3,
+  "disability": 3,
+  "age": 2
+ },
+ "asksRequired": {
+  "work_authorization": 6,
+  "sponsorship": 10,
+  "consent": 31,
+  "unknown": 211,
+  "relocation": 8,
+  "missing_profile_value": 8,
+  "salary": 15,
+  "criminal": 1,
+  "notice_period": 4,
+  "sensitive": 3,
+  "pronouns": 1
+ },
+ "skips": {
+  "optional attachment (not your resume)": 66,
+  "current job: no end date": 24,
+  "optional, not in profile": 233,
+  "study dates are not in your profile": 48,
+  "optional attachment": 5,
+  "no portfolio in profile": 17,
+  "optional choice": 183,
+  "not sure this saved answer fits: left for you": 11,
+  "identity: entered by you only": 1
+ },
+ "failedByKey": {
+  "profile:location (combobox)": 1,
+  "profile:school (combobox)": 5,
+  "answer:Quick answers › relocation (combobox)": 2,
+  "answer:Quick answers › work authorization (combobox)": 3,
+  "answer:Quick answers › onsite (combobox)": 1,
+  "profile:state (combobox)": 1,
+  "profile:country (combobox)": 1
+ },
+ "seconds": {
+  "forms": 182,
+  "median": 19,
+  "mean": 19.8,
+  "medianFilled": 18,
+  "max": 53
+ },
+ "perCompany": {
+  "greenhouse:showpad": {
+   "forms": 1,
+   "fields": 12,
+   "filled": 9,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "breezy:taqar-consulting-co-l-l-c": {
+   "forms": 2,
+   "fields": 46,
+   "filled": 33,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:mercury": {
+   "forms": 1,
+   "fields": 15,
+   "filled": 9,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:zoominfo": {
+   "forms": 2,
+   "fields": 39,
+   "filled": 35,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 1
+  },
+  "breezy:segal-mccambridge": {
+   "forms": 2,
+   "fields": 20,
+   "filled": 14,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "greenhouse:raisin": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 10,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "breezy:zero-hash": {
+   "forms": 2,
+   "fields": 51,
+   "filled": 36,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:bird": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 14,
+   "needsUser": 10,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "breezy:zeno-power": {
+   "forms": 2,
+   "fields": 38,
+   "filled": 22,
+   "needsUser": 11,
+   "ready": 0,
+   "requiredLeft": 11
+  },
+  "breezy:prime-philippines": {
+   "forms": 2,
+   "fields": 47,
+   "filled": 33,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 1
+  },
+  "greenhouse:squarespace": {
+   "forms": 1,
+   "fields": 26,
+   "filled": 14,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "breezy:north-wind-group": {
+   "forms": 2,
+   "fields": 45,
+   "filled": 33,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "greenhouse:algolia": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 32,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "breezy:helpware-inc": {
+   "forms": 2,
+   "fields": 33,
+   "filled": 23,
+   "needsUser": 1,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "greenhouse:labelbox": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 20,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "breezy:inallmedia-llc": {
+   "forms": 2,
+   "fields": 65,
+   "filled": 38,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "greenhouse:klaviyo": {
+   "forms": 1,
+   "fields": 20,
+   "filled": 14,
+   "needsUser": 2,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "breezy:prolift-rigging": {
+   "forms": 2,
+   "fields": 62,
+   "filled": 46,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "breezy:vagaro": {
+   "forms": 2,
+   "fields": 70,
+   "filled": 45,
+   "needsUser": 11,
+   "ready": 0,
+   "requiredLeft": 11
+  },
+  "greenhouse:smartsheet": {
+   "forms": 1,
+   "fields": 28,
+   "filled": 21,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "breezy:bear-robotics": {
+   "forms": 2,
+   "fields": 46,
+   "filled": 34,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "greenhouse:pagerduty": {
+   "forms": 2,
+   "fields": 27,
+   "filled": 24,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 1
+  },
+  "greenhouse:upwork": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 8,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "greenhouse:deliveroo": {
+   "forms": 2,
+   "fields": 35,
+   "filled": 26,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "breezy:spark-power": {
+   "forms": 2,
+   "fields": 46,
+   "filled": 28,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "greenhouse:dataiku": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 30,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "breezy:beex": {
+   "forms": 2,
+   "fields": 12,
+   "filled": 8,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "breezy:aimpoint-digital": {
+   "forms": 2,
+   "fields": 44,
+   "filled": 32,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "greenhouse:five9": {
+   "forms": 2,
+   "fields": 31,
+   "filled": 21,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:stabilityai": {
+   "forms": 1,
+   "fields": 3,
+   "filled": 0,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "breezy:social-discovery-ventures": {
+   "forms": 2,
+   "fields": 46,
+   "filled": 32,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "ashby:qonto": {
+   "forms": 1,
+   "fields": 20,
+   "filled": 7,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:coreweave": {
+   "forms": 2,
+   "fields": 49,
+   "filled": 35,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "ashby:ashby": {
+   "forms": 2,
+   "fields": 16,
+   "filled": 8,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:verkada": {
+   "forms": 2,
+   "fields": 26,
+   "filled": 22,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "ashby:alan": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 8,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "greenhouse:twitch": {
+   "forms": 2,
+   "fields": 74,
+   "filled": 32,
+   "needsUser": 29,
+   "ready": 0,
+   "requiredLeft": 25
+  },
+  "ashby:notion": {
+   "forms": 2,
+   "fields": 29,
+   "filled": 12,
+   "needsUser": 3,
+   "ready": 1,
+   "requiredLeft": 1
+  },
+  "greenhouse:turing": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 9,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "breezy:wealthy-recruiting": {
+   "forms": 2,
+   "fields": 44,
+   "filled": 32,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "greenhouse:mirakl": {
+   "forms": 1,
+   "fields": 17,
+   "filled": 11,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "ashby:airbyte": {
+   "forms": 2,
+   "fields": 11,
+   "filled": 10,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 1
+  },
+  "greenhouse:monzo": {
+   "forms": 2,
+   "fields": 40,
+   "filled": 28,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "greenhouse:mentimeter": {
+   "forms": 2,
+   "fields": 29,
+   "filled": 16,
+   "needsUser": 9,
+   "ready": 0,
+   "requiredLeft": 9
+  },
+  "greenhouse:workato": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 27,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 5
+  },
+  "greenhouse:mongodb": {
+   "forms": 2,
+   "fields": 36,
+   "filled": 25,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:eucalyptus": {
+   "forms": 1,
+   "fields": 26,
+   "filled": 8,
+   "needsUser": 17,
+   "ready": 0,
+   "requiredLeft": 17
+  },
+  "greenhouse:gemini": {
+   "forms": 1,
+   "fields": 17,
+   "filled": 13,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:asana": {
+   "forms": 2,
+   "fields": 52,
+   "filled": 34,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "greenhouse:attentive": {
+   "forms": 2,
+   "fields": 36,
+   "filled": 26,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:housinganywhere": {
+   "forms": 1,
+   "fields": 15,
+   "filled": 10,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "greenhouse:oura": {
+   "forms": 2,
+   "fields": 38,
+   "filled": 34,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "greenhouse:nice": {
+   "forms": 2,
+   "fields": 40,
+   "filled": 27,
+   "needsUser": 11,
+   "ready": 0,
+   "requiredLeft": 11
+  },
+  "greenhouse:pendo": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 12,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "greenhouse:appier": {
+   "forms": 2,
+   "fields": 19,
+   "filled": 17,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "greenhouse:veriff": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 10,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:carta": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 28,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "greenhouse:sumup": {
+   "forms": 2,
+   "fields": 23,
+   "filled": 14,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "ashby:influxdata": {
+   "forms": 2,
+   "fields": 14,
+   "filled": 8,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "bamboohr:adistec": {
+   "forms": 2,
+   "fields": 30,
+   "filled": 19,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:warp": {
+   "forms": 2,
+   "fields": 8,
+   "filled": 8,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "bamboohr:hinterlandgroup": {
+   "forms": 2,
+   "fields": 31,
+   "filled": 22,
+   "needsUser": 3,
+   "ready": 1,
+   "requiredLeft": 3
+  },
+  "ashby:satispay": {
+   "forms": 2,
+   "fields": 68,
+   "filled": 13,
+   "needsUser": 4,
+   "ready": 1,
+   "requiredLeft": 2
+  },
+  "bamboohr:familypromiseofspokane": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 20,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 1
+  },
+  "ashby:snowflake": {
+   "forms": 2,
+   "fields": 24,
+   "filled": 12,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "ashby:watershed": {
+   "forms": 2,
+   "fields": 18,
+   "filled": 13,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "bamboohr:royal": {
+   "forms": 2,
+   "fields": 27,
+   "filled": 22,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "ashby:whoop": {
+   "forms": 2,
+   "fields": 10,
+   "filled": 8,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 1
+  },
+  "bamboohr:hsvarc": {
+   "forms": 2,
+   "fields": 38,
+   "filled": 20,
+   "needsUser": 4,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "ashby:abridge": {
+   "forms": 1,
+   "fields": 18,
+   "filled": 7,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "bamboohr:nexii": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 10,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:wealthsimple": {
+   "forms": 1,
+   "fields": 18,
+   "filled": 6,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "bamboohr:maplr": {
+   "forms": 2,
+   "fields": 42,
+   "filled": 20,
+   "needsUser": 10,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "bamboohr:icmarketsglobal": {
+   "forms": 2,
+   "fields": 32,
+   "filled": 21,
+   "needsUser": 5,
+   "ready": 1,
+   "requiredLeft": 2
+  },
+  "ashby:primer": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 12,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "ashby:kong": {
+   "forms": 1,
+   "fields": 10,
+   "filled": 7,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "bamboohr:totalps": {
+   "forms": 2,
+   "fields": 24,
+   "filled": 20,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "ashby:mintlify": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:oyster": {
+   "forms": 2,
+   "fields": 52,
+   "filled": 11,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 10
+  },
+  "ashby:clickup": {
+   "forms": 1,
+   "fields": 8,
+   "filled": 6,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "bamboohr:eastlandfood": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 12,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:backmarket": {
+   "forms": 2,
+   "fields": 22,
+   "filled": 16,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "bamboohr:latigobio": {
+   "forms": 1,
+   "fields": 15,
+   "filled": 11,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "ashby:docker": {
+   "forms": 2,
+   "fields": 17,
+   "filled": 13,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "bamboohr:verastem": {
+   "forms": 1,
+   "fields": 16,
+   "filled": 12,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:thought-machine": {
+   "forms": 2,
+   "fields": 18,
+   "filled": 13,
+   "needsUser": 1,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "ashby:lambda": {
+   "forms": 2,
+   "fields": 17,
+   "filled": 16,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "greenhouse:wildlifestudios": {
+   "forms": 1,
+   "fields": 22,
+   "filled": 17,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "ashby:thumbtack": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 6,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:uipath": {
+   "forms": 2,
+   "fields": 22,
+   "filled": 14,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "ashby:rohlik": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 5,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:skydio": {
+   "forms": 2,
+   "fields": 15,
+   "filled": 10,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "ashby:clickhouse": {
+   "forms": 2,
+   "fields": 15,
+   "filled": 12,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "ashby:redis": {
+   "forms": 2,
+   "fields": 14,
+   "filled": 12,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "ashby:temporal": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 21,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "ashby:fullstory": {
+   "forms": 2,
+   "fields": 19,
+   "filled": 12,
+   "needsUser": 4,
+   "ready": 1,
+   "requiredLeft": 2
+  },
+  "ashby:babbel": {
+   "forms": 2,
+   "fields": 17,
+   "filled": 15,
+   "needsUser": 2,
+   "ready": 1,
+   "requiredLeft": 1
+  },
+  "ashby:illumio": {
+   "forms": 1,
+   "fields": 13,
+   "filled": 8,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:lightspeed": {
+   "forms": 1,
+   "fields": 6,
+   "filled": 5,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "ashby:zapier": {
+   "forms": 2,
+   "fields": 37,
+   "filled": 21,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "ashby:harvey": {
+   "forms": 1,
+   "fields": 14,
+   "filled": 12,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  },
+  "greenhouse:groww": {
+   "forms": 1,
+   "fields": 11,
+   "filled": 9,
+   "needsUser": 0,
+   "ready": 1,
+   "requiredLeft": 0
+  }
+ },
+ "perPlatform": {
+  "greenhouse": {
+   "forms": 61,
+   "fields": 1077,
+   "filled": 751,
+   "needsUser": 183,
+   "failed": 13,
+   "skipped": 130,
+   "ready": 12,
+   "required": 735,
+   "requiredLeft": 178,
+   "seconds": 21
+  },
+  "breezy": {
+   "forms": 32,
+   "fields": 715,
+   "filled": 489,
+   "needsUser": 52,
+   "failed": 0,
+   "skipped": 154,
+   "ready": 15,
+   "required": 272,
+   "requiredLeft": 50,
+   "seconds": 29
+  },
+  "ashby": {
+   "forms": 58,
+   "fields": 683,
+   "filled": 373,
+   "needsUser": 69,
+   "failed": 1,
+   "skipped": 240,
+   "ready": 33,
+   "required": 304,
+   "requiredLeft": 46,
+   "seconds": 11
+  },
+  "bamboohr": {
+   "forms": 20,
+   "fields": 310,
+   "filled": 209,
+   "needsUser": 29,
+   "failed": 0,
+   "skipped": 72,
+   "ready": 11,
+   "required": 44,
+   "requiredLeft": 20,
+   "seconds": 21
+  }
+ },
+ "blocked": {
+  "total": 2142,
+  "forms": 180,
+  "applicationSends": []
+ },
+ "urlChanged": [
+  "https://job-boards.greenhouse.io/zoominfo/jobs/8922316002",
+  "https://job-boards.greenhouse.io/five9/jobs/6238401004",
+  "https://job-boards.greenhouse.io/stabilityai/jobs/5031493101",
+  "https://job-boards.greenhouse.io/coreweave/jobs/4705797006",
+  "https://job-boards.greenhouse.io/zoominfo/jobs/8888394002",
+  "https://job-boards.greenhouse.io/coreweave/jobs/4690150006",
+  "https://job-boards.greenhouse.io/asana/jobs/8137748",
+  "https://job-boards.greenhouse.io/five9/jobs/5835102004",
+  "https://job-boards.greenhouse.io/sumup/jobs/8923240002",
+  "https://job-boards.greenhouse.io/asana/jobs/8282374",
+  "https://job-boards.greenhouse.io/sumup/jobs/8644753002"
+ ],
+ "errors": {},
+ "filledShare": 65.42,
+ "requiredLeftShare": 22.32,
+ "formsReady": 71,
+ "formsNeedingUser": 100,
+ "accuracy": {
+  "filled": 1822,
+  "correct": 1821,
+  "wrong": 1,
+  "unclear": 0,
+  "byRule": {
+   "correct:resume": 170,
+   "correct:profile_kind": 1006,
+   "correct:qa_heard": 1,
+   "correct:manual:profile_kind": 93,
+   "correct:work_block": 216,
+   "correct:sponsor_job_country": 27,
+   "correct:workauth_india": 12,
+   "correct:eeo_decline": 116,
+   "correct:manual:none": 49,
+   "correct:qa_salary": 30,
+   "correct:qa_onsite": 12,
+   "correct:hear": 31,
+   "correct:workauth_other_country": 8,
+   "correct:manual:qa_notice": 2,
+   "correct:workauth_job_country": 8,
+   "correct:qa_relocation": 1,
+   "correct:sponsor_india": 7,
+   "correct:qa_eeo": 8,
+   "correct:answer_same_topic": 3,
+   "correct:qa_pronouns": 12,
+   "correct:sponsor_other_country": 4,
+   "correct:qa_accommodation": 2,
+   "correct:qa_notice": 3,
+   "wrong:manual:qa_notice": 1
+  },
+  "wrongByRule": {
+   "qa_notice": 1
+  },
+  "wrongShare": 0.055,
+  "correctShare": 99.945,
+  "unclearPairs": 0,
+  "clearedAfterFill": 81,
+  "clearedForms": 38,
+  "clearedByName": {
+   "cAddress": 18,
+   "streetAddress.value": 20,
+   "city.value": 20,
+   "state.value": 3,
+   "zip.value": 20
+  }
+ }
+}

@@ -178,6 +178,30 @@ Results (every unclear answer checked by hand; audit in reports/live1000/round8-
   re-checked live.
 - Re-check of the 12 affected forms with both candidates: every fix confirmed on the live pages.
 
+## Round 11: closing the gaps against competitors; 182 fresh forms × 2 candidates (2026-11-13) → 1.0.17
+
+Asked for: improve every area where ApplyAgent was behind (comparison of 2026-11-12). Live round 9: 182 jobs never used
+before (70 Greenhouse, 60 Ashby, 32 Breezy, 20 BambooHR), US and India candidates; every send blocked.
+
+| # | Gap / flaw | Status | What changed |
+|---|---|---|---|
+| 11.1 | Round 8 fields that failed to fill (27): sentence options, two "Yes" sponsorship options, a school not in the list, US-states lists for users abroad, two LinkedIn options, "degree classification" | Fixed (1.0.17) | Read-only probe of the real lists (`e2e/probe-lists.spec.ts`); Yes/No onto sentence options; "now"/"in the future" from the user's own work authorization; school "Other" + the name in its box, flagged; "outside the United States"; "LinkedIn job search". Live: failed fills 27 → 14 |
+| 11.2 | About 70 countries unknown (Indonesia, Thailand, Iceland, Nigeria, Korea…): their sponsorship, salary and relocation questions went to the user | Fixed (1.0.17) | Countries and their main job cities; multi-country jobs answered when every country gives the same answer |
+| 11.3 | Job-requirement questions always asked (hybrid/on-site elsewhere, "based in the US or Canada", office lists, "If you live outside X…", notice period yes/no, earliest start date, "Name (first & last)", "Passport Country") | Fixed (1.0.17) | From saved facts only; 46 of round 8's 563 required asks now answered, every answer reviewed by hand (one wrong rule caught and narrowed before release) |
+| 11.4 | "Have you sold into enterprise accounts?"-type questions: no help | Done (1.0.17) | A suggestion with the resume line it rests on, used on a click; never a "No" |
+| 11.5 | Discover: no alerts; 340 companies | Done (1.0.17) | Daily job check (off by default; a number on the icon); 404 companies, each verified on its public board (2,000 was not reachable honestly) |
+| 11.6 | No resume tailoring | Done (1.0.17) | Job fit card: skills to add (only ones in the Profile), lines to lead with, skills missing (only if you have them) |
+| 11.7 | Store listing claimed Workday/iCIMS/SuccessFactors; data disclosure said "no network calls" | Fixed | Only tested platforms; every network request disclosed |
+| 11.8 | Live: "Do you currently have a notice period? When would you be available to start?" got a bare "Yes" | Fixed (1.0.17) | One question only for the notice yes/no rule; re-checked live: left for the user |
+| 11.9 | Live: "No, and not willing to relocating" chosen for a user willing to relocate (Abridge) | Fixed (1.0.17) | A "No, …" that adds a claim about relocating is never a plain No; re-checked live. The audit now checks that claim too |
+
+Results (every unclear answer checked by hand; reports/live1000/round9-us, round9-india, round9-recheck):
+- US: 171 forms with a form, 65.4% of fields filled, required left 22.3%, 71 ready; 1 wrong of 1,822 (11.8).
+- India: 171 forms, 64.9% filled, required left 23.2%, 70 ready; 2 wrong of 1,808 (11.8, 11.9).
+- Cover letters: the PDF went into 65 of 65 real upload boxes (round 8: 122 of 127).
+- Honest note: the required-left share stayed about the same as round 8 (22%) on these new forms; the round 8 wordings
+  are now answered, but new forms ask new questions. The 1,539-question labelled set stays at 0 wrong.
+
 ## Still open
 
 | Item | Why open |
@@ -186,5 +210,7 @@ Results (every unclear answer checked by hand; audit in reports/live1000/round8-
 | AI matching for reworded questions | Question model retrained on 3,465 real questions (7.5); a writing model failed the laptop test (7.1) |
 | Address existence check | Needs an online lookup; conflicts with "data never leaves the browser" |
 | Workday, iCIMS, Taleo live testing | Need accounts (user's decision); adapters tested on saved pages only (9.9) |
+| Required fields left for the user (~22%) | Mostly job-specific questions ("Have you sold into…", "Why us?"); suggestions and drafts help, but the user answers |
+| Discover beyond ~400 companies | Needs a large real source of company job boards; names that are not verified are never listed |
 | Essay writer tier thresholds and fine-tuning | Waiting on the user's Chrome-only model test on their laptop |
 

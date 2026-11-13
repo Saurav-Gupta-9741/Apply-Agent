@@ -30,6 +30,11 @@ describe("Yes/No onto options worded as sentences", () => {
     expect(yesNoOption(LUCID, "No")).toBe("Never been a contractor or an employee");
     expect(yesNoOption(["I am authorized to work in the US", "I am not authorized to work in the US"], "No")).toBe("I am not authorized to work in the US");
   });
+  it("'No, and not willing to relocate' is not a plain No (Abridge, live round 9)", () => {
+    const abridge = ["Yes", "No, but willing to relocating", "No, and not willing to relocating"];
+    expect(yesNoOption(abridge, "No")).toBeUndefined();
+    expect(yesNoOption(["Yes", "No, I do not require sponsorship"], "No")).toBe("No, I do not require sponsorship");
+  });
   it("never: two no-options, 'Not applicable', 'I prefer not to say'", () => {
     expect(yesNoOption(["I am not a veteran", "I do not wish to answer", "I am a veteran"], "No")).toBe("I am not a veteran");
     expect(yesNoOption(["Yes", "Not applicable"], "No")).toBeUndefined();
@@ -138,6 +143,8 @@ describe("where the user lives and works", () => {
 describe("notice period and names", () => {
   it("'Do you have a notice period…', 'If offered… how soon…', the earliest start date", () => {
     expect(decideWithMeaning(q("Do you have a notice period at your current job before being able to start a new role?"), IN, [])).toMatchObject({ kind: "answer", value: "Yes" });
+    // Two questions in one box (Watershed, live round 9): a bare "Yes" would leave the second unanswered.
+    expect(decideWithMeaning(q("Do you currently have a notice period? When would you available to start?", "text", []), IN, [])).not.toMatchObject({ kind: "answer", value: "Yes" });
     expect(decideWithMeaning(q("If offered this position, how soon are you available to start?", "text", []), IN, [])).toMatchObject({ kind: "answer", value: "30 days" });
     const start = decideWithMeaning(q("What is your earliest possible start date?", "date", []), IN, []);
     expect(start).toMatchObject({ kind: "answer" });
