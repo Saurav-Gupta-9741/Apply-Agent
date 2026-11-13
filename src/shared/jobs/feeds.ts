@@ -295,6 +295,12 @@ export async function fetchATSFeed(
   const feedUrl = getFeedUrl(ats, slug);
   const cached = limiter.getCached<JobPosting[]>(feedUrl);
   if (cached) return cached;
+  // Kept on this computer for 6 hours, across panel openings (round 10: every search read every board again).
+  const stored = await readStoredFeed(feedUrl);
+  if (stored) {
+    limiter.setCached(feedUrl, stored);
+    return stored;
+  }
 
   await limiter.acquire(feedUrl);
   const res = await fetchFn(feedUrl);
@@ -331,5 +337,43 @@ export async function fetchATSFeed(
   }
 
   limiter.setCached(feedUrl, postings);
+  void storeFeed(feedUrl, postings);
   return postings;
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// The feed cache on this computer: public job lists only (nothing about the user), 6 hours, pruned as it is written.
+
+const FEED_KEY = (url: string) => `feedCache:${url}`;
+const FEED_INDEX = "feedCacheIndex";
+const FEED_TTL_MS = 6 * 60 * 60 * 1000;
+const local = (): chrome.storage.LocalStorageArea | undefined =>
+  typeof chrome !== "undefined" && chrome.storage?.local ? chrome.storage.local : undefined;
+
+async function readStoredFeed(url: string): Promise<JobPosting[] | undefined> {
+  const area = local();
+  if (!area) return undefined;
+  try {
+    const entry = (await area.get(FEED_KEY(url)))[FEED_KEY(url)] as { at: number; jobs: JobPosting[] } | undefined;
+    if (!entry || !Array.isArray(entry.jobs) || Date.now() - entry.at > FEED_TTL_MS) return undefined;
+    return entry.jobs;
+  } catch {
+    return undefined;
+  }
+}
+
+async function storeFeed(url: string, jobs: JobPosting[]): Promise<void> {
+  const area = local();
+  if (!area) return;
+  try {
+    const now = Date.now();
+    const index = ((await area.get(FEED_INDEX))[FEED_INDEX] ?? {}) as Record<string, number>;
+    const expired = Object.entries(index).filter(([, at]) => now - at > FEED_TTL_MS).map(([u]) => u);
+    for (const u of expired) delete index[u];
+    index[url] = now;
+    if (expired.length) await area.remove(expired.map(FEED_KEY));
+    await area.set({ [FEED_KEY(url)]: { at: now, jobs }, [FEED_INDEX]: index });
+  } catch {
+    // Storage full or unavailable: the in-memory cache still serves this session.
+  }
 }

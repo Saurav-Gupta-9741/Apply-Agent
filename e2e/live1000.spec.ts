@@ -269,10 +269,11 @@ test("real-life: the extension fills live application forms (nothing submitted o
           options: f.field.options.slice(0, 40), name: f.field.name, section: f.field.section,
           decision: d.kind, key: d.kind === "profile" ? d.key : d.kind === "work" ? `${d.part}#${d.index + 1}` : d.kind === "ask" ? (d.topic ?? d.reason) : d.kind === "skip" ? d.reason : undefined,
           value: "value" in d ? d.value : undefined, matched: d.kind === "answer" ? d.question : undefined, source: "source" in d ? d.source : undefined,
-          status: f.status, detail: f.detail, understood: f.understood, review: f.review,
+          status: f.status, detail: f.detail, understood: f.understood, review: f.review, ms: f.ms,
           onPage: values[f.field.name] ?? undefined,
         };
       });
+      row.phases = report.phases;
       row.requiredSections = await requiredSections(page);
       // Round 8: a cover-letter upload gets the approved letter as a PDF made on this computer (ATTACH_FILE, as the
       // panel sends after "Use this answer"). Uploads to the site's storage are blocked like every other send.

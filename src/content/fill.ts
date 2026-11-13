@@ -621,7 +621,8 @@ export async function fillCombobox(input: HTMLInputElement, value: string, timeo
     typeQuery(input, query, index === 0);
     // A search answers within ~1.2 s of showing its results; nothing better comes after that. The whole list (an
     // empty search) is there at once or not at all.
-    const result = await waitAndPick(input, pick, Math.min(left, query ? timeoutMs : 3000), 1200);
+    // A typed search whose list has not opened after 3.5 s will not (round 10: 6 s waits on every location list).
+    const result = await waitAndPick(input, pick, Math.min(left, query ? Math.min(timeoutMs, 3500) : 3000), 1200);
     if (result.seen.length) seen = result.seen;
     if (result.chosen) {
       await sleep(120);

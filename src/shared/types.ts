@@ -277,6 +277,8 @@ export interface FieldResult {
   tag?: FillTag;
   /** Filled from the user's saved data because the local question model understood a wording the rules did not. */
   understood?: boolean;
+  /** How long this field took to decide and fill (milliseconds; for speed measurements). */
+  ms?: number;
 }
 
 export type RunStatus =
@@ -287,6 +289,8 @@ export type RunStatus =
   | "submitted_unconfirmed";
 
 export interface RunReport {
+  /** Where the fill spent its time (milliseconds): upload, resume settle, add blocks, meanings, fields, retype. */
+  phases?: Record<string, number>;
   status: RunStatus;
   platform: string;
   url: string;

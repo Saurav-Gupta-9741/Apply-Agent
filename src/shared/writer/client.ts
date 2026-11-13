@@ -14,6 +14,8 @@ export interface WriterSettings {
   modelId?: string;
   /** A download was under way: resume it when the panel opens again. */
   downloading?: boolean;
+  /** Start drafts by themselves after Fill when the writer is ready (never a download); on unless switched off. */
+  autoDraft?: boolean;
   /** Measured writing speed per model (tokens per second). */
   tokensPerSec?: Record<string, number>;
 }

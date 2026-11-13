@@ -664,13 +664,38 @@ export function createDraftWidget(ctx: DraftContext): HTMLElement {
 
 /** "Draft all answers" above the questions: queues every essay box of the page; the offscreen engine drafts them one
  * at a time in the background (the panel may close meanwhile). Drafts are only shown, never filled. */
+/** Questions whose draft was started by itself once (a redraw of the panel never starts them again). */
+const autoStarted = new Set<string>();
+
 export function createDraftAllBar(): HTMLElement {
   const box = el("div", "draft-all");
   const go = btn("Draft all answers", "secondary", () => void run());
   const line = el("p", "draft-note", "Writes a first answer for every long question, one after another, on this computer. Nothing goes into the form until you press \"Use this answer\" under each one.");
   line.setAttribute("aria-live", "polite");
-  box.append(go, line);
+  // Round 10: drafts start by themselves after Fill when the writer is ready, so they are written while the user checks
+  // the rest of the form (the 0.8B model needs minutes on a slow laptop). Never a download, never typed into the form.
+  const autoBox = document.createElement("input");
+  autoBox.type = "checkbox";
+  const auto = el("label", "check-label");
+  auto.append(autoBox, document.createTextNode(" Start drafts by themselves after Fill"));
+  autoBox.addEventListener("change", () => void saveWriterSettings({ autoDraft: autoBox.checked }));
+  box.append(go, line, auto);
   let ids: string[] = [];
+  void (async () => {
+    const settings = await loadWriterSettings();
+    autoBox.checked = settings.autoDraft !== false;
+    if (!autoBox.checked) return;
+    const fresh = liveWidgets().filter((w) => !autoStarted.has(w.id));
+    if (!fresh.length) return;
+    const choice = await resolveWriter();
+    const ready = choice.writer === "local" && choice.local
+      ? !!(await writer.fetchStatus()).files[choice.local.id]?.complete
+      : choice.writer === "nano" && (await nanoStatus()) === "available";
+    if (!ready || !box.isConnected) return;
+    for (const w of fresh) autoStarted.add(w.id);
+    ids = fresh.map((w) => w.id);
+    for (const w of fresh) await w.start(true);
+  })().catch(() => undefined);
 
   const update = (s: WriterStatus) => {
     if (!ids.length || !box.isConnected) return;

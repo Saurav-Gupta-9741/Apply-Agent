@@ -346,7 +346,9 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
   let outcome = field.descriptor.control === "combobox" ? await fillCombobox(el as HTMLInputElement, value, 6000,
       school ? { queries: schoolQueries(value), pick: (labels) => pickSchool(labels, value) }
         : declineOnly ? { pick: declineOnly, first: ["", "decline", "wish", "prefer not"] }
-          : home ? { queries: placeQueries(home), pick: (labels) => placeOption(labels, home, (l) => bestOption(l, value)) }
+          // The full place name first ("Austin, Texas"): Greenhouse's city search finds nothing for "Austin, TX" and
+          // only gives up after the wait (round 10: 6.2 s on every Greenhouse location list).
+          : home ? { first: placeQueries(home).slice(0, 1), queries: placeQueries(home), pick: (labels) => placeOption(labels, home, (l) => bestOption(l, value)) }
             : custom ? { pick: custom, first: yesNo || abroad ? [""] : [] } : {})
     : field.descriptor.control === "dropdown" || el.matches(DROPDOWN) ? await fillDropdown(el, value, 4000, custom)
     // Phone boxes often format the number as it is typed, or beside a country picker keep only the national part.
@@ -511,10 +513,18 @@ async function fillFormUnguarded(doc: Document, context: AgentContext): Promise<
 
   // 1. The resume first: many sites read it and fill the form themselves. Wait until that is finished, then fill
   //    only what is still empty (and flag what the site filled differently from the user's facts).
+  const phases: Record<string, number> = {};
+  let mark = Date.now();
+  const lap = (name: string) => { const now = Date.now(); phases[name] = (phases[name] ?? 0) + now - mark; mark = now; };
+  const timed = async (field: ExtractedField, meaning?: Meaning): Promise<FieldResult> => {
+    const t0 = Date.now();
+    const r = await fillOne(field, ctx, meaning);
+    return { ...r, ms: Date.now() - t0 };
+  };
   const uploads: FieldResult[] = [];
   const uploaded = new Set<Element>();
   for (const field of extractFields(root).filter((f) => f.descriptor.control === "file")) {
-    const result = await fillOne(field, ctx);
+    const result = await timed(field);
     if (result.status === "filled") uploaded.add(field.elements[0]!);
     uploads.push(result);
   }
@@ -523,10 +533,15 @@ async function fillFormUnguarded(doc: Document, context: AgentContext): Promise<
   const preRemaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file");
   await translateFieldsOnDevice(preRemaining.map((f) => f.descriptor), doc.documentElement?.lang ?? "");
   const meaningsPromise = readMeanings(preRemaining, ctx);
-  if (uploaded.size) await settle(doc, 1000, 10_000, 2000);
+  lap("upload");
+  // Resume parsers start a moment after the upload. A value the page clears afterwards is typed again in step 4, so
+  // the wait ends as soon as the form is quiet (round 10: a fixed 2 s on every form).
+  if (uploaded.size) await settle(doc, 700, 10_000, 800);
+  lap("resumeSettle");
   // 2. One block per job in the work history ("Add another" in a repeating experience section).
   await addWorkBlocks(doc, ctx);
   await addEducationBlock(doc, ctx);
+  lap("addBlocks");
   // 3. Everything else, read again: the page may have changed meanwhile.
   const rest: FieldResult[] = [];
   const remaining = extractFields(locate(doc).root ?? root).filter((f) => f.descriptor.control !== "file"); // files: step 1
@@ -537,11 +552,12 @@ async function fillFormUnguarded(doc: Document, context: AgentContext): Promise<
     const postMeanings = await readMeanings(newFields, ctx);
     for (const [label, m] of postMeanings) meanings.set(label, m);
   }
+  lap("meanings");
   for (const [index, field] of remaining.entries()) {
     // A robot check that appears while filling (some sites show one after a few fields): stop right there.
     const challenge = challengeNow();
     if (challenge) return challengeReport({ ...report, fields: [...uploads, ...rest] }, challenge.kind, challenge.detail);
-    const res = await fillOne(field, ctx, meanings.get(field.descriptor.label));
+    const res = await timed(field, meanings.get(field.descriptor.label));
     if (res.status === "filled" && (res.decision.kind === "profile" || res.decision.kind === "answer" || res.decision.kind === "work")) {
       trackCorrection(doc, field);
     }
@@ -562,9 +578,11 @@ async function fillFormUnguarded(doc: Document, context: AgentContext): Promise<
       ? { ...again, detail: again.detail ?? "typed again: the page had cleared it" }
       : { ...res, status: "failed", detail: "the page cleared this value: type it yourself" };
   }
+  lap("fields");
   const results = [...uploads, ...rest];
 
   report.fields = results;
+  report.phases = phases;
   const after = challengeNow();
   if (after) return challengeReport(report, after.kind, after.detail);
   report.captcha = hasCaptcha(doc);

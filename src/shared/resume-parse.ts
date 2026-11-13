@@ -918,7 +918,10 @@ function linkWord(items: PdfItem[], rect: number[]): string {
 /** Extracts positioned text from a PDF byte buffer and turns it into readable lines. */
 export async function extractPdfText(bytes: Uint8Array): Promise<string> {
   const isNode = typeof window === "undefined" && typeof process !== "undefined" && process.versions?.node;
-  const pdfjs: any = isNode ? await import("pdfjs-dist/legacy/build/pdf.mjs") : await import("pdfjs-dist");
+  // The legacy build is for Node (tests) only: a path the bundler cannot see keeps it out of the extension (round 10:
+  // it shipped as a second 790 KB copy of the PDF reader).
+  const nodeBuild = ["pdfjs-dist", "legacy", "build", "pdf.mjs"].join("/");
+  const pdfjs: any = isNode ? await import(/* @vite-ignore */ nodeBuild) : await import("pdfjs-dist");
   if (typeof chrome !== "undefined" && chrome.runtime?.getURL) {
     pdfjs.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL("pdf.worker.mjs");
   }

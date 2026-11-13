@@ -1,0 +1,828 @@
+[
+ {
+  "label": "Field of Study",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "discipline",
+  "source": "round8-us"
+ },
+ {
+  "label": "Will you now or in the future require sponsorship to work at Culture Amp?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round8-us"
+ },
+ {
+  "label": "Do you identify as Hispanic or Latinx (“Hispanic / Latinx” refers to people with cultural history from Spanish-speaking and/or Latin American countries)?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "race",
+  "source": "round8-us"
+ },
+ {
+  "label": "Race / Ethnicity (Select all that apply)",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "race",
+  "source": "round8-us"
+ },
+ {
+  "label": "Disability",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "disability",
+  "source": "round8-us"
+ },
+ {
+  "label": "Are you legally authorized to work in the United States without employer sponsorship now or in the future?",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round8-us"
+ },
+ {
+  "label": "What are your salary expectations for this role? Please note that final compensation is determined by various factors such as years of relevant work experience, skills, qualifications, certifications, and other business considerations.",
+  "control": "text",
+  "rule": "live:answer",
+  "intent": "salary_expected",
+  "source": "round8-us"
+ },
+ {
+  "label": "If you're happy, please share a link to your GitHub profile",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "github",
+  "source": "round8-us"
+ },
+ {
+  "label": "What is your ethnicity?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "race",
+  "source": "round8-us"
+ },
+ {
+  "label": "Are you legally authorized to work in the UK?",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round8-us"
+ },
+ {
+  "label": "Will you now or in the future require visa sponsorship to work in the UK?",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round8-us"
+ },
+ {
+  "label": "Are you legally authorized to work for any U.S. employer?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round8-us"
+ },
+ {
+  "label": "Will you now, or in the future, require employment sponsorship?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round8-us"
+ },
+ {
+  "label": "In which city are you located?",
+  "control": "combobox",
+  "rule": "live:profile",
+  "intent": "location",
+  "source": "round8-us"
+ },
+ {
+  "label": "Do you now, or will you in the future, require sponsorship for employment visa status to work legally for our Company in Canada?",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round8-us"
+ },
+ {
+  "label": "Most recent company:",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "currentCompany",
+  "source": "round8-us"
+ },
+ {
+  "label": "Phonetic Pronunciation",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "phone",
+  "source": "round8-us"
+ },
+ {
+  "label": "What are your annual base salary expectations?",
+  "control": "number",
+  "rule": "live:answer",
+  "intent": "salary_expected",
+  "source": "round8-us"
+ },
+ {
+  "label": "Are you authorized to work in the United States for any employer?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round8-us"
+ },
+ {
+  "label": "I identify my ethnicity as (mark all that apply):",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "race",
+  "source": "round8-us"
+ },
+ {
+  "label": "I have a physical disability:",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "disability",
+  "source": "round8-us"
+ },
+ {
+  "label": "Will you now, or in the future, require sponsorship for employment visa status (e.g. H-1B, OPT, etc.)?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round8-us"
+ },
+ {
+  "label": "LinkedIn Profile (Please include to be sure you're a real person)",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "linkedin",
+  "source": "round8-us"
+ },
+ {
+  "label": "Will you now or in the future require visa sponsorship for employment with Miro?",
+  "control": "select",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round8-us"
+ },
+ {
+  "label": "Are you authorized to work in the United Kingdom?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round8-us"
+ },
+ {
+  "label": "What are your minimum base salary expectations?",
+  "control": "number",
+  "rule": "live:answer",
+  "intent": "salary_expected",
+  "source": "round8-us"
+ },
+ {
+  "label": "Do you require any reasonable adjustments for your interview with us?",
+  "control": "text",
+  "rule": "live:answer",
+  "intent": "accommodation",
+  "source": "round8-us"
+ },
+ {
+  "label": "Please share your LinkedIn profile",
+  "control": "url",
+  "rule": "live:profile",
+  "intent": "linkedin",
+  "source": "round8-us"
+ },
+ {
+  "label": "Do you currently, or will you in the future require Visa sponsorship for this position?",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round8-us"
+ },
+ {
+  "label": "Preferred Full Name",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "fullName",
+  "source": "round8-us"
+ },
+ {
+  "label": "Legal Surname",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "lastName",
+  "source": "round8-us"
+ },
+ {
+  "label": "Are you legally authorized to work in USA?",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round8-us"
+ },
+ {
+  "label": "What are your salary expectations",
+  "control": "textarea",
+  "rule": "live:answer",
+  "intent": "salary_expected",
+  "source": "round8-us"
+ },
+ {
+  "label": "What is your current location (city, state and country)?",
+  "control": "combobox",
+  "rule": "live:profile",
+  "intent": "location",
+  "source": "round8-us"
+ },
+ {
+  "label": "What would your salary expectations be?",
+  "control": "text",
+  "rule": "live:answer",
+  "intent": "salary_expected",
+  "source": "round8-us"
+ },
+ {
+  "label": "Preferred First Name & Last Name",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "fullName",
+  "source": "round8-us"
+ },
+ {
+  "label": "What is your full name?",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "fullName",
+  "source": "round8-us"
+ },
+ {
+  "label": "What is your email?",
+  "control": "email",
+  "rule": "live:profile",
+  "intent": "email",
+  "source": "round8-us"
+ },
+ {
+  "label": "What is your phone number?",
+  "control": "tel",
+  "rule": "live:profile",
+  "intent": "phone",
+  "source": "round8-us"
+ },
+ {
+  "label": "What is your LinkedIn profile URL?",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "linkedin",
+  "source": "round8-us"
+ },
+ {
+  "label": "What is your GitHub username?",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "github",
+  "source": "round8-us"
+ },
+ {
+  "label": "Link to your Github profile",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "github",
+  "source": "round8-us"
+ },
+ {
+  "label": "Portfolio / Github URL",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "github",
+  "source": "round8-us"
+ },
+ {
+  "label": "Do you have the legal right to work in the UK without sponsorship?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round8-us"
+ },
+ {
+  "label": "Will you now, or in the future, require sponsorship for employment Visa status (e.g., H-1B, visa status)?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round8-us"
+ },
+ {
+  "label": "Do you require work authorization?",
+  "control": "text",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round8-india"
+ },
+ {
+  "label": "Notice Period (months)",
+  "control": "number",
+  "rule": "live:answer",
+  "intent": "notice_period",
+  "source": "round8-india"
+ },
+ {
+  "label": "Do you currently have, and will you continue to have, the legal right to work in the country where this role is based without the need for employer support (such as a visa or work permit)?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round8-india"
+ },
+ {
+  "label": "Who is your current/most recent employer?",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "currentCompany",
+  "source": "round9-us"
+ },
+ {
+  "label": "What is your current/most recent job title?",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "currentTitle",
+  "source": "round9-us"
+ },
+ {
+  "label": "Are you authorized to work lawfully in the United States for any employer?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round9-us"
+ },
+ {
+  "label": "Are you committed to working from the office location specified in this job description at least twice a week?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "onsite",
+  "source": "round9-us"
+ },
+ {
+  "label": "Are you legally authorised to work in the UK?",
+  "control": "text",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round9-us"
+ },
+ {
+  "label": "Will you now or in the future require sponsorship for employment visa status in the United States?",
+  "control": "select",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round9-us"
+ },
+ {
+  "label": "This role requires on-site work 5 days/week in our Pleasanton, CA headquarters. Are you able to meet this requirement?",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "onsite",
+  "source": "round9-us"
+ },
+ {
+  "label": "Are you within a 50 mile radius of our San Francisco office and able to come in at least 2 times per week?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "onsite",
+  "source": "round9-us"
+ },
+ {
+  "label": "What state do you live in?",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "state",
+  "source": "round9-us"
+ },
+ {
+  "label": "Salary expectations, base and total?",
+  "control": "text",
+  "rule": "live:answer",
+  "intent": "salary_expected",
+  "source": "round9-us"
+ },
+ {
+  "label": "Are you comfortable committing to an in-office work schedule of 5 days per week?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "onsite",
+  "source": "round9-us"
+ },
+ {
+  "label": "Right to Work : Do you currently have the legal right to work in the country without requiring sponsorship?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round9-us"
+ },
+ {
+  "label": "Hybrid Policy : This role requires being on‑site in the office 4 days per week, with the option to work from home 1 day per week. Are you able and willing to meet this requirement?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "onsite",
+  "source": "round9-us"
+ },
+ {
+  "label": "Salary Expectation : What is your expected total annual gross salary for this role, including both base salary or/and any variable components (e.g., based paid and bonus or commission)?",
+  "control": "text",
+  "rule": "live:answer",
+  "intent": "salary_expected",
+  "source": "round9-us"
+ },
+ {
+  "label": "Are you eligible to work in Sweden?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round9-us"
+ },
+ {
+  "label": "Do you now or will you in the future require visa sponsorship for work authorization?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round9-us"
+ },
+ {
+  "label": "Are you authorized to work in the UK for any employer?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round9-us"
+ },
+ {
+  "label": "What is your expected compensation?",
+  "control": "text",
+  "rule": "live:answer",
+  "intent": "salary_expected",
+  "source": "round9-us"
+ },
+ {
+  "label": "Would you like to make us aware of any disability that would impact your application process?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "disability",
+  "source": "round9-us"
+ },
+ {
+  "label": "Are you authorized to work in the listed country of hire for any employer?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round9-us"
+ },
+ {
+  "label": "Will you now, or in the future, require sponsorship for employment visa status in order to work in France?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round9-us"
+ },
+ {
+  "label": "Please share if you will need any accommodations during the interview process if your application is selected.",
+  "control": "textarea",
+  "rule": "live:answer",
+  "intent": "accommodation",
+  "source": "round9-us"
+ },
+ {
+  "label": "Do you now, or will you in the future, require Ouraring sponsorship for employment-based immigration status (e.g. H-1B or other status) in order to work for Ouraring?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round9-us"
+ },
+ {
+  "label": "LinkedIn profille",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "linkedin",
+  "source": "round9-us"
+ },
+ {
+  "label": "Will you be able to in the Raleigh, NC Office 3 days a week?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "onsite",
+  "source": "round9-us"
+ },
+ {
+  "label": "Do you currently require, or will you in the future require, visa sponsorship?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round9-us"
+ },
+ {
+  "label": "Your Preferred Name",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "firstName",
+  "source": "round9-us"
+ },
+ {
+  "label": "Your Salary Expectations",
+  "control": "number",
+  "rule": "live:answer",
+  "intent": "salary_expected",
+  "source": "round9-us"
+ },
+ {
+  "label": "Do you belong to a protected category or hold an officially recognized disability status under your local legislation (e.g., Law 68/99 in Italy, LIGDV in Spain, ADEM status in Luxembourg)?",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "disability",
+  "source": "round9-us"
+ },
+ {
+  "label": "LinkedIn Profile, if available",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "linkedin",
+  "source": "round9-us"
+ },
+ {
+  "label": "Do you now or in the future require visa sponsorship to work in the United Kingdom?",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round9-us"
+ },
+ {
+  "label": "This position is not remote and requires regular on-site work. Are you able and willing to meet this requirement?",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "onsite",
+  "source": "round9-us"
+ },
+ {
+  "label": "Are you legally authorized to work in the United States and able to provide documentation of work authorization upon hire?",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round9-us"
+ },
+ {
+  "label": "Nom complet",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "fullName",
+  "source": "round9-us"
+ },
+ {
+  "label": "Adresse courriel",
+  "control": "email",
+  "rule": "live:profile",
+  "intent": "email",
+  "source": "round9-us"
+ },
+ {
+  "label": "Numéro de téléphone",
+  "control": "tel",
+  "rule": "live:profile",
+  "intent": "phone",
+  "source": "round9-us"
+ },
+ {
+  "label": "Lieu de résidence permanente",
+  "control": "combobox",
+  "rule": "live:profile",
+  "intent": "location",
+  "source": "round9-us"
+ },
+ {
+  "label": "What is the location where you permanently reside?",
+  "control": "combobox",
+  "rule": "live:profile",
+  "intent": "location",
+  "source": "round9-us"
+ },
+ {
+  "label": "Profilo LinkedIn",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "linkedin",
+  "source": "round9-us"
+ },
+ {
+  "label": "Numero di Telefono",
+  "control": "tel",
+  "rule": "live:profile",
+  "intent": "phone",
+  "source": "round9-us"
+ },
+ {
+  "label": "Linkedin or Personal Website Link",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "linkedin",
+  "source": "round9-us"
+ },
+ {
+  "label": "Highest level of education completed",
+  "control": "combobox",
+  "rule": "live:profile",
+  "intent": "degree",
+  "source": "round9-us"
+ },
+ {
+  "label": "Will you now or in the future require visa sponsorship? If yes, select the type of sponsorship.",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round9-us"
+ },
+ {
+  "label": "LinkedIn or Professional Website:",
+  "control": "url",
+  "rule": "live:profile",
+  "intent": "linkedin",
+  "source": "round9-us"
+ },
+ {
+  "label": "What is your desired salary range for this role, including base and any variable or on-target earnings?",
+  "control": "text",
+  "rule": "live:answer",
+  "intent": "salary_expected",
+  "source": "round9-us"
+ },
+ {
+  "label": "Full Name (Preferred format : First Name LAST NAME)",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "fullName",
+  "source": "round9-us"
+ },
+ {
+  "label": "Physical Mailing Address",
+  "control": "textarea",
+  "rule": "live:profile",
+  "intent": "address",
+  "source": "round9-us"
+ },
+ {
+  "label": "Mobile Number",
+  "control": "tel",
+  "rule": "live:profile",
+  "intent": "phone",
+  "source": "round9-us"
+ },
+ {
+  "label": "If offered this position, how soon are you available to start?",
+  "control": "text",
+  "rule": "live:answer",
+  "intent": "notice_period",
+  "source": "round9-us"
+ },
+ {
+  "label": "Most Recent Company",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "currentCompany",
+  "source": "round9-us"
+ },
+ {
+  "label": "Vor- und Nachname",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "fullName",
+  "source": "round9-us"
+ },
+ {
+  "label": "E-Mail Adresse",
+  "control": "email",
+  "rule": "live:profile",
+  "intent": "email",
+  "source": "round9-us"
+ },
+ {
+  "label": "Telefonnummer",
+  "control": "tel",
+  "rule": "live:profile",
+  "intent": "phone",
+  "source": "round9-us"
+ },
+ {
+  "label": "LinkedIn oder Web",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "linkedin",
+  "source": "round9-us"
+ },
+ {
+  "label": "What city are you current based in?",
+  "control": "combobox",
+  "rule": "live:profile",
+  "intent": "location",
+  "source": "round9-us"
+ },
+ {
+  "label": "When would you be able to start?",
+  "control": "text",
+  "rule": "live:answer",
+  "intent": "notice_period",
+  "source": "round9-us"
+ },
+ {
+  "label": "What are your salary expectations (EUR gross/annually)?",
+  "control": "text",
+  "rule": "live:answer",
+  "intent": "salary_expected",
+  "source": "round9-us"
+ },
+ {
+  "label": "Please share a link to your LinkedIn or portfolio:",
+  "control": "url",
+  "rule": "live:profile",
+  "intent": "linkedin",
+  "source": "round9-us"
+ },
+ {
+  "label": "What is your target compensation for this role?",
+  "control": "text",
+  "rule": "live:answer",
+  "intent": "salary_expected",
+  "source": "round9-us"
+ },
+ {
+  "label": "Voluntary Information: Severe Disability / Equal Status",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "disability",
+  "source": "round9-us"
+ },
+ {
+  "label": "Current or Most Recent Company",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "currentCompany",
+  "source": "round9-us"
+ },
+ {
+  "label": "Current or Most Recent Role Title",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "currentTitle",
+  "source": "round9-us"
+ },
+ {
+  "label": "Legal First and Last Name",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "fullName",
+  "source": "round9-us"
+ },
+ {
+  "label": "Current or Most Recent Employer",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "currentCompany",
+  "source": "round9-us"
+ },
+ {
+  "label": "University or School Attended",
+  "control": "text",
+  "rule": "live:profile",
+  "intent": "school",
+  "source": "round9-us"
+ },
+ {
+  "label": "Will you now or will you in the future require employment visa sponsorship?",
+  "control": "radio",
+  "rule": "live:answer",
+  "intent": "sponsorship",
+  "source": "round9-us"
+ },
+ {
+  "label": "Are you legally authorized to work in the United States of America?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round9-india"
+ },
+ {
+  "label": "Select which best describes your right to work in the US?",
+  "control": "combobox",
+  "rule": "live:answer",
+  "intent": "work_authorization",
+  "source": "round9-india"
+ },
+ {
+  "label": "Which state do you currently reside in?",
+  "control": "combobox",
+  "rule": "live:profile",
+  "intent": "state",
+  "source": "round9-india"
+ },
+ {
+  "label": "Paese",
+  "control": "combobox",
+  "rule": "live:profile",
+  "intent": "country",
+  "source": "round9-india"
+ }
+]

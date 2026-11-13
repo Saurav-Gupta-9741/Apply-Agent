@@ -1021,7 +1021,7 @@ function renderQuestions(report: RunReport): void {
   // Two or more essay boxes: one button drafts them all, one at a time, on this computer (shown only, never filled).
   // Never on a form whose employer bans AI; questions with a planted AI test do not count (they get no draft).
   const draftable = pending.filter((r) => isDraftableField(r.field) && r.decision.kind === "ask" && !aiTrapOf(`${r.field.label} ${r.field.hint ?? ""}`));
-  if (!draftsForbidden(aiRule) && draftable.length >= 2) box.append(createDraftAllBar());
+  if (!draftsForbidden(aiRule) && draftable.length >= 1) box.append(createDraftAllBar());
   for (const r of pending) {
     box.append(questionCard(r, {
       job,
