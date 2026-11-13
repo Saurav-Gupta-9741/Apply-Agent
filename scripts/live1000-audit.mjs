@@ -230,7 +230,7 @@ function judge(f, row) {
   }
   const needsAsk = !authWithout && /\b(need|require|requir(es|ing))\b[^?]{0,60}\b(visa|work permit|sponsor\w*|right to work support)\b/.test(label);
   if ((isWorkAuth(q) || authWithout) && !needsAsk && !needsWorkAuth && (f.decision === "answer" || YES.test(c) || NO.test(c))) {
-    const cs = countriesIn(q.replace(/((?:e.?s?g.?|i.?s?e.?|for example|for instance|such as|including|like)[s.:,][^)]*)/gi, " "));
+    const cs = countriesIn(q.replace(/\((?:e\.?\s?g\.?|i\.?\s?e\.?|for example|for instance|such as|including|like)[\s.:,][^)]*\)/gi, " "));
     const yes = YES.test(c) || /authori[sz]ed|eligible/.test(c) && !/not/.test(c);
     const no = NO.test(c);
     if (cs.length === 1 && cs[0] === HOME) return yes ? r("correct", "workauth_india", `authorized in ${HOME}`) : r("wrong", "workauth_india", `answered "${chosen ?? value}" for ${HOME}`);
@@ -245,7 +245,7 @@ function judge(f, row) {
   }
   // Sponsorship.
   if (isSponsor(q) && !authWithout && !needsWorkAuth && (f.decision === "answer" || YES.test(c) || NO.test(c))) {
-    const cs = countriesIn(q.replace(/((?:e.?s?g.?|i.?s?e.?|for example|for instance|such as|including|like)[s.:,][^)]*)/gi, " "));
+    const cs = countriesIn(q.replace(/\((?:e\.?\s?g\.?|i\.?\s?e\.?|for example|for instance|such as|including|like)[\s.:,][^)]*\)/gi, " "));
     // Judged on the question only: help text often explains both answers ("Mark NO if you will NOT require…").
     // Bracketed notes ("(…applies even if you don't need sponsorship immediately…)") do not turn the question round.
     const inverted = INVERTED.test(label.replace(/\([^)]*\)|\[[^\]]*\]/g, " "));
@@ -333,7 +333,7 @@ function judge(f, row) {
   if (f.decision === "answer") {
     const m = norm(f.matched);
     if (/where you live/.test(m) && /(located|based|reside|live|living)\b/.test(q)) {
-      const cs = countriesIn(q.replace(/((?:e.?s?g.?|i.?s?e.?|for example|for instance|such as|including|like)[s.:,][^)]*)/gi, " "));
+      const cs = countriesIn(q.replace(/\((?:e\.?\s?g\.?|i\.?\s?e\.?|for example|for instance|such as|including|like)[\s.:,][^)]*\)/gi, " "));
       const yes = YES.test(c), no = NO.test(c);
       // "No, and not willing to relocate": the chosen option also says whether the candidate would move, and both test
       // candidates saved "willing to relocate" (round 9, Abridge).

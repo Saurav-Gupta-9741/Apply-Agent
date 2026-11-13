@@ -146,8 +146,15 @@ describe("live round 10", () => {
     expect(decideWithMeaning(q(label, "combobox"), US, [], at("Japan"))).toMatchObject({ kind: "answer", value: "Yes" });
     expect(decideWithMeaning(q(label, "combobox"), US, [], at("United States"))).toMatchObject({ kind: "answer", value: "No" });
   });
+  it("variable pay, commission or bonus is never the salary expectation", () => {
+    const paid = { ...US, facts: { ...baseFacts, expectedCtc: "120000" } } as unknown as Profile;
+    expect(decideWithMeaning(q("What is your expected annual variable compensation (ex. commission)?", "text", []), paid, [], at("United States"))).not.toMatchObject({ kind: "answer" });
+    expect(decideWithMeaning(q("What is your expected salary?", "text", []), paid, [], at("United States"))).toMatchObject({ kind: "answer" });
+  });
   it("'employed or refused employment by…' is not answered from the work history", () => {
     expect(decideWithMeaning(q("Have you ever been employed or refused employment by Couples Negril?", "combobox"), US, [], at("Jamaica"))).not.toMatchObject({ kind: "answer" });
+    // The question model's path too (it reads these as previous-employer questions).
+    expect(decideWithMeaning(q("Have you ever been employed or refused employment by Couples Sans Souci?", "combobox"), US, [], at("Jamaica"), { intent: "previous_employee", confidence: 0.99 } as never)).not.toMatchObject({ kind: "answer" });
   });
 });
 

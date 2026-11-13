@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-13T12:11:29.119Z",
+ "generatedAt": "2026-11-13T13:16:38.229Z",
  "accuracy": {
   "filled": 1905,
   "correct": 1892,
@@ -8,7 +8,7 @@
   "byRule": {
    "correct:resume": 172,
    "correct:profile_kind": 1042,
-   "correct:sponsor_job_country": 31,
+   "correct:sponsor_job_country": 26,
    "correct:manual:profile_kind": 99,
    "correct:qa_salary": 33,
    "correct:work_block": 189,
@@ -17,6 +17,7 @@
    "correct:eeo_decline": 136,
    "correct:manual:qa_notice": 4,
    "correct:manual:none": 42,
+   "correct:sponsor_india": 9,
    "correct:qa_accommodation": 4,
    "correct:qa_onsite": 9,
    "correct:qa_eeo": 15,
@@ -26,12 +27,11 @@
    "correct:qa_notice": 5,
    "correct:where_live": 3,
    "wrong:sponsor_job_country": 1,
-   "correct:sponsor_india": 5,
    "correct:qa_pronouns": 12,
    "wrong:manual:none": 12,
    "correct:manual:sponsor_unnamed_country": 2,
    "correct:years_generic": 2,
-   "correct:sponsor_other_country": 1,
+   "correct:sponsor_other_country": 2,
    "correct:answer_same_topic": 2,
    "correct:workauth_other_country": 2
   },
@@ -1848,8 +1848,8 @@
    "onPage": "No",
    "pair": "answer | Quick answers › sponsorship | will you now or in the future require sponsorship for employment visa status in the united states? | no",
    "verdict": "correct",
-   "rule": "sponsor_job_country",
-   "reason": "no sponsorship for a job in United States"
+   "rule": "sponsor_india",
+   "reason": "no sponsorship needed in United States"
   },
   {
    "company": "prolift-rigging",
@@ -3840,8 +3840,8 @@
    "onPage": "No",
    "pair": "answer | Quick answers › sponsorship | will you now or in the future require sponsorship for employment visa status in the united states? | no",
    "verdict": "correct",
-   "rule": "sponsor_job_country",
-   "reason": "no sponsorship for a job in United States"
+   "rule": "sponsor_india",
+   "reason": "no sponsorship needed in United States"
   },
   {
    "company": "prolift-rigging",
@@ -32455,8 +32455,8 @@
    "matched": "Quick answers › sponsorship",
    "pair": "answer | Quick answers › sponsorship | do you now, or will you in the future, require sponsorship for employment visa status in the united states? | no, i will not require sponsorship for a visa to work in the united states.",
    "verdict": "correct",
-   "rule": "sponsor_job_country",
-   "reason": "no sponsorship for a job in United States"
+   "rule": "sponsor_india",
+   "reason": "no sponsorship needed in United States"
   },
   {
    "company": "helpscout",
@@ -33379,8 +33379,8 @@
    "matched": "Quick answers › sponsorship",
    "pair": "answer | Quick answers › sponsorship | do you now, or will you in the future, require sponsorship for employment visa status in the united states? | no, i will not require sponsorship for a visa to work in the united states.",
    "verdict": "correct",
-   "rule": "sponsor_job_country",
-   "reason": "no sponsorship for a job in United States"
+   "rule": "sponsor_india",
+   "reason": "no sponsorship needed in United States"
   },
   {
    "company": "helpscout",
@@ -34536,8 +34536,8 @@
    "matched": "Quick answers › sponsorship",
    "pair": "answer | Quick answers › sponsorship | would you require sponsorship to work in the uk? | yes",
    "verdict": "correct",
-   "rule": "sponsor_job_country",
-   "reason": "needs sponsorship for a job in United Kingdom"
+   "rule": "sponsor_other_country",
+   "reason": "needs sponsorship for United Kingdom"
   },
   {
    "company": "moneybox",

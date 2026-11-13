@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-13T12:11:29.119Z",
+ "generatedAt": "2026-11-13T13:16:38.229Z",
  "inputs": [
   "results-r10-us-a.jsonl",
   "results-r10-us-b.jsonl"
@@ -1156,7 +1156,7 @@
   "byRule": {
    "correct:resume": 172,
    "correct:profile_kind": 1042,
-   "correct:sponsor_job_country": 31,
+   "correct:sponsor_job_country": 26,
    "correct:manual:profile_kind": 99,
    "correct:qa_salary": 33,
    "correct:work_block": 189,
@@ -1165,6 +1165,7 @@
    "correct:eeo_decline": 136,
    "correct:manual:qa_notice": 4,
    "correct:manual:none": 42,
+   "correct:sponsor_india": 9,
    "correct:qa_accommodation": 4,
    "correct:qa_onsite": 9,
    "correct:qa_eeo": 15,
@@ -1174,12 +1175,11 @@
    "correct:qa_notice": 5,
    "correct:where_live": 3,
    "wrong:sponsor_job_country": 1,
-   "correct:sponsor_india": 5,
    "correct:qa_pronouns": 12,
    "wrong:manual:none": 12,
    "correct:manual:sponsor_unnamed_country": 2,
    "correct:years_generic": 2,
-   "correct:sponsor_other_country": 1,
+   "correct:sponsor_other_country": 2,
    "correct:answer_same_topic": 2,
    "correct:workauth_other_country": 2
   },

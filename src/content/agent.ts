@@ -348,7 +348,9 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
         : declineOnly ? { pick: declineOnly, first: ["", "decline", "wish", "prefer not"] }
           // The full place name first ("Austin, Texas"): Greenhouse's city search finds nothing for "Austin, TX" and
           // only gives up after the wait (round 10: 6.2 s on every Greenhouse location list).
-          : home ? { first: placeQueries(home).slice(0, 1), queries: placeQueries(home), pick: (labels) => placeOption(labels, home, (l) => bestOption(l, value)) }
+          // Only when the saved location uses a short state code: otherwise the user's own wording goes first ("Pune"
+          // first, never the country "India" before it).
+          : home ? { first: /,\s*[A-Z]{2}\s*$/.test(value) ? placeQueries(home).filter((p) => p.includes(",")).slice(0, 1) : [], queries: placeQueries(home), pick: (labels) => placeOption(labels, home, (l) => bestOption(l, value)) }
             : custom ? { pick: custom, first: yesNo || abroad ? [""] : [] } : {})
     : field.descriptor.control === "dropdown" || el.matches(DROPDOWN) ? await fillDropdown(el, value, 4000, custom)
     // Phone boxes often format the number as it is typed, or beside a country picker keep only the national part.

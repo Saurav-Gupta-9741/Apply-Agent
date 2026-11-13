@@ -202,6 +202,27 @@ Results (every unclear answer checked by hand; reports/live1000/round9-us, round
 - Honest note: the required-left share stayed about the same as round 8 (22%) on these new forms; the round 8 wordings
   are now answered, but new forms ask new questions. The 1,539-question labelled set stays at 0 wrong.
 
+## Round 12: speed and accuracy of the existing features; 182 fresh forms × 2 candidates (2026-11-13/14) → 1.0.18
+
+Asked for: faster and more accurate processing, always tested on real application forms.
+
+| # | Item | Status | Measured on real forms |
+|---|---|---|---|
+| 12.1 | Fill speed: the full place name searched first ("Austin, Texas"), typed searches give up after 3.5 s (was 6 s), the resume wait ends when the form is quiet (min 0.8 s, was 2 s); every field and phase timed | Done | Same 40 live forms before/after: fill time median 4.9 s → 3.1 s (Greenhouse 10.9 → 4.0 s); filled 412 → 412, required left 75 → 75, wrong 0 of 412. Fresh round 10: whole form incl. page load median 19 s → 15 s |
+| 12.2 | Question model retrained with 118 new live-verified wordings | Not shipped | Held-out accuracy on the original 3,465 questions 79.2% → 79.1%, precision 97.8% → 97.8%: no gain, the shipped model is unchanged (labels kept) |
+| 12.3 | Drafts start by themselves after Fill when the writer is ready (setting, on by default; never a download) | Done | The writer already streams and uses Chrome's built-in model first; on a slow laptop the 0.8B model stays minutes per letter |
+| 12.4 | Discover: job lists kept on this computer for 6 hours | Done | Repeat searches read no boards (unit-tested) |
+| 12.5 | Bundle: the Node-only PDF reader no longer ships | Done | 47 → 46 MB |
+| 12.6 | Live: New Relic's Tokyo job, "(e.g. U.S. F-1, H-1B…)" read as a US question → "No sponsorship" | Fixed | Countries named as examples are ignored; re-checked live: "Yes" |
+| 12.7 | Live: "Have you ever been employed or refused employment by Couples…?" → "No" (12 fields per candidate, one employer) | Fixed | Never answered from the work history, on every path (the question model's too); re-checked live: 0 of 28 filled |
+| 12.8 | Live: "expected annual variable compensation (ex. commission)" got the whole salary | Fixed | Variable pay, bonus and equity questions are the user's; re-checked live |
+| 12.9 | Audit: the pronoun "us" read as the United States; Latvia unknown | Fixed | Rounds 9 and 10 re-audited |
+
+Results (every unclear answer checked by hand; reports/live1000/round10-us, round10-india, round10-recheck):
+- US: 176 forms with a form, 63.5% filled, required left 25.8%, 65 ready; 13 wrong of 1,905 (12 from 12.7, 1 from 12.6).
+- India: 176 forms, 63.0% filled, required left 26.4%, 61 ready; 13 wrong of 1,889 (12 from 12.7, 1 from 12.8).
+- Cover letters: 74 of 75 and 75 of 75 real uploads. All wrong answers fixed and re-checked on the live pages.
+
 ## Still open
 
 | Item | Why open |

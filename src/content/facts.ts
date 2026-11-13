@@ -96,7 +96,7 @@ function theQuestion(label: string): string | undefined {
 
 /** The question without its examples: "(e.g. U.S. F-1, H-1B, TN…)" names visa types, not the job's country (New Relic,
  * a job in Tokyo, live round 10: answered for the US). */
-export const withoutExamples = (label: string): string => label.replace(/((?:e.?s?g.?|i.?s?e.?|for example|for instance|such as|including|like)[s.:,][^)]*)/gi, " ");
+export const withoutExamples = (label: string): string => label.replace(/\((?:e\.?\s?g\.?|i\.?\s?e\.?|for example|for instance|such as|including|like)[\s.:,][^)]*\)/gi, " ");
 
 /** What a yes/no about working there means: the user's right to work, or their need for a visa. */
 const ABOUT_WORKING = /authori[sz]|eligib|entitled|right to work|permitted|legally|sponsor|visa|immigration|work permit|permission to work|droit de travailler|droit au travail|derecho a trabajar|direito de trabalhar|arbeitsberechtigung|berechtigt|arbeitserlaubnis|arbeitsvisum|arbeitsgenehmigung|visum|autoris|permis de travail|autoriz|permiso de trabajo|autorizacao de trabalho|visto de trabalho|permissao de trabalho|werkvergunning|gerechtigd|permesso|parrainage|patrocinio/;
@@ -303,6 +303,8 @@ function salaryAnswer(field: FieldDescriptor, facts: QuickFacts, page?: PageFact
   // Not a request for the figure itself (live run 3): "If there's anything else you'd like to mention regarding expected
   // salary…", "Salary growth expectations", "…fixed/variable compensation breakdown", "Of this amount, how much…".
   if (/\b(anything else|growth|breakdown|split|of this amount|how much (of|do you expect for))\b/.test(q)) return undefined;
+  // Only part of the pay: "expected annual variable compensation (ex. commission)?" (live round 10), bonus, equity.
+  if (/\b(variable|commission|commissions|bonus|incentive|equity|stock|rsu|rsus|sign on|signing)\b/.test(q) && !/\b(base|total|overall|ote|on target)\b/.test(q)) return undefined;
   // "Is your current salary negotiable?" asks yes or no. "Could you please share your expectations?" asks for the amount.
   const politeAsk = /^(could|can|would) you (please )?(let us know|tell|share|specify|provide|give|indicate|state)\b/.test(q);
   if (YES_NO_QUESTION.test(q) && !politeAsk && field.control !== "number") return undefined;
@@ -1055,6 +1057,8 @@ const ITS_RELATIONS = /\b(clients?|customers?|partners?|vendors?|suppliers?|affi
 export function previousEmployerAnswer(field: FieldDescriptor, profile: Profile, page?: PageFacts): Decision | undefined {
   if (!yesNoField(field)) return undefined;
   if (ITS_RELATIONS.test(normalize(field.label))) return undefined;
+  // Here too, for the question model's path (live round 10 re-check: it still answered "…or refused employment by…").
+  if (/\b(refused|denied|rejected|dismissed|terminated|fired|let go|turned down)\b/.test(normalize(field.label))) return undefined;
 
   const currentHost = page?.url ? companyDomain(page.url) : "";
   const label = field.label;

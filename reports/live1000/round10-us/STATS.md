@@ -1,6 +1,6 @@
 # Live run statistics (182 forms)
 
-Generated 2026-11-13T12:11:29.119Z from results-r10-us-a.jsonl, results-r10-us-b.jsonl by `scripts/live1000-audit.mjs`. The run is still growing: re-run the script.
+Generated 2026-11-13T13:16:38.229Z from results-r10-us-a.jsonl, results-r10-us-b.jsonl by `scripts/live1000-audit.mjs`. The run is still growing: re-run the script.
 
 ## Forms
 

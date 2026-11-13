@@ -1,0 +1,142 @@
+{
+ "profile": {
+  "firstName": "Asha",
+  "lastName": "Verma",
+  "email": "asha.verma.test@example.com",
+  "phone": "+91 90000 00000",
+  "location": "Pune",
+  "country": "India",
+  "linkedin": "https://www.linkedin.com/in/asha-verma-test",
+  "github": "https://github.com/asha-verma-test",
+  "portfolio": "",
+  "currentCompany": "Acme Pay",
+  "currentTitle": "Data Engineer",
+  "school": "State Technical University",
+  "degree": "Bachelor's Degree",
+  "discipline": "Computer Science",
+  "graduationYear": "2021",
+  "experienceYears": "5",
+  "targetRoles": "Data Engineer",
+  "preferredLocations": "Pune, Remote",
+  "skills": "Python, SQL, BigQuery, Apache Airflow, Docker",
+  "state": "Maharashtra",
+  "addressLine1": "12 Test Road, Kothrud",
+  "postalCode": "411038",
+  "address": "12 Test Road, Kothrud, Pune, Maharashtra 411038",
+  "summary": "Data engineer with 5 years of experience building batch and streaming data pipelines in Python, SQL and Apache Airflow.",
+  "resume": {
+   "name": "Asha_Verma_Resume.txt"
+  },
+  "facts": {
+   "workCountries": "India",
+   "citizenship": "India",
+   "needsFutureSponsorship": "No",
+   "noticePeriod": "30 days",
+   "currentCtc": "12 LPA",
+   "expectedCtc": "18 LPA",
+   "relocate": "Yes",
+   "heardFrom": "LinkedIn",
+   "gender": "Decline",
+   "hispanic": "Decline",
+   "race": "Decline",
+   "veteran": "Decline",
+   "disability": "Decline",
+   "workMode": "any",
+   "travel": "Yes",
+   "travelPercent": "25",
+   "needsAccommodation": "No",
+   "pronouns": "she/her",
+   "sexualOrientation": "Decline",
+   "transgender": "Decline",
+   "over18": "Yes",
+   "otherCountries": "sponsorship",
+   "nonCompete": "No",
+   "relativesAtCompanies": "No",
+   "securityClearance": "None",
+   "expectedSalaryAbroad": "USD 70,000; EUR 60,000; GBP 55,000"
+  },
+  "workHistory": [
+   {
+    "title": "Data Engineer",
+    "company": "Acme Pay",
+    "location": "Bengaluru, India",
+    "start": "2021-07",
+    "end": "",
+    "current": true,
+    "summary": "Batch and streaming data pipelines in Python and Apache Airflow."
+   },
+   {
+    "title": "Software Engineering Intern",
+    "company": "Bluefin Labs",
+    "location": "Pune, India",
+    "start": "2021-01",
+    "end": "2021-06",
+    "current": false,
+    "summary": "Django REST API for internal reporting."
+   }
+  ],
+  "workHistoryComplete": true
+ },
+ "answers": [
+  {
+   "question": "Are you legally authorized to work in India?",
+   "answer": "Yes",
+   "topic": "work_authorization",
+   "country": "India",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "Will you now or in the future require visa sponsorship to work in the United States?",
+   "answer": "Yes",
+   "topic": "sponsorship",
+   "country": "United States",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "What is your notice period?",
+   "answer": "30 days",
+   "topic": "notice_period",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "Are you willing to relocate?",
+   "answer": "Yes",
+   "topic": "relocation",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "Gender",
+   "answer": "Decline to self identify",
+   "topic": "gender",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "Race / Ethnicity",
+   "answer": "Decline to self identify",
+   "topic": "race",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "Veteran status",
+   "answer": "I don't wish to answer",
+   "topic": "veteran",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "Disability status",
+   "answer": "I do not want to answer",
+   "topic": "disability",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "How did you hear about this job?",
+   "answer": "LinkedIn",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  },
+  {
+   "question": "How many years of experience do you have with Python?",
+   "answer": "5",
+   "updatedAt": "2026-11-07T00:00:00Z"
+  }
+ ]
+}
