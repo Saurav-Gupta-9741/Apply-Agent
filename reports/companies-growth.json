@@ -1,8 +1,36 @@
 {
-  "checkedAt": "2026-11-04T14:02:33.738Z",
-  "kept": 352,
-  "candidates": 851,
+  "checkedAt": "2026-11-13T07:44:17.271Z",
+  "kept": 404,
+  "candidates": 1254,
   "dropped": [
+    {
+      "name": "bunq",
+      "why": "listed board no longer answers with jobs"
+    },
+    {
+      "name": "Mia-Platform",
+      "why": "listed board no longer answers with jobs"
+    },
+    {
+      "name": "Bluecrux",
+      "why": "listed board no longer answers with jobs"
+    },
+    {
+      "name": "dLocal",
+      "why": "listed board no longer answers with jobs"
+    },
+    {
+      "name": "Veeva",
+      "why": "listed board no longer answers with jobs"
+    },
+    {
+      "name": "Shield AI",
+      "why": "listed board no longer answers with jobs"
+    },
+    {
+      "name": "Getyourguide",
+      "why": "listed board no longer answers with jobs"
+    },
     {
       "name": "Razorpay",
       "why": "no public board with open jobs found"
@@ -896,6 +924,10 @@
       "why": "no public board with open jobs found"
     },
     {
+      "name": "Shield AI",
+      "why": "no public board with open jobs found"
+    },
+    {
       "name": "Applied Intuition",
       "why": "no public board with open jobs found"
     },
@@ -1081,6 +1113,10 @@
     },
     {
       "name": "Picnic",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Bunq",
       "why": "no public board with open jobs found"
     },
     {
@@ -1308,6 +1344,10 @@
       "why": "no public board with open jobs found"
     },
     {
+      "name": "Veeva",
+      "why": "no public board with open jobs found"
+    },
+    {
       "name": "Workiva",
       "why": "no public board with open jobs found"
     },
@@ -1492,10 +1532,6 @@
       "why": "no public board with open jobs found"
     },
     {
-      "name": "Buffer",
-      "why": "no public board with open jobs found"
-    },
-    {
       "name": "Hotjar",
       "why": "no public board with open jobs found"
     },
@@ -1605,14 +1641,6 @@
     },
     {
       "name": "Vinted Group",
-      "why": "no public board with open jobs found"
-    },
-    {
-      "name": "Mercari",
-      "why": "no public board with open jobs found"
-    },
-    {
-      "name": "SmartNews",
       "why": "no public board with open jobs found"
     },
     {
@@ -1756,6 +1784,10 @@
       "why": "no public board with open jobs found"
     },
     {
+      "name": "dLocal",
+      "why": "no public board with open jobs found"
+    },
+    {
       "name": "Loft",
       "why": "no public board with open jobs found"
     },
@@ -1809,6 +1841,254 @@
     },
     {
       "name": "Snyk Ltd",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Daangn",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Realtimeboardglobal",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Gympass",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "CDPROJEKTRED",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Vitol",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "DigitalVirgo",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "KPMGNederland",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "DohlerGmbH",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Boulanger",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "LaRabidaChildrensHospital",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "AbbVie",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "NBCUniversal3",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "PublicStorage",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "ServiceNow",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "ReitmansCanadaLteLtd",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "AECOM2",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Wabtec",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Sia",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "CornerstoneBuildingBrandsCareers",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Swordtechnologies",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Aubay",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Hardrockdigital",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Snapsoft",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Hostpointag",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Partejobs",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Aikidosecurity",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Interpath Advisory",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Weekday 1",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Jupiter Money",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "MobiKwik",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Spyne",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Onfido",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Gousto",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Cazoo",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Pitch",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "1Komma5",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Wise Estonia",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Tibber",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Kahoot",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Unity Technologies",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Scalapay",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "OutSystems",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Booksy",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Property Finder",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Armis",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Twiga Foods",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Yoco",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "TymeBank",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Sea Group",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Coda Payments",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "PatSnap",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Preferred Networks",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Toss",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Klook",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Creditas",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Platzi",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "NotCo",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Betterfly",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Cornershop",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Hebbia",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Canva US",
+      "why": "no public board with open jobs found"
+    },
+    {
+      "name": "Miro US",
       "why": "no public board with open jobs found"
     },
     {
