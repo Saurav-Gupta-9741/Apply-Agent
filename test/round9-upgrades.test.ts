@@ -158,6 +158,17 @@ describe("live round 10", () => {
   });
 });
 
+describe("round 11: a list of states and countries", () => {
+  it("'Where do you currently live?' (Squarespace): the user's state when the list has no cities", async () => {
+    const { placeOption } = await import("../src/shared/place-pick");
+    const squarespace = ["Arizona", "California", "Dublin, Ireland", "Ireland", "Netherlands", "New York", "Texas", "Other - My state/country is not listed"];
+    const home = { location: "Austin, TX", state: "Texas", country: "United States" };
+    expect(placeOption(squarespace, home, () => undefined)).toBe("Texas");
+    // Never another state, and never a guess when the state is missing.
+    expect(placeOption(["Arizona", "California", "Other - My state/country is not listed"], home, () => undefined)).toBeUndefined();
+  });
+});
+
 describe("notice period and names", () => {
   it("'Do you have a notice period…', 'If offered… how soon…', the earliest start date", () => {
     expect(decideWithMeaning(q("Do you have a notice period at your current job before being able to start a new role?"), IN, [])).toMatchObject({ kind: "answer", value: "Yes" });

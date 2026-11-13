@@ -118,5 +118,12 @@ export function placeOption(labels: string[], home: Home, best: (labels: string[
   const exact = countryOnly.filter((l) => foldPlace(l) === foldPlace(country ?? "") || (COUNTRY_NAMES[country ?? ""] ?? []).includes(foldPlace(l)));
   if (country && exact.length >= 1 && new Set(exact).size === 1) return exact[0];
   if (country && countryOnly.length === 1) return countryOnly[0];
+  // A list of states and countries without cities ("Where do you currently live?" on Squarespace, round 11: Arizona,
+  // California…, Ireland, Netherlands): the user's own state, named exactly.
+  const region = regionOf(home);
+  if (region) {
+    const states = labels.filter((l) => !/[,(]/.test(l) && foldPlace(l) === foldPlace(region));
+    if (new Set(states).size === 1) return states[0];
+  }
   return best(labels);
 }

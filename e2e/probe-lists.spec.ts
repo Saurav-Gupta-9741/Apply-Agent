@@ -30,7 +30,7 @@ test("probe dropdown options on real forms", async ({ context }) => {
           const byId = by ? by.split(/\s+/).map((x) => document.getElementById(x)?.textContent ?? "").join(" ") : "";
           return (byFor || byId || el.getAttribute("aria-label") || "").replace(/\s+/g, " ").trim().slice(0, 120);
         });
-        if (!/school|right to work|sponsor|previously worked|hear about|eligible|graduation|degree|state|located|location/i.test(label)) continue;
+        if (!/school|right to work|sponsor|previously worked|hear about|eligible|graduation|degree|state|located|location|live|reside/i.test(label)) continue;
         const entry: Record<string, unknown> = { label };
         try {
           await box.scrollIntoViewIfNeeded();

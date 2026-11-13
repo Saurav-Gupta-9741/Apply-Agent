@@ -612,7 +612,8 @@ export async function fillCombobox(input: HTMLInputElement, value: string, timeo
   const pick = withoutCatchAll(value, options.pick ?? ((labels) => bestOption(labels, value)));
   const queries = [...new Set([...(options.first ?? []), value, ...(options.queries ?? []).filter(Boolean), ""])];
   // Every search together stays within a little more than one wait: a long form with several lists must not crawl.
-  const deadline = Date.now() + timeoutMs + 3000;
+  // Round 11: +1.5 s (was +3 s). Lists that cannot match were the slowest fields left (21 s on 40 forms).
+  const deadline = Date.now() + timeoutMs + 1500;
   let seen: string[] = [];
   input.focus();
   for (const [index, query] of queries.entries()) {

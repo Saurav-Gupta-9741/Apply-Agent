@@ -45,7 +45,9 @@ import { headline, rowState, summarize, type LiveField } from "./checklist";
 // >>> L4 ai drafts
 import { createDraftAllBar, createDraftWidget, isDraftableField, limitCounter, limitOfField, resumeTextOf } from "./drafts";
 import { experienceSuggestion, yearsSuggestion, type Suggestion } from "../shared/evidence";
-import { COVER_LETTER_LIMIT, SUMMARY_LIMIT, SUMMARY_QUESTION, coverLetterQuestion, isCoverLetterField, letterFile, wrapLetter } from "../shared/cover-letter";
+import { normalize, similarity } from "../shared/text";
+import { loadWriterSettings } from "../shared/writer/client";
+import { coverLetterLimitFor, SUMMARY_LIMIT, SUMMARY_QUESTION, coverLetterQuestion, isCoverLetterField, letterFile, wrapLetter } from "../shared/cover-letter";
 import { AI_TRAP_MESSAGE, aiPolicyMessage, aiPolicyOfForm, aiTrapOf, draftsForbidden, type AiPolicy } from "../shared/ai-policy";
 import { checkLength } from "../shared/length-limit";
 import { factHints, focusQuickAnswer } from "./fact-hints";
@@ -744,6 +746,11 @@ function answerInput(r: FieldResult): HTMLInputElement | HTMLSelectElement | HTM
   return h("input", { class: "input", type: "text", "aria-label": r.field.label });
 }
 
+/** The cover-letter length for this computer: shorter when its writer is measured as slow (see cover-letter.ts). */
+let writerSpeed: number | undefined;
+void loadWriterSettings().then((s) => { writerSpeed = s.modelId ? s.tokensPerSec?.[s.modelId] : undefined; }).catch(() => undefined);
+const letterLimit = () => coverLetterLimitFor(writerSpeed);
+
 /** A suggestion from the user's own resume or profile for an experience question left for them ("Have you sold into
  * enterprise accounts?" → Yes, with the resume line that says so). Shown with its reason; used only when pressed. */
 function evidenceChip(r: FieldResult, input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement): HTMLElement {
@@ -771,6 +778,36 @@ function evidenceChip(r: FieldResult, input: HTMLInputElement | HTMLSelectElemen
     const s = experienceSuggestion(r.field.label, r.field.options, `${text}\n${work}\n${profile.summary ?? ""}`);
     if (s && slot.isConnected !== false) show(s);
   });
+  return slot;
+}
+
+/** "Why do you want to work here?" asked again on another form: the user's own earlier long answer to a similar
+ * question, offered as a start to edit (round 11: auto-reuse is near its ceiling, 218 of 280 left-over questions were
+ * different questions; long answers are where the user's time goes). Never filled by itself. */
+function earlierAnswerChip(r: FieldResult, input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement): HTMLElement {
+  const slot = h("div", { class: "evidence" });
+  if (r.field.control !== "textarea" || input instanceof HTMLSelectElement) return slot;
+  void loadAnswers().then((answers) => {
+    const here = normalize(r.field.label);
+    let best: { score: number; answer: string; company?: string } | undefined;
+    for (const a of answers) {
+      if (a.answer.trim().length < 80 || normalize(a.question) === here) continue;
+      const score = similarity(a.question, r.field.label);
+      if (score >= 0.35 && (!best || score > best.score)) best = { score, answer: a.answer, company: a.company };
+    }
+    if (!best || !slot.isConnected) return;
+    const why = h("span", { class: "question-why" });
+    why.append(icon("info", 14), h("span", {}, `You answered a similar question${best.company ? ` for ${best.company}` : ""}. Start from it and change what is about that company.`));
+    const use = button("Start from my earlier answer", { variant: "ghost", size: "sm", icon: "wand" });
+    const chosen = best.answer;
+    use.addEventListener("click", () => {
+      input.value = chosen;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+      input.focus();
+    });
+    slot.replaceChildren(why, use);
+  }).catch(() => undefined);
   return slot;
 }
 
@@ -846,6 +883,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   if (counter) card.append(counter);
   card.append(...factHints(r, profile, input, (key) => void openQuickAnswer(key)));
   card.append(evidenceChip(r, input));
+  card.append(earlierAnswerChip(r, input));
   const suggested = findSuggestedCorrection(ctx.corrections ?? [], r.field.label);
   if (suggested && suggested.count === 1 && !onPageOnly) {
     const chipBtn = button(`Use previous correction: "${suggested.answer}"`, {
@@ -879,7 +917,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
       profile,
       job: ctx.job,
       kind: letter ? "cover_letter" : summary ? "summary" : undefined,
-      limit: letter ? limitOfField(r.field) ?? COVER_LETTER_LIMIT : summary ? limitOfField(r.field) ?? SUMMARY_LIMIT : undefined,
+      limit: letter ? limitOfField(r.field) ?? letterLimit() : summary ? limitOfField(r.field) ?? SUMMARY_LIMIT : undefined,
       finish: letter ? (body) => wrapLetter(body, profile, ctx.job) : undefined,
       label: letter ? "Write a cover letter" : summary ? "Write my summary" : undefined,
       onUse: async (draftText) => {
@@ -975,7 +1013,7 @@ function coverLetterUpload(r: FieldResult, ctx: CardContext): HTMLElement {
     profile,
     job: ctx.job,
     kind: "cover_letter",
-    limit: COVER_LETTER_LIMIT,
+    limit: letterLimit(),
     finish: (body) => wrapLetter(body, profile, ctx.job),
     label: "Write a cover letter",
     onUse: async (text) => {

@@ -206,7 +206,8 @@ const captionOf = (el: HTMLElement): string => (el.textContent || el.getAttribut
 async function pressAdd(doc: Document, add: HTMLElement): Promise<void> {
   if (add.tagName === "A") add.addEventListener("click", (e) => e.preventDefault(), { once: true });
   add.click();
-  await settle(doc, 400, 4000);
+  // Round 11: 250 ms of quiet is enough for a new block to render (Breezy forms spent ~2 s here).
+  await settle(doc, 250, 4000);
 }
 
 /** Repeating work-experience sections start with fewer job blocks than the user has jobs: press the section's own

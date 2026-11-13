@@ -44,6 +44,13 @@ export function coverLetterQuestion(job: { title: string; company: string }): st
 
 /** A cover letter: about 250 words, never enforced as a hard limit. */
 export const COVER_LETTER_LIMIT: LengthLimit = { maxWords: 280, approximate: true };
+/** On a computer whose writer is slow (under 4 tokens a second, measured on its own drafts): a letter of about 170
+ * words, written in about half the time (round 11: a full letter took ~8 minutes on an i3 laptop). */
+export const SHORT_COVER_LETTER_LIMIT: LengthLimit = { maxWords: 170, approximate: true };
+export const SLOW_WRITER_TOKENS_PER_SEC = 4;
+export function coverLetterLimitFor(tokensPerSec: number | undefined): LengthLimit {
+  return tokensPerSec !== undefined && tokensPerSec < SLOW_WRITER_TOKENS_PER_SEC ? SHORT_COVER_LETTER_LIMIT : COVER_LETTER_LIMIT;
+}
 
 /** What the writer is asked for a professional summary. */
 export const SUMMARY_QUESTION = "Write a professional summary of the candidate for a job application: their current role and years of experience, their main skills, and one concrete strength from their experience. Two to four sentences, first person, plain and specific.";

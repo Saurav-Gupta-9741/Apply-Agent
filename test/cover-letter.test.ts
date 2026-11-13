@@ -79,3 +79,12 @@ describe("the company name in the letter", () => {
     expect(wrapLetter("Body.", { firstName: "A", lastName: "B" }, { company: "north-wind-group" })).toMatch(/^Dear Hiring Team at North Wind Group,\n/);
   });
 });
+
+describe("letter length for this computer (round 11)", () => {
+  it("a shorter letter when the writer is measured as slow; the full one otherwise", async () => {
+    const { coverLetterLimitFor, COVER_LETTER_LIMIT, SHORT_COVER_LETTER_LIMIT } = await import("../src/shared/cover-letter");
+    expect(coverLetterLimitFor(1.8)).toEqual(SHORT_COVER_LETTER_LIMIT);
+    expect(coverLetterLimitFor(9)).toEqual(COVER_LETTER_LIMIT);
+    expect(coverLetterLimitFor(undefined)).toEqual(COVER_LETTER_LIMIT); // not measured yet
+  });
+});
