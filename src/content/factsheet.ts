@@ -22,6 +22,7 @@ import { answerableLength, narrowerSkill, yesNoField } from "./facts";
 import { countriesIn } from "../shared/countries";
 import { countriesOfCity, sameCity } from "../shared/places";
 import { countryCode } from "../shared/profile-validate";
+import { pickPlace } from "../shared/place-pick";
 
 export interface SheetJob {
   company: string;
@@ -430,11 +431,27 @@ const JOB_COUNTRY = /^the country (?:where|in which) (?:this|the) (?:job|role|po
 function residenceAnswer(field: FieldDescriptor, profile: Profile, page?: { jobCountries: string[] }): Decision | undefined {
   if (!yesNoField(field) || field.control === "checkbox") return undefined;
   const label = field.label.trim().replace(/\s+/g, " ").replace(/\s*[?.!]+\s*$/, "");
-  const m = RESIDES_Q.exec(label);
-  if (!m) return undefined;
   const home = profile.country?.trim() ? countryCode(profile.country) : undefined;
   if (!home) return undefined;
   const homeName = profile.country!.trim();
+  const reply = (yes: boolean) => {
+    const value = field.options.length ? yesNoOption(field.options, yes ? "Yes" : "No") : yes ? "Yes" : "No";
+    return value ? { kind: "answer" as const, value, question: "Quick answers › where you live", source: `from your Profile country (${homeName})` } : undefined;
+  };
+  // "Are you based in the United States or Canada?" (Warp, live round 8): a list of countries only. Yes when the user's
+  // country is one of them, No otherwise. "If hired, will you be based in…?" and "Please confirm you're based in the
+  // USA": only a Yes for a user who lives there (one who does not may plan to move: theirs to say).
+  const future = /^(?:if (?:hired|selected|offered)[^,]*, )?will you be (?:based|located|living|residing) in (.+)$/i.exec(label);
+  const confirm = /(?:^|[.!]\s+)please confirm (?:that )?you(?:'re| are) (?:currently )?(?:based|located|living|residing) in (.+)$/i.exec(label);
+  const now = RESIDES_Q.exec(label);
+  const listed = countryList((future ?? confirm ?? now)?.[1] ?? "");
+  if (listed) {
+    const inList = listed.includes(home);
+    if (future || confirm) return inList ? reply(true) : undefined;
+    return reply(inList);
+  }
+  const m = now;
+  if (!m) return undefined;
   const city = profile.location?.trim() ?? "";
   const asked = m[1]!.trim();
   let yes: boolean | undefined;
@@ -468,6 +485,23 @@ function residenceAnswer(field: FieldDescriptor, profile: Profile, page?: { jobC
   return { kind: "answer", value, question: "Quick answers › where you live", source: `from ${from}` };
 }
 
+/** The country codes of "the United States or Canada", "the US, UK or Ireland", "the USA": every part one country, and
+ * nothing else in the text. Undefined for anything else ("the US or remote", "NYC or the Bay Area"). */
+function countryList(text: string): string[] | undefined {
+  const parts = text.replace(/^the /i, "").split(/\s*,\s*(?:or\s+)?|\s+or\s+/i).map((p) => p.trim().replace(/^the /i, "")).filter(Boolean);
+  if (!parts.length || parts.length > 6) return undefined;
+  const codes: string[] = [];
+  for (const part of parts) {
+    if (normalize(part).split(" ").length > 4) return undefined;
+    const found = countriesIn(part);
+    if (found.includes("European Union")) return undefined; // a union of countries, not one the user's code can match
+    const iso = countryCode(part) ?? (found.length === 1 ? countryCode(found[0]!) : undefined);
+    if (!iso) return undefined;
+    codes.push(iso);
+  }
+  return codes;
+}
+
 /** The answer the fact sheet gives to a question the rules could not answer, or nothing (the question is asked). */
 export function factSheetAnswer(field: FieldDescriptor, profile: Profile, sheet: FactSheet = factSheetOf(profile),
   page?: { jobCountries: string[] }): Decision | undefined {
@@ -477,7 +511,18 @@ export function factSheetAnswer(field: FieldDescriptor, profile: Profile, sheet:
     ?? educationAnswer(field, profile, sheet)
     ?? experienceAnswer(field, profile)
     ?? skillAnswer(field, sheet)
-    ?? residenceAnswer(field, profile, page);
+    ?? residenceAnswer(field, profile, page)
+    ?? officeAnswer(field, profile);
+}
+
+/** "Which of our offices would you prefer to work from?", "Please select the office location nearest to you" (live
+ * round 8): the office in the user's own city, when the list has exactly that. Any other office is the user's choice. */
+const OFFICE_Q = /\b(which|what|select|choose|pick)\b.*\boffices?\b|\boffice (location|hub)s?\b.*\b(nearest|closest|prefer\w*)\b|\bpreferred office\b|\bnearest office\b/;
+function officeAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
+  if (!field.options.length || field.control === "checkbox") return undefined;
+  if (!OFFICE_Q.test(normalize(field.label))) return undefined;
+  const office = pickPlace(field.options, { location: profile.location ?? "", state: profile.state, country: profile.country });
+  return office ? { kind: "answer", value: office, question: "Quick answers › where you live", source: `the office in your city (${profile.location})` } : undefined;
 }
 
 // --- panel help for questions that stay asked -----------------------------------------------------------------

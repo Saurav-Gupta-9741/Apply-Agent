@@ -2,6 +2,17 @@ import type { JobPosting, SupportedATS } from "./types";
 import { FeedRateLimiter, defaultLimiter } from "./rate-limiter";
 
 /** Construct the public feed URL for a given ATS and company slug */
+/** The sites Discover and the daily alerts read (the optional permission the user grants once). */
+export const FEED_ORIGINS: Record<SupportedATS, string> = {
+  greenhouse: "https://boards-api.greenhouse.io/*",
+  lever: "https://api.lever.co/*",
+  ashby: "https://api.ashbyhq.com/*",
+  smartrecruiters: "https://api.smartrecruiters.com/*",
+  recruitee: "https://*.recruitee.com/*",
+  personio: "https://*.jobs.personio.de/*",
+  workable: "https://apply.workable.com/*",
+};
+
 export function getFeedUrl(ats: SupportedATS, slug: string): string {
   switch (ats) {
     case "greenhouse":

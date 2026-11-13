@@ -152,7 +152,7 @@ function fromMeaning(field: FieldDescriptor, profile: Profile, meaning: Meaning,
   if (intent === "resume" && field.control === "file") return profile.resume ? { kind: "resume" } : undefined;
   if (intent === "skills_experience") return skillsExperienceAnswer(field, profile);
   if (intent === "language_proficiency") return languageAnswer(field, profile);
-  if (intent === "onsite") return workModeAnswer(field, profile);
+  if (intent === "onsite") return workModeAnswer(field, profile, page);
   if (intent === "travel") return travelAnswer(field, profile.facts);
   if (intent === "previous_employee") return previousEmployerAnswer(field, profile, page);
   return undefined;
@@ -211,7 +211,8 @@ export const MODEL_DECISIONS = new WeakSet<object>();
 
 /** Only some people are asked ("For pre-college applicants…", "If you're less than 3 years out of school…"): the
  * user may not be one of them, so nothing is filled from their saved data. "If applicable" / "if any" are not that. */
-const ONLY_SOME = /^(if\s+(?!applicable\b|any\b|available\b|possible\b|relevant\b|you\s+have\s+(one|any|a|an)\b|you\s+wish\b|you'?d\s+like\b|desired\b|known\b|you('re|\s+are)\s+(happy|comfortable|willing|able|interested|keen|open)\b)|for\s+([\w-]+\s+){0,3}(applicants?|candidates?|students?|graduates?|residents?|citizens?|employees?|only)\b)/i;
+// "If hired by Warp, will you be based in…?", "If offered this position, …": the condition is this application itself.
+const ONLY_SOME = /^(if\s+(?!applicable\b|any\b|available\b|possible\b|relevant\b|hired\b|selected\b|offered\b|you\s+(are|were)\s+(hired|selected|offered)\b|you\s+have\s+(one|any|a|an)\b|you\s+wish\b|you'?d\s+like\b|desired\b|known\b|you('re|\s+are)\s+(happy|comfortable|willing|able|interested|keen|open)\b)|for\s+([\w-]+\s+){0,3}(applicants?|candidates?|students?|graduates?|residents?|citizens?|employees?|only)\b)/i;
 /** Words that make a question something other than what the rules saw in it (all seen on real Greenhouse forms). */
 const NOT_THIS_FACT: Array<[(d: Decision) => boolean, RegExp]> = [
   // "Alternative Email" is a second address, not the user's email.

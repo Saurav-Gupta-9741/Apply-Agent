@@ -17,6 +17,7 @@ import { currentLicense, isPro } from "../shared/license";
 import { loadProfile } from "../shared/storage";
 import { isHandsOff, platformFor } from "../shared/platforms";
 import { saveJobFromTab } from "./tracker";
+import { ALERTS_KEY, alertStateOf, type AlertState } from "../shared/jobs/alerts";
 import { jobLevel, NO_FILTERS, passesFilters, type DiscoverFilters } from "../shared/jobs/job-filters";
 
 export const FREE_DAILY_MATCH_LIMIT = 20;
@@ -162,15 +163,8 @@ export function describeSearch(sp: SearchProfile): Array<{ label: string; value:
 // --- panel wiring -------------------------------------------------------------------------------------------------
 
 /** The only hosts Discover may call: each ATS's public job-board API. Asked for at first use (optional permission). */
-export const FEED_ORIGINS: Record<SupportedATS, string> = {
-  greenhouse: "https://boards-api.greenhouse.io/*",
-  lever: "https://api.lever.co/*",
-  ashby: "https://api.ashbyhq.com/*",
-  smartrecruiters: "https://api.smartrecruiters.com/*",
-  recruitee: "https://*.recruitee.com/*",
-  personio: "https://*.jobs.personio.de/*",
-  workable: "https://apply.workable.com/*",
-};
+export { FEED_ORIGINS } from "../shared/jobs/feeds";
+import { FEED_ORIGINS } from "../shared/jobs/feeds";
 
 /** Companies checked per click. Their boards are on different hosts, each asked at most once every 2 s. */
 export const COMPANIES_PER_RUN = 24;
@@ -347,6 +341,69 @@ export function initDiscover(ui: { toast: (text: string, tone?: "ok" | "warn" | 
     const saved: SavedRun = { at: savedAt, jobs: slim, checked: [...checked], failed };
     await chrome.storage.local.set({ [LAST_KEY]: saved }).catch(() => undefined);
   };
+
+  // Daily alerts: a switch, and the new matches the daily check found (the number on the icon).
+  const alertSwitch = $in<HTMLInputElement>("discover-alerts");
+  const freshBox = $in<HTMLDivElement>("discover-fresh");
+  const showFresh = (state: AlertState): void => {
+    if (alertSwitch) alertSwitch.checked = state.on;
+    if (!freshBox) return;
+    freshBox.replaceChildren();
+    freshBox.hidden = !state.on;
+    if (!state.on) return;
+    if (!state.fresh.length) {
+      const note = document.createElement("p");
+      note.className = "hint";
+      note.textContent = state.lastRun
+        ? `Last checked ${new Date(state.lastRun).toLocaleString()}: no new matches since then.`
+        : "The first check runs in about a minute. From then on, new matches are counted on the ApplyAgent icon.";
+      freshBox.append(note);
+      return;
+    }
+    const head = document.createElement("p");
+    head.className = "hint";
+    head.textContent = `${state.fresh.length} new matching job${state.fresh.length === 1 ? "" : "s"} since you last looked:`;
+    const ul = document.createElement("ul");
+    ul.className = "fresh-list";
+    for (const j of state.fresh) {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = j.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = `${j.title} · ${j.company}`;
+      const meta = document.createElement("span");
+      meta.className = "muted";
+      meta.textContent = ` ${j.location ? `${j.location} · ` : ""}match ${j.score}`;
+      li.append(a, meta);
+      ul.append(li);
+    }
+    const clear = document.createElement("button");
+    clear.type = "button";
+    clear.className = "btn btn-ghost btn-sm";
+    clear.textContent = "Mark as seen";
+    clear.addEventListener("click", async () => {
+      const now = alertStateOf((await chrome.storage.local.get(ALERTS_KEY))[ALERTS_KEY]);
+      await chrome.storage.local.set({ [ALERTS_KEY]: { ...now, fresh: [] } });
+    });
+    freshBox.append(head, ul, clear);
+  };
+  void chrome.storage.local.get(ALERTS_KEY).then((v) => showFresh(alertStateOf(v[ALERTS_KEY]))).catch(() => undefined);
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "local" && changes[ALERTS_KEY]) showFresh(alertStateOf(changes[ALERTS_KEY].newValue));
+  });
+  alertSwitch?.addEventListener("change", async () => {
+    const on = alertSwitch.checked;
+    // Ask inside the click (Chrome shows the prompt only during the user's gesture): the same boards as Discover.
+    if (on && !(await chrome.permissions.request({ origins: Object.values(FEED_ORIGINS) }).catch(() => false))) {
+      alertSwitch.checked = false;
+      status.textContent = "Daily checks need permission to read companies' public job boards. Nothing about you is sent.";
+      return;
+    }
+    const now = alertStateOf((await chrome.storage.local.get(ALERTS_KEY))[ALERTS_KEY]);
+    await chrome.storage.local.set({ [ALERTS_KEY]: on ? { ...now, on: true } : { ...now, on: false, fresh: [] } });
+    ui.toast(on ? "Daily job check is on" : "Daily job check is off", "ok");
+  });
 
   const checkBatch = async (fresh: boolean): Promise<void> => {
     if (busy) return;

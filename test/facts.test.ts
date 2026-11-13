@@ -61,7 +61,10 @@ describe("notice period, salary, relocation, how you heard", () => {
     expect(value(decide(field("What is your notice period?", "text", []), ME, []))).toBe("Immediate");
     expect(value(decide(field("When can you start?", "text", []), ME, []))).toBe("Immediate");
     expect(decide(field("Start date month", "select", ["January", "February"]), ME, []).kind).toBe("ask");
-    expect(decide(field("Earliest start date", "date", []), ME, []).kind).toBe("ask");
+    // Round 9: a date box for the start date gets today + the notice period as a date, never "30 days".
+    const start = decide(field("Earliest start date", "date", []), ME, []);
+    if (start.kind === "answer") expect(start.value).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    else expect(start.kind).toBe("ask"); // no notice period saved
   });
 
   it("current vs expected CTC; a number box gets the number; a question in dollars is asked", () => {

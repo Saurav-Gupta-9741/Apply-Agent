@@ -9,6 +9,8 @@ import { applyCorrection, isLearnableCorrection, type CorrectionMessage } from "
 import { isHandsOff } from "../shared/platforms";
 import { clearDetection, recordDetection, syncDetector } from "./detector";
 import { setWorking } from "./icon";
+import { runJobAlerts, showAlertBadge, syncAlertAlarm } from "./alerts";
+import { ALERT_ALARM, ALERTS_KEY, alertStateOf } from "../shared/jobs/alerts";
 import { ensurePage, modelFits, understand } from "./understand";
 import { isValidJobUrl } from "./queue";
 import { backOff, onTabClosed, onTabReport, PACE_ALARM, pendingQuestions, pump, queueStatusFor, runInTab, updateQueue, working } from "./runner";
@@ -91,7 +93,22 @@ chrome.permissions.onRemoved.addListener(resyncDetector);
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "local" && changes.settings) resyncDetector();
 });
+// Daily job alerts: the switch in Discover turns the alarm on or off; the number on the icon follows the new matches.
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== "local" || !changes[ALERTS_KEY]) return;
+  const state = alertStateOf(changes[ALERTS_KEY].newValue);
+  void syncAlertAlarm(state.on);
+  void showAlertBadge(state);
+});
+chrome.runtime.onStartup.addListener(() => {
+  void chrome.storage.local.get(ALERTS_KEY).then((v) => {
+    const state = alertStateOf(v[ALERTS_KEY]);
+    void syncAlertAlarm(state.on);
+    void showAlertBadge(state);
+  });
+});
 chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === ALERT_ALARM) return void runJobAlerts().catch(() => undefined);
   if (alarm.name === PACE_ALARM) return void pump(); // a pacing wait or a robot-check pause is over
   if (alarm.name !== PUMP_ALARM) return;
   void expireSubmissions();

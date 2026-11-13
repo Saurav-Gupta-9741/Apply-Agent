@@ -305,7 +305,8 @@ describe("e) notice period, start dates and yes/no availability", () => {
     ["Notice period (in days)", "number", { oneOf: ["30", null] }],
     ["Notice period (months)", "text", { not: ["30 days"] }],
     ["Notice period in months", "number", { not: ["30 days", "30"] }],
-    ["Earliest start date", "date", null],
+    // Round 9: a date box gets a real date (today + the notice period), never "30 days".
+    ["Earliest start date", "date", { not: ["30 days", "30"] }],
     ["Available start date", "text", null, { placeholder: "MM/DD/YYYY" }],
     ["Start date (DD/MM/YYYY)", "text", null],
     ["Date available to start", "text", null, { placeholder: "dd/mm/yyyy" }],

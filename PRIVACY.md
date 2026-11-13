@@ -25,6 +25,11 @@ stored **only in your browser** (Chrome local storage). We do not receive or sto
 - **BambooHR's public job details:** on a BambooHR application, ApplyAgent reads the job's country from that same
   BambooHR site's public job details (a location such as "Milano, MI" could otherwise be read as Michigan). The
   request names only the job; it carries no information about you and no cookies.
+- **Discover and the daily job check (optional):** when you press "Find matching jobs", or switch on "Check for new
+  matching jobs every day", ApplyAgent downloads companies' public job lists from their job-board sites
+  (Greenhouse, Lever, Ashby, SmartRecruiters, Recruitee, Personio, Workable), without cookies. Matching your
+  profile to the jobs happens on your computer; nothing about you is sent. The daily check runs once a day only
+  while the switch is on, and shows the number of new matches on the ApplyAgent icon.
 - **Cover letters:** a cover letter you approve is turned into a PDF file on your computer and attached to the
   form's cover-letter box only when you press "Use this answer". It is never sent anywhere else.
 - **Question understanding:** a small language model shipped inside the extension reads what form questions mean.

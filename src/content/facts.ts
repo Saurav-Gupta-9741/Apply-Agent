@@ -8,7 +8,7 @@
 
 import { evaluateEeoPolicy } from "../shared/locale/country-rules";
 import type { ApplicationRecord, Decision, FieldDescriptor, Profile, QuickFacts, SensitiveTopic } from "../shared/types";
-import { canonicalCountries, canWorkIn, countriesIn, extractPlacesInText } from "../shared/countries";
+import { canonicalCountries, canWorkIn, countriesIn, countriesInLocation, extractPlacesInText } from "../shared/countries";
 import { bestOption, normalize, yesNoOption } from "../shared/text";
 import { hasExceptionClause, isCompanyOrPlaceSpecific } from "../shared/screening";
 import { parseRequirement } from "../shared/requirements";
@@ -24,7 +24,8 @@ const answer = (value: string, what: string): Decision => ({ kind: "answer", val
 /** A question answered with yes or no: a yes/no list, a choice, or a short text box (never a long explanation). */
 /** "If you have a visa, please share all relevant details (visa type, expirations…)" wants details, not yes or no
  * (seen on a real form, where a bare "No" was about to be typed). */
-const WANTS_DETAILS = /^if (you|your|so|yes|applicable)\b|\b(share|describe|provide|list|explain|specify|elaborate)\b|\bdetails?\b|\bwhich (visa|permit)\b|\bwhat (type|kind) of\b|\bif so\b|\bwhen does your\b/;
+// "…and able to provide documentation of work authorization upon hire?" still asks yes or no (live round 8).
+const WANTS_DETAILS = /^if (you|your|so|yes|applicable)\b|\b(share|describe|provide(?! (proof|documentation|evidence|documents?)\b)|list|explain|specify|elaborate)\b|\bdetails?\b|\bwhich (visa|permit)\b|\bwhat (type|kind) of\b|\bif so\b|\bwhen does your\b/;
 
 /** Questions that open with a question word ask for something, never for yes or no ("In what countries do you have
  * the right to work?", "What is the source of your right to work?"; both seen on real forms). */
@@ -223,7 +224,11 @@ export function countryAnswer(field: FieldDescriptor, profile: Profile, answers:
   const entry = saved.find((a) => countriesIn(a.country!)[0] === places[0]);
   if (!entry) return undefined;
   const raw = /^yes$/i.test(entry.answer.trim()) ? "Yes" : "No";
-  const val = field.options.length ? yesNoOption(field.options, raw) : raw;
+  // "Yes, I will require sponsorship now" vs "…in the future": now when the user cannot work there today.
+  const auth = answers.find((a) => a.topic === "work_authorization" && a.country && countriesIn(a.country).length === 1
+    && countriesIn(a.country)[0] === places[0] && /^(yes|no)$/i.test(a.answer.trim()));
+  const hint = { topic, authorizedHere: auth ? /^yes$/i.test(auth.answer.trim()) : undefined };
+  const val = field.options.length ? yesNoOption(field.options, raw, hint) : raw;
   return val ? { kind: "answer", value: val, question: entry.question, reused: true } : undefined;
 }
 
@@ -769,10 +774,26 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     // A date picker or a "month"/"year" box needs a date, not "30 days".
     // "Are you subject to a notice period?" is a yes/no question: "30 days" is not its answer.
     const notice = facts.noticePeriod?.trim() ?? "";
-    if (!notice || field.control === "date") return undefined;
+    if (!notice) return undefined;
     const candidateDays = parseNoticeDays(notice);
+    // "What is your earliest possible start date?" in a date box (live round 8): today plus the saved notice period.
+    if (field.control === "date") {
+      if (candidateDays === undefined || !/\b(earliest|soonest)\b.*\bstart|\bstart date\b|\bdate available\b|\bavailab\w* (start )?date\b/.test(q) || /\b(end|last|leave|finish)\b/.test(q)) return undefined;
+      const day = new Date(Date.now() + candidateDays * 86_400_000);
+      return answer(day.toISOString().slice(0, 10), "notice period");
+    }
+    // "Do you have a notice period at your current job before being able to start a new role?": yes when it is longer
+    // than nothing.
+    // ("Are you subject to a notice period…?" stays the user's: the labelled set of 1,539 real questions keeps it so.)
+    if (/^do you (currently )?have( a| any)? notice period\b/.test(q) && yesNoField(field) && candidateDays !== undefined) {
+      const raw = candidateDays > 0 ? "Yes" : "No";
+      const val = field.options.length ? yesNoOption(field.options, raw) : raw;
+      return val ? answer(val, "notice period") : undefined;
+    }
+    // "If offered this position, how soon are you available to start?": the condition is the application itself.
+    const plain = q.replace(/^if (you are |you re |you were )?(offered|selected for|hired for) (this|the) (position|role|job|opportunity) /, "");
 
-    if (isCompanyOrPlaceSpecific(field.label) || hasExceptionClause(field.label) || /^if\b/i.test(q)) return undefined;
+    if (isCompanyOrPlaceSpecific(field.label) || hasExceptionClause(field.label) || /^if\b/i.test(plain)) return undefined;
     const withinMatch = q.match(/^(?:can you|are you (?:able|available) to|could you|would you be able to)?\s*(?:start|join|commence|begin|available|commencer|incorporarse|iniciar)\s+(?:within|in|dans|en|em)\s+(\d+)\s*(days?|weeks?|months?|tage?n?|wochen?|monate?n?|jours?|semaines?|mois|dias?|semanas?|meses?)\??$/i);
     if (withinMatch && withinMatch[1]) {
       const allowedNum = parseInt(withinMatch[1], 10);
@@ -832,6 +853,8 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     return answer(isBareNumber ? `${candidateDays} days` : notice, "notice period");
   }
   if (topic === "relocation") {
+    const moved = relocationFact(field, profile, facts, page);
+    if (moved) return moved;
     if (!facts.relocate) return undefined;
     if (field.control === "textarea" || field.control === "text") return undefined;
     if (!/\b(relocat|open to (?:relocation|relocating)|willing to relocate)\b/i.test(q)) return undefined;
@@ -861,6 +884,46 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     }
   }
   if (!topic && facts.heardFrom?.trim() && HEARD_ABOUT.test(q) && field.control !== "textarea") return answer(facts.heardFrom.trim(), "how you heard");
+  return undefined;
+}
+
+/** Relocation questions the plain Quick answer does not cover, answered from where the user lives (live round 8):
+ * - "Would you need to relocate to work regularly from this office?": Yes when the job is in other countries only.
+ * - "If you live outside of the Detroit area, are you open to relocation?": the saved answer, for a user who does not
+ *   live there.
+ * - "Are you currently located in, or open to relocating to, one of BILL's remote-eligible states?" (US states) for a
+ *   user abroad: "No, but I am open to relocating…" or "No, I am not open to relocation".
+ * Anything else stays with the rules below or the user. */
+function relocationFact(field: FieldDescriptor, profile: Profile, facts: QuickFacts, page?: PageFacts): Decision | undefined {
+  if (field.control === "textarea" || field.control === "text") return undefined;
+  const q = normalize(field.label);
+  const home = canonicalCountries(profile.country ?? "")[0];
+  const jobs = page?.jobCountries ?? [];
+  const pick = (raw: string) => (field.options.length ? yesNoOption(field.options, raw) : raw);
+  // Only about the job's own place: "…from one of these offices?" may list one in the user's city (Graphcore lists
+  // Austin, round 9 review), so a list of offices is the user's.
+  if (/^would you (need|have) to relocate\b|^would you require relocation\b|^will you (need|have) to relocate\b/.test(q) && yesNoField(field)
+    && !/\b(one of|any of|these|those|our) (offices|locations|sites|hubs)\b|\boffices\b/.test(q)) {
+    if (!home || !jobs.length || jobs.includes(home)) return undefined; // same country: another city or not is theirs
+    const val = pick("Yes");
+    return val ? answer(val, "relocation") : undefined;
+  }
+  const outside = /^if you (?:currently )?(?:live|are based|reside|are located) outside (?:of )?(?:the )?(.+?)(?: (?:metro(?:politan)? )?(?:area|region))?,? (?:are|would) you (?:be )?(?:open|willing) to relocat/.exec(q);
+  // ("If you…" reads as a follow-up to yesNoField; here it is the whole question, so the options decide.)
+  const yesAndNo = field.options.length ? !!yesNoOption(field.options, "Yes") && !!yesNoOption(field.options, "No") : ["combobox", "select", "dropdown", "radio"].includes(field.control);
+  if (outside && facts.relocate && yesAndNo) {
+    const place = outside[1]!;
+    if (new RegExp(`\\b${escapeRegex(place)}\\b`).test(normalize(profile.location ?? ""))) return undefined; // they live there
+    const val = pick(facts.relocate);
+    return val ? answer(val, "relocation") : undefined;
+  }
+  if (/\blocated in,? or open to relocating to\b/.test(q) && /\bstates?\b/.test(q) && home && home !== "United States" && facts.relocate && field.options.length) {
+    const opts = field.options.map((o) => [o, normalize(o)] as const);
+    const want = facts.relocate === "Yes"
+      ? opts.filter(([, n]) => /^no\b/.test(n) && /\bopen to relocat/.test(n) && !/\bnot open\b/.test(n))
+      : opts.filter(([, n]) => /^no\b/.test(n) && /\bnot open to relocat/.test(n));
+    return want.length === 1 ? answer(want[0]![0], "relocation") : undefined;
+  }
   return undefined;
 }
 
@@ -1033,7 +1096,8 @@ export function isWorkModeQuestion(field: FieldDescriptor): boolean {
   if (/^(i |please |describe )/.test(q)) return false;
   if (/\b(interview|facial id|third party contractor)\b/.test(q)) return false;
   if (/are you currently based in this location/.test(q)) return false;
-  return /\b(onsite|hybrid|hybride|inoffice|inperson|commute|commuting distance|office attendance|\bwork from (the|our)?\s*office\b|\bjoin us in the office\b|\bdays (in|from) the office\b|\bdays (a|per) week\b|come to office|office based|work arrangement|sur place)\b/i.test(q);
+  // "100% on-site in Pleasanton, CA" reads "on site" once normalised (live round 8).
+  return /\b(onsite|on site|hybrid|hybride|inoffice|in office|inperson|commute|commuting distance|office attendance|\bwork from (the|our)?\s*office\b|\bjoin us in the office\b|\bdays (in|from) the office\b|\bdays (a|per) week\b|come to office|office based|work arrangement|sur place)\b/i.test(q);
 }
 
 const US_STATES = /\b(alabama|alaska|arizona|arkansas|california|colorado|connecticut|delaware|florida|georgia|hawaii|idaho|illinois|indiana|iowa|kansas|kentucky|louisiana|maine|maryland|massachusetts|michigan|minnesota|mississippi|missouri|montana|nebraska|nevada|new hampshire|new jersey|new mexico|north carolina|north dakota|ohio|oklahoma|oregon|pennsylvania|rhode island|south carolina|south dakota|tennessee|texas|utah|vermont|virginia|west virginia|wisconsin|wyoming)\b/;
@@ -1059,7 +1123,7 @@ export function namesUnknownPlace(label: string): boolean {
   return false;
 }
 
-export function workModeAnswer(field: FieldDescriptor, profile: Profile): Decision | undefined {
+export function workModeAnswer(field: FieldDescriptor, profile: Profile, page?: PageFacts): Decision | undefined {
   const facts = profile.facts;
   if (!facts?.workMode || !yesNoField(field)) return undefined;
 
@@ -1072,13 +1136,19 @@ export function workModeAnswer(field: FieldDescriptor, profile: Profile): Decisi
   const unknownPlace = namesUnknownPlace(field.label);
   const placeMatched = places.length > 0 && places.some((place) => new RegExp(`\\b${escapeRegex(normalize(place))}\\b`).test(userLocs))
     && places.every((place) => new RegExp(`\\b${escapeRegex(normalize(place))}\\b`).test(`${userLocs} ${normalize(profile.country)}`));
-  if (unknownPlace) return undefined;
-  if (places.length > 0 && !placeMatched) return undefined;
+  // "Are you able to work hybrid in our NYC office 3 days a week?", "100% on-site in Pleasanton, CA. Are you able to meet
+  // this requirement?" (live round 8, a user in Austin): another city is no obstacle for a user willing to relocate, in a
+  // country they may work in without a visa (the job's countries and any the question names, all known and allowed).
+  const placeCountries = [...new Set([...countriesInLocation(field.label), ...(page?.jobCountries ?? [])])];
+  const allowed = canonicalCountries(facts.workCountries ?? "");
+  const willMove = facts.relocate === "Yes" && placeCountries.length > 0 && placeCountries.every((c) => canWorkIn(c, allowed));
   // "Are you local / within commuting distance to this job?", "…able to commute daily to …?": a fact about where the
   // user lives, answerable only against a named place that is theirs.
-  if (/\b(commut\w*|local|nearby|within \d+ (miles?|km|kilometers?|kilometres?)|live within|based within|located within|reside within|proximity)\b/.test(q) && !placeMatched) {
+  if (/\b(commut\w*|local|nearby|within \d+ (miles?|km|kilometers?|kilometres?)|live within|based within|located within|reside within|proximity|based in|located in|live in|reside in)\b/.test(q) && !placeMatched) {
     return undefined;
   }
+  if (unknownPlace && !willMove) return undefined;
+  if (places.length > 0 && !placeMatched && !willMove) return undefined;
 
   // Check required office days per week via shared requirements parser:
   const req = parseRequirement(field.label);

@@ -43,11 +43,14 @@ describe("new Greenhouse form (react-select lists, formatted phone)", () => {
     expect((window as { __submitted?: number }).__submitted ?? 0).toBe(0);
   }, 90_000);
 
-  it("a school that is not listed is left for the user: never another campus, never 'Other'", async () => {
+  it("a school that is not listed: the list's own 'Other', flagged for the user; never another campus", async () => {
+    // Round 9: many Indian colleges are missing from Greenhouse's list; a person whose school is not there picks "Other".
     mountPage();
     const report = await fillForm(document, { profile: { ...P, school: "IIT Hyderabad" }, answers: [], mode: "review" });
-    expect(report.fields.find((f) => f.field.label === "School")?.status).toBe("failed");
-    expect(shown("school--0")).toBe("");
+    const school = report.fields.find((f) => f.field.label === "School");
+    expect(school).toMatchObject({ status: "filled", review: true });
+    expect(school?.detail).toMatch(/not in this list/);
+    expect(shown("school--0")).toBe("Other");
   }, 90_000);
 });
 

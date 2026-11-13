@@ -43,7 +43,8 @@ import { mountFormStructureButton } from "./form-structure";
 // <<< L3
 import { headline, rowState, summarize, type LiveField } from "./checklist";
 // >>> L4 ai drafts
-import { createDraftAllBar, createDraftWidget, isDraftableField, limitCounter, limitOfField } from "./drafts";
+import { createDraftAllBar, createDraftWidget, isDraftableField, limitCounter, limitOfField, resumeTextOf } from "./drafts";
+import { experienceSuggestion, yearsSuggestion, type Suggestion } from "../shared/evidence";
 import { COVER_LETTER_LIMIT, SUMMARY_LIMIT, SUMMARY_QUESTION, coverLetterQuestion, isCoverLetterField, letterFile, wrapLetter } from "../shared/cover-letter";
 import { AI_TRAP_MESSAGE, aiPolicyMessage, aiPolicyOfForm, aiTrapOf, draftsForbidden, type AiPolicy } from "../shared/ai-policy";
 import { checkLength } from "../shared/length-limit";
@@ -743,6 +744,36 @@ function answerInput(r: FieldResult): HTMLInputElement | HTMLSelectElement | HTM
   return h("input", { class: "input", type: "text", "aria-label": r.field.label });
 }
 
+/** A suggestion from the user's own resume or profile for an experience question left for them ("Have you sold into
+ * enterprise accounts?" → Yes, with the resume line that says so). Shown with its reason; used only when pressed. */
+function evidenceChip(r: FieldResult, input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement): HTMLElement {
+  const slot = h("div", { class: "evidence" });
+  if (r.field.control === "textarea" || r.field.control === "checkbox_group" || r.field.control === "file") return slot;
+  if (r.decision.kind === "ask" && r.decision.reason === "sensitive") return slot;
+  const show = (s: Suggestion) => {
+    const why = h("span", { class: "question-why" });
+    why.append(icon("info", 14), h("span", {}, `Suggested from ${s.because}.`));
+    const use = button(`Use "${s.value}"`, { variant: "ghost", size: "sm", icon: "wand" });
+    use.addEventListener("click", () => {
+      input.value = s.value;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    slot.replaceChildren(why, use);
+  };
+  const years = yearsSuggestion(r.field.label, r.field.options, profile.experienceYears ?? "");
+  if (years) {
+    show(years);
+    return slot;
+  }
+  void resumeTextOf(profile).then((text) => {
+    const work = (profile.workHistory ?? []).map((w) => `${w.title} at ${w.company}. ${w.summary}`).join("\n");
+    const s = experienceSuggestion(r.field.label, r.field.options, `${text}\n${work}\n${profile.summary ?? ""}`);
+    if (s && slot.isConnected !== false) show(s);
+  });
+  return slot;
+}
+
 interface CardContext {
   job: { title: string; company: string };
   corrections?: UserCorrection[];
@@ -814,6 +845,7 @@ function questionCard(r: FieldResult, ctx: CardContext): HTMLDivElement {
   const counter = input instanceof HTMLSelectElement ? undefined : limitCounter(input, limit);
   if (counter) card.append(counter);
   card.append(...factHints(r, profile, input, (key) => void openQuickAnswer(key)));
+  card.append(evidenceChip(r, input));
   const suggested = findSuggestedCorrection(ctx.corrections ?? [], r.field.label);
   if (suggested && suggested.count === 1 && !onPageOnly) {
     const chipBtn = button(`Use previous correction: "${suggested.answer}"`, {

@@ -800,3 +800,142 @@ Waabi | Autonomy | Canada
 Sanctuary AI | Robotics | Canada
 Clearco | Fintech | Canada
 Snyk Ltd | Security | United Kingdom
+
+# --- round 9: real boards seen in the live runs (2026-11) ---
+Cleo | | 
+Coupang | | 
+Stone | | 
+C6bank | | 
+Staffbase | | 
+Daangn | | 
+Dcard | | 
+Luno | | 
+Ebanx | | 
+Slice | | 
+Bird | | 
+Storyblok | | 
+Cognite | | 
+Housinganywhere | | 
+Realtimeboardglobal | | 
+Prospa | | 
+Porter | | 
+Mentimeter | | 
+Appier | | 
+Inter | | 
+Gympass | | 
+Jumia | | 
+Krafton | | 
+Flexport | | 
+Blockchain | | 
+Eucalyptus | | 
+Trivago | | 
+Appsflyer | | 
+Showpad | | 
+Veriff | | 
+Commercetools | | 
+Solarisbank | | 
+Branch | | 
+CDPROJEKTRED | | 
+Vitol | | 
+DigitalVirgo | | 
+KPMGNederland | | 
+DohlerGmbH | | 
+Boulanger | | 
+LaRabidaChildrensHospital | | 
+AbbVie | | 
+NBCUniversal3 | | 
+PublicStorage | | 
+ServiceNow | | 
+ReitmansCanadaLteLtd | | 
+AECOM2 | | 
+Wabtec | | 
+Sia | | 
+CornerstoneBuildingBrandsCareers | | 
+Swordtechnologies | | 
+Aubay | | 
+Hardrockdigital | | 
+Snapsoft | | 
+Hostpointag | | 
+Partejobs | | 
+Aikidosecurity | | 
+Interpath Advisory | | 
+The Pod Group | | 
+Hudabeauty | | 
+Export Development Canada | | 
+Fundingsocieties | | 
+Blue Nile | | 
+Apna | | 
+Lamour | | 
+Xtremax Pte Ltd | | 
+Luxasia | | 
+Workana Premium | | 
+Our Future Health | | 
+Swtch Energy | | 
+Orfium | | 
+Libertex Europe | | 
+Weekday 1 | | 
+Porsche Asia Pacific | | 
+Prominence Advisors | | 
+Pearltalent | | 
+Jolera | | 
+Culligan Uk Limited | | 
+
+# --- round 9: employers worldwide (verified by their public job boards before listing) ---
+# --- India ---
+Jupiter Money | Fintech | India
+MobiKwik | Fintech | India
+Spyne | AI | India
+Highradius | Fintech | India
+# --- Europe ---
+Onfido | Security | United Kingdom
+Gousto | Consumer | United Kingdom
+Cazoo | Consumer | United Kingdom
+Zilch | Fintech | United Kingdom
+Pitch | Software | Germany
+Enpal | Energy | Germany
+1Komma5 | Energy | Germany
+Pennylane | Fintech | France
+Wise Estonia | Fintech | Estonia
+Tibber | Energy | Norway
+Kahoot | Edtech | Norway
+Unity Technologies | Software | Denmark
+Nord Security | Security | Lithuania
+Scalapay | Fintech | Italy
+OutSystems | Software | Portugal
+Feedzai | Fintech | Portugal
+Sword Health | Healthtech | Portugal
+Brainly | Edtech | Poland
+DocPlanner | Healthtech | Poland
+Booksy | Software | Poland
+Smartly.io | Adtech | Finland
+# --- Middle East & Africa ---
+Property Finder | Consumer | United Arab Emirates
+Payoneer | Fintech | Israel
+Lemonade | Insurance | Israel
+Armis | Security | Israel
+M-KOPA | Fintech | Kenya
+Twiga Foods | B2B | Kenya
+Yoco | Fintech | South Africa
+TymeBank | Fintech | South Africa
+# --- Asia-Pacific ---
+Sea Group | Consumer | Singapore
+Coda Payments | Fintech | Singapore
+PatSnap | Software | Singapore
+Preferred Networks | AI | Japan
+Toss | Fintech | South Korea
+Klook | Travel | Hong Kong
+Animoca Brands | Gaming | Hong Kong
+# --- Latin America ---
+Creditas | Fintech | Brazil
+Platzi | Edtech | Colombia
+Clara | Fintech | Mexico
+NotCo | Food | Chile
+Betterfly | Insurance | Chile
+Cornershop | E-commerce | Chile
+# --- North America ---
+Hebbia | AI | United States
+Sierra | AI | United States
+Decagon | AI | United States
+Neon | Software | United States
+Canva US | Software | United States
+Miro US | Software | United States

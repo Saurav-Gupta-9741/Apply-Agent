@@ -120,7 +120,7 @@ const NO_QUALIFIER = /\b(but|however|except|unless|although|though)\b/;
 /** Match a Yes or No answer to choice options (e.g. ["Yes", "No"], ["Yes, I do", "No, I do not"], ["I agree", "I disagree"]).
  * The fallback only fires when exactly ONE option has the wanted polarity: two different "I agree …" options are
  * ambiguous and stay for the user. "N/A" is never "No" and "Yes, but …" is never a plain "Yes". */
-export function yesNoOption(options: string[], wanted: string): string | undefined {
+export function yesNoOption(options: string[], wanted: string, hint: YesNoHint = {}): string | undefined {
   const match = bestOption(options, wanted);
   if (match) return match;
   const w = normalize(wanted);
@@ -128,23 +128,54 @@ export function yesNoOption(options: string[], wanted: string): string | undefin
   const isNo = w === "n" || /^(no|false|disagree|nein|non|nao|nee)\b/.test(w);
   const unique = (list: string[]): string | undefined => (list.length === 1 ? list[0] : undefined);
   if (isYes) {
-    return unique(
-      options.filter((o) => {
-        const n = normalize(o);
-        if (n === "y") return true;
-        if (!YES_START.test(n)) return false;
-        return !YES_QUALIFIER.test(n.replace(YES_START, ""));
-      }),
-    );
+    const yeses = options.filter((o) => {
+      const n = normalize(o);
+      if (n === "y") return true;
+      if (!YES_START.test(n)) return false;
+      const rest = n.replace(YES_START, "");
+      // On a sponsorship question "Yes, I will require sponsorship" IS the plain yes (Airbnb, live round 8).
+      if (hint.topic === "sponsorship") return !/\b(but|however|except|unless|although|though|not|dont|never)\b/.test(rest);
+      return !YES_QUALIFIER.test(rest);
+    });
+    return unique(yeses) ?? sponsorshipTiming(yeses, hint);
   }
   if (isNo) {
-    return unique(
-      options.filter((o) => {
-        const n = normalize(o);
-        if (n === "n") return true;
-        return NO_START.test(n) && !NO_QUALIFIER.test(n);
-      }),
-    );
+    const noes = options.filter((o) => {
+      const n = normalize(o);
+      if (n === "n") return true;
+      return NO_START.test(n) && !NO_QUALIFIER.test(n);
+    });
+    if (noes.length) return unique(noes);
+    // No option starts with "No": the one option that says no in its own words ("Never been a contractor or an
+    // employee", "I do not have a valid work permit and would need visa sponsorship…": Lucid and Mentimeter, round 8).
+    const negatives = options.filter((o) => {
+      const n = normalize(o);
+      return NEGATIVE_STATEMENT.test(n) && !YES_START.test(n) && !NOT_A_NO.test(n);
+    });
+    return negatives.length === 1 && options.length > 1 ? negatives[0] : undefined;
   }
   return undefined;
+}
+
+/** What helps pick between several options of the same polarity. */
+export interface YesNoHint {
+  /** The question's topic (a "Yes, I will require sponsorship" is a plain yes on a sponsorship question). */
+  topic?: string;
+  /** Whether the user may work in the job's country today without sponsorship (from their own Quick answers). */
+  authorizedHere?: boolean;
+}
+
+/** A no said in the option's own first words: "I do not…", "Never been…", "I am not…", "I have not…". */
+const NEGATIVE_STATEMENT = /^(?:\S+ ){0,3}?(do not|dont|does not|doesnt|did not|didnt|have not|havent|has not|hasnt|am not|are not|is not|was not|were not|will not|wont|cannot|cant|never|not)\b/;
+/** Options that start with a negation but are not a "No": "Not applicable", "I prefer not to say", "Not sure". */
+const NOT_A_NO = /\b(not applicable|prefer not|not to (say|answer|disclose|specify)|wish|decline|not sure|unsure|not specified|not listed|not yet decided|undecided)\b|^n a$/;
+
+/** Two "Yes, I will require sponsorship" options that differ only by when: "now" for a user who cannot work in the
+ * job's country today, "in the future" for one who can (their permit ends). Unknown → left for the user. */
+function sponsorshipTiming(yeses: string[], hint: YesNoHint): string | undefined {
+  if (hint.topic !== "sponsorship" || hint.authorizedHere === undefined || yeses.length !== 2) return undefined;
+  const now = yeses.filter((o) => /\bnow\b|\bcurrently\b|\bimmediately\b/.test(normalize(o)) && !/\bfuture\b/.test(normalize(o)));
+  const later = yeses.filter((o) => /\bfuture\b|\blater\b/.test(normalize(o)) && !/\bnow\b/.test(normalize(o)));
+  if (now.length !== 1 || later.length !== 1) return undefined;
+  return hint.authorizedHere ? later[0] : now[0];
 }

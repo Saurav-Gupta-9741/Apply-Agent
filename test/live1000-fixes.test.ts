@@ -158,8 +158,10 @@ describe("live run: a saved answer about one country answers the same plain ques
   });
   it("chooses the matching yes/no choice when the choices are listed", () => {
     expect(decide(field("Do you require visa sponsorship?", "radio", ["No", "Yes"]), INDIA_PROFILE, COUNTRY_SAVED, US_JOB)).toMatchObject({ kind: "answer", value: "Yes" });
-    // A qualified choice is never read as a plain yes (existing yesNoOption rule): left for the user.
-    expect(decide(field("Do you require visa sponsorship?", "radio", ["Yes, I will require sponsorship", "No, I will not require sponsorship"]), INDIA_PROFILE, COUNTRY_SAVED, US_JOB)).not.toMatchObject({ kind: "answer" });
+    // Round 9: on a sponsorship question "Yes, I will require sponsorship" is the plain yes (Airbnb's wording); a
+    // "Yes, but…" still is not.
+    expect(decide(field("Do you require visa sponsorship?", "radio", ["Yes, I will require sponsorship", "No, I will not require sponsorship"]), INDIA_PROFILE, COUNTRY_SAVED, US_JOB)).toMatchObject({ kind: "answer", value: "Yes, I will require sponsorship" });
+    expect(decide(field("Do you require visa sponsorship?", "radio", ["Yes, but not now", "No"]), INDIA_PROFILE, COUNTRY_SAVED, US_JOB)).not.toMatchObject({ kind: "answer" });
   });
   for (const [label, page, why] of [
     ["Will you now or in the future require sponsorship for a visa to remain in your current location?", US_JOB, "gitlab: about where the user lives (India), not the US job"],

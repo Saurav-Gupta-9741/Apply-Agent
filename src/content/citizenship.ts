@@ -13,7 +13,8 @@ import { bestOption, normalize, yesNoOption } from "../shared/text";
 import type { Decision, FieldDescriptor, Profile } from "../shared/types";
 import type { PageFacts } from "./facts";
 
-const ABOUT_CITIZENSHIP = /\bcitizen(ship)?s?\b|\bnationalit(y|ies)\b|\bu ?s person\b|\bgreen card\b|\bpermanent resident\b/;
+// "Passport Country", "Country of passport", "Passport issuing country": the country of citizenship (round 9).
+const ABOUT_CITIZENSHIP = /\bcitizen(ship)?s?\b|\bnationalit(y|ies)\b|\bu ?s person\b|\bgreen card\b|\bpermanent resident\b|\bpassport (issuing )?country\b|\bcountry of (your )?passport\b|\bpassport (issued by|nationality)\b/;
 /** A follow-up, an explanation, a history or a comparison: the user's own words. */
 const NOT_PLAIN = /\b(if|explain|describe|specify|elaborate|since|afterwards|previous(ly)?|former(ly)?|ever|renounc\w*|other than|apart from|besides|acquired|obtain\w*|date|when|year|how long|parents?|spouse|family)\b/;
 const EU = new Set(["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"]);

@@ -57,7 +57,8 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["fullName", /first (name )?(and )?(last|family|sur) ?name|name and surname|vor und nachname|nom et prenom|nombre y apellidos?|voor en achternaam|nome e cognome/],
   ["firstName", /first ?name|given ?name|^(what is |whats )?your preferred name$|^preferred name$|\bfname\b|forename|vorname|\bprenom\b|^nombre$|^nome$|primer nombre|primeiro nome|nome de batismo|nome di battesimo|prenome|voornaam|下の名前|ファーストネーム|^名$|الاسم الأول|पहला नाम/],
   ["lastName", /last ?name|family ?name|surname|\blname\b|nachname|familienname|familienaam|nom de famille|^nom$|apellido|sobrenome|cognome|achternaam|名字|苗字|^姓$|اسم العائلة|उपनाम/],
-  ["fullName", /^(full )?name$|^your name$|full name|legal name|voller name|vollstandiger name|vor und nachname|nom complet|nom et prenom|nombre completo|nombre y apellidos?|nome completo|volledige naam|voor en achternaam|nome e cognome|氏名|お名前|フルネーム|^名前$|الاسم الكامل|पूरा नाम/],
+  // "Name (first & last)" (live round 8).
+  ["fullName", /^(full )?name$|^your name$|^name first (and )?last( name)?$|^first (and )?last name$|full name|legal name|voller name|vollstandiger name|vor und nachname|nom complet|nom et prenom|nombre completo|nombre y apellidos?|nome completo|volledige naam|voor en achternaam|nome e cognome|氏名|お名前|フルネーム|^名前$|الاسم الكامل|पूरा नाम/],
   ["email", /e ?mail|courriel|correo|posta elettronica|adresse electronique|メール|ईमेल|이메일|电子邮件|電子郵件/],
   ["phone", /phone|mobile|\btel\b|contact number|telef|telefoon|\bhandy|rufnummer|portable|movil|celular|cellulare|mobiel|numero di telefono|numero de tele|電話|电话|फ़?ोन|मोबाइल|전화/],
   ["linkedin", /linked ?in/],
@@ -74,7 +75,9 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["graduationYear", /graduat\w* (year|date)|year of graduation|class of|quelle annee|annee (de|d) (diplom|obtention)|abschlussjahr|jahr des abschlusses|ano de (formatura|conclusao|graduacao|graduacion|egreso)|anno di (laurea|diploma)/],
   // Only total experience. "Years of experience with Python" is a different question and goes to the user.
   ["experienceYears", /total (years? of )?(work |professional )?experience|^years of (professional |work )?experience$|^experience (in )?years$/],
-  ["degree", /\bdegree\b|qualification|abschluss|diplome|titulacion|formacao|laurea|opleiding/],
+  // Not the grade of a degree: "What is your predicted/final degree classification?" wants "2:1", not "Bachelor's"
+  // (Graphcore, live round 8).
+  ["degree", /^(?!.*\b(classification|grade|gpa|cgpa|honou?rs class|percentage|marks)\b).*(\bdegree\b|qualification|abschluss|diplome|titulacion|formacao|laurea|opleiding)/],
   ["discipline", /discipline|major|field of study|speciali[sz]ation|studiengang|studienfach|filiere|carrera|indirizzo di studio|studierichting/],
   ["school", /school|universi|college|institution|hochschule|ecole|escuela|faculdade|istituto|hogeschool/],
   ["educationLevel", /\b(highest level of education|highest education|level of education completed|possui curso superior|completed bachelor s degree)\b/],
@@ -90,7 +93,8 @@ const PROFILE_RULES: Array<[ProfileKey | "fullName", RegExp]> = [
   ["state", /^(?!.*\bcity\b).*\b(state\s*\/\s*province|province\s*\/\s*state|^province state$|^state province$|^state region$|state or province|province or state|state\s*\/\s*region|u\.s\.\s*state|canadian province|^state$|^province$|canton|departement|bundesland|provincia|regione|provincie)\b|^(what|which) (state|province) (are|do) you (currently )?(live|reside|located|based)\b|^(what|which) (state|province) are you (currently )?(located|based|living) in\b|^in which (state|province) do you (currently )?(live|reside)\b|\bcurrent state of residence\b|\bselect the (state|province) (that )?you (are )?(currently )?(located|based|living|live|reside) in\b/],
   // Where both city and country are requested in one field ("City, Country" or "country and city"), it is a location question:
   ["location", /\b(?:city\s*country|country\s*city|city\s*(?:and|,|\/)\s*country|country\s*(?:and|,|\/)\s*city)\b/],
-  ["country", /country|^land$|\bpays\b|\bpais\b|\bpaese\b/],
+  // Not where the user lives: "Passport Country" is their citizenship (citizenship.ts), "Country of birth" theirs to say.
+  ["country", /^(?!.*\b(passport|citizenship|nationality|birth|born|issuing|issued)\b).*(country|^land$|\bpays\b|\bpais\b|\bpaese\b)/],
   // Where the user WANTS to work, before where they live.
   ["preferredLocations", /preferred (job |work )?(location|cit(y|ies))|location preference|desired (job |work )?location|where would you (like|prefer) to work|bevorzugte[rn]? (arbeits)?ort|lieu souhaite|ubicacion (deseada|preferida)/],
   ["location", /\bcity\b|location|where are you (currently )?(based|located)|where do you (currently )?(live|reside)|town|wohnort|\bstadt\b|\bort\b|\bville\b|ciudad|localidad|cidade|\bcitta\b|woonplaats|lieu de residence|luogo di residenza/],
@@ -652,7 +656,7 @@ export function decide(field: FieldDescriptor, profile: Profile, answers: Answer
     if (prev) return prev;
   }
   if (isWorkModeQuestion(field)) {
-    const wm = workModeAnswer(field, profile);
+    const wm = workModeAnswer(field, profile, page);
     if (wm) return wm;
   }
   if (isTravelQuestion(field)) {

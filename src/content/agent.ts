@@ -4,7 +4,7 @@
 import { translateFieldsOnDevice } from "../shared/locale/translator";
 import type { AnswerEntry, ApplicationRecord, Decision, FieldResult, FillTag, Mode, Profile, ResumeFile, RunReport } from "../shared/types";
 import { detectSignInWall, generic, isGoogleForms, pickAdapter } from "./adapters";
-import { workEntries } from "./classify";
+import { sensitiveTopic, workEntries } from "./classify";
 import { codeOptionFor, dialCodePickerFor, isDialCodePicker, JUST_A_DIAL_CODE, phoneBoxFor, selectedCode, splitPhone } from "./phone";
 import { decideWithMeaning, MODEL_DECISIONS, type Meaning } from "./meaning";
 import { detectChallenge, detectConfirmation, hasCaptcha, visibleErrors } from "./detect";
@@ -12,10 +12,11 @@ import { DROPDOWN, extractFields, inWorkSection, sectionHeadings, type Extracted
 import { currentValue, fillCombobox, fillDropdown, fillField, fillPhone, type FillOutcome } from "./fill";
 import { pickSchool, schoolQueries } from "./schools";
 import { deepQueryAll } from "./dom";
-import { isDeclineAnswer, type PageFacts } from "./facts";
+import { HEARD_ABOUT, isDeclineAnswer, type PageFacts } from "./facts";
 import { jobCountriesWithApi } from "./joblocation";
 import { placeOption, placeQueries } from "../shared/place-pick";
-import { bestOption, normalize } from "../shared/text";
+import { bestOption, normalize, yesNoOption, type YesNoHint } from "../shared/text";
+import { canonicalCountries, countriesIn } from "../shared/countries";
 import { pruneDisconnectedCorrections, trackCorrection } from "./corrections";
 import { isConsentLabel } from "../shared/consent-review";
 import { questionKey } from "./classify";
@@ -331,18 +332,99 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
   // (live run 7: "Austin, TX" found nothing on 9 Ashby and Greenhouse location lists).
   const home = decision.kind === "profile" && decision.key === "location"
     ? { location: value, state: ctx.profile.state, country: ctx.profile.country } : undefined;
-  const outcome = field.descriptor.control === "combobox" ? await fillCombobox(el as HTMLInputElement, value, 6000,
+  // A Yes or No decided before the list showed its options (react-select lists open only when clicked): the option
+  // that says it, read from the whole list ("I do not have a valid work permit…", "Yes, I will require sponsorship now…").
+  const yesNo = decision.kind === "answer" && !declineOnly && /^(yes|no)$/i.test(value.trim())
+    ? (labels: string[]) => yesNoOption(labels, value, yesNoHint(field, ctx)) : undefined;
+  // "How did you hear about us?": "LinkedIn" among "LinkedIn advertisement" and "LinkedIn job search" (Fivetran).
+  const source = decision.kind === "answer" && HEARD_ABOUT.test(normalize(field.descriptor.label))
+    ? (labels: string[]) => bestOption(labels, value) ?? sourceOption(labels, value) : undefined;
+  // A state list for US states only, with "I am located outside the United States" (Bill.com), for a user abroad.
+  const abroad = decision.kind === "profile" && decision.key === "state" && livesOutsideUs(ctx.profile)
+    ? (labels: string[]) => bestOption(labels, value) ?? outsideUsOption(labels) : undefined;
+  const custom = declineOnly ?? yesNo ?? source ?? abroad;
+  let outcome = field.descriptor.control === "combobox" ? await fillCombobox(el as HTMLInputElement, value, 6000,
       school ? { queries: schoolQueries(value), pick: (labels) => pickSchool(labels, value) }
         : declineOnly ? { pick: declineOnly, first: ["", "decline", "wish", "prefer not"] }
-          : home ? { queries: placeQueries(home), pick: (labels) => placeOption(labels, home, (l) => bestOption(l, value)) } : {})
-    : field.descriptor.control === "dropdown" || el.matches(DROPDOWN) ? await fillDropdown(el, value, 4000, declineOnly)
+          : home ? { queries: placeQueries(home), pick: (labels) => placeOption(labels, home, (l) => bestOption(l, value)) }
+            : custom ? { pick: custom, first: yesNo || abroad ? [""] : [] } : {})
+    : field.descriptor.control === "dropdown" || el.matches(DROPDOWN) ? await fillDropdown(el, value, 4000, custom)
     // Phone boxes often format the number as it is typed, or beside a country picker keep only the national part.
     : phone && (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) ? fillPhone(el, value, splitPhone(ctx.profile.phone).code)
     : fillField(field, value, ctx.profile.resume);
+  // A school the list does not know (many Indian colleges are missing from Greenhouse's list): "Other", and the
+  // school's name in the box that "Other" opens, if it opens one. Flagged so the user sees it.
+  let review: boolean | undefined;
+  if (!outcome.ok && school && field.descriptor.control === "combobox" && /^no option matches/.test(outcome.detail ?? "")) {
+    const other = await schoolNotListed(field, value);
+    if (other) {
+      outcome = other;
+      review = true;
+    }
+  }
   return {
     field: field.descriptor, decision, status: outcome.ok ? "filled" : "failed", detail: outcome.detail,
-    tag: fillTagFor(decision), understood: MODEL_DECISIONS.has(decision) || undefined,
+    tag: fillTagFor(decision), understood: MODEL_DECISIONS.has(decision) || undefined, review,
   };
+}
+
+/** What helps a Yes/No land on the right option: the question's topic, and whether the user may work in the job's
+ * one country today (their own Quick answer for that country; unknown otherwise). */
+function yesNoHint(field: ExtractedField, ctx: AgentContext): YesNoHint {
+  const topic = sensitiveTopic(field.descriptor);
+  const job = ctx.page?.jobCountries ?? [];
+  let authorizedHere: boolean | undefined;
+  if (job.length === 1) {
+    const entry = ctx.answers.find((a) => a.topic === "work_authorization" && a.country && countriesIn(a.country).length === 1
+      && countriesIn(a.country)[0] === job[0] && /^(yes|no)$/i.test(a.answer.trim()));
+    if (entry) authorizedHere = /^yes$/i.test(entry.answer.trim());
+  }
+  return { topic, authorizedHere };
+}
+
+/** Among several options naming the source, the one for a job listing ("LinkedIn job search", not "LinkedIn
+ * advertisement"); nothing when that is not clear. */
+export function sourceOption(labels: string[], value: string): string | undefined {
+  const want = normalize(value);
+  if (!want) return undefined;
+  const named = labels.filter((l) => ` ${normalize(l)} `.includes(` ${want} `));
+  if (named.length === 1) return named[0];
+  const listing = named.filter((l) => /\b(job|jobs|search|posting|listing|board|careers?)\b/.test(normalize(l)) && !/\b(ad|ads|advert\w*|sponsored|recruiter|message|inmail|post)\b/.test(normalize(l)));
+  return listing.length === 1 ? listing[0] : undefined;
+}
+
+const livesOutsideUs = (profile: Profile) => {
+  const home = canonicalCountries(profile.country ?? "")[0];
+  return !!home && home !== "United States";
+};
+
+/** "I am located outside the United States and its territories", when the list has exactly one such option. */
+export function outsideUsOption(labels: string[]): string | undefined {
+  const hits = labels.filter((l) => /\b(outside|not in|not located in|not based in) (of )?(the )?(united states|us|usa|u s|u s a)\b|\bnon us\b|^(international|outside us)$/.test(normalize(l)));
+  return hits.length === 1 ? hits[0] : undefined;
+}
+
+const NOT_LISTED = /^(other|others|other school|other university|other institution|my school is not listed|school not listed|not listed|(school|university|institution) not (listed|in (the )?list))$/;
+
+/** The school list's own "Other", then the school's name in a box that appears for it ("Other school", "Please
+ * specify"). Nothing when the list has no such option. */
+async function schoolNotListed(field: ExtractedField, school: string): Promise<FillOutcome | undefined> {
+  const input = field.elements[0] as HTMLInputElement;
+  const doc = input.ownerDocument;
+  const scan = () => extractFields(locate(doc).root ?? doc.body);
+  const before = new Set(scan().map((f) => f.descriptor.key));
+  const picked = await fillCombobox(input, "Other", 4000, { pick: (labels) => labels.find((l) => NOT_LISTED.test(normalize(l))), first: ["Other", ""] });
+  if (!picked.ok) return undefined;
+  await sleep(500);
+  const extra = scan().find((f) => !before.has(f.descriptor.key)
+    && (f.descriptor.control === "text" || f.descriptor.control === "textarea")
+    && /other|specify|school|universit|college|institution|name/i.test(f.descriptor.label) && !currentValue(f));
+  const chose = picked.chosen ?? "Other";
+  if (extra) {
+    const typed = fillField(extra, school);
+    if (typed.ok) return { ok: true, detail: `your school is not in this list: chose "${chose}" and typed it in "${extra.descriptor.label}"`, chosen: chose };
+  }
+  return { ok: true, detail: `your school is not in this list: chose "${chose}"; please check`, chosen: chose };
 }
 
 /** Fill everything the agent is allowed to fill. Never overwrites a value already present. */
