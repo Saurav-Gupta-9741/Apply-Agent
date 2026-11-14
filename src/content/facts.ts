@@ -788,6 +788,16 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
       const day = new Date(Date.now() + candidateDays * 86_400_000);
       return answer(day.toISOString().slice(0, 10), "notice period");
     }
+    // The same question in a text box (Alan, DeepL, Trustpilot, round 12): the date in the box's own format when it shows
+    // one, else written out ("1 December 2026") so day and month cannot be swapped.
+    if (field.control === "text" && candidateDays !== undefined && /\b(earliest|soonest)\b.*\bstart|\b(desired|possible|expected) start date\b/.test(q) && !/\b(end|last|leave|finish|month|year)\b/.test(q)) {
+      const day = new Date(Date.now() + candidateDays * 86_400_000);
+      const shape = normalize(`${field.label} ${field.placeholder}`);
+      const dd = String(day.getDate()).padStart(2, "0"), mm = String(day.getMonth() + 1).padStart(2, "0"), yyyy = day.getFullYear();
+      const value = /\bmm dd yyyy\b/.test(shape) ? `${mm}/${dd}/${yyyy}` : /\bdd mm yyyy\b/.test(shape) ? `${dd}/${mm}/${yyyy}`
+        : /\byyyy mm dd\b/.test(shape) ? `${yyyy}-${mm}-${dd}` : day.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+      return answer(value, "notice period");
+    }
     // "Do you have a notice period at your current job before being able to start a new role?": yes when it is longer
     // than nothing.
     // ("Are you subject to a notice period…?" stays the user's: the labelled set of 1,539 real questions keeps it so.)
@@ -865,7 +875,16 @@ export function factDecision(field: FieldDescriptor, profile: Profile, topic: Se
     if (moved) return moved;
     if (!facts.relocate) return undefined;
     if (field.control === "textarea" || field.control === "text") return undefined;
-    if (!/\b(relocat|open to (?:relocation|relocating)|willing to relocate)\b/i.test(q)) return undefined;
+    // "relocat" followed by a word boundary never matched "relocate"/"relocated" (round 12: "willing and able to relocate
+    // to one of our hubs" and "willing to relocated to Dublin" went to the user).
+    if (!/\b(relocat\w*|open to (?:relocation|relocating))\b/i.test(q)) return undefined;
+    // Only willingness: "Will you require relocation assistance?" or "…a relocation package?" is another question.
+    if (!/\b(willing|open|able|consider|interested|happy|prepared|ok)\b/.test(q) || /\b(assistance|package|support|reimburs\w*|stipend|bonus|allowance|expenses?|costs?|visa)\b/.test(q)) return undefined;
+    // On-site work and relocation in one question ("…work onsite in the Esri location, or relocate to do so?") is the
+    // user's: the work mode decides too.
+    if (/\b(onsite|on site|in office|in person|work from|commute|hybrid)\b/.test(q)) return undefined;
+    // Conditions the saved answer does not cover: at the user's own cost, by a date, without help.
+    if (/\b(own (expense|cost)|your expense|self[- ]?fund\w*|without (any )?(relocation )?(assistance|support|help|package)|within \d+|by (january|february|march|april|may|june|july|august|september|october|november|december)|immediately)\b/i.test(q)) return undefined;
     // "Are you currently located in, or open to relocating to, one of BILL's remote-eligible states?" (live run 3):
     // where the user lives AND relocation in one question, with a "Yes, I currently reside in…" choice. The Quick
     // answer is only for the plain "Are you willing to relocate?": a question that also asks where the user is goes
@@ -916,7 +935,9 @@ function relocationFact(field: FieldDescriptor, profile: Profile, facts: QuickFa
     const val = pick("Yes");
     return val ? answer(val, "relocation") : undefined;
   }
-  const outside = /^if you (?:currently )?(?:live|are based|reside|are located) outside (?:of )?(?:the )?(.+?)(?: (?:metro(?:politan)? )?(?:area|region))?,? (?:are|would) you (?:be )?(?:open|willing) to relocat/.exec(q);
+  // Also "If you are currently not local to one of our central offices, are you willing to relocate?" (Sigma, round 12).
+  const notLocal = /^if you are (?:currently )?not (?:local|based|located|living) (?:to|in|near) (?:one of )?(?:our |the )?(.+?),? (?:are|would) you (?:be )?(?:open|willing) to relocat/.exec(q);
+  const outside = notLocal ?? /^if you (?:currently )?(?:live|are based|reside|are located) outside (?:of )?(?:the )?(.+?)(?: (?:metro(?:politan)? )?(?:area|region))?,? (?:are|would) you (?:be )?(?:open|willing) to relocat/.exec(q);
   // ("If you…" reads as a follow-up to yesNoField; here it is the whole question, so the options decide.)
   const yesAndNo = field.options.length ? !!yesNoOption(field.options, "Yes") && !!yesNoOption(field.options, "No") : ["combobox", "select", "dropdown", "radio"].includes(field.control);
   if (outside && facts.relocate && yesAndNo) {

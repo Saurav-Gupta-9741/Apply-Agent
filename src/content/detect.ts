@@ -52,9 +52,25 @@ function challengeIn(text: string): string | undefined {
   return CHALLENGE_TEXT.find(([pattern]) => pattern.test(clean))?.[1];
 }
 
+/** A CAPTCHA that is part of an application form (Lever puts an hCaptcha inside every application form, checked when
+ * the user presses Submit): inside a form with fields to fill. Not a robot check: ApplyAgent fills the fields and leaves
+ * the CAPTCHA and Submit to the user, as always. Round 12: treated as a robot check, so nothing was filled on Lever. */
+function captchaIsPartOfForm(doc: Document): boolean {
+  const found = CAPTCHA_SELECTORS.map((s) => doc.querySelector<HTMLElement>(s)).filter((el): el is HTMLElement => !!el);
+  if (!found.length) return false;
+  // The visible challenge window (reCAPTCHA's "bframe") or a block-page checker is never part of a form.
+  if (found.some((el) => /bframe|captcha-delivery|px-cloud|perimeterx|arkoselabs|funcaptcha|awswaf|challenges\.cloudflare/i.test(el.getAttribute("src") ?? "") || el.id === "px-captcha")) return false;
+  return found.every((el) => {
+    const form = el.closest("form");
+    if (!form) return false;
+    const fields = Array.from(form.querySelectorAll<HTMLElement>("input:not([type=hidden]):not([type=submit]):not([type=button]), textarea, select"));
+    return fields.length >= 3;
+  });
+}
+
 /** A robot check, rate-limit or block page. ApplyAgent stops at these; it never tries to solve or get past them. */
 export function detectChallenge(doc: Document): Challenge | null {
-  if (hasCaptcha(doc)) return { kind: "captcha", detail: "a CAPTCHA" };
+  if (hasCaptcha(doc) && !captchaIsPartOfForm(doc)) return { kind: "captcha", detail: "a CAPTCHA" };
   const navigation = (doc.defaultView?.performance?.getEntriesByType?.("navigation")?.[0] as { responseStatus?: number } | undefined);
   if (navigation?.responseStatus === 429) return { kind: "http429", detail: "HTTP 429 (too many requests)" };
   const places = [doc.title, ...Array.from(doc.querySelectorAll<HTMLElement>("h1, h2, h3, [role='alert'], [role='alertdialog'], .error-title, #challenge-title"),

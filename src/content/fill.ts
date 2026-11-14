@@ -391,6 +391,8 @@ const OPTION_SELECTOR = [
   ".zp_select_option",
   ".zp_option",
   "li.zp_dropdown_item",
+  // Lever's location suggestions (round 12).
+  ".dropdown-results > .dropdown-location",
 ].join(", ");
 
 function visibleOptions(scope: ParentNode): HTMLElement[] {
@@ -580,9 +582,21 @@ export function comboboxShown(el: Element): string {
  * the whole list (react-select lists everything when nothing is typed). */
 function typeQuery(input: HTMLInputElement, query: string, first: boolean): void {
   if (first || input.value !== query) {
-    setNativeValue(input, query);
-    fire(input, "input");
-    input.dispatchEvent(new KeyboardEvent("keyup", { key: query.slice(-1) || "Backspace", bubbles: true, composed: true }));
+    if (!query) {
+      setNativeValue(input, query);
+      fire(input, "input");
+      input.dispatchEvent(new KeyboardEvent("keyup", { key: "Backspace", bubbles: true, composed: true }));
+    } else {
+      // One character at a time, as typing does: some searches start only on key presses (Lever's location box showed
+      // no suggestions for a value set at once; live round 12). The final text is the same.
+      for (let i = 1; i <= query.length; i++) {
+        const key = query[i - 1]!;
+        input.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true, composed: true }));
+        setNativeValue(input, query.slice(0, i));
+        fire(input, "input");
+        input.dispatchEvent(new KeyboardEvent("keyup", { key, bubbles: true, composed: true }));
+      }
+    }
   }
   // ArrowDown opens a closed list (it never submits or closes anything on the page).
   if (!query) input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", code: "ArrowDown", bubbles: true, composed: true, cancelable: true }));

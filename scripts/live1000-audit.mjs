@@ -97,7 +97,10 @@ const US_STATES = /\b(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|M
 const INDIA_PLACES = /\b(india|bengaluru|bangalore|mumbai|pune|hyderabad|chennai|gurgaon|gurugram|noida|delhi|kolkata|ahmedabad)\b/i;
 const CITY_COUNTRY = [[/\b(london|manchester|edinburgh|cambridge, uk)\b/i, "United Kingdom"], [/\bparis\b/i, "France"], [/\b(madrid|barcelona)\b/i, "Spain"], [/\b(berlin|munich|hamburg)\b/i, "Germany"], [/\b(toronto|vancouver|montreal)\b/i, "Canada"], [/\bamsterdam\b/i, "Netherlands"], [/\bdublin\b/i, "Ireland"], [/\b(sydney|melbourne)\b/i, "Australia"], [/\btokyo\b/i, "Japan"], [/\bbangkok|thailand\b/i, "Thailand"], [/\b(amman|jordan)\b/i, "Jordan"], [/\btel aviv\b/i, "Israel"], [/\bs[aã]o paulo\b/i, "Brazil"], [/\b(lisbon)\b/i, "Portugal"], [/\b(warsaw)\b/i, "Poland"], [/\b(mexico city)\b/i, "Mexico"], [/\b(serbia|belgrade)\b/i, "Serbia"], [/\b(dubai)\b/i, "UAE"]];
 /** The countries a job is in, from its location text ("Remote - USA", "Bengaluru-VTP, India", "Raleigh, NC"). */
-function jobCountries(meta) {
+function jobCountries(rawMeta) {
+  // Two-letter country codes from the job APIs ("IN" from Lever is India, never Indiana; round 12).
+  const regionName = (c) => (/^[A-Z]{2}$/.test(String(c ?? "").trim()) ? new Intl.DisplayNames(["en"], { type: "region" }).of(String(c).trim()) : c);
+  const meta = rawMeta ? { ...rawMeta, country: regionName(rawMeta.country) } : rawMeta;
   // The API's own country wins: "IN Tamil Nadu (Chennai) - Office" (Poshmark) read as Indiana.
   const own = meta?.country ? countriesIn(meta.country) : [];
   if (own.length) return own;

@@ -1,0 +1,388 @@
+{
+ "generatedAt": "2026-11-14T08:24:19.070Z",
+ "inputs": [
+  "results-r12-recheck-us.jsonl"
+ ],
+ "forms": 42,
+ "byOutcome": {
+  "filled": 40,
+  "no_form": 2
+ },
+ "byPlatformOutcome": {
+  "lever": {
+   "filled": 30
+  },
+  "personio": {
+   "filled": 4,
+   "no_form": 2
+  },
+  "teamtailor": {
+   "filled": 2
+  },
+  "rippling": {
+   "filled": 2
+  },
+  "pinpoint": {
+   "filled": 2
+  }
+ },
+ "runStatus": {
+  "needs_user": 35,
+  "ready_to_submit": 5
+ },
+ "fields": 574,
+ "byStatus": {
+  "filled": 354,
+  "skipped": 126,
+  "needs_user": 89,
+  "already_filled": 2,
+  "failed": 3
+ },
+ "byDecision": {
+  "resume": 40,
+  "profile": 256,
+  "skip": 118,
+  "ask": 99,
+  "answer": 61
+ },
+ "byDecisionStatus": {
+  "resume": {
+   "filled": 40
+  },
+  "profile": {
+   "filled": 256
+  },
+  "skip": {
+   "skipped": 118
+  },
+  "ask": {
+   "needs_user": 89,
+   "skipped": 8,
+   "already_filled": 2
+  },
+  "answer": {
+   "filled": 58,
+   "failed": 3
+  }
+ },
+ "required": 274,
+ "requiredLeftForUser": 76,
+ "requiredFilled": 198,
+ "requiredSections": 0,
+ "requiredSectionsLeft": 0,
+ "requiredSectionsLeftByName": {},
+ "cover": {
+  "tried": 2,
+  "attached": 2,
+  "shown": 2,
+  "notShown": []
+ },
+ "asks": {
+  "work_authorization": 3,
+  "salary": 27,
+  "relocation": 5,
+  "consent": 8,
+  "unknown": 42,
+  "sponsorship": 3,
+  "pronouns": 6,
+  "gender": 1,
+  "race": 1,
+  "disability": 3
+ },
+ "asksRequired": {
+  "work_authorization": 2,
+  "unknown": 42,
+  "salary": 23,
+  "sponsorship": 3,
+  "relocation": 3,
+  "gender": 1,
+  "race": 1,
+  "disability": 3
+ },
+ "skips": {
+  "optional, not in profile": 70,
+  "optional attachment": 4,
+  "optional choice": 18,
+  "optional attachment (not your resume)": 2,
+  "no portfolio in profile": 22,
+  "not sure this saved answer fits: left for you": 2
+ },
+ "failedByKey": {
+  "answer:Gender (dropdown)": 1,
+  "answer:Race / Ethnicity (dropdown)": 1,
+  "answer:Veteran status (dropdown)": 1
+ },
+ "seconds": {
+  "forms": 42,
+  "median": 9,
+  "mean": 12.9,
+  "medianFilled": 9,
+  "max": 35
+ },
+ "perCompany": {
+  "lever:angellist": {
+   "forms": 2,
+   "fields": 20,
+   "filled": 15,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "personio:ottonova": {
+   "forms": 2,
+   "fields": 22,
+   "filled": 12,
+   "needsUser": 4,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "teamtailor:career": {
+   "forms": 2,
+   "fields": 25,
+   "filled": 12,
+   "needsUser": 2,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "rippling:rippling": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 18,
+   "needsUser": 3,
+   "ready": 1,
+   "requiredLeft": 3
+  },
+  "pinpoint:workwithus": {
+   "forms": 2,
+   "fields": 22,
+   "filled": 12,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "lever:animocabrands": {
+   "forms": 2,
+   "fields": 37,
+   "filled": 20,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "personio:chrono24": {
+   "forms": 2,
+   "fields": 27,
+   "filled": 16,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "lever:arcadia": {
+   "forms": 2,
+   "fields": 48,
+   "filled": 30,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "lever:blablacar": {
+   "forms": 2,
+   "fields": 33,
+   "filled": 18,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "lever:contentsquare": {
+   "forms": 2,
+   "fields": 38,
+   "filled": 23,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "lever:cred": {
+   "forms": 2,
+   "fields": 22,
+   "filled": 16,
+   "needsUser": 0,
+   "ready": 0,
+   "requiredLeft": 0
+  },
+  "lever:hevodata": {
+   "forms": 2,
+   "fields": 24,
+   "filled": 16,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "lever:jamcity": {
+   "forms": 2,
+   "fields": 24,
+   "filled": 16,
+   "needsUser": 0,
+   "ready": 0,
+   "requiredLeft": 0
+  },
+  "lever:kavak": {
+   "forms": 2,
+   "fields": 22,
+   "filled": 16,
+   "needsUser": 0,
+   "ready": 0,
+   "requiredLeft": 0
+  },
+  "lever:meesho": {
+   "forms": 2,
+   "fields": 40,
+   "filled": 22,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 12
+  },
+  "lever:mindtickle": {
+   "forms": 2,
+   "fields": 34,
+   "filled": 18,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "lever:neon": {
+   "forms": 2,
+   "fields": 33,
+   "filled": 17,
+   "needsUser": 12,
+   "ready": 0,
+   "requiredLeft": 12
+  },
+  "lever:ninjavan": {
+   "forms": 2,
+   "fields": 17,
+   "filled": 15,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "lever:nium": {
+   "forms": 2,
+   "fields": 29,
+   "filled": 23,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "lever:outreach": {
+   "forms": 2,
+   "fields": 29,
+   "filled": 19,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 0
+  }
+ },
+ "perPlatform": {
+  "lever": {
+   "forms": 30,
+   "fields": 450,
+   "filled": 284,
+   "needsUser": 67,
+   "failed": 0,
+   "skipped": 99,
+   "ready": 0,
+   "required": 224,
+   "requiredLeft": 61,
+   "seconds": 9
+  },
+  "personio": {
+   "forms": 4,
+   "fields": 49,
+   "filled": 28,
+   "needsUser": 10,
+   "failed": 0,
+   "skipped": 11,
+   "ready": 2,
+   "required": 20,
+   "requiredLeft": 6,
+   "seconds": 7
+  },
+  "teamtailor": {
+   "forms": 2,
+   "fields": 25,
+   "filled": 12,
+   "needsUser": 2,
+   "failed": 0,
+   "skipped": 11,
+   "ready": 2,
+   "required": 2,
+   "requiredLeft": 0,
+   "seconds": 24
+  },
+  "rippling": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 18,
+   "needsUser": 3,
+   "failed": 3,
+   "skipped": 2,
+   "ready": 1,
+   "required": 16,
+   "requiredLeft": 3,
+   "seconds": 35
+  },
+  "pinpoint": {
+   "forms": 2,
+   "fields": 22,
+   "filled": 12,
+   "needsUser": 7,
+   "failed": 0,
+   "skipped": 3,
+   "ready": 0,
+   "required": 12,
+   "requiredLeft": 6,
+   "seconds": 35
+  }
+ },
+ "blocked": {
+  "total": 487,
+  "forms": 40,
+  "applicationSends": []
+ },
+ "urlChanged": [],
+ "errors": {},
+ "filledShare": 61.67,
+ "requiredLeftShare": 27.74,
+ "formsReady": 5,
+ "formsNeedingUser": 35,
+ "accuracy": {
+  "filled": 354,
+  "correct": 347,
+  "wrong": 0,
+  "unclear": 7,
+  "byRule": {
+   "correct:resume": 40,
+   "correct:profile_kind": 256,
+   "correct:manual:none": 2,
+   "correct:qa_pronouns": 3,
+   "correct:eeo_decline": 20,
+   "correct:qa_onsite": 3,
+   "correct:workauth_job_country": 5,
+   "correct:workauth_other_country": 2,
+   "correct:answer_same_topic": 3,
+   "correct:hear": 4,
+   "unclear:none": 3,
+   "correct:sponsor_job_country": 2,
+   "correct:qa_relocation": 2,
+   "unclear:qa_notice": 4,
+   "correct:qa_notice": 4,
+   "correct:qa_eeo": 1
+  },
+  "wrongByRule": {},
+  "wrongShare": 0,
+  "correctShare": 98.023,
+  "unclearPairs": 4,
+  "clearedAfterFill": 0,
+  "clearedForms": 0,
+  "clearedByName": {}
+ }
+}

@@ -21,6 +21,7 @@ import { NEVER_REMEMBER, type PendingQuestion } from "../shared/types";
 import { findAnswer, profileKeyFor, questionKey } from "../content/classify";
 import { isAppliedBeforeQuestion } from "../content/facts";
 import { HANDS_OFF_MESSAGE, isHandsOff, platformFor } from "../shared/platforms";
+import { renderApplyDirect } from "./apply-direct-card";
 import { makeBackup, mergeAnswers, mergeApplications, mergeCompanies, readBackup } from "../shared/backup";
 import { loadMyCompanies } from "./discover";
 import { MY_COMPANIES_KEY } from "../shared/jobs/companies";
@@ -47,7 +48,7 @@ import { createDraftAllBar, createDraftWidget, isDraftableField, limitCounter, l
 import { experienceSuggestion, yearsSuggestion, type Suggestion } from "../shared/evidence";
 import { normalize, similarity } from "../shared/text";
 import { loadWriterSettings } from "../shared/writer/client";
-import { coverLetterLimitFor, SUMMARY_LIMIT, SUMMARY_QUESTION, coverLetterQuestion, isCoverLetterField, letterFile, wrapLetter } from "../shared/cover-letter";
+import { coverLetterLimitFor, letterCompany, SUMMARY_LIMIT, SUMMARY_QUESTION, coverLetterQuestion, isCoverLetterField, letterFile, wrapLetter } from "../shared/cover-letter";
 import { AI_TRAP_MESSAGE, aiPolicyMessage, aiPolicyOfForm, aiTrapOf, draftsForbidden, type AiPolicy } from "../shared/ai-policy";
 import { checkLength } from "../shared/length-limit";
 import { factHints, focusQuickAnswer } from "./fact-hints";
@@ -315,6 +316,8 @@ async function refreshPage(): Promise<void> {
   void renderUsageMeter({ toast: (m, t) => toast(m, t ?? ""), showPlan: () => showSection("profile") });
   void renderFitCard(tab?.id, canFill, () => showSection("profile"));
   void renderApplyResume(tab?.id, url, canFill);
+  // LinkedIn, Indeed, Naukri: never filled there; this job found on the company's own site instead.
+  renderApplyDirect(tab, handsOff);
   await renderDetection(tab, handsOff, embedded, () => mine === pageCheck);
 }
 
@@ -781,6 +784,9 @@ function evidenceChip(r: FieldResult, input: HTMLInputElement | HTMLSelectElemen
   return slot;
 }
 
+/** "Why us?" in its usual wordings. */
+const WHY_US = /^why\b(?! (did|do|are|have|would) you (leave|left|want to leave))|\bwhy do you want to (join|work)\b|\bwhy are you interested in\b|\bwhat (excites|interests|draws|attracts) you (about|to)\b|\bwhy (this|our) (company|role|team)\b/;
+
 /** "Why do you want to work here?" asked again on another form: the user's own earlier long answer to a similar
  * question, offered as a start to edit (round 11: auto-reuse is near its ceiling, 218 of 280 left-over questions were
  * different questions; long answers are where the user's time goes). Never filled by itself. */
@@ -792,12 +798,14 @@ function earlierAnswerChip(r: FieldResult, input: HTMLInputElement | HTMLSelectE
     let best: { score: number; answer: string; company?: string } | undefined;
     for (const a of answers) {
       if (a.answer.trim().length < 80 || normalize(a.question) === here) continue;
-      const score = similarity(a.question, r.field.label);
+      // "Why Mercury?" and "Why do you want to work at Stripe?" share no words, yet are the same question (round 12).
+      const score = WHY_US.test(normalize(a.question)) && WHY_US.test(here) ? 1 : similarity(a.question, r.field.label);
       if (score >= 0.35 && (!best || score > best.score)) best = { score, answer: a.answer, company: a.company };
     }
     if (!best || !slot.isConnected) return;
     const why = h("span", { class: "question-why" });
-    why.append(icon("info", 14), h("span", {}, `You answered a similar question${best.company ? ` for ${best.company}` : ""}. Start from it and change what is about that company.`));
+    const at = best.company ? letterCompany(best.company) : "";
+    why.append(icon("info", 14), h("span", {}, `You answered a similar question${at ? ` for ${at}` : ""}. Start from it and change what is about that company.`));
     const use = button("Start from my earlier answer", { variant: "ghost", size: "sm", icon: "wand" });
     const chosen = best.answer;
     use.addEventListener("click", () => {

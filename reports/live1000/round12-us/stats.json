@@ -1,0 +1,435 @@
+{
+ "generatedAt": "2026-11-14T07:41:24.364Z",
+ "inputs": [
+  "results-r12-us-a.jsonl",
+  "results-r12-us-b.jsonl"
+ ],
+ "forms": 111,
+ "byOutcome": {
+  "no_form": 65,
+  "filled": 46
+ },
+ "byPlatformOutcome": {
+  "lever": {
+   "no_form": 30
+  },
+  "smartrecruiters": {
+   "no_form": 25
+  },
+  "personio": {
+   "no_form": 4,
+   "filled": 2
+  },
+  "jobvite": {
+   "no_form": 4
+  },
+  "pinpoint": {
+   "filled": 2
+  },
+  "workable": {
+   "filled": 23,
+   "no_form": 2
+  },
+  "recruitee": {
+   "filled": 15
+  },
+  "teamtailor": {
+   "filled": 2
+  },
+  "rippling": {
+   "filled": 2
+  }
+ },
+ "runStatus": {
+  "needs_user": 34,
+  "ready_to_submit": 12
+ },
+ "fields": 479,
+ "byStatus": {
+  "filled": 258,
+  "needs_user": 114,
+  "skipped": 71,
+  "already_filled": 33,
+  "failed": 3
+ },
+ "byDecision": {
+  "resume": 46,
+  "profile": 227,
+  "ask": 120,
+  "skip": 67,
+  "answer": 19
+ },
+ "byDecisionStatus": {
+  "resume": {
+   "filled": 46
+  },
+  "profile": {
+   "filled": 196,
+   "already_filled": 31
+  },
+  "ask": {
+   "needs_user": 114,
+   "skipped": 4,
+   "already_filled": 2
+  },
+  "skip": {
+   "skipped": 67
+  },
+  "answer": {
+   "filled": 16,
+   "failed": 3
+  }
+ },
+ "required": 340,
+ "requiredLeftForUser": 111,
+ "requiredFilled": 229,
+ "requiredSections": 0,
+ "requiredSectionsLeft": 0,
+ "requiredSectionsLeftByName": {},
+ "cover": {
+  "tried": 14,
+  "attached": 14,
+  "shown": 14,
+  "notShown": []
+ },
+ "asks": {
+  "work_authorization": 2,
+  "unknown": 80,
+  "consent": 8,
+  "salary": 27,
+  "notice_period": 2,
+  "sponsorship": 1
+ },
+ "asksRequired": {
+  "unknown": 80,
+  "work_authorization": 1,
+  "consent": 4,
+  "salary": 25,
+  "notice_period": 2,
+  "sponsorship": 1
+ },
+ "skips": {
+  "optional choice": 6,
+  "optional, not in profile": 37,
+  "optional attachment (not your resume)": 22,
+  "optional attachment": 2
+ },
+ "failedByKey": {
+  "answer:Gender (dropdown)": 1,
+  "answer:Race / Ethnicity (dropdown)": 1,
+  "answer:Veteran status (dropdown)": 1
+ },
+ "seconds": {
+  "forms": 111,
+  "median": 8,
+  "mean": 15.9,
+  "medianFilled": 8,
+  "max": 43
+ },
+ "perCompany": {
+  "pinpoint:workwithus": {
+   "forms": 2,
+   "fields": 17,
+   "filled": 10,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "workable:revisionz": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 14,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "recruitee:swordtechnologies": {
+   "forms": 2,
+   "fields": 19,
+   "filled": 8,
+   "needsUser": 7,
+   "ready": 0,
+   "requiredLeft": 7
+  },
+  "teamtailor:career": {
+   "forms": 2,
+   "fields": 25,
+   "filled": 12,
+   "needsUser": 2,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "rippling:rippling": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 18,
+   "needsUser": 3,
+   "ready": 1,
+   "requiredLeft": 3
+  },
+  "personio:chrono24": {
+   "forms": 2,
+   "fields": 27,
+   "filled": 16,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "workable:the-pod-group": {
+   "forms": 2,
+   "fields": 17,
+   "filled": 10,
+   "needsUser": 5,
+   "ready": 0,
+   "requiredLeft": 5
+  },
+  "recruitee:hardrockdigital": {
+   "forms": 2,
+   "fields": 17,
+   "filled": 9,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "workable:lamour": {
+   "forms": 2,
+   "fields": 15,
+   "filled": 10,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "workable:xtremax-pte-ltd": {
+   "forms": 2,
+   "fields": 18,
+   "filled": 11,
+   "needsUser": 3,
+   "ready": 1,
+   "requiredLeft": 3
+  },
+  "workable:luxasia": {
+   "forms": 2,
+   "fields": 20,
+   "filled": 13,
+   "needsUser": 2,
+   "ready": 1,
+   "requiredLeft": 2
+  },
+  "workable:workana-premium": {
+   "forms": 2,
+   "fields": 19,
+   "filled": 12,
+   "needsUser": 6,
+   "ready": 0,
+   "requiredLeft": 6
+  },
+  "workable:our-future-health": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 5,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "workable:interpath-advisory": {
+   "forms": 2,
+   "fields": 26,
+   "filled": 12,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "recruitee:aubay": {
+   "forms": 2,
+   "fields": 33,
+   "filled": 8,
+   "needsUser": 21,
+   "ready": 0,
+   "requiredLeft": 21
+  },
+  "workable:hudabeauty": {
+   "forms": 2,
+   "fields": 21,
+   "filled": 14,
+   "needsUser": 3,
+   "ready": 0,
+   "requiredLeft": 3
+  },
+  "recruitee:snapsoft": {
+   "forms": 2,
+   "fields": 24,
+   "filled": 11,
+   "needsUser": 8,
+   "ready": 0,
+   "requiredLeft": 8
+  },
+  "workable:export-development-canada": {
+   "forms": 2,
+   "fields": 16,
+   "filled": 10,
+   "needsUser": 2,
+   "ready": 0,
+   "requiredLeft": 2
+  },
+  "recruitee:hostpointag": {
+   "forms": 1,
+   "fields": 9,
+   "filled": 5,
+   "needsUser": 1,
+   "ready": 0,
+   "requiredLeft": 1
+  },
+  "recruitee:partejobs": {
+   "forms": 2,
+   "fields": 12,
+   "filled": 8,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  },
+  "workable:fundingsocieties": {
+   "forms": 2,
+   "fields": 22,
+   "filled": 13,
+   "needsUser": 4,
+   "ready": 0,
+   "requiredLeft": 4
+  },
+  "recruitee:aikidosecurity": {
+   "forms": 2,
+   "fields": 12,
+   "filled": 9,
+   "needsUser": 1,
+   "ready": 1,
+   "requiredLeft": 1
+  },
+  "workable:blue-nile": {
+   "forms": 2,
+   "fields": 33,
+   "filled": 12,
+   "needsUser": 13,
+   "ready": 0,
+   "requiredLeft": 13
+  },
+  "recruitee:sahl": {
+   "forms": 2,
+   "fields": 12,
+   "filled": 8,
+   "needsUser": 0,
+   "ready": 2,
+   "requiredLeft": 0
+  }
+ },
+ "perPlatform": {
+  "pinpoint": {
+   "forms": 2,
+   "fields": 17,
+   "filled": 10,
+   "needsUser": 5,
+   "failed": 0,
+   "skipped": 2,
+   "ready": 0,
+   "required": 10,
+   "requiredLeft": 4,
+   "seconds": 35
+  },
+  "workable": {
+   "forms": 23,
+   "fields": 244,
+   "filled": 136,
+   "needsUser": 56,
+   "failed": 0,
+   "skipped": 36,
+   "ready": 4,
+   "required": 189,
+   "requiredLeft": 56,
+   "seconds": 7
+  },
+  "recruitee": {
+   "forms": 15,
+   "fields": 138,
+   "filled": 66,
+   "needsUser": 42,
+   "failed": 0,
+   "skipped": 15,
+   "ready": 5,
+   "required": 107,
+   "requiredLeft": 42,
+   "seconds": 9
+  },
+  "teamtailor": {
+   "forms": 2,
+   "fields": 25,
+   "filled": 12,
+   "needsUser": 2,
+   "failed": 0,
+   "skipped": 11,
+   "ready": 2,
+   "required": 2,
+   "requiredLeft": 0,
+   "seconds": 25
+  },
+  "rippling": {
+   "forms": 2,
+   "fields": 28,
+   "filled": 18,
+   "needsUser": 3,
+   "failed": 3,
+   "skipped": 2,
+   "ready": 1,
+   "required": 16,
+   "requiredLeft": 3,
+   "seconds": 36
+  },
+  "personio": {
+   "forms": 2,
+   "fields": 27,
+   "filled": 16,
+   "needsUser": 6,
+   "failed": 0,
+   "skipped": 5,
+   "ready": 0,
+   "required": 16,
+   "requiredLeft": 6,
+   "seconds": 23
+  }
+ },
+ "blocked": {
+  "total": 688,
+  "forms": 105,
+  "applicationSends": []
+ },
+ "urlChanged": [],
+ "errors": {},
+ "filledShare": 53.86,
+ "requiredLeftShare": 32.65,
+ "formsReady": 12,
+ "formsNeedingUser": 34,
+ "accuracy": {
+  "filled": 258,
+  "correct": 258,
+  "wrong": 0,
+  "unclear": 0,
+  "byRule": {
+   "correct:resume": 46,
+   "correct:profile_kind": 181,
+   "correct:manual:profile_kind": 15,
+   "correct:manual:none": 2,
+   "correct:workauth_other_country": 2,
+   "correct:answer_same_topic": 1,
+   "correct:qa_notice": 7,
+   "correct:qa_pronouns": 1,
+   "correct:eeo_decline": 1,
+   "correct:qa_salary": 2
+  },
+  "wrongByRule": {},
+  "wrongShare": 0,
+  "correctShare": 100,
+  "unclearPairs": 0,
+  "clearedAfterFill": 23,
+  "clearedForms": 23,
+  "clearedByName": {
+   "phone": 23
+  }
+ }
+}

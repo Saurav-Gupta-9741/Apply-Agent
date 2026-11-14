@@ -62,6 +62,31 @@ for (const r of rows) {
       const locs = job ? (job.locations?.length ? job.locations : [job.location]).filter(Boolean) : [];
       meta[r.url] = { location: locs.map((l) => l.name).filter(Boolean).join("; "), country: [...new Set(locs.map((l) => l.country?.name).filter(Boolean))].join("; "), remote: job?.location?.is_remote, options: {} };
       fetched++;
+    } else if (["lever", "recruitee", "workable", "smartrecruiters"].includes(r.platform)) {
+      // Round 12: the public job lists of the other sites, for each job's city and country.
+      const key = `${r.platform}:${r.company}`;
+      if (!ashbyBoards.has(key)) {
+        const url = r.platform === "lever" ? `https://api.lever.co/v0/postings/${r.company}?mode=json`
+          : r.platform === "recruitee" ? `https://${r.company}.recruitee.com/api/offers/`
+            : r.platform === "workable" ? `https://apply.workable.com/api/v1/widget/accounts/${r.company}`
+              : `https://api.smartrecruiters.com/v1/companies/${r.company}/postings?limit=100`;
+        const res = await fetch(url);
+        const j = res.ok ? await res.json() : undefined;
+        ashbyBoards.set(key, Array.isArray(j) ? j : j?.offers ?? j?.jobs ?? j?.content ?? []);
+        await sleep(300);
+      }
+      const list = ashbyBoards.get(key);
+      const job = r.platform === "lever" ? list.find((x) => r.url.includes(x.id))
+        : r.platform === "recruitee" ? list.find((x) => r.url.includes(`/o/${x.slug}/`))
+          : r.platform === "workable" ? list.find((x) => r.url.includes(`/j/${x.shortcode}/`))
+            : list.find((x) => r.url.includes(String(x.id)));
+      const location = !job ? "" : r.platform === "lever" ? [job.categories?.location, ...(job.categories?.allLocations ?? [])].filter(Boolean).join("; ")
+        : r.platform === "recruitee" ? (job.location ?? "") : r.platform === "workable" ? [job.city, job.state, job.country].filter(Boolean).join(", ")
+          : [job.location?.city, job.location?.region, job.location?.country].filter(Boolean).join(", ");
+      const country = !job ? "" : r.platform === "lever" ? (job.country ?? "") : r.platform === "recruitee" ? (job.country ?? job.country_code ?? "")
+        : r.platform === "workable" ? (job.country ?? "") : (job.location?.country ?? "");
+      meta[r.url] = { location, country, options: {} };
+      fetched++;
     } else if (r.platform === "ashby") {
       if (!ashbyBoards.has(r.company)) {
         const res = await fetch(`https://api.ashbyhq.com/posting-api/job-board/${r.company}`);

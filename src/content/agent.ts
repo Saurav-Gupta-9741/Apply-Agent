@@ -17,6 +17,7 @@ import { jobCountriesWithApi } from "./joblocation";
 import { placeOption, placeQueries } from "../shared/place-pick";
 import { bestOption, normalize, yesNoOption, type YesNoHint } from "../shared/text";
 import { canonicalCountries, countriesIn } from "../shared/countries";
+import { salaryBandOption } from "../shared/salary-band";
 import { pruneDisconnectedCorrections, trackCorrection } from "./corrections";
 import { isConsentLabel } from "../shared/consent-review";
 import { questionKey } from "./classify";
@@ -343,7 +344,10 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
   // A state list for US states only, with "I am located outside the United States" (Bill.com), for a user abroad.
   const abroad = decision.kind === "profile" && decision.key === "state" && livesOutsideUs(ctx.profile)
     ? (labels: string[]) => bestOption(labels, value) ?? outsideUsOption(labels) : undefined;
-  const custom = declineOnly ?? yesNo ?? source ?? abroad;
+  // A salary list of ranges: the one range holding the saved figure, same currency only (Benevity, round 12).
+  const band = decision.kind === "answer" && /salary|ctc|compensation|pay/i.test(decision.question)
+    ? (labels: string[]) => bestOption(labels, value) ?? salaryBandOption(labels, value) : undefined;
+  const custom = declineOnly ?? yesNo ?? source ?? abroad ?? band;
   let outcome = field.descriptor.control === "combobox" ? await fillCombobox(el as HTMLInputElement, value, 6000,
       school ? { queries: schoolQueries(value), pick: (labels) => pickSchool(labels, value) }
         : declineOnly ? { pick: declineOnly, first: ["", "decline", "wish", "prefer not"] }
@@ -352,7 +356,7 @@ async function fillOne(field: ExtractedField, ctx: AgentContext, meaning?: Meani
           // Only when the saved location uses a short state code: otherwise the user's own wording goes first ("Pune"
           // first, never the country "India" before it).
           : home ? { first: /,\s*[A-Z]{2}\s*$/.test(value) ? placeQueries(home).filter((p) => p.includes(",")).slice(0, 1) : [], queries: placeQueries(home), pick: (labels) => placeOption(labels, home, (l) => bestOption(l, value)) }
-            : custom ? { pick: custom, first: yesNo || abroad ? [""] : [] } : {})
+            : custom ? { pick: custom, first: yesNo || abroad || band ? [""] : [] } : {})
     : field.descriptor.control === "dropdown" || el.matches(DROPDOWN) ? await fillDropdown(el, value, 4000, custom)
     // Phone boxes often format the number as it is typed, or beside a country picker keep only the national part.
     : phone && (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) ? fillPhone(el, value, splitPhone(ctx.profile.phone).code)

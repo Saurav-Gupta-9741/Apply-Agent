@@ -239,6 +239,27 @@ Results, live round 11 (182 fresh forms × 2 candidates; every unclear answer ch
 - India: 166 forms, 65.2% filled, required left 23.4%, 55 ready; **0 wrong of 1,820**.
 - Cover letters: 68 of 69 and 69 of 69 real uploads. Whole form incl. page load: median 15 s and 14 s.
 
+## Round 14: every public job site, live; LinkedIn/Indeed/Naukri jobs via the company site (2026-11-14) → 1.0.20
+
+Live round 12: 111 fresh postings on 9 more sites (robots.txt checked: Lever 30, Workable 25, SmartRecruiters 25,
+Recruitee 15, Personio 6, Jobvite 4, Teamtailor 2, Rippling 2, Pinpoint 2) × US + India candidates; every send blocked.
+
+| # | Found / built | Status | Measured on real forms |
+|---|---|---|---|
+| 14.1 | **Lever: nothing was filled on any form.** Its hCaptcha sits inside every application form; ApplyAgent took it for a robot-check page | Fixed | A CAPTCHA inside a form with fields is part of the form (the user still solves it at Submit); block pages still stop it. Lever 0 → 30/30 forms, 63-66% filled |
+| 14.2 | Lever's location box cleared the typed city ("value did not stick" on 30 forms) | Fixed | Searches are typed one character at a time, as typing does; Lever's own suggestion is chosen ("Pune, Maharashtra, IND"); 0 failed. Same-40-forms speed 3.35 → 3.14 s |
+| 14.3 | Personio job pages: no form (the form is on /apply) | Fixed in tests | 4/6 filled from the application page |
+| 14.4 | SmartRecruiters: the application page shows a robot check to automated test browsers | Not testable live | Never bypassed; covered by saved-page tests only |
+| 14.5 | Jobvite: a privacy-consent step comes before the form | Not testable live | Accepting it would send data; the user's act |
+| 14.6 | "Apply on the company site" for LinkedIn, Indeed, Naukri jobs (those platforms ban extensions on their pages) | Done | From the tab title only; 30 real open jobs written as LinkedIn titles: 22 found on the company's board, all 22 the same posting, 0 wrong |
+| 14.7 | Relocation: the "relocat" pattern never matched "relocate" | Fixed | 3 more wordings answered; assistance, cost, deadline and on-site+relocation questions stay the user's |
+| 14.8 | Start date in text boxes; salary dropdowns of ranges | Done | Unit-tested; re-checked live with 0 wrong |
+| 14.9 | Panel helpers on live forms | Verified live | Gusto and Starburst: the resume line is suggested for the experience question; Mercury "Why Mercury?": the earlier "Why Stripe?" answer offered ("why us" wordings now match) |
+| 14.10 | Audit: job countries for Lever/Recruitee/Workable/SmartRecruiters; "IN" is India, never Indiana | Fixed | |
+
+Results: round 12 0 wrong of 783 (both candidates); re-check with the fixes 0 wrong of 719; same 40 forms 0 wrong of 414.
+Fill time per site: Recruitee 1.5 s, Workable/Personio/Teamtailor/Pinpoint ~2 s, Lever 3.2 s, Rippling 4.9 s.
+
 ## Still open
 
 | Item | Why open |
@@ -247,6 +268,9 @@ Results, live round 11 (182 fresh forms × 2 candidates; every unclear answer ch
 | AI matching for reworded questions | Question model retrained on 3,465 real questions (7.5); a writing model failed the laptop test (7.1) |
 | Address existence check | Needs an online lookup; conflicts with "data never leaves the browser" |
 | Workday, iCIMS, Taleo live testing | Need accounts (user's decision); adapters tested on saved pages only (9.9) |
+| SmartRecruiters, Jobvite live testing | A robot check for automated browsers / a consent step that sends data (14.4, 14.5) |
+| Rippling demographic lists | 3 choices did not stick (left for the user, never wrong) |
+| Simplify head-to-head on 1.0.20 | Needs the user's Simplify profile in the test browser |
 | Required fields left for the user (~22%) | Mostly job-specific questions ("Have you sold into…", "Why us?"); suggestions and drafts help, but the user answers |
 | Discover beyond ~400 companies | Needs a large real source of company job boards; names that are not verified are never listed |
 | Essay writer tier thresholds and fine-tuning | Waiting on the user's Chrome-only model test on their laptop |

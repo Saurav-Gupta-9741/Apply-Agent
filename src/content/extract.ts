@@ -481,6 +481,9 @@ function controlType(el: FieldElement): ControlType {
   if (el instanceof HTMLTextAreaElement) return "textarea";
   if (el instanceof HTMLSelectElement) return "select";
   if (el.getAttribute("role") === "combobox") return "combobox";
+  // Lever's location box: a type-ahead whose suggestions are plain divs; typed text that is not one of them is cleared
+  // (live round 12: "value did not stick" on all 30 Lever forms).
+  if (el.matches("input[data-qa='location-input'], input.location-input") && el.parentElement?.querySelector(".dropdown-container, .dropdown-results")) return "combobox";
   if (isDropzone(el)) return "file";
   const type = (el.getAttribute("type") ?? "text").toLowerCase();
   const known: ControlType[] = ["email", "tel", "url", "number", "date", "radio", "checkbox", "file"];

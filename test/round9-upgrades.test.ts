@@ -169,6 +169,26 @@ describe("round 11: a list of states and countries", () => {
   });
 });
 
+describe("round 12: relocation wordings and start dates in text boxes", () => {
+  it("willingness to relocate in other words; never assistance, cost or a deadline", () => {
+    for (const label of ["Are you willing and able to relocate to one of our hub locations upon successful completion of the interview process?",
+      "If you are currently not local to one of our central offices, are you willing to relocate?", "Are you willing to relocated to Dublin, Ireland?"]) {
+      expect(decideWithMeaning(q(label, "combobox"), US, [], at("United States"))).toMatchObject({ kind: "answer", value: "Yes" });
+    }
+    for (const label of ["Will you require relocation assistance?", "Are you willing to relocate at your own expense?", "Are you willing to relocate within 30 days?", "Would you need a relocation package?"]) {
+      expect(decideWithMeaning(q(label, "combobox"), US, [], at("United States"))).not.toMatchObject({ kind: "answer", value: "Yes" });
+    }
+  });
+  it("the earliest start date in a text box: written out, or in the box's own format", () => {
+    const start = decideWithMeaning(q("What is your earliest possible start date?", "text", []), IN, []);
+    expect(start).toMatchObject({ kind: "answer" });
+    expect((start as { value: string }).value).toMatch(/^\d{1,2} [A-Z][a-z]+ \d{4}$/);
+    const us = decideWithMeaning({ ...q("Earliest start date (MM/DD/YYYY)", "text", []) }, IN, []);
+    expect((us as { value: string }).value).toMatch(/^\d{2}\/\d{2}\/\d{4}$/);
+    expect(decideWithMeaning(q("Start date month", "text", []), IN, [])).not.toMatchObject({ kind: "answer" });
+  });
+});
+
 describe("notice period and names", () => {
   it("'Do you have a notice period…', 'If offered… how soon…', the earliest start date", () => {
     expect(decideWithMeaning(q("Do you have a notice period at your current job before being able to start a new role?"), IN, [])).toMatchObject({ kind: "answer", value: "Yes" });

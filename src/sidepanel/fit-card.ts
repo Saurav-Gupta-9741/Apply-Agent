@@ -82,7 +82,8 @@ async function tailorSection(jobDescription: string, profile: Profile): Promise<
   if (resume.trim().length < 200) return undefined; // no readable resume: nothing to compare
   const tips = tailorTips(jobDescription, resume, profile);
   if (!tips.addToResume.length && !tips.leadWith.length && !tips.missing.length) return undefined;
-  const parts: (Node | string)[] = [el("summary", {}, `Tailor your resume for this job · it mentions ${tips.resumeCovers.matched} of ${tips.resumeCovers.total} skills the job asks for`)];
+  const covers = tips.resumeCovers.total ? ` · it mentions ${tips.resumeCovers.matched} of ${tips.resumeCovers.total} skills the job asks for` : "";
+  const parts: (Node | string)[] = [el("summary", {}, `Tailor your resume for this job${covers}`)];
   if (tips.addToResume.length) {
     parts.push(el("p", { class: "hint" }, "In your Profile but not in your resume. Add them where they are true (keyword searches read the resume):"));
     const chips = el("div", { class: "chips" });
